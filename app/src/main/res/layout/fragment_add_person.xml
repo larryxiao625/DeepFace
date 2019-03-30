@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    android:overScrollMode="never"
+    android:background="@drawable/pic_half_earth"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:paddingBottom="@dimen/y200"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <ImageView
+            android:id="@+id/photo_iv"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/zhaopiankuang1"
+            android:layout_marginTop="@dimen/y90"
+            android:layout_marginBottom="@dimen/y90"
+            android:layout_width="@dimen/x450"
+            android:layout_height="@dimen/y600" />
+
+        <LinearLayout
+            android:layout_marginBottom="@dimen/y100"
+            android:paddingLeft="@dimen/x65"
+            android:paddingRight="@dimen/x65"
+            android:layout_marginLeft="@dimen/x40"
+            android:layout_marginRight="@dimen/x40"
+            android:background="@drawable/zhucekuang1"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:textSize="@dimen/x42"
+                tools:text="人脸库名称——测试库02"
+                android:gravity="center_vertical"
+                android:textColor="#6e81cd"
+                android:id="@+id/lib_name_tv"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y110" />
+
+            <FrameLayout
+                style="@style/LibraryEditLayout">
+                <TextView
+                    android:text="@string/name"
+                    style="@style/LibraryText"/>
+                <EditText
+                    android:id="@+id/name_edit"
+                    android:hint="@string/fill_name"
+                    style="@style/LibraryEditText"/>
+            </FrameLayout>
+            <include layout="@layout/divider_horizontal"/>
+            <FrameLayout
+                style="@style/LibraryEditLayout">
+                <TextView
+                    android:text="@string/id_number"
+                    style="@style/LibraryText"/>
+                <EditText
+                    android:inputType="number"
+                    android:id="@+id/id_card_edit"
+                    android:hint="@string/fill_id_number"
+                    style="@style/LibraryEditText"/>
+            </FrameLayout>
+            <include layout="@layout/divider_horizontal"/>
+            <FrameLayout
+                style="@style/LibraryEditLayout">
+                <TextView
+                    android:text="@string/sex"
+                    style="@style/LibraryText"/>
+                <EditText
+                    android:id="@+id/sex_edit"
+                    android:hint="@string/fill_sex"
+                    style="@style/LibraryEditText"/>
+            </FrameLayout>
+            <include layout="@layout/divider_horizontal"/>
+            <FrameLayout
+                style="@style/LibraryEditLayout">
+                <TextView
+                    android:text="@string/location"
+                    style="@style/LibraryText"/>
+                <EditText
+                    android:id="@+id/location_edit"
+                    android:hint="@string/fill_location"
+                    style="@style/LibraryEditText"/>
+            </FrameLayout>
+            <include layout="@layout/divider_horizontal"/>
+            <FrameLayout
+                style="@style/LibraryEditLayout">
+                <TextView
+                    android:text="@string/race"
+                    style="@style/LibraryText"/>
+                <EditText
+                    android:id="@+id/race_edit"
+                    android:hint="@string/fill_race"
+                    style="@style/LibraryEditText"/>
+            </FrameLayout>
+            <include layout="@layout/divider_horizontal"/>
+            <FrameLayout
+                style="@style/LibraryEditLayout">
+                <TextView
+                    android:text="@string/phone_number"
+                    style="@style/LibraryText"/>
+                <EditText
+                    android:id="@+id/phone_number_edit"
+                    android:inputType="phone"
+                    android:hint="@string/fill_phone_number"
+                    style="@style/LibraryEditText"/>
+            </FrameLayout>
+            <include layout="@layout/divider_horizontal"/>
+            <FrameLayout
+                style="@style/LibraryEditLayout">
+                <TextView
+                    android:text="@string/remark"
+                    style="@style/LibraryText"/>
+                <EditText
+                    android:id="@+id/remark_edit"
+                    android:hint="@string/fill_remark"
+                    style="@style/LibraryEditText"/>
+            </FrameLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/submit_tv"
+            android:background="@drawable/tijiao1"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:text="@string/submit"
+            android:layout_marginLeft="@dimen/x260"
+            android:layout_marginRight="@dimen/x260"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y84" />
+    </LinearLayout>
+</ScrollView>

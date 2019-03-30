@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/colorBackground"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.iustu.identification.ui.widget.TitleBar
+        android:id="@+id/history_title_bar"
+        app:title="历史记录"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </com.iustu.identification.ui.widget.TitleBar>
+
+
+    <FrameLayout
+        android:id="@+id/histoy_fragment_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+        <fragment
+            android:tag="face_history"
+            android:name="com.iustu.identification.ui.main.history.face.FaceHistoryFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </FrameLayout>
+
+</LinearLayout>

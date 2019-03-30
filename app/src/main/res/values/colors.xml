@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#030919</color>
+    <color name="colorAccent">#25d2f4</color>
+    <color name="colorBackground">#030919</color>
+    <color name="lite_blue">#25d2f4</color>
+    <color name="lite_green">#2dd8d2</color>
+    <color name="lite_gray">#a1a4ad</color>
+    <color name="data_base_back">#292e3d</color>
+    <color name="white">#ffffff</color>
+    <color name="bottom_bar_background">#151821</color>
+    <color name="bottom_bar_selected">#003e93</color>
+    <color name="bottom_bar_item_unselected">#7c7e95</color>
+    <color name="colorBackgroundLite">#091126</color>
+    <color name="gold">#d0a240</color>
+    <color name="red">#e72929</color>
+    <color name="tab_bg_color">#1d2b68</color>
+
+    <color name="out_line_color">#2650b2</color>
+</resources>

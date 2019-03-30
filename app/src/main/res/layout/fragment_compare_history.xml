@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:paddingBottom="@dimen/y20"
+    android:background="@color/colorBackground"
+    android:paddingLeft="@dimen/x50"
+    android:paddingRight="@dimen/x50"
+    android:paddingTop="@dimen/y55"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <android.support.v7.widget.RecyclerView
+        android:overScrollMode="never"
+        android:layout_marginBottom="@dimen/y172"
+        android:id="@+id/compare_history_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    <include layout="@layout/layout_page_switch"/>
+</FrameLayout>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginTop="@dimen/y20"
+    tools:layout_height="@dimen/y404"
+    android:background="@drawable/out_line_bg"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_marginTop="@dimen/y2"
+        android:layout_marginLeft="@dimen/x2"
+        android:layout_marginRight="@dimen/x2"
+        android:background="#0d223d"
+        android:id="@+id/compare_time_tv"
+        android:padding="@dimen/x10"
+        android:gravity="center_vertical"
+        android:textColor="@color/white"
+        android:textSize="@dimen/y36"
+        tools:text="比对时间：10时13分08秒"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y80" />
+
+    <LinearLayout
+        android:paddingTop="@dimen/y20"
+        android:paddingBottom="@dimen/y20"
+        android:paddingLeft="@dimen/x30"
+        android:paddingRight="@dimen/x30"
+        android:layout_marginTop="@dimen/y80"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:background="@drawable/batch_photo_bg"
+            android:padding="@dimen/x5"
+            android:scaleType="fitCenter"
+            android:src="@drawable/photo_holder"
+            android:id="@+id/photo_iv"
+            android:layout_marginLeft="@dimen/x15"
+            android:layout_marginRight="@dimen/x15"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" />
+
+        <com.iustu.identification.ui.widget.ScaleView
+            android:id="@+id/scale_view_compare_history"
+            android:layout_gravity="center_vertical"
+            app:outRadius="@dimen/x67"
+            app:textEnable="true"
+            app:innerRadius="@dimen/x57"
+            app:numberTextSize="@dimen/x36"
+            app:similarityTextSize="@dimen/x30"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:padding="@dimen/x5"
+            android:background="@drawable/batch_photo_bg"
+            android:src="@drawable/photo_holder"
+            android:scaleType="fitCenter"
+            android:layout_marginLeft="@dimen/x15"
+            android:layout_marginRight="@dimen/x15"
+            android:id="@+id/photo_lib_iv"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent" />
+        
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="@dimen/x340"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/name_tv"
+                style="@style/CompareHistoryItemText" />
+            <TextView
+                android:id="@+id/id_card_tv"
+                style="@style/CompareHistoryItemText" />
+            <TextView
+                android:id="@+id/nationality_tv"
+                style="@style/CompareHistoryItemText" />
+            <TextView
+                android:id="@+id/lib_tv"
+                style="@style/CompareHistoryItemText" />
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

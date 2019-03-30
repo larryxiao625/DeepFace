@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/dhtiao1"
+    tools:ignore="ContentDescription,RtlHardcoded,RtlSymmetry"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/y100">
+
+    <TextView
+        android:id="@+id/title_bar_title_tv"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        tools:text="人脸比对"
+        android:textSize="@dimen/y50"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:visibility="gone"
+        android:id="@+id/title_bar_back_iv"
+        android:src="@drawable/xiangzuo1"
+        android:paddingLeft="@dimen/y33"
+        android:paddingRight="@dimen/y34"
+        android:paddingTop="@dimen/y15"
+        android:paddingBottom="@dimen/y15"
+        android:layout_width="@dimen/y100"
+        android:layout_height="match_parent" />
+    
+    <ImageView
+        android:id="@+id/title_bar_sure_iv"
+        android:visibility="gone"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/sure_btn"
+        android:layout_width="@dimen/x200"
+        android:layout_height="match_parent"
+        android:paddingTop="@dimen/y12"
+        android:paddingBottom="@dimen/y12"
+        android:paddingLeft="@dimen/x25"
+        android:paddingRight="@dimen/x25" />
+</RelativeLayout>

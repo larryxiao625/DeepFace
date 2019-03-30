@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/colorBackground"
+    tools:ignore="RtlHardcoded"
+    android:paddingBottom="@dimen/y20"
+    android:layout_height="match_parent">
+    <android.support.v7.widget.RecyclerView
+        android:overScrollMode="never"
+        android:background="@drawable/out_line_bg"
+        android:id="@+id/people_manage_recycler_view"
+        android:layout_marginLeft="@dimen/x30"
+        android:layout_marginRight="@dimen/x30"
+        android:layout_marginBottom="@dimen/y172"
+        android:layout_marginTop="@dimen/y30"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <include layout="@layout/layout_page_switch"/>
+</FrameLayout>

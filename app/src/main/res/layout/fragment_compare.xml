@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/pic_half_earth"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.iustu.identification.ui.widget.TitleBar
+        android:id="@+id/compare_tb"
+        app:title="@string/face_compare"
+        app:backEnable="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </com.iustu.identification.ui.widget.TitleBar>
+
+    <ImageView
+        android:padding="@dimen/x2"
+        android:id="@+id/photo_iv"
+        android:scaleType="fitCenter"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/zpkuang1"
+        android:layout_marginTop="@dimen/y84"
+        android:layout_marginBottom="@dimen/y100"
+        android:layout_width="@dimen/x520"
+        android:layout_height="@dimen/y540" />
+
+    <android.support.v7.widget.RecyclerView
+        android:overScrollMode="never"
+        android:id="@+id/compare_rv"
+        android:scrollbars="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+</LinearLayout>

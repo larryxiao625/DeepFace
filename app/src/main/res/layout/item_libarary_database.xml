@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:background="#282e3c"
+    android:layout_marginTop="@dimen/y13"
+    android:layout_marginBottom="@dimen/y13"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="@dimen/x1"
+    android:layout_marginRight="@dimen/x1"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:layout_marginLeft="@dimen/x30"
+        tools:text="V"
+        android:textColor="@color/white"
+        android:layout_gravity="center_vertical"
+        android:textSize="@dimen/y36"
+        android:id="@+id/select_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:ignore="RtlHardcoded" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/lib_id_tv"
+            tools:text="1"
+            style="@style/databaseItemCol"/>
+        <TextView
+            android:id="@+id/lib_name_tv"
+            android:text="测试库02"
+            style="@style/databaseItemCol"/>
+        <TextView
+            android:id="@+id/lib_number_tv"
+            android:text="43"
+            style="@style/databaseItemCol"/>
+        <TextView
+            android:id="@+id/lib_state_tv"
+            android:text="库状态"
+            style="@style/databaseItemCol"/>
+    </LinearLayout>
+</FrameLayout>

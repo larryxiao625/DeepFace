@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="RtlHardcoded"
+    android:paddingLeft="@dimen/x30"
+    android:paddingRight="@dimen/x30"
+    android:paddingTop="@dimen/y20"
+    android:paddingBottom="@dimen/y20"
+    android:background="@color/colorBackground"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    
+    <FrameLayout
+        android:background="@drawable/out_line_bg"
+        android:paddingLeft="@dimen/x33"
+        android:paddingRight="@dimen/x33"
+        android:paddingTop="@dimen/y15"
+        android:paddingBottom="@dimen/y20"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y210">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y60">
+            <TextView
+                android:layout_marginRight="@dimen/x15"
+                android:text="@string/collect_date"
+                android:gravity="center_vertical"
+                android:textSize="@dimen/x36"
+                android:textColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/date_from_tv"
+                tools:text="2017年11月02日"
+                android:drawableRight="@drawable/ic_calendar"
+                android:paddingLeft="@dimen/x15"
+                android:paddingRight="@dimen/x15"
+                android:background="@drawable/out_line_bg"
+                android:layout_marginRight="@dimen/x15"
+                android:gravity="center_vertical"
+                android:textSize="@dimen/x36"
+                android:textColor="@color/white"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+            <TextView
+                android:layout_marginRight="@dimen/x15"
+                android:text="@string/to"
+                android:gravity="center_vertical"
+                android:textSize="@dimen/x36"
+                android:textColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/date_to_tv"
+                tools:text="2017年11月02日"
+                android:drawableRight="@drawable/ic_calendar"
+                android:paddingLeft="@dimen/x15"
+                android:paddingRight="@dimen/x15"
+                android:background="@drawable/out_line_bg"
+                android:layout_marginRight="@dimen/x15"
+                android:gravity="center_vertical"
+                android:textSize="@dimen/x36"
+                android:textColor="@color/white"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+        
+        <TextView
+            android:id="@+id/start_query_tv"
+            android:layout_gravity="center_horizontal|bottom"
+            android:gravity="center"
+            android:background="@drawable/batch_compare"
+            android:textColor="@color/white"
+            android:text="@string/start_query"
+            android:textSize="@dimen/y42"
+            android:layout_width="@dimen/x240"
+            android:layout_height="@dimen/y72" />
+    </FrameLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:overScrollMode="never"
+        android:id="@+id/face_history_recycler_view"
+        android:background="@drawable/out_line_bg"
+        android:layout_marginTop="@dimen/y250"
+        android:layout_marginBottom="@dimen/y172"
+        android:paddingTop="@dimen/y20"
+        android:paddingBottom="@dimen/y20"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <include layout="@layout/layout_page_switch"/>
+</FrameLayout>

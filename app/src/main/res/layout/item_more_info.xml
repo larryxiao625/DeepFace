@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginTop="@dimen/y20"
+    tools:layout_height="@dimen/y404"
+    android:background="@drawable/out_line_bg"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:padding="@dimen/x5"
+        android:background="@drawable/batch_photo_bg"
+        android:src="@drawable/photo_holder"
+        android:scaleType="fitCenter"
+        android:layout_marginTop="@dimen/y15"
+        android:layout_marginBottom="@dimen/y15"
+        android:layout_marginLeft="@dimen/x60"
+        android:id="@+id/photo_lib_iv"
+        android:layout_width="@dimen/x300"
+        android:layout_height="match_parent"
+        tools:ignore="RtlHardcoded" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_marginLeft="@dimen/x450"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:ignore="RtlHardcoded">
+        <TextView
+            android:id="@+id/name_tv"
+            tools:text="姓名：王源"
+            style="@style/MoreInfoItemText" />
+        <TextView
+            android:id="@+id/age_tv"
+            tools:text="年龄：20"
+            style="@style/MoreInfoItemText" />
+        <TextView
+            android:id="@+id/nationality_tv"
+            tools:text="民族：汉"
+            style="@style/MoreInfoItemText" />
+        <TextView
+            android:id="@+id/lib_tv"
+            tools:text="目标库：在逃人员库"
+            style="@style/MoreInfoItemText" />
+    </LinearLayout>
+
+    <TextView
+        android:layout_marginTop="@dimen/y15"
+        android:layout_marginRight="@dimen/x20"
+        android:layout_gravity="right"
+        android:textColor="@color/red"
+        android:id="@+id/delete_tv"
+        android:textSize="@dimen/y60"
+        android:gravity="center"
+        android:layout_width="@dimen/x70"
+        android:layout_height="match_parent"
+        tools:ignore="RtlHardcoded" />
+</FrameLayout>

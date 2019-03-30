@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginLeft="@dimen/x20"
+    android:layout_marginRight="@dimen/x20"
+    android:layout_marginTop="@dimen/y20"
+    tools:layout_width="@dimen/x293"
+    android:layout_height="@dimen/y360">
+
+    <ImageView
+        android:id="@+id/face_collect_iv"
+        android:scaleType="fitCenter"
+        android:src="@drawable/photo_holder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:textColor="@color/white"
+        android:layout_gravity="bottom"
+        android:gravity="center"
+        android:padding="@dimen/y10"
+        tools:text="2017-11-2\n13:14:09"
+        android:textSize="@dimen/y30"
+        android:id="@+id/date_time_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <View
+        android:background="@drawable/face_collect_item_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</FrameLayout>

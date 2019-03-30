@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/y66"
+    android:background="#1c306f"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <TextView
+        android:text="@string/order"
+        style="@style/databaseCol"/>
+
+    <include layout="@layout/divider_vertical"/>
+    <TextView
+        android:text="@string/library_name"
+        style="@style/databaseCol"/>
+    <include layout="@layout/divider_vertical"/>
+    <TextView
+        android:text="@string/library_count"
+        style="@style/databaseCol"/>
+    <include layout="@layout/divider_vertical"/>
+
+    <TextView
+        android:layout_height="match_parent"
+        android:textSize="@dimen/y36"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:layout_width="@dimen/x440"
+        android:text="@string/opt"/>
+
+</LinearLayout>

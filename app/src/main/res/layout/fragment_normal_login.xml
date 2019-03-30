@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:background="@color/colorBackground"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/login_username_et"
+        style="@style/LoginEdit"
+        android:layout_marginTop="48dp"
+        android:drawableLeft="@drawable/username"
+        android:drawableStart="@drawable/username"
+        android:hint="@string/hint_username"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:layout_marginTop="32dp"
+        android:inputType="textPassword"
+        android:id="@+id/login_password_et"
+        android:hint="@string/hint_password"
+        android:drawableLeft="@drawable/password"
+        android:drawableStart="@drawable/password"
+        app:layout_constraintTop_toBottomOf="@id/login_username_et"
+        style="@style/LoginEdit"/>
+
+    <Button
+        android:layout_marginTop="32dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toBottomOf="@id/login_password_et"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/login_normal_tv"
+        android:textStyle="bold"
+        android:background="@drawable/out_line_bg"
+        android:textColor="@color/lite_blue"
+        android:text="@string/login_normal"/>
+
+    <TextView
+        android:padding="8dp"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/login_normal_switch"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_normal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="@string/switch_to_face_login"/>
+
+    <TextView
+        android:padding="8dp"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/set_server_tv"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="@string/server_set"/>
+
+</android.support.constraint.ConstraintLayout>

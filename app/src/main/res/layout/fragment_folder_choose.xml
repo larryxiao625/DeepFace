@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical"
+    tools:background="@color/colorBackground"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@color/colorBackground"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.iustu.identification.ui.widget.TitleBar
+        android:id="@+id/folder_choose_title_bar"
+        app:backEnable="true"
+        app:sureEnable="true"
+        app:title="文件夹选择"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </com.iustu.identification.ui.widget.TitleBar>
+    <TextView
+        android:id="@+id/path_tv"
+        tools:text="当前路径：sdcard://d/android/data"
+        android:padding="@dimen/x10"
+        android:textColor="@color/white"
+        android:textSize="@dimen/x36"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/folder_recycler_view"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:overScrollMode="never"/>
+</LinearLayout>

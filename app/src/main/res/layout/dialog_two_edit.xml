@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@drawable/dialog_bg"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <include layout="@layout/layout_dialog_title"/>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_margin="10dp"
+        android:textColorHint="@color/lite_blue"
+        android:id="@+id/dialog_til_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:id="@+id/dialog_edit_et_1"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textCursorDrawable="@drawable/edit_cursor"
+            android:padding="10dp"
+            android:maxLines="1"
+            android:maxLength="36"
+            android:theme="@style/DialogEditTextTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_margin="10dp"
+        android:id="@+id/dialog_til_2"
+        android:textColorHint="@color/lite_blue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:id="@+id/dialog_edit_et_2"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textCursorDrawable="@drawable/edit_cursor"
+            android:padding="10dp"
+            android:theme="@style/DialogEditTextTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </android.support.design.widget.TextInputLayout>
+
+
+    <include layout="@layout/divider_horizontal"/>
+    <include layout="@layout/layout_dialog_buttons"/>
+</LinearLayout>

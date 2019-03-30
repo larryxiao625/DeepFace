@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/colorBackground"
+    android:scrollbars="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:paddingBottom="@dimen/y20"
+        android:paddingLeft="@dimen/x35"
+        android:paddingRight="@dimen/x35"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="RtlHardcoded">
+
+        <TextView android:text="@string/base_parameters"
+            style="@style/ConfigTitle"/>
+
+        <LinearLayout
+            android:layout_height="@dimen/y380"
+            style="@style/ConfigLayout1">
+
+            <TextView
+                android:drawableLeft="@drawable/config_threshold_value"
+                android:text="@string/threshold_value_face"
+                style="@style/ConfigItemTitle"/>
+
+            <include layout="@layout/divider_horizontal"/>
+
+            <com.iustu.identification.ui.widget.seekbar.BubbleSeekBar
+                android:id="@+id/face_bsb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <include layout="@layout/layout_threshold_value"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_height="@dimen/y380"
+            style="@style/ConfigLayout1">
+
+            <TextView
+                android:drawableLeft="@drawable/config_threshold_value"
+                android:text="@string/threshold_value_paper"
+                style="@style/ConfigItemTitle"/>
+
+            <include layout="@layout/divider_horizontal"/>
+
+            <com.iustu.identification.ui.widget.seekbar.BubbleSeekBar
+                android:id="@+id/paper_bsb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <include layout="@layout/layout_threshold_value"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_height="@dimen/y292"
+            style="@style/ConfigLayout1">
+
+            <TextView
+                android:drawableLeft="@drawable/display_count"
+                android:text="@string/display_count"
+                style="@style/ConfigItemTitle"/>
+
+            <include layout="@layout/divider_horizontal"/>
+
+            <LinearLayout
+                android:id="@+id/display_count_ll"
+                android:paddingLeft="@dimen/x40"
+                android:paddingRight="@dimen/x25"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y160">
+
+                <TextView
+                    android:gravity="center_vertical"
+                    android:text="@string/less_or_equals"
+                    android:textSize="@dimen/y36"
+                    android:textColor="@color/white"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/display_count_tv"
+                    android:gravity="center_vertical"
+                    tools:text="10"
+                    android:textSize="@dimen/y36"
+                    android:textColor="@color/lite_blue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"  />
+
+                <TextView
+                    android:layout_marginLeft="@dimen/x5"
+                    android:gravity="center_vertical"
+                    android:text="@string/piece"
+                    android:textSize="@dimen/y36"
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView android:text="@string/filter_parameters"
+            style="@style/ConfigTitle"/>
+
+        <LinearLayout
+            android:layout_height="@dimen/y340"
+            style="@style/ConfigLayout1"
+            android:background="@drawable/out_line_bg">
+
+            <TextView
+                android:drawableLeft="@drawable/sex"
+                android:text="@string/sex"
+                style="@style/ConfigItemTitle"/>
+
+            <include layout="@layout/divider_horizontal"/>
+
+            <com.iustu.identification.ui.widget.SexChooser
+                android:id="@+id/sex_chooser"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </com.iustu.identification.ui.widget.SexChooser>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/age_range_ll"
+            style="@style/ConfigLayout2">
+            <TextView
+                android:drawableLeft="@drawable/display_count"
+                android:text="@string/age_range"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                style="@style/ConfigItemTitle2"/>
+            <TextView
+                android:id="@+id/age_range_tv"
+                android:drawableRight="@drawable/arrow_right"
+                android:text="@string/please_choose"
+                android:layout_width="wrap_content"
+                style="@style/ConfigItemTitle2"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/location_ll"
+            style="@style/ConfigLayout2">
+            <TextView
+                android:drawableLeft="@drawable/location"
+                android:text="@string/location"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                style="@style/ConfigItemTitle2"/>
+            <TextView
+                android:id="@+id/config_location_tv"
+                android:drawableRight="@drawable/arrow_right"
+                android:text="@string/please_choose"
+                android:layout_width="wrap_content"
+                style="@style/ConfigItemTitle2"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

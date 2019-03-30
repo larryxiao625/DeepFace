@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="config_icon_size">@dimen/x71</dimen>
+    <dimen name="config_icon_margin_left">@dimen/x55</dimen>
+    <dimen name="config_icon_margin_top">@dimen/y20</dimen>
+    <dimen name="config_item_margin_top">@dimen/y20</dimen>
+
+    <dimen name="dialog_corner_radius">10dp</dimen>
+    <dimen name="activity_padding">16dp</dimen>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="font_normal">14sp</dimen>
+    <dimen name="out_line_padding">1dp</dimen>
+
+</resources>

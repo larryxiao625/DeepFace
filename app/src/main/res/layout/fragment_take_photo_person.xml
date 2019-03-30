@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    android:id="@+id/verify_camera_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/colorBackground"
+    android:layout_width="@dimen/x1080"
+    android:layout_height="@dimen/y1920">
+    <ImageView
+        android:visibility="gone"
+        android:id="@+id/cancel_iv"
+        android:src="@drawable/ic_close"
+        android:padding="@dimen/x20"
+        android:layout_width="@dimen/x132"
+        android:layout_height="@dimen/x132" />
+
+    <ImageView
+        android:visibility="gone"
+        android:id="@+id/ok_iv"
+        android:src="@drawable/ic_check"
+        android:layout_gravity="right"
+        android:padding="@dimen/x20"
+        android:layout_width="@dimen/x132"
+        android:layout_height="@dimen/x132"/>
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/take_photo_prompt_tv"
+        android:layout_marginTop="@dimen/y150"
+        android:text="@string/person_take_photo_prompt"
+        android:textSize="@dimen/x36"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:visibility="gone"
+        android:id="@+id/take_photo_out_line_iv"
+        android:scaleType="centerInside"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/y310"
+        android:src="@drawable/person_out_line"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/y1370"
+        android:id="@+id/take_photo_iv"
+        android:scaleType="centerInside"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/take_photo"
+        android:layout_width="@dimen/x288"
+        android:layout_height="@dimen/x288" />
+</FrameLayout>

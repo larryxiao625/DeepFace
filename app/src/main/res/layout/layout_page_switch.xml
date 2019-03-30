@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_gravity="center_horizontal|bottom"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ImageView
+        android:padding="@dimen/y30"
+        android:id="@+id/last_page_iv"
+        android:scaleType="centerInside"
+        android:src="@drawable/last_page"
+        android:layout_width="@dimen/y278"
+        android:layout_height="@dimen/y132" />
+
+    <TextView
+        android:id="@+id/page_tv"
+        android:layout_gravity="center_vertical"
+        tools:text="10/11"
+        android:textColor="@color/lite_blue"
+        android:textSize="@dimen/x42"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:padding="@dimen/y30"
+        android:id="@+id/next_page_iv"
+        android:scaleType="centerInside"
+        android:src="@drawable/next_page"
+        android:layout_width="@dimen/y278"
+        android:layout_height="@dimen/y132"/>
+</LinearLayout>

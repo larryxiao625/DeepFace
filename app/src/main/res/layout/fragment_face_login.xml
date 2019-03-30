@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/colorBackground"
+    android:paddingTop="48dp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:id="@+id/camera_layout"
+        android:layout_gravity="center_horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="216dp"
+        android:layout_height="240dp">
+        <FrameLayout
+            android:id="@+id/login_camera_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+        <com.iustu.identification.ui.widget.CameraDecor
+            app:scanDrawable="@drawable/scan_line"
+            app:scanHeight="48dp"
+            android:id="@+id/camera_decor"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+
+    <TextView
+        android:id="@+id/tv_prompt"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@id/camera_layout"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/login_prompt"
+        android:textColor="@color/white" />
+
+    <Button
+        app:layout_constraintTop_toBottomOf="@id/tv_prompt"
+        android:layout_marginTop="32dp"
+        android:layout_margin="16dp"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:id="@+id/login_face_btn"
+        android:textStyle="bold"
+        android:background="@drawable/out_line_bg"
+        android:textColor="@color/lite_blue"
+        android:text="@string/start_check_face"/>
+
+    <TextView
+        android:padding="8dp"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/login_normal_switch"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_normal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="@string/switch_to_normal_login"/>
+
+    <TextView
+        android:padding="8dp"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:id="@+id/set_server_tv"
+        android:textColor="@color/white"
+        android:textSize="@dimen/font_normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="@string/server_set"/>
+
+</android.support.constraint.ConstraintLayout>

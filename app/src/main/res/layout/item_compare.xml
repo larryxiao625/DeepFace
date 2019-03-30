@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="ContentDescription,RtlHardcoded"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <FrameLayout
+        android:background="#0a1227"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <FrameLayout
+            android:layout_marginTop="@dimen/y40"
+            android:layout_marginBottom="@dimen/y20"
+            android:layout_marginLeft="@dimen/x72"
+            android:layout_marginRight="@dimen/x72"
+            android:layout_width="@dimen/x300"
+            android:layout_height="@dimen/y360">
+            <ImageView
+                android:id="@+id/photo_capture_iv"
+                android:scaleType="fitCenter"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <View
+                android:background="@drawable/batch_photo_bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </FrameLayout>
+
+        <TextView
+            android:layout_marginTop="@dimen/y320"
+            android:textStyle="bold"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/similarity"
+            android:textColor="@color/lite_blue"
+            android:textSize="@dimen/y42"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <FrameLayout
+            android:layout_gravity="end"
+            android:layout_marginTop="@dimen/y40"
+            android:layout_marginBottom="@dimen/y20"
+            android:layout_marginLeft="@dimen/x72"
+            android:layout_marginRight="@dimen/x72"
+            android:layout_width="@dimen/x300"
+            android:layout_height="@dimen/y360">
+            <ImageView
+                android:id="@+id/photo_match_iv"
+                android:scaleType="fitCenter"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+            <View
+                android:background="@drawable/batch_photo_bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </FrameLayout>
+
+
+        <com.iustu.identification.ui.widget.ScaleView
+            android:id="@+id/compare_scv"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/y100" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/more_info_ll"
+        tools:visibility="visible"
+        android:visibility="gone"
+        android:background="@drawable/xinxikuang1"
+        android:paddingLeft="@dimen/x30"
+        android:paddingRight="@dimen/x30"
+        android:layout_marginLeft="@dimen/x63"
+        android:layout_marginRight="@dimen/x63"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y380"
+        >
+        <TextView
+            android:id="@+id/people_library_tv"
+            tools:text="1"
+            style="@style/CompareItemText" />
+        <TextView
+            android:id="@+id/name_and_nationality_tv"
+            tools:text="1"
+            style="@style/CompareItemText" />
+        <TextView
+            android:id="@+id/birthday_tv"
+            tools:text="1"
+            style="@style/CompareItemText" />
+        <TextView
+            android:id="@+id/id_card_tv"
+            tools:text="1"
+            style="@style/CompareItemText" />
+        <TextView
+            android:id="@+id/location_tv"
+            tools:text="1"
+            style="@style/CompareItemText" />
+
+    </LinearLayout>
+    
+    <FrameLayout
+        android:id="@+id/fold_fm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/by1"
+            android:scaleType="fitXY"
+            android:layout_width="@dimen/x100"
+            android:layout_height="@dimen/x44" />
+        
+        <ImageView
+            android:id="@+id/fold_icon_iv"
+            android:scaleType="centerInside"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/xiangs2"
+            android:layout_width="@dimen/x44"
+            android:layout_height="@dimen/x44" />
+    </FrameLayout>
+</LinearLayout>

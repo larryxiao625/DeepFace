@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:padding="@dimen/x10"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:clickable="true"
+    android:focusable="true"
+    android:background="@drawable/item_file_click"
+    android:layout_height="@dimen/y150"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView
+        tools:src="@drawable/ic_folder"
+        android:id="@+id/file_icon_iv"
+        android:textColor="@color/lite_blue"
+        android:layout_gravity="center_vertical"
+        android:layout_width="@dimen/y100"
+        android:scaleType="fitXY"
+        android:layout_height="@dimen/y100" />
+
+    <LinearLayout
+        android:padding="@dimen/x10"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content">
+        <TextView
+            android:maxLines="1"
+            android:ellipsize="end"
+            tools:text="safdddddddddddd"
+            android:id="@+id/file_name_tv"
+            android:textSize="@dimen/x48"
+            android:textColor="@color/white"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            tools:text="java文件"
+            android:id="@+id/file_desc_tv"
+            android:textSize="@dimen/x30"
+            android:textColor="@color/white"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</LinearLayout>

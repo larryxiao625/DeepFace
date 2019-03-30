@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/person_info_item_bg"
+    android:layout_margin="@dimen/y10"
+    android:layout_marginLeft="@dimen/x25"
+    android:layout_marginRight="@dimen/x25"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:layout_height="@dimen/y420"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="@dimen/x320"
+        android:layout_height="match_parent">
+        <ImageView
+            android:id="@+id/photo_iv"
+            android:scaleType="fitCenter"
+            android:src="@drawable/photo_holder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:ignore="ContentDescription" />
+
+        <View
+            android:id="@+id/delete_photo_view"
+            android:layout_gravity="right"
+            android:background="@drawable/delete_photo"
+            android:layout_marginRight="@dimen/x15"
+            android:layout_marginTop="@dimen/y15"
+            android:layout_width="@dimen/x54"
+            android:layout_height="@dimen/x54"
+            tools:ignore="RtlHardcoded" />
+        <LinearLayout
+            android:id="@+id/switch_img_layout"
+            android:paddingLeft="@dimen/x40"
+            android:paddingRight="@dimen/x40"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="@dimen/x5"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y72">
+            <TextView
+                android:gravity="center"
+                android:textSize="@dimen/y51"
+                android:textColor="@color/lite_gray"
+                android:id="@+id/last_img_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+
+            <TextView
+                android:gravity="center"
+                tools:text="1/50"
+                android:id="@+id/img_page_tv"
+                android:textColor="@color/white"
+                android:textSize="@dimen/y36"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:gravity="center"
+                android:textSize="@dimen/y51"
+                android:textColor="@color/lite_gray"
+                android:id="@+id/next_img_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
+        
+        <View
+            android:background="@drawable/batch_photo_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/edit_layout"
+        android:orientation="vertical"
+        android:layout_marginLeft="@dimen/x360"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:ignore="RtlHardcoded">
+
+        <EditText
+            android:background="@null"
+            android:hint="@string/name"
+            android:textColorHint="@color/lite_gray"
+            android:id="@+id/name_edit"
+            android:gravity="center_vertical"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x40"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp" />
+
+        <EditText
+            android:background="@null"
+            android:hint="@string/id_card_number"
+            android:textColorHint="@color/lite_gray"
+            android:id="@+id/id_card_edit"
+            android:gravity="center_vertical"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x40"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp" />
+
+        <EditText
+            android:background="@null"
+            android:hint="@string/sex"
+            android:textColorHint="@color/lite_gray"
+            android:id="@+id/sex_edit"
+            android:gravity="center_vertical"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x40"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp" />
+
+        <EditText
+            android:id="@+id/location_edit"
+            android:background="@null"
+            android:hint="@string/location"
+            android:textColorHint="@color/lite_gray"
+            android:gravity="center_vertical"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x40"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y80">
+            <TextView
+                android:gravity="center_vertical"
+                android:textColor="#13d22c"
+                android:id="@+id/save_icon_tv"
+                android:layout_gravity="center_vertical"
+                android:textSize="@dimen/y48"
+                android:layout_width="@dimen/x70"
+                android:layout_height="match_parent" />
+            <TextView
+                android:textSize="@dimen/x36"
+                android:gravity="center_vertical"
+                android:text="@string/save"
+                android:textColor="@color/lite_blue"
+                android:id="@+id/save_tv"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+            <TextView
+                android:gravity="center_vertical"
+                android:textColor="@color/gold"
+                android:id="@+id/add_photo_icon_tv"
+                android:layout_gravity="center_vertical"
+                android:textSize="@dimen/y54"
+                android:layout_width="@dimen/x60"
+                android:layout_height="match_parent" />
+            <TextView
+                android:textSize="@dimen/x36"
+                android:gravity="center_vertical"
+                android:text="@string/add_photo"
+                android:textColor="@color/lite_blue"
+                android:id="@+id/add_photo_tv"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+            <TextView
+                android:gravity="center_vertical"
+                android:textColor="@color/red"
+                android:id="@+id/delete_icon_tv"
+                android:layout_gravity="center_vertical"
+                android:textSize="@dimen/y54"
+                android:layout_width="@dimen/x60"
+                android:layout_height="match_parent" />
+            <TextView
+                android:textSize="@dimen/x36"
+                android:gravity="center_vertical"
+                android:text="@string/delete"
+                android:textColor="@color/lite_blue"
+                android:id="@+id/delete_tv"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>
