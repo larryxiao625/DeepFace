@@ -15,7 +15,7 @@ import com.iustu.identification.api.message.Message;
 import com.iustu.identification.ui.SplashActivity;
 import com.iustu.identification.ui.base.BaseActivity;
 import com.iustu.identification.ui.base.BaseFragment;
-import com.iustu.identification.ui.login.LoginActivity;
+import com.iustu.identification.ui.login.view.LoginActivity;
 import com.iustu.identification.ui.main.batch.BatchFragment;
 import com.iustu.identification.ui.main.camera.CameraFragment;
 import com.iustu.identification.ui.main.camera.CompareFragment;

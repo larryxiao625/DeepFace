@@ -14,11 +14,9 @@ import android.support.v4.content.ContextCompat;
 
 import com.iustu.identification.R;
 import com.iustu.identification.api.Api;
-import com.iustu.identification.api.message.Message;
-import com.iustu.identification.api.message.response.PreLoginResponse;
 import com.iustu.identification.bean.User;
 import com.iustu.identification.ui.base.BaseActivity;
-import com.iustu.identification.ui.login.LoginActivity;
+import com.iustu.identification.ui.login.view.LoginActivity;
 import com.iustu.identification.ui.main.MainActivity;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.ui.widget.dialog.SingleButtonDialog;
@@ -32,7 +30,6 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class SplashActivity extends BaseActivity {

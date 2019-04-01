@@ -1,4 +1,4 @@
-package com.iustu.identification.ui.login;
+package com.iustu.identification.ui.login.view;
 
 import android.hardware.Camera;
 import android.widget.FrameLayout;
@@ -9,6 +9,7 @@ import com.iustu.identification.api.Api;
 import com.iustu.identification.api.message.Message;
 import com.iustu.identification.bean.User;
 import com.iustu.identification.ui.base.BaseFragment;
+import com.iustu.identification.ui.login.prenster.LoginPrenster;
 import com.iustu.identification.ui.widget.CameraDecor;
 import com.iustu.identification.ui.widget.camera.CameraPreview;
 import com.iustu.identification.util.ExceptionUtil;
@@ -25,6 +26,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  */
 
 public class FaceLoginFragment extends BaseFragment{
+    LoginPrenster loginPrenster=new LoginPrenster();
     @BindView(R.id.login_face_btn)
     TextView loginTv;
     @BindView(R.id.login_camera_layout)
@@ -46,7 +48,7 @@ public class FaceLoginFragment extends BaseFragment{
     public void setServer(){
         cameraDecor.stopScan();
         dispose();
-        ((LoginActivity)mActivity).setServer();
+        loginPrenster.setServer();
     }
 
     @Override

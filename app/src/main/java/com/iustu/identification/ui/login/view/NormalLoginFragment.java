@@ -1,5 +1,6 @@
-package com.iustu.identification.ui.login;
+package com.iustu.identification.ui.login.view;
 
+import android.util.Log;
 import android.widget.EditText;
 
 import com.iustu.identification.R;
@@ -7,13 +8,11 @@ import com.iustu.identification.api.Api;
 import com.iustu.identification.api.message.Message;
 import com.iustu.identification.bean.User;
 import com.iustu.identification.ui.base.BaseFragment;
-import com.iustu.identification.ui.main.MainActivity;
-import com.iustu.identification.ui.widget.dialog.SingleButtonDialog;
+import com.iustu.identification.ui.login.prenster.LoginPrenster;
 import com.iustu.identification.util.ExceptionUtil;
 import com.iustu.identification.util.LibManager;
 import com.iustu.identification.util.ToastUtil;
 import com.iustu.identification.util.UserCache;
-import com.tencent.bugly.crashreport.CrashReport;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -24,6 +23,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  */
 
 public class NormalLoginFragment extends BaseFragment {
+    LoginPrenster loginPrenster=new LoginPrenster();
     @BindView(R.id.login_username_et)
     EditText usernameEdit;
     @BindView(R.id.login_password_et)
@@ -42,7 +42,7 @@ public class NormalLoginFragment extends BaseFragment {
 
     @OnClick(R.id.set_server_tv)
     public void setServer(){
-        ((LoginActivity)mActivity).setServer();
+        loginPrenster.setServer();
     }
 
 //    @OnClick(R.id.btn_test)
@@ -80,16 +80,16 @@ public class NormalLoginFragment extends BaseFragment {
                         LibManager.loadData();
                     } else if(stringMessage.getCode() == Message.VERIFY_ERROR){
                         loginActivity.dismiss();
-                        loginActivity.showLoginFail("用户名或密码不正确");
+                        loginPrenster.getLoginFailDialog("用户名或密码不正确");
                     }else {
                         loginActivity.dismiss();
-                        loginActivity.showLoginFail("未知错误(" + stringMessage.getCode() + ")");
+                        loginPrenster.getLoginFailDialog("未知错误(" + stringMessage.getCode() + ")");
                     }
                 }, throwable -> {
                     dispose();
                     ExceptionUtil.getThrowableMessage(NormalLoginFragment.class.getSimpleName(), throwable);
                     loginActivity.dismiss();
-                    loginActivity.showLoginFail("无法连接服务器");
+                    loginPrenster.getLoginFailDialog("无法连接服务器");
                 });
     }
 }

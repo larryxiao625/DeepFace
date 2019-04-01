@@ -1,4 +1,4 @@
-package com.iustu.identification.ui.login;
+package com.iustu.identification.ui.login.view;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,6 +11,7 @@ import com.iustu.identification.R;
 import com.iustu.identification.config.SystemConfig;
 import com.iustu.identification.ui.base.BaseActivity;
 import com.iustu.identification.ui.base.BaseFragment;
+import com.iustu.identification.ui.login.prenster.LoginPrenster;
 import com.iustu.identification.ui.main.MainActivity;
 import com.iustu.identification.ui.widget.dialog.EditDialog;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
@@ -38,9 +39,11 @@ public class LoginActivity extends BaseActivity implements LibManager.OnLibLoadL
 
     private WaitProgressDialog waitProgressDialog;
 
+    LoginPrenster loginPrenster=new LoginPrenster();
     @Override
     protected void initView(@Nullable Bundle savedInstanceState) {
         LibManager.setOnLoadListener(this);
+        loginPrenster.attchView(iVew);
         mFragmentList = new ArrayList<>();
         mFragmentManager = getSupportFragmentManager();
         mFragmentList.add((BaseFragment) mFragmentManager.findFragmentByTag(TAGS[0]));
@@ -88,15 +91,7 @@ public class LoginActivity extends BaseActivity implements LibManager.OnLibLoadL
     }
 
     public void startLogin(){
-        waitProgressDialog = new WaitProgressDialog.Builder()
-                .title("正在登陆")
-                .button("取消", v->{
-                    dispose();
-                    LibManager.dispose();
-                })
-                .cancelable(false)
-                .build();
-        waitProgressDialog.show(getFragmentManager(), "wait");
+        loginPrenster.getWaitProgressDialog("正在登陆");
     }
 
     @Override
@@ -104,15 +99,7 @@ public class LoginActivity extends BaseActivity implements LibManager.OnLibLoadL
         if(waitProgressDialog != null){
             waitProgressDialog.dismiss();
         }
-        waitProgressDialog = new WaitProgressDialog.Builder()
-                .title("正在初始化数据")
-                .button("取消", v->{
-                    dispose();
-                    LibManager.dispose();
-                })
-                .cancelable(false)
-                .build();
-        waitProgressDialog.show(getFragmentManager(), "wait");
+        loginPrenster.getWaitProgressDialog("正在初始化数据");
     }
 
 
@@ -133,12 +120,7 @@ public class LoginActivity extends BaseActivity implements LibManager.OnLibLoadL
         if(waitProgressDialog != null){
             waitProgressDialog.dismiss();
         }
-        new NormalDialog.Builder()
-                .title("错误")
-                .content("初始化数据失败，请检查设置后重试")
-                .negative("取消", null)
-                .positive("重试", v->LibManager.loadData())
-                .show(getFragmentManager());
+        loginPrenster.getDataLoadFail();
     }
 
     @Override
@@ -147,33 +129,31 @@ public class LoginActivity extends BaseActivity implements LibManager.OnLibLoadL
         LibManager.setOnLoadListener(null);
     }
 
-    public void setServer(){
-        new EditDialog.Builder()
-                .content(SystemConfig.getInstance().getIpAddress())
-                .title("更改域名地址")
-                .hint("新域名")
-                .positive("确定", (v, content, layout) -> {
-                    if(!content.endsWith("/")){
-                        content  += "/";
-                    }
-                    HttpUrl httpUrl = HttpUrl.parse(content);
-                    if(httpUrl == null) {
-                        layout.setError("地址不合法");
-                        return false;
-                    }
-                    SystemConfig.getInstance().setIpAddress(content);
-                    return true;
-                })
-                .negative("取消", null)
-                .show(getFragmentManager());
-    }
+    IVew iVew=new IVew() {
+        @Override
+        public void showServerDialog(EditDialog editDialog) {
+            editDialog.show(getFragmentManager(),"server");
+        }
 
-    public void showLoginFail(String cause){
-        new SingleButtonDialog.Builder()
-                .title("登陆失败")
-                .content(cause)
-                .button("确定", null)
-                .show(getFragmentManager());
-    }
+        @Override
+        public void showLoginFail(SingleButtonDialog singleButtonDialog) {
+            singleButtonDialog.show(getFragmentManager(),"loginFail");
+        }
+
+        @Override
+        public void showDataFailLoad(NormalDialog normalDialog) {
+            normalDialog.show(getFragmentManager(),"loadFail");
+        }
+
+        @Override
+        public void showWaitDialog(WaitProgressDialog waitProgressDialog) {
+            waitProgressDialog.show(getFragmentManager(),"waitDialog");
+        }
+
+        @Override
+        public void disposeRxjava() {
+            dispose();
+        }
+    };
 }
 
