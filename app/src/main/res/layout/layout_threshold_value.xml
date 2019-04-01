@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TextView android:text="@string/threshold_value_hint"
     android:textColor="@color/lite_gray"
-    android:textSize="@dimen/y36"
+    android:textSize="@dimen/y28"
     android:layout_marginBottom="@dimen/y40"
     android:background="#101d52"
-    android:paddingTop="@dimen/y20"
-    android:paddingBottom="@dimen/y20"
-    android:paddingLeft="@dimen/x30"
-    android:paddingRight="@dimen/x30"
+    android:paddingTop="@dimen/y6"
+    android:paddingBottom="@dimen/y6"
+    android:paddingLeft="@dimen/x6"
+    android:paddingRight="@dimen/x6"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android" />

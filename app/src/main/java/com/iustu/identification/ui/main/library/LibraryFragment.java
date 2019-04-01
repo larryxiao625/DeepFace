@@ -20,6 +20,7 @@ import butterknife.BindView;
 
 /**
  * Created by Liu Yuchuan on 2017/11/5.
+ * 该Fragment的作用就是管理其所有的ChildFragment
  */
 
 public class LibraryFragment extends BaseFragment implements TitleBar.TitleBarListener{
@@ -96,6 +97,7 @@ public class LibraryFragment extends BaseFragment implements TitleBar.TitleBarLi
         fragmentNow = toId;
     }
 
+    // 自定义TitleBar的点击事件
     @Override
     public void onTitleButtonClick(int id) {
         onBackPressed();

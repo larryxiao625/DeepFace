@@ -31,8 +31,6 @@ import okhttp3.HttpUrl;
 public class SystemManageFragment extends BaseFragment implements SwitchButton.OnSwitchListener{
     private SystemConfig systemConfig;
 
-    @BindView(R.id.wlan_4g_sb)
-    SwitchButton switchButton;
     @BindView(R.id.tv_username)
     TextView usernameTv;
     @BindView(R.id.tv_version)
@@ -46,8 +44,6 @@ public class SystemManageFragment extends BaseFragment implements SwitchButton.O
     @Override
     protected void initView(@Nullable Bundle savedInstanceState, View view) {
         systemConfig = SystemConfig.getInstance();
-        switchButton.setSwitch(systemConfig.isWlan4gSwitchOn());
-        switchButton.setOnSwitchListener(this);
         usernameTv.setText(("用户：" + UserCache.getUser().getUsername()));
         versionTv.setText(("当前版本：" + BuildConfig.VERSION_NAME));
     }

@@ -10,6 +10,7 @@ import com.iustu.identification.App;
  */
 
 public class MSP {
+    public static final String SP_PARAMETERS = "lib_parameters";    // 人脸库管理界面中参数的配置
     private static SharedPreferences preferences;
 
     private static String lastName;

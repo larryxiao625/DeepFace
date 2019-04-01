@@ -35,6 +35,7 @@ public class LibrariesManageAdapter extends PageRecyclerViewAdapter<LibrariesMan
         holder.name.setText(library.getName());
         holder.number.setText(String.valueOf(library.getCount()));
         IconFontUtil.getDefault().setText(holder.select, IconFontUtil.UNSELECT_SINGLE);
+        /*
         if(isAdmin){
             holder.lock.setVisibility(View.VISIBLE);
             if(library.isLock()) {
@@ -45,17 +46,21 @@ public class LibrariesManageAdapter extends PageRecyclerViewAdapter<LibrariesMan
         }else {
             holder.lock.setVisibility(View.INVISIBLE);
         }
+        */
+        IconFontUtil.getMyDefault().setText(holder.batch, IconFontUtil.PEOPLE_IMPORT);
         IconFontUtil.getDefault().setText(holder.edit, IconFontUtil.ALTER);
         IconFontUtil.getDefault().setText(holder.add, IconFontUtil.MEMBER_NEW);
         IconFontUtil.getDefault().setText(holder.delete, IconFontUtil.DELETE);
+
         holder.itemView.setOnClickListener(v -> {
             if(onPageItemClickListener != null){
                 onPageItemClickListener.onClick(v, index, position);
             }
         });
-        holder.lock.setOnClickListener(v -> {
+
+        holder.batch.setOnClickListener(v -> {
             if(isAdmin && onLibrariesItemButtonClickedListener != null){
-                onLibrariesItemButtonClickedListener.onLock(v, index);
+                onLibrariesItemButtonClickedListener.onImportMany(v, index);
             }
         });
         holder.add.setOnClickListener(v -> {
@@ -65,7 +70,7 @@ public class LibrariesManageAdapter extends PageRecyclerViewAdapter<LibrariesMan
         });
         holder.edit.setOnClickListener(v -> {
             if(onLibrariesItemButtonClickedListener != null){
-                onLibrariesItemButtonClickedListener.onModifyLib(v, index, position);
+                onLibrariesItemButtonClickedListener.onManagePeople(v, index, position);
             }
         });
         holder.delete.setOnClickListener(v -> {
@@ -91,8 +96,8 @@ public class LibrariesManageAdapter extends PageRecyclerViewAdapter<LibrariesMan
         TextView number;
         @BindView(R.id.select_tv)
         TextView select;
-        @BindView(R.id.lib_lock_tv)
-        TextView lock;
+        @BindView(R.id.lib_batch_tv)
+        TextView batch;
         @BindView(R.id.lib_add_tv)
         TextView add;
         @BindView(R.id.lib_edit_tv)
@@ -123,15 +128,19 @@ public class LibrariesManageAdapter extends PageRecyclerViewAdapter<LibrariesMan
         return true;
     }
 
+    // 该接口代表的是每个item后面的四个操作的点击事件
+    // 而不是RecyclerView中每个item的点击事件
+    // 名字具有迷惑性，不要搞错了
     public interface OnLibrariesItemButtonClickedListener {
-        void onLock(View v,  int index);
-        void onNewMember(View v ,int index);
-        void onModifyLib(View v, int index, int position);
+        void onImportMany(View v, int index);
+        void onNewMember(View v, int index);
+        void onManagePeople(View v, int index, int position);
         void onDelete(View v, int index);
     }
 
     private OnLibrariesItemButtonClickedListener onLibrariesItemButtonClickedListener;
 
+    // RecyclerView的item的点击事件，目前没有使用
     public void setOnLibrariesItemButtonClickedListener(OnLibrariesItemButtonClickedListener onLibrariesItemButtonClickedListener) {
         this.onLibrariesItemButtonClickedListener = onLibrariesItemButtonClickedListener;
     }

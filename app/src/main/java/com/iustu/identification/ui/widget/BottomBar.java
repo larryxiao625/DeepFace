@@ -12,7 +12,6 @@ import com.iustu.identification.R;
 import com.iustu.identification.util.IconFontUtil;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 /**
  * Created by Liu Yuchuan on 2017/11/4.
