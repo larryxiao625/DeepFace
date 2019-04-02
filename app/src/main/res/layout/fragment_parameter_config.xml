@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorBackground"
     android:scrollbars="vertical"
     android:layout_width="match_parent"
@@ -14,8 +15,33 @@
         android:layout_height="wrap_content"
         tools:ignore="RtlHardcoded">
 
-        <TextView android:text="@string/base_parameters"
-            style="@style/ConfigTitle"/>
+        <LinearLayout
+            android:weightSum="15"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_weight="4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/base_parameters"
+                style="@style/ConfigTitle"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="9"
+                android:layout_height="wrap_content"
+                android:text=""
+                style="@style/ConfigTitle"/>
+            <TextView
+                android:text="保存"
+                android:textAlignment="textEnd"
+                android:layout_weight="2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/save_tv"
+                style="@style/ConfigTitle"
+                android:gravity="end" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_height="@dimen/y380"
@@ -42,17 +68,102 @@
 
             <TextView
                 android:drawableLeft="@drawable/config_threshold_value"
-                android:text="@string/threshold_value_paper"
+                android:text="@string/threshold_value_check"
                 style="@style/ConfigItemTitle"/>
 
             <include layout="@layout/divider_horizontal"/>
-
-            <com.iustu.identification.ui.widget.seekbar.BubbleSeekBar
-                android:id="@+id/paper_bsb"
+            
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:padding="2dp">
+                <TextView
+                    android:gravity="center_vertical"
+                    android:text="@string/min_faces"
+                    android:textSize="@dimen/y36"
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <EditText
+                    android:id="@+id/min_face"
+                    android:textSize="@dimen/y38"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColorHint="@color/lite_gray"
+                    android:hint="@string/min_faces_hint"/>
+                
+            </LinearLayout>
+            <LinearLayout
+                android:padding="2dp"
+                android:weightSum="3"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:gravity="center_vertical"
+                        android:text="@string/check_facotr1"
+                        android:textSize="@dimen/y36"
+                        android:textColor="@color/white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <EditText
+                        android:id="@+id/check_factor1"
+                        android:textSize="@dimen/y38"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColorHint="@color/lite_gray"
+                        android:hint="@string/check_factor_hint"
+                        android:layout_marginRight="@dimen/x10"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:gravity="center_vertical"
+                        android:text="@string/check_facotr2"
+                        android:textSize="@dimen/y36"
+                        android:textColor="@color/white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <EditText
+                        android:id="@+id/check_factor2"
+                        android:textSize="@dimen/y38"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColorHint="@color/lite_gray"
+                        android:hint="@string/check_factor_hint"
+                        android:layout_marginRight="@dimen/x10"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:gravity="center_vertical"
+                        android:text="@string/check_facotr3"
+                        android:textSize="@dimen/y36"
+                        android:textColor="@color/white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <EditText
+                        android:id="@+id/check_factor3"
+                        android:textSize="@dimen/y38"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColorHint="@color/lite_gray"
+                        android:hint="@string/check_factor_hint"
+                        android:layout_marginRight="@dimen/x6"/>
 
-            <include layout="@layout/layout_threshold_value"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout
@@ -102,61 +213,52 @@
             </LinearLayout>
         </LinearLayout>
 
-        <TextView android:text="@string/filter_parameters"
-            style="@style/ConfigTitle"/>
+    <LinearLayout
+        android:layout_height="@dimen/y292"
+        style="@style/ConfigLayout1">
+
+        <TextView
+            android:drawableLeft="@drawable/display_count"
+            android:text="@string/save_count"
+            style="@style/ConfigItemTitle"/>
+
+        <include layout="@layout/divider_horizontal"/>
 
         <LinearLayout
-            android:layout_height="@dimen/y340"
-            style="@style/ConfigLayout1"
-            android:background="@drawable/out_line_bg">
+            android:id="@+id/save_count_ll"
+            android:paddingLeft="@dimen/x40"
+            android:paddingRight="@dimen/x25"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y160">
 
             <TextView
-                android:drawableLeft="@drawable/sex"
-                android:text="@string/sex"
-                style="@style/ConfigItemTitle"/>
-
-            <include layout="@layout/divider_horizontal"/>
-
-            <com.iustu.identification.ui.widget.SexChooser
-                android:id="@+id/sex_chooser"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            </com.iustu.identification.ui.widget.SexChooser>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/age_range_ll"
-            style="@style/ConfigLayout2">
-            <TextView
-                android:drawableLeft="@drawable/display_count"
-                android:text="@string/age_range"
-                android:layout_width="0dp"
+                android:gravity="center_vertical"
+                android:text="@string/less_or_equals"
+                android:textSize="@dimen/y36"
+                android:textColor="@color/white"
                 android:layout_weight="1"
-                style="@style/ConfigItemTitle2"/>
-            <TextView
-                android:id="@+id/age_range_tv"
-                android:drawableRight="@drawable/arrow_right"
-                android:text="@string/please_choose"
-                android:layout_width="wrap_content"
-                style="@style/ConfigItemTitle2"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/location_ll"
-            style="@style/ConfigLayout2">
-            <TextView
-                android:drawableLeft="@drawable/location"
-                android:text="@string/location"
                 android:layout_width="0dp"
-                android:layout_weight="1"
-                style="@style/ConfigItemTitle2"/>
-            <TextView
-                android:id="@+id/config_location_tv"
-                android:drawableRight="@drawable/arrow_right"
-                android:text="@string/please_choose"
-                android:layout_width="wrap_content"
-                style="@style/ConfigItemTitle2"/>
-        </LinearLayout>
+                android:layout_height="match_parent" />
 
+            <TextView
+                android:id="@+id/save_count_tv"
+                android:gravity="center_vertical"
+                tools:text="0"
+                android:textSize="@dimen/y36"
+                android:textColor="@color/lite_blue"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"  />
+
+            <TextView
+                android:layout_marginLeft="@dimen/x5"
+                android:gravity="center_vertical"
+                android:text="@string/piece"
+                android:textSize="@dimen/y36"
+                android:textColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+        </LinearLayout>
     </LinearLayout>
+    </LinearLayout>
+
 </ScrollView>

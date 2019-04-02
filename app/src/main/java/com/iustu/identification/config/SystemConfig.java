@@ -19,7 +19,7 @@ public class SystemConfig {
 
     private SystemConfig(){
         SharedPreferences preferences = MSP.getInstance(name);
-        ipAddress = preferences.getString(KEY_IP_ADDRESS, "http://121.49.110.28:9001/");
+        ipAddress = preferences.getString(KEY_IP_ADDRESS, "http://112.74.58.182:7080/");
         wlan4gSwitchOn = preferences.getBoolean(KEY_WLAN_4G_SWITCH, false);
     }
 

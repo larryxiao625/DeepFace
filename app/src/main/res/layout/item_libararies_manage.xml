@@ -37,11 +37,11 @@
             style="@style/libraryManageItemText"/>
 
         <TextView
-            android:id="@+id/lib_lock_tv"
+            android:id="@+id/lib_add_tv"
             android:textColor="@color/gold"
             style="@style/libraryManageItemButton"/>
         <TextView
-            android:id="@+id/lib_add_tv"
+            android:id="@+id/lib_batch_tv"
             android:textColor="@color/gold"
             style="@style/libraryManageItemButton"/>
         <TextView

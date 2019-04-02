@@ -11,6 +11,7 @@ import com.iustu.identification.App;
 
 public class IconFontUtil {
     private static final Typeface ICONS = Typeface.createFromAsset(App.getContext().getAssets(), "fonts/icons.ttf");
+    private static final Typeface MYICONS = Typeface.createFromAsset(App.getContext().getAssets(), "fonts/myicons.ttf");
     public static final String OFF = "\ue607";
     public static final String HISTORY = "\ue699";
     public static final String ALTER = "\ue615";
@@ -36,6 +37,7 @@ public class IconFontUtil {
     public static final String MEMBER_NEW = "\ue6ba";
     public static final String LOCK = "\ue62a";
     public static final String EMPTY_CIRCLE = "\ue631";
+    public static final String PEOPLE_IMPORT = "\ue607";     // 批量导入的图标, &#xe607一定要改成\ue607
 
     private Typeface mTypeFace;
     private IconFontUtil(Typeface typeface){
@@ -49,6 +51,11 @@ public class IconFontUtil {
             DEFAULT = new IconFontUtil(ICONS);
         }
         return DEFAULT;
+    }
+
+    // 专门为了添加批量导入的图标
+    public static IconFontUtil getMyDefault() {
+        return new IconFontUtil(MYICONS);
     }
 
     public static IconFontUtil createFromAsset(String path){

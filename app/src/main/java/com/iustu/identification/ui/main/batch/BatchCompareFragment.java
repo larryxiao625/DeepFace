@@ -17,7 +17,6 @@ import com.iustu.identification.api.message.response.AdvancedFaceSearchResponse;
 import com.iustu.identification.bean.BatchCompareImg;
 import com.iustu.identification.bean.FaceResult;
 import com.iustu.identification.bean.SearchCompareItem;
-import com.iustu.identification.config.ParametersConfig;
 import com.iustu.identification.config.SystemConfig;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.main.batch.folder.FolderChooseFragment;
@@ -35,7 +34,6 @@ import com.iustu.identification.util.ToastUtil;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
