@@ -14,6 +14,7 @@ import com.iustu.identification.api.Api;
 import com.iustu.identification.api.message.Message;
 import com.iustu.identification.bean.Library;
 import com.iustu.identification.ui.base.BaseFragment;
+import com.iustu.identification.ui.base.PageRecyclerViewAdapter;
 import com.iustu.identification.ui.main.library.AddPersonFragment;
 import com.iustu.identification.ui.main.library.LibraryFragment;
 import com.iustu.identification.ui.main.library.peoplemagnage.PeopleManageFragment;
@@ -25,6 +26,7 @@ import com.iustu.identification.util.LibManager;
 import com.iustu.identification.util.PageSetHelper;
 import com.iustu.identification.util.ToastUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -55,7 +57,7 @@ public class LibrariesManageFragment extends BaseFragment implements LibrariesMa
 
     private PageSetHelper pageSetHelper;
     private LibrariesManageAdapter mAdapter;
-    private List<Library> mLibraryList;
+    private List<Library> mLibraryList = new ArrayList<>();
 
     @Override
     protected int postContentView() {
@@ -65,9 +67,10 @@ public class LibrariesManageFragment extends BaseFragment implements LibrariesMa
     @Override
     protected void initView(@Nullable Bundle savedInstanceState, View view) {
         super.initView(savedInstanceState, view);
-        mLibraryList = LibManager.getLibraryList();     // 获取所有的人脸库,这里我们需要修改
+        //mLibraryList = LibManager.getLibraryList();     // 获取所有的人脸库,这里我们需要修改
         mAdapter = new LibrariesManageAdapter(mLibraryList);
         mAdapter.setOnLibrariesItemButtonClickedListener(this);
+        mAdapter.setPageSetHelper(pageSetHelper);
         // RecyclerView的Item点击事件实现更改库名称
         mAdapter.setOnPageItemClickListener((view1, index, position) -> {
             Library library = mLibraryList.get(index);
@@ -89,6 +92,13 @@ public class LibrariesManageFragment extends BaseFragment implements LibrariesMa
                     .negative("取消", null)
                     .show(mActivity.getFragmentManager());
         });
+        mAdapter.setLoadMoreListener(new PageRecyclerViewAdapter.LoadMoreListener() {
+            @Override
+            public void loadMore() {
+                // Presenter 实现
+            }
+        });
+        //mAdapter.setDisplayCountPerPage();
         recyclerView.setLayoutManager(new GridLayoutManager(mActivity, 10, LinearLayoutManager.HORIZONTAL, false){
             @Override
             public boolean canScrollHorizontally() {
@@ -98,6 +108,8 @@ public class LibrariesManageFragment extends BaseFragment implements LibrariesMa
         recyclerView.setAdapter(mAdapter);
         pageSetHelper = new PageSetHelper(recyclerView, pageTv);
         IconFontUtil.getDefault().setText(newIconTv, IconFontUtil.ADD);
+        // 初始化数据
+        initData();
     }
 
     @Override
@@ -197,5 +209,10 @@ public class LibrariesManageFragment extends BaseFragment implements LibrariesMa
 
     public void createNewLib(String name, String remark){
 
+    }
+
+    // 初始加载时进行数据初始化
+    public void initData() {
+        // presenter
     }
 }

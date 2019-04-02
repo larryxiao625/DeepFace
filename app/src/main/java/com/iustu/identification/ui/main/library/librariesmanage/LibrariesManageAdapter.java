@@ -111,23 +111,6 @@ public class LibrariesManageAdapter extends PageRecyclerViewAdapter<LibrariesMan
         }
     }
 
-    public boolean isAdmin() {
-        return isAdmin;
-    }
-
-    public void setAdmin(boolean admin) {
-        isAdmin = admin;
-    }
-
-    private boolean isSelectAll(){
-        for (Library library : mDataLast) {
-            if(!library.isInUse()){
-                return false;
-            }
-        }
-        return true;
-    }
-
     // 该接口代表的是每个item后面的四个操作的点击事件
     // 而不是RecyclerView中每个item的点击事件
     // 名字具有迷惑性，不要搞错了

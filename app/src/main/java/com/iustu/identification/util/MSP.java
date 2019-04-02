@@ -13,6 +13,9 @@ import com.iustu.identification.App;
 
 public class MSP {
     public static final String SP_PARAMETERS = "lib_parameters";    // 人脸库管理界面中参数的配置
+    public static final String PARAMETERS = "patameters";      // 用于在SharePreference中putString
+    public static final String SP_CHOSEN = "lib_chosen";     // 人脸库管理界面中被选中的人脸库
+    public static final String CHOSEN = "chosen";          // 从人脸库中取出数据
     private static SharedPreferences preferences;
 
     private static String lastName;
@@ -22,6 +25,7 @@ public class MSP {
             preferences = App
                     .getContext()
                     .getSharedPreferences(name, Context.MODE_PRIVATE);
+            lastName = name;
         }
         return preferences;
     }
