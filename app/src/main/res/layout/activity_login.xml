@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
     <fragment
         android:tag="normal"
-        android:name="com.iustu.identification.ui.login.NormalLoginFragment"
+        android:name="com.iustu.identification.ui.login.view.NormalLoginFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 </FrameLayout>
