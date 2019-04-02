@@ -7,6 +7,8 @@ import com.iustu.identification.App;
 
 /**
  * Created by Liu Yuchuan on 2017/11/5.
+ *
+ * 操作SharePreference的工具类
  */
 
 public class MSP {
