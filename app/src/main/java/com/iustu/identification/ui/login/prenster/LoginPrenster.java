@@ -74,4 +74,9 @@ public class LoginPrenster implements IPrenster{
                 .build();
         iVew.showWaitDialog(waitProgressDialog);
     }
+
+    @Override
+    public void normalLogin() {
+
+    }
 }
