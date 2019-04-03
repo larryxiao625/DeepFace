@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.bigkoo.pickerview.OptionsPickerView;
+import com.bigkoo.pickerview.TimePickerView;
 import com.iustu.identification.R;
 import com.iustu.identification.api.Api;
 import com.iustu.identification.api.message.Message;
@@ -19,13 +21,18 @@ import com.iustu.identification.bean.SearchCompareItem;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.main.MainActivity;
 import com.iustu.identification.ui.main.history.adapter.CompareHistoryItemAdapter;
+import com.iustu.identification.ui.main.history.prenster.HistoryPrenster;
 import com.iustu.identification.ui.main.history.view.HistoryFragment;
+import com.iustu.identification.ui.main.history.view.IVew;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.ui.widget.dialog.SingleButtonDialog;
 import com.iustu.identification.util.ExceptionUtil;
 import com.iustu.identification.util.PageSetHelper;
+import com.iustu.identification.util.PickerViewFactor;
+import com.iustu.identification.util.TextUtil;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
@@ -42,15 +49,23 @@ public class CompareHistoryFragment extends BaseFragment{
     RecyclerView recyclerView;
     @BindView(R.id.page_tv)
     TextView pageTv;
+    @BindView(R.id.compare_date_from_tv)
+    TextView fromDateTv;
+    @BindView(R.id.compare_date_to_tv)
+    TextView toDateTv;
 
     private static final String KEY_FACE_ID = "face_id";
 
+    private Calendar startCalendar = Calendar.getInstance();
+    private Calendar endCalendar = Calendar.getInstance();
     private PageSetHelper pageSetHelper;
     private CompareHistoryItemAdapter mAdapter;
 
     private final List<SearchCompareItem> compareItemList = new ArrayList<>();
 
     private String faceId;
+
+    HistoryPrenster historyPrenster=new HistoryPrenster();
 
     @Override
     protected int postContentView() {
@@ -59,6 +74,8 @@ public class CompareHistoryFragment extends BaseFragment{
 
     @Override
     protected void initView(@Nullable Bundle savedInstanceState, View view) {
+        historyPrenster.attchView(iVew);
+        historyPrenster.initCalender();
         mAdapter = new CompareHistoryItemAdapter(compareItemList);
         recyclerView.setLayoutManager(new GridLayoutManager(mActivity, 3, LinearLayoutManager.HORIZONTAL, false){
             @Override
@@ -96,38 +113,19 @@ public class CompareHistoryFragment extends BaseFragment{
             mAdapter.notifyDataChange();
         }
     }
-
+    @OnClick(R.id.compare_start_query_tv)
     public void startQuery(){
-        Api.queryComparedResult(faceId)
-                .doOnSubscribe(disposable -> {
-                    addDisposable(disposable);
-                    ((MainActivity)mActivity).showWaitDialog("正在查询", v-> ((HistoryFragment)getParentFragment()).switchFragment(HistoryFragment.ID_FACE));
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(listMessage -> {
-                    if(listMessage.getCode() != Message.CODE_SUCCESS){
-                        onFail();
-                    }else {
-                        if(listMessage.getBody() == null){
-                            return;
-                        }
-                        for (AdvancedFaceSearchResponse advancedFaceSearchResponse : listMessage.getBody()) {
-                            for (FaceResult faceResult : advancedFaceSearchResponse.getFaceResults()) {
-                                for (FaceSetResult faceSetResult : faceResult.getFaceSetResults()) {
-                                    compareItemList.add(new SearchCompareItem(faceResult.getFaceSetId(), faceSetResult, advancedFaceSearchResponse.getFaceRect()));
-                                }
-                            }
-                        }
-                    }
-                }, t->{
-                    ((MainActivity)mActivity).dismissWaiDialog();
-                    onFail();
-                    ExceptionUtil.getThrowableMessage(CompareHistoryFragment.this.getClass().getSimpleName(), t);
-                }, ()->{
-                    ((MainActivity)mActivity).dismissWaiDialog();
-                    mAdapter.notifyDataChange();
-                    pageSetHelper.notifyChange();
-                });
+
+    }
+
+    @OnClick(R.id.compare_date_from_tv)
+    public void fromDateChoose(){
+        historyPrenster.initDateChoose(0);
+    }
+
+    @OnClick(R.id.compare_date_to_tv)
+    public void toDateChoose(){
+        historyPrenster.initDateChoose(1);
     }
 
     private void onFail(){
@@ -177,4 +175,21 @@ public class CompareHistoryFragment extends BaseFragment{
     public void onNextPage(){
         pageSetHelper.nextPage();
     }
+
+    IVew iVew=new IVew() {
+        @Override
+        public void setToDateTv(String date) {
+            toDateTv.setText(date);
+        }
+
+        @Override
+        public void setFromDateTv(String date) {
+            fromDateTv.setText(date);
+        }
+
+        @Override
+        public void showDateChoose(TimePickerView timePickerView) {
+            timePickerView.show();
+        }
+    };
 }

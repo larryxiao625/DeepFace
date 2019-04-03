@@ -7,6 +7,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.bigkoo.pickerview.OptionsPickerView;
+import com.bigkoo.pickerview.TimePickerView;
 import com.iustu.identification.R;
 import com.iustu.identification.api.Api;
 import com.iustu.identification.api.message.Message;
@@ -14,7 +16,9 @@ import com.iustu.identification.api.message.response.SearchImageHistoryResponse;
 import com.iustu.identification.bean.FaceCollectItem;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.main.history.adapter.FaceCollectItemAdapter;
+import com.iustu.identification.ui.main.history.prenster.HistoryPrenster;
 import com.iustu.identification.ui.main.history.view.HistoryFragment;
+import com.iustu.identification.ui.main.history.view.IVew;
 import com.iustu.identification.ui.main.history.view.compare.CompareHistoryFragment;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
@@ -56,16 +60,12 @@ public class FaceHistoryFragment extends BaseFragment {
 
     private WaitProgressDialog waitProgressDialog;
 
+    HistoryPrenster historyPrenster=new HistoryPrenster();
+
     @Override
     protected void initView(@Nullable Bundle savedInstanceState, View view) {
-        startCalendar.set(Calendar.HOUR_OF_DAY, 0);
-        startCalendar.set(Calendar.MINUTE, 0);
-        startCalendar.set(Calendar.SECOND, 0);
-        endCalendar.set(Calendar.HOUR_OF_DAY, 23);
-        endCalendar.set(Calendar.MINUTE, 59);
-        endCalendar.set(Calendar.SECOND, 59);
-        fromDateTv.setText(TextUtil.getDateString(startCalendar.getTime()));
-        toDateTv.setText(TextUtil.getDateString(endCalendar.getTime()));
+        historyPrenster.initCalender();
+        historyPrenster.attchView(iVew);
         itemList = new ArrayList<>();
         mAdapter = new FaceCollectItemAdapter(itemList);
         mAdapter.setOnPageItemClickListener((view1, position, index) -> {
@@ -94,34 +94,12 @@ public class FaceHistoryFragment extends BaseFragment {
 
     @OnClick(R.id.date_from_tv)
     public void fromDateChoose(){
-        Calendar c = Calendar.getInstance();
-        c.roll(Calendar.YEAR, -100);
-        PickerViewFactor.newTimePickerViewBuilder(mActivity, (date, v) -> {
-            startCalendar.setTime(date);
-            startCalendar.set(Calendar.HOUR_OF_DAY, 0);
-            startCalendar.set(Calendar.MINUTE, 0);
-            startCalendar.set(Calendar.SECOND, 0);
-            fromDateTv.setText(TextUtil.getDateString(date));
-        })
-                .setRangDate(c, endCalendar)
-                .setDate(startCalendar)
-                .build()
-                .show();
+        historyPrenster.initDateChoose(0);
     }
 
     @OnClick(R.id.date_to_tv)
     public void toDateChoose(){
-        PickerViewFactor.newTimePickerViewBuilder(mActivity, (date, v) -> {
-            endCalendar.setTime(date);
-            endCalendar.set(Calendar.HOUR_OF_DAY, 23);
-            endCalendar.set(Calendar.MINUTE, 59);
-            endCalendar.set(Calendar.SECOND, 59);
-            toDateTv.setText(TextUtil.getDateString(date));
-        })
-                .setRangDate(startCalendar, Calendar.getInstance())
-                .setDate(endCalendar)
-                .build()
-                .show();
+        historyPrenster.initDateChoose(1);
     }
 
     @OnClick(R.id.start_query_tv)
@@ -161,4 +139,21 @@ public class FaceHistoryFragment extends BaseFragment {
             loadData(++page);
         }
     }
+
+    IVew iVew=new IVew() {
+        @Override
+        public void setToDateTv(String date) {
+            toDateTv.setText(date);
+        }
+
+        @Override
+        public void setFromDateTv(String date) {
+            fromDateTv.setText(date);
+        }
+
+        @Override
+        public void showDateChoose(TimePickerView timePickerView) {
+            timePickerView.show();
+        }
+    };
 }
