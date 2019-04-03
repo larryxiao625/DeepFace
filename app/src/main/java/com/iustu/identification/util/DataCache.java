@@ -10,12 +10,13 @@ import com.iustu.identification.entity.Account;
  */
 public class DataCache {
     private static ParameterConfig parameterConfig;         // 参数设置界面的数据
-    private static Account account;             // 当前登录的账户
-    private static ChosenLibConfig chosenLibConfig;           // 记录已被选中的人脸库
+    private static Account account;                         // 当前登录的账户
+    private static ChosenLibConfig chosenLibConfig;         // 记录已被选中的人脸库
 
     // 该方法需要在登录成功时的回调中调用
     public static void initCache() {
         parameterConfig = ParameterConfig.getFromSP();
         chosenLibConfig = ChosenLibConfig.getFromSP();
+        account = Account.getFromSP();
     }
 }
