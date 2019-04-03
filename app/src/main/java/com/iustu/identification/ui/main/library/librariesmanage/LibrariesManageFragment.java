@@ -6,33 +6,27 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.iustu.identification.R;
-import com.iustu.identification.api.Api;
-import com.iustu.identification.api.message.Message;
-import com.iustu.identification.bean.Library;
+import com.iustu.identification.entity.Library;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.base.PageRecyclerViewAdapter;
-import com.iustu.identification.ui.main.library.AddPersonFragment;
 import com.iustu.identification.ui.main.library.LibraryFragment;
+import com.iustu.identification.ui.main.library.addpersion.AddPersonFragment;
+import com.iustu.identification.ui.main.library.librariesmanage.mvp.LibPresenter;
+import com.iustu.identification.ui.main.library.librariesmanage.mvp.LibView;
 import com.iustu.identification.ui.main.library.peoplemagnage.PeopleManageFragment;
 import com.iustu.identification.ui.widget.dialog.Edit2Dialog;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
-import com.iustu.identification.util.ExceptionUtil;
 import com.iustu.identification.util.IconFontUtil;
-import com.iustu.identification.util.LibManager;
 import com.iustu.identification.util.PageSetHelper;
-import com.iustu.identification.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Liu Yuchuan on 2017/11/20.
@@ -46,7 +40,7 @@ import io.reactivex.schedulers.Schedulers;
  * 2. deleteLib、createNewLib、modifyLib 三者的实现都交由Presenter处理
  */
 
-public class LibrariesManageFragment extends BaseFragment implements LibrariesManageAdapter.OnLibrariesItemButtonClickedListener{
+public class LibrariesManageFragment extends BaseFragment implements LibView, LibrariesManageAdapter.OnLibrariesItemButtonClickedListener{
     @BindView(R.id.libraries_manage_recycler_view)
     RecyclerView recyclerView;
     @BindView(R.id.page_tv)
@@ -55,6 +49,7 @@ public class LibrariesManageFragment extends BaseFragment implements LibrariesMa
     TextView newIconTv;
 
 
+    private LibPresenter presenter;
     private PageSetHelper pageSetHelper;
     private LibrariesManageAdapter mAdapter;
     private List<Library> mLibraryList = new ArrayList<>();
@@ -78,15 +73,15 @@ public class LibrariesManageFragment extends BaseFragment implements LibrariesMa
                     .title("修改人脸库")
                     .hint1("库名称")
                     .hint2("备注")
-                    .content1(library.getName())
-                    .content2(library.getRemark())
+                    .content1(library.libName)
+                    .content2(library.discribetion)
                     .positive("提交", (v1, layout1, layout2) -> {
                         String name = layout1.getEditText().getText().toString();
                         if(name.trim().equals("")){
                             layout1.setError("库名称不能为空");
                             return false;
                         }
-                        modifyLibName(name, layout2.getEditText().getText().toString(), library.getIdOnServer(), index, position);
+                        //modifyLibName(name, layout2.getEditText().getText().toString(), library.getIdOnServer(), index, position);
                         return true;
                     })
                     .negative("取消", null)
@@ -151,7 +146,7 @@ public class LibrariesManageFragment extends BaseFragment implements LibrariesMa
         Library library = mLibraryList.get(index);
         LibraryFragment libraryFragment = (LibraryFragment) getParentFragment();
         ((AddPersonFragment)libraryFragment.getFragment(LibraryFragment.ID_ADD_PERSON))
-                .setArguments(library.getName(), library.getIdOnServer(), index);
+                .setArguments(library.libName, "", index);
         libraryFragment.switchFragment(LibraryFragment.ID_ADD_PERSON);
     }
 
@@ -162,7 +157,7 @@ public class LibrariesManageFragment extends BaseFragment implements LibrariesMa
         // 可见ChildFragment的相互切换还是委托给ParentFragment来完成的
         LibraryFragment libraryFragment = (LibraryFragment) getParentFragment();
         PeopleManageFragment peopleManageFragment = (PeopleManageFragment) libraryFragment.getFragment(LibraryFragment.ID_PEOPLE_MANAGE);
-        peopleManageFragment.setArguments(mLibraryList.get(index).getIdOnServer(), index);
+        peopleManageFragment.setArguments("", index);
         libraryFragment.switchFragment(LibraryFragment.ID_PEOPLE_MANAGE);
     }
 
@@ -170,9 +165,9 @@ public class LibrariesManageFragment extends BaseFragment implements LibrariesMa
     public void onDelete(View v, int index) {
         new NormalDialog.Builder()
                 .title("提示")
-                .content("确定删除库 " + mLibraryList.get(index).getName() + " 吗？")
+                .content("确定删除库 " + mLibraryList.get(index).libName + " 吗？")
                 .positive("确定", view->{
-                    deleteLib(mLibraryList.get(index).getIdOnServer(), index);
+                    //deleteLib(mLibraryList.get(index)., index);
                 })
                 .negative("取消", null)
                 .show(mActivity.getFragmentManager());
@@ -191,7 +186,7 @@ public class LibrariesManageFragment extends BaseFragment implements LibrariesMa
                         layout1.setError("库名称不能为空");
                         return false;
                     }
-                    createNewLib(name, layout2.getEditText().getText().toString());
+                    //createNewLib(name, layout2.getEditText().getText().toString());
                     return true;
                 })
                 .negative("取消", null)
@@ -214,5 +209,17 @@ public class LibrariesManageFragment extends BaseFragment implements LibrariesMa
     // 初始加载时进行数据初始化
     public void initData() {
         // presenter
+        presenter.onInitData();
+    }
+
+    @Override
+    public void setPresenter(LibPresenter presenter) {
+        this.presenter = presenter;
+    }
+
+    @Override
+    public void bindData(List<com.iustu.identification.entity.Library> data) {
+        mLibraryList.addAll(data);
+        mAdapter.notifyDataChange();
     }
 }

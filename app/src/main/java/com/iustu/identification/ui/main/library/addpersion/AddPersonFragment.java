@@ -1,4 +1,4 @@
-package com.iustu.identification.ui.main.library;
+package com.iustu.identification.ui.main.library.addpersion;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -18,6 +18,9 @@ import com.iustu.identification.bean.Library;
 import com.iustu.identification.bean.PersonInfo;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.main.MainActivity;
+import com.iustu.identification.ui.main.library.LibraryFragment;
+import com.iustu.identification.ui.main.library.addpersion.mvp.AddPersionPresenter;
+import com.iustu.identification.ui.main.library.addpersion.mvp.AddPersionView;
 import com.iustu.identification.ui.widget.dialog.SingleButtonDialog;
 import com.iustu.identification.util.ExceptionUtil;
 import com.iustu.identification.util.FileCallBack;
@@ -36,14 +39,18 @@ import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Liu Yuchuan on 2017/11/21.
+ *
  */
 
-public class AddPersonFragment extends BaseFragment {
+public class AddPersonFragment extends BaseFragment implements AddPersionView {
     private static final String KEY_LIB_NAME = "lib name";
     private static final String KEY_FACE_SET_ID = "face set id";
     private static final String FORMAT_LIB_NAME = "人脸库名称——%s";
     private static final String KEY_PHOTO_PATH = "path";
     private static final String KEY_FACE_SET_INDEX = "index";
+
+
+    private AddPersionPresenter presenter;
 
     private String libName;
     private String faceSetId;
@@ -227,5 +234,15 @@ public class AddPersonFragment extends BaseFragment {
                         .into(photoIv);
             }
         }
+    }
+
+    @Override
+    public void setPresenter(AddPersionPresenter presenter) {
+        this.presenter = presenter;
+    }
+
+    @Override
+    public void onAddPersion() {
+        presenter.onAddPersion();
     }
 }

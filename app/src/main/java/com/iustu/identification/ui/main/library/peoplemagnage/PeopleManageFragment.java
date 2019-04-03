@@ -16,11 +16,13 @@ import com.iustu.identification.api.Api;
 import com.iustu.identification.api.message.Message;
 import com.iustu.identification.bean.Library;
 import com.iustu.identification.bean.PersonInfo;
+import com.iustu.identification.entity.PersionInfo;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.base.PageRecyclerViewAdapter;
 import com.iustu.identification.ui.main.MainActivity;
-import com.iustu.identification.ui.main.library.AddPersonFragment;
 import com.iustu.identification.ui.main.library.LibraryFragment;
+import com.iustu.identification.ui.main.library.peoplemagnage.mvp.PersionPresenter;
+import com.iustu.identification.ui.main.library.peoplemagnage.mvp.PersionView;
 import com.iustu.identification.ui.widget.dialog.EditDialog;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.ui.widget.dialog.SingleButtonDialog;
@@ -42,9 +44,16 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by Liu Yuchuan on 2017/11/21.
+ *
+ * 逻辑分析：
+ * 1. 初始化
+ * 2. 执行“人员删除”、“照片删除”、“添加照片”、“保存更改”、“加载更多”、“初始加载”等功能
+ *
+ * 修改思路：
+ * 1. “人员删除”、“照片删除”、“添加照片”、“保存更改”、“加载更多”、“初始加载”等功能放到Presetner中
  */
 
-public class PeopleManageFragment extends BaseFragment implements PersonInfoAdapter.PersonOptInterface, PageRecyclerViewAdapter.LoadMoreListener{
+public class PeopleManageFragment extends BaseFragment implements PersionView, PageRecyclerViewAdapter.LoadMoreListener{
     private static final String KEY_FACE_SET_ID = "face set id";
     private static final String KEY_FACE_SET_INDEX = "face set index";
 
@@ -56,6 +65,7 @@ public class PeopleManageFragment extends BaseFragment implements PersonInfoAdap
     private List<PersonInfo> mPersonList;
     private PersonInfoAdapter mAdapter;
     private PageSetHelper pageSetHelper;
+    private PersionPresenter presenter;
 
     private String faceSetId;
     private int faceSetIndex;
@@ -78,7 +88,7 @@ public class PeopleManageFragment extends BaseFragment implements PersonInfoAdap
         mPersonList = new ArrayList<>();
         mAdapter = new PersonInfoAdapter(mPersonList);
         mAdapter.setLoadMoreListener(this);
-        mAdapter.setPersonOptInterface(this);
+        mAdapter.setItemListener(this);
         recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(new GridLayoutManager(mActivity, 3 , LinearLayoutManager.HORIZONTAL, false){
             @Override
@@ -193,56 +203,7 @@ public class PeopleManageFragment extends BaseFragment implements PersonInfoAdap
         pageSetHelper.nextPage();
     }
 
-    @Override
-    public void save(View v, int index, int position, PersonInfo newInfo, PersonInfoAdapter.Holder holder) {
-        newInfo.setFaceSetId(faceSetId);
-        Api.modifyPeople(newInfo)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(this::addDisposable)
-                .subscribe(message -> {
-                    if(message.getCode() != Message.CODE_SUCCESS){
-                        ToastUtil.show("修改失败");
-                        holder.setPersonInfo(mPersonList.get(index));
-                    }else {
-                        ToastUtil.show("修改成功");
-                        mPersonList.set(index, newInfo);
-                        mAdapter.notifyItemChanged(position);
-                    }
-                }, t->{
-                    ExceptionUtil.toastServerError();
-                    ExceptionUtil.getThrowableMessage(t);
-                });
-    }
 
-    @Override
-    public void deletePhoto(View v, int index, int position) {
-        PersonInfo personInfo = mPersonList.get(index);
-        int pos = personInfo.getUrlPosition();
-        if(pos == -1){
-            new SingleButtonDialog.Builder()
-                    .title("错误")
-                    .content("参数错误!")
-                    .show(mActivity.getFragmentManager());
-        }else {
-            new NormalDialog.Builder()
-                    .title("提示")
-                    .content("确认删除这张照片?")
-                    .positive("确定", view-> deletePhoto(index, position, personInfo.getIdAt(pos), pos))
-                    .negative("取消", null)
-                    .show(mActivity.getFragmentManager());
-        }
-    }
-
-    @Override
-    public void delete(View v, int index, int position) {
-        PersonInfo personInfo = mPersonList.get(index);
-        new NormalDialog.Builder()
-                .title("提示")
-                .content("确定删除人员 " + personInfo.getName() + " 吗?")
-                .positive("确定", view-> deletePerson(index))
-                .negative("取消", null)
-                .show(mActivity.getFragmentManager());
-    }
 
     private void deletePhoto(int index, int position, String id, int urlPosition){
         PersonInfo personInfo = mPersonList.get(index);
@@ -279,12 +240,6 @@ public class PeopleManageFragment extends BaseFragment implements PersonInfoAdap
                 });
     }
 
-    @Override
-    public void addPhoto(View v, int index, int position) {
-        addPhotoIndex = index;
-        addPhotoPosition = position;
-        ImageUtils.startChoose(this);
-    }
 
     @Override
     public void loadMore() {
@@ -381,5 +336,45 @@ public class PeopleManageFragment extends BaseFragment implements PersonInfoAdap
             mAdapter.dispose();
         }
         super.onDestroyView();
+    }
+
+    @Override
+    public void setPresenter(PersionPresenter presenter) {
+        this.presenter = presenter;
+    }
+
+    @Override
+    public void bindData(List<PersionInfo> data) {
+
+    }
+
+    @Override
+    public void onInitData() {
+        presenter.onInitData();
+    }
+
+    @Override
+    public void onLoadMore() {
+        presenter.onLoadMore();
+    }
+
+    @Override
+    public void onAddPhoto() {
+        presenter.onAddPhoto();
+    }
+
+    @Override
+    public void onDeletePhoto() {
+        presenter.onDeletePhoto();
+    }
+
+    @Override
+    public void onDeletePer() {
+        presenter.onDeletePer();
+    }
+
+    @Override
+    public void onSaveChange() {
+        presenter.onSaveChange();
     }
 }
