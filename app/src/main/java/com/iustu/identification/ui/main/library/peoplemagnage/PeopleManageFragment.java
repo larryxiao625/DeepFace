@@ -21,6 +21,7 @@ import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.base.PageRecyclerViewAdapter;
 import com.iustu.identification.ui.main.MainActivity;
 import com.iustu.identification.ui.main.library.LibraryFragment;
+import com.iustu.identification.ui.main.library.addpersion.AddPersonFragment;
 import com.iustu.identification.ui.main.library.peoplemagnage.mvp.PersionPresenter;
 import com.iustu.identification.ui.main.library.peoplemagnage.mvp.PersionView;
 import com.iustu.identification.ui.widget.dialog.EditDialog;

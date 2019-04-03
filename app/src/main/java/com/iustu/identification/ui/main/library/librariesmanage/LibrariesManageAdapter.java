@@ -26,6 +26,7 @@ public class LibrariesManageAdapter extends PageRecyclerViewAdapter<LibrariesMan
 
     public LibrariesManageAdapter(List<Library> dataLast) {
         super(dataLast);
+
     }
 
     @Override
