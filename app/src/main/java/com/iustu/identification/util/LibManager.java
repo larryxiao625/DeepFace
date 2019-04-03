@@ -59,34 +59,8 @@ public class LibManager{
 
     public static void loadData(){
         LibManager libManager = getInstance();
-        Api.getFaceSetList()
-                .doOnSubscribe(d->{
-                    libManager.addDisposable(d);
-                    if(libManager.onLibLoadListener != null){
-                        libManager.onLibLoadListener.onStartLoad();
-                    }
-                    libManager.libraryList.clear();
-                    libManager.idNameMap.clear();
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(listMessage -> {
-                    if(listMessage.getCode() == Message.CODE_SUCCESS){
-                        libManager.isLoadData = true;
-                        if(libManager.onLibLoadListener != null){
-                            for (int i = 0; i < listMessage.getBody().size(); i++) {
-                                FaceSet faceSet = listMessage.getBody().get(i);
-                                libManager.libraryList.add(new Library(faceSet, i));
-                                libManager.idNameMap.put(faceSet.getId(), faceSet.getName());
-                            }
-                            libManager.onLibLoadListener.onSuccessLoad();
-                        }
-                    }else {
-                        libManager.onLibLoadListener.onFailLoad();
-                    }
-                }, t->{
-                    ExceptionUtil.getThrowableMessage(libManager.getClass().getSimpleName(), t);
-                    libManager.onLibLoadListener.onFailLoad();
-                });
+        libManager.onLibLoadListener.onSuccessLoad();
+        libManager.isLoadData=true;
     }
 
     public static boolean isLoadData() {

@@ -11,4 +11,5 @@ public interface IVew {
     void showDataFailLoad(NormalDialog normalDialog);
     void disposeRxjava();
     void showWaitDialog(WaitProgressDialog waitProgressDialog);
+    void loginSuccessfully();
 }

@@ -1,5 +1,7 @@
 package com.iustu.identification.ui.login.prenster;
 
+import android.text.TextUtils;
+
 import com.iustu.identification.config.SystemConfig;
 import com.iustu.identification.ui.login.view.IVew;
 import com.iustu.identification.ui.widget.dialog.EditDialog;
@@ -76,7 +78,11 @@ public class LoginPrenster implements IPrenster{
     }
 
     @Override
-    public void normalLogin() {
-
+    public void normalLogin(String username,String password) {
+        if(TextUtils.equals(username,"admin")&&TextUtils.equals(password,"123456")) {
+            LibManager.loadData();
+        }else{
+            getLoginFailDialog("用户名或密码错误");
+        }
     }
 }
