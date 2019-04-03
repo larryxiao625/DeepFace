@@ -154,6 +154,11 @@ public class LoginActivity extends BaseActivity implements LibManager.OnLibLoadL
         public void disposeRxjava() {
             dispose();
         }
+
+        @Override
+        public void loginSuccessfully() {
+
+        }
     };
 }
 

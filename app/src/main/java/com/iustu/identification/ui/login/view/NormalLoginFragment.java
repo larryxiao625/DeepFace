@@ -63,33 +63,7 @@ public class NormalLoginFragment extends BaseFragment {
             ToastUtil.show("请输入密码");
             return;
         }
-        Api.login(username, password)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(disposable -> {
-                    mActivity.addDisposable(disposable);
-                    loginActivity.startLogin();
-                })
-                .subscribe(stringMessage -> {
-                    if (stringMessage.getCode() == Message.CODE_SUCCESS) {
-                        User user = new User();
-                        user.setUsername(username);
-                        user.setId(stringMessage.getId());
-                        user.setSession(stringMessage.getBody().getSession());
-                        user.setVerify(true);
-                        UserCache.setUser(user);
-                        LibManager.loadData();
-                    } else if(stringMessage.getCode() == Message.VERIFY_ERROR){
-                        loginActivity.dismiss();
-                        loginPrenster.getLoginFailDialog("用户名或密码不正确");
-                    }else {
-                        loginActivity.dismiss();
-                        loginPrenster.getLoginFailDialog("未知错误(" + stringMessage.getCode() + ")");
-                    }
-                }, throwable -> {
-                    dispose();
-                    ExceptionUtil.getThrowableMessage(NormalLoginFragment.class.getSimpleName(), throwable);
-                    loginActivity.dismiss();
-                    loginPrenster.getLoginFailDialog("无法连接服务器");
-                });
+        loginPrenster.normalLogin(username,password);
+
     }
 }

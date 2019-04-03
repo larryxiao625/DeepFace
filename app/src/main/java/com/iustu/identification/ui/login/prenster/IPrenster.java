@@ -8,5 +8,5 @@ public interface IPrenster {
     void getLoginFailDialog(String cause);
     void getDataLoadFail();
     void getWaitProgressDialog(String title);
-    void normalLogin();
+    void normalLogin(String username,String password);
 }
