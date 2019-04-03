@@ -1,4 +1,4 @@
-package com.iustu.identification.ui.main.history.compare;
+package com.iustu.identification.ui.main.history.view.compare;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,7 +18,8 @@ import com.iustu.identification.bean.FaceSetResult;
 import com.iustu.identification.bean.SearchCompareItem;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.main.MainActivity;
-import com.iustu.identification.ui.main.history.HistoryFragment;
+import com.iustu.identification.ui.main.history.adapter.CompareHistoryItemAdapter;
+import com.iustu.identification.ui.main.history.view.HistoryFragment;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.ui.widget.dialog.SingleButtonDialog;
 import com.iustu.identification.util.ExceptionUtil;
@@ -67,7 +68,6 @@ public class CompareHistoryFragment extends BaseFragment{
         });
         recyclerView.setAdapter(mAdapter);
         pageSetHelper = new PageSetHelper(recyclerView, pageTv);
-        onShow();
     }
 
     @Override
@@ -142,6 +142,7 @@ public class CompareHistoryFragment extends BaseFragment{
     }
 
     public void onArgumentsError(){
+        Log.d("CompareHistoryFragment","onArgumentsError");
         new SingleButtonDialog.Builder()
                 .title("错误")
                 .cancelable(false)

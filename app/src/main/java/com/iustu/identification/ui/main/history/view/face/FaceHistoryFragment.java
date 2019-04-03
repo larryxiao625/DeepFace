@@ -1,4 +1,4 @@
-package com.iustu.identification.ui.main.history.face;
+package com.iustu.identification.ui.main.history.view.face;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,8 +13,9 @@ import com.iustu.identification.api.message.Message;
 import com.iustu.identification.api.message.response.SearchImageHistoryResponse;
 import com.iustu.identification.bean.FaceCollectItem;
 import com.iustu.identification.ui.base.BaseFragment;
-import com.iustu.identification.ui.main.history.HistoryFragment;
-import com.iustu.identification.ui.main.history.compare.CompareHistoryFragment;
+import com.iustu.identification.ui.main.history.adapter.FaceCollectItemAdapter;
+import com.iustu.identification.ui.main.history.view.HistoryFragment;
+import com.iustu.identification.ui.main.history.view.compare.CompareHistoryFragment;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
 import com.iustu.identification.util.ExceptionUtil;
@@ -89,34 +90,6 @@ public class FaceHistoryFragment extends BaseFragment {
             return;
         }
 
-        Api.queryCapturedFace(startCalendar.getTime(), endCalendar.getTime(), page)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(disposable -> {
-                    addDisposable(disposable);
-                    showSingleButton();
-                })
-                .subscribe(searchImageHistoryResponseMessage -> {
-                    if(searchImageHistoryResponseMessage.getCode() != Message.CODE_SUCCESS){
-                        onFail("错误码(" + searchImageHistoryResponseMessage.getCode() + ")");
-                    }else {
-                        SearchImageHistoryResponse response = searchImageHistoryResponseMessage.getBody();
-                        totalPage = response.getTotalPage();
-                        if(page == 0){
-                            itemList.clear();
-                        }
-                        for (SearchImageHistoryResponse.Result result : response.getResult()) {
-                            itemList.add(new FaceCollectItem(result));
-                        }
-                        mAdapter.notifyDataChange();
-                        pageSetHelper.notifyChange();
-                    }
-                    if(waitProgressDialog != null){
-                        waitProgressDialog.dismiss();
-                    }
-                }, t->{
-                    ExceptionUtil.getThrowableMessage(getClass().getSimpleName(), t);
-                    onFail("无法连接服务器");
-                });
     }
 
     @OnClick(R.id.date_from_tv)

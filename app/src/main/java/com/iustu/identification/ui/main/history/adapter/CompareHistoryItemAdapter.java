@@ -1,4 +1,4 @@
-package com.iustu.identification.ui.main.history.compare;
+package com.iustu.identification.ui.main.history.adapter;
 
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;

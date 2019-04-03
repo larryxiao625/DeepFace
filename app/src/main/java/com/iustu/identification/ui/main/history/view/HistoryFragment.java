@@ -1,15 +1,22 @@
-package com.iustu.identification.ui.main.history;
+package com.iustu.identification.ui.main.history.view;
 
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.FrameLayout;
 
 import com.iustu.identification.R;
 import com.iustu.identification.ui.base.BaseFragment;
-import com.iustu.identification.ui.main.history.compare.CompareHistoryFragment;
+import com.iustu.identification.ui.main.history.adapter.HistoryPagerAdapter;
+import com.iustu.identification.ui.main.history.view.compare.CompareHistoryFragment;
+import com.iustu.identification.ui.main.history.view.face.FaceHistoryFragment;
 import com.iustu.identification.ui.widget.TitleBar;
 
 import java.util.ArrayList;
@@ -22,14 +29,18 @@ import butterknife.BindView;
  */
 
 public class HistoryFragment extends BaseFragment implements TitleBar.TitleBarListener{
-    @BindView(R.id.histoy_fragment_layout)
-    FrameLayout layout;
+    @BindView(R.id.history_viewpager)
+    ViewPager viewPager;
+    @BindView(R.id.history_tab_layout)
+    TabLayout tabLayout;
     @BindView(R.id.history_title_bar)
     TitleBar titleBar;
 
     private List<BaseFragment> mFragmentList;
 
     private int fragmentNow;
+
+    private HistoryPagerAdapter historyPagerAdapter;
 
     public static final int ID_FACE = 0;
     public static final int ID_COMPARE = 1;
@@ -40,14 +51,15 @@ public class HistoryFragment extends BaseFragment implements TitleBar.TitleBarLi
         titleBar.setTitleBarListener(this);
         FragmentManager fm = getChildFragmentManager();
         mFragmentList = new ArrayList<>();
-        mFragmentList.add((BaseFragment) fm.findFragmentByTag(TAGS[0]));
-        Fragment fragment = fm.findFragmentByTag(TAGS[1]);
-        if(fragment != null){
-            fm.beginTransaction().remove(fragment).commit();
-            mFragmentList.add((BaseFragment) fragment);
-        }else {
-            mFragmentList.add(new CompareHistoryFragment());
-        }
+        CompareHistoryFragment compareHistoryFragment=new CompareHistoryFragment();
+        FaceHistoryFragment faceHistoryFragment=new FaceHistoryFragment();
+        mFragmentList.add(faceHistoryFragment);
+        mFragmentList.add(compareHistoryFragment);
+        historyPagerAdapter=new HistoryPagerAdapter(fm,mFragmentList);
+        viewPager.setAdapter(historyPagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setTabTextColors(ColorStateList.valueOf(Color.parseColor("#FFFFFF")));
+        tabLayout.setBackgroundColor(Color.parseColor("#222986"));
     }
 
     @SuppressWarnings("unchecked")
@@ -56,31 +68,7 @@ public class HistoryFragment extends BaseFragment implements TitleBar.TitleBarLi
     }
 
     public void switchFragment(int id){
-        if(id == fragmentNow){
-            return;
-        }
-        BaseFragment ff = mFragmentList.get(fragmentNow);
-        BaseFragment tf = mFragmentList.get(id);
-        if(!tf.isAdded()){
-            getChildFragmentManager().beginTransaction()
-                    .hide(ff)
-                    .add(R.id.histoy_fragment_layout, tf, TAGS[id])
-                    .show(tf)
-                    .commit();
-        }else {
-            getChildFragmentManager().beginTransaction()
-                    .hide(ff)
-                    .show(tf)
-                    .commit();
-        }
-        if(id == ID_FACE){
-            titleBar.setBackEnable(false);
-            titleBar.setTitle("历史记录");
-        }else {
-            titleBar.setBackEnable(true);
-            titleBar.setTitle("比对结果记录");
-        }
-        fragmentNow = id;
+        viewPager.setCurrentItem(id);
     }
 
     @Override
@@ -98,7 +86,7 @@ public class HistoryFragment extends BaseFragment implements TitleBar.TitleBarLi
         if(fragmentNow == ID_FACE){
             super.onBackPressed();
         }else {
-            switchFragment(ID_FACE);
+            switchFragment(0);
         }
     }
 }

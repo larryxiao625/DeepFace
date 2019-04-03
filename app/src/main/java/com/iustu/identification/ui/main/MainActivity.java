@@ -20,7 +20,7 @@ import com.iustu.identification.ui.main.batch.BatchFragment;
 import com.iustu.identification.ui.main.camera.CameraFragment;
 import com.iustu.identification.ui.main.camera.CompareFragment;
 import com.iustu.identification.ui.main.config.ConfigFragment;
-import com.iustu.identification.ui.main.history.HistoryFragment;
+import com.iustu.identification.ui.main.history.view.HistoryFragment;
 import com.iustu.identification.ui.main.library.LibraryFragment;
 import com.iustu.identification.ui.main.verify.VerifyFragment;
 import com.iustu.identification.ui.widget.BottomBar;

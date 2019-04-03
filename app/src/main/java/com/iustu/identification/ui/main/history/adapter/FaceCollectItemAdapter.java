@@ -1,6 +1,5 @@
-package com.iustu.identification.ui.main.history.face;
+package com.iustu.identification.ui.main.history.adapter;
 
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,13 +10,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.iustu.identification.R;
 import com.iustu.identification.bean.FaceCollectItem;
 import com.iustu.identification.ui.base.OnPageItemClickListener;
 import com.iustu.identification.ui.base.PageRecyclerViewAdapter;
-import com.iustu.identification.util.ImageUtils;
 import com.iustu.identification.util.TextUtil;
 
 import java.util.List;
