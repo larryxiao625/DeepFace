@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.iustu.identification.R;
-import com.iustu.identification.bean.Library;
+import com.iustu.identification.entity.Library;
 import com.iustu.identification.ui.base.OnPageItemClickListener;
 import com.iustu.identification.ui.base.PageRecyclerViewAdapter;
 import com.iustu.identification.util.IconFontUtil;
@@ -31,9 +31,9 @@ public class LibrariesManageAdapter extends PageRecyclerViewAdapter<LibrariesMan
     @Override
     public void onBindHolder(Holder holder, int index, int position) {
         Library library = mDataLast.get(index);
-        holder.id.setText(String.valueOf(library.getId()));
-        holder.name.setText(library.getName());
-        holder.number.setText(String.valueOf(library.getCount()));
+        holder.id.setText(String.valueOf(library.libId));
+        holder.name.setText(library.libName);
+        holder.number.setText(String.valueOf(library.numberCount));
         IconFontUtil.getDefault().setText(holder.select, IconFontUtil.UNSELECT_SINGLE);
         /*
         if(isAdmin){

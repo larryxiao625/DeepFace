@@ -17,6 +17,7 @@ import com.iustu.identification.api.Api;
 import com.iustu.identification.api.message.Message;
 import com.iustu.identification.bean.PersonInfo;
 import com.iustu.identification.ui.base.PageRecyclerViewAdapter;
+import com.iustu.identification.ui.main.library.peoplemagnage.mvp.PersionView;
 import com.iustu.identification.util.ExceptionUtil;
 import com.iustu.identification.util.IconFontUtil;
 import com.iustu.identification.util.TextUtil;
@@ -68,14 +69,14 @@ public class PersonInfoAdapter extends PageRecyclerViewAdapter<PersonInfoAdapter
         }
 
         holder.setSaveListener(v -> {
-            if(personOptInterface!= null){
+            if(personView!= null){
                 holder.setEditEnable(false);
                 PersonInfo personInfo = new PersonInfo(p);
                 personInfo.setName(holder.name.getText().toString().trim());
                 personInfo.setCode(holder.idCard.getText().toString().trim());
                 personInfo.setGender(holder.sex.getText().toString().trim());
                 personInfo.setAddress(holder.location.getText().toString().trim());
-                personOptInterface.save(v, index, position, personInfo, holder);
+                personView.onSaveChange();
             }
         });
 
@@ -87,28 +88,28 @@ public class PersonInfoAdapter extends PageRecyclerViewAdapter<PersonInfoAdapter
         });
 
         holder.add.setOnClickListener(v->{
-            if(personOptInterface!= null){
-                personOptInterface.addPhoto(v, index, position);
+            if(personView != null){
+                personView.onAddPhoto();
             }
         });
         holder.addIcon.setOnClickListener(v->{
-            if(personOptInterface!= null){
-                personOptInterface.addPhoto(v, index, position);
+            if(personView != null){
+                personView.onAddPhoto();
             }
         });
         holder.delete.setOnClickListener(v->{
-            if(personOptInterface!= null){
-                personOptInterface.delete(v, index, position);
+            if(personView != null){
+                personView.onDeletePer();
             }
         });
         holder.deleteIcon.setOnClickListener(v->{
-            if(personOptInterface!= null){
-                personOptInterface.delete(v, index, position);
+            if(personView != null){
+                personView.onDeletePer();
             }
         });
         holder.deletePhoto.setOnClickListener(v->{
-            if(personOptInterface != null){
-                personOptInterface.deletePhoto(v, index, position);
+            if(personView != null){
+                personView.onDeletePhoto();
             }
         });
         holder.nextImg.setOnClickListener(v->{
@@ -129,18 +130,12 @@ public class PersonInfoAdapter extends PageRecyclerViewAdapter<PersonInfoAdapter
         });
     }
 
-    private PersonOptInterface personOptInterface;
+    private PersionView personView;
 
-    public void setPersonOptInterface(PersonOptInterface personOptInterface) {
-        this.personOptInterface = personOptInterface;
+    public void setItemListener(PersionView personOptInterface) {
+        this.personView = personOptInterface;
     }
 
-    public interface PersonOptInterface{
-        void save(View v, int index, int position, PersonInfo newInfo, Holder holder);
-        void deletePhoto(View v, int index, int position);
-        void delete(View v, int index, int position);
-        void addPhoto(View v, int index, int position);
-    }
 
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {

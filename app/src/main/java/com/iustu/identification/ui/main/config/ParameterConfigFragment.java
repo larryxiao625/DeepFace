@@ -7,18 +7,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.bigkoo.pickerview.OptionsPickerView;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.iustu.identification.R;
-import com.iustu.identification.bean.Province;
 import com.iustu.identification.config.ParametersConfig;
 import com.iustu.identification.ui.base.BaseFragment;
-import com.iustu.identification.ui.widget.SexChooser;
 import com.iustu.identification.ui.widget.seekbar.BubbleSeekBar;
-import com.iustu.identification.util.GetJsonDataUtil;
 import com.iustu.identification.util.PickerViewFactor;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
