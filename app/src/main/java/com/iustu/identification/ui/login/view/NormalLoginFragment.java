@@ -23,7 +23,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  */
 
 public class NormalLoginFragment extends BaseFragment {
-    LoginPrenster loginPrenster=new LoginPrenster();
+    LoginPrenster loginPrenster=LoginPrenster.getInstance();
     @BindView(R.id.login_username_et)
     EditText usernameEdit;
     @BindView(R.id.login_password_et)

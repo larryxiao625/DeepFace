@@ -26,7 +26,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  */
 
 public class FaceLoginFragment extends BaseFragment{
-    LoginPrenster loginPrenster=new LoginPrenster();
+    LoginPrenster loginPrenster=LoginPrenster.getInstance();
     @BindView(R.id.login_face_btn)
     TextView loginTv;
     @BindView(R.id.login_camera_layout)

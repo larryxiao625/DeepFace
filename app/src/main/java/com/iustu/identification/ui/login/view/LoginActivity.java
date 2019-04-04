@@ -39,10 +39,11 @@ public class LoginActivity extends BaseActivity implements LibManager.OnLibLoadL
 
     private WaitProgressDialog waitProgressDialog;
 
-    LoginPrenster loginPrenster=new LoginPrenster();
+    LoginPrenster loginPrenster;
     @Override
     protected void initView(@Nullable Bundle savedInstanceState) {
         LibManager.setOnLoadListener(this);
+        loginPrenster=LoginPrenster.getInstance();
         loginPrenster.attchView(iVew);
         mFragmentList = new ArrayList<>();
         mFragmentManager = getSupportFragmentManager();
