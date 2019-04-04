@@ -3,20 +3,15 @@ package com.iustu.identification.ui.main.history.view;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.provider.CalendarContract;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.widget.FrameLayout;
 
 import com.iustu.identification.R;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.main.history.adapter.HistoryPagerAdapter;
-import com.iustu.identification.ui.main.history.view.compare.CompareHistoryFragment;
-import com.iustu.identification.ui.main.history.view.face.FaceHistoryFragment;
 import com.iustu.identification.ui.widget.TitleBar;
 
 import java.util.ArrayList;

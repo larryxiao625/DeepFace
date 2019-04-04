@@ -1,5 +1,6 @@
 package com.iustu.identification.ui.main.history.prenster;
 
+import android.content.Context;
 import android.support.design.widget.TabLayout;
 import android.text.TextUtils;
 
@@ -7,6 +8,7 @@ import com.bigkoo.pickerview.OptionsPickerView;
 import com.bigkoo.pickerview.TimePickerView;
 import com.iustu.identification.App;
 import com.iustu.identification.ui.main.history.view.IVew;
+import com.iustu.identification.util.PickerViewFactor;
 import com.iustu.identification.util.TextUtil;
 
 import java.util.Calendar;
@@ -16,8 +18,12 @@ public class HistoryPrenster implements IPrenster{
 
     private Calendar startCalendar = Calendar.getInstance();
     private Calendar endCalendar = Calendar.getInstance();
-    int START_CALENDER=0;
-    int END_CALENDER=1;
+    int START_CALENDER=0; //fromDatChoose
+    int END_CALENDER=1; //toDateChoose
+    Context context;
+    public HistoryPrenster(Context context){
+        this.context=context;
+    }
     @Override
     public void attchView(IVew iVew) {
         this.iVew=iVew;
@@ -37,7 +43,13 @@ public class HistoryPrenster implements IPrenster{
 
     @Override
     public void initDateChoose(int type) {
-        TimePickerView timePickerView=new TimePickerView.Builder(App.getContext(),(date, v)->{
+        Calendar c = Calendar.getInstance();
+        if(type==0) {
+            c.roll(Calendar.YEAR, -100);
+        }else if(type==1){
+            c.roll(Calendar.YEAR,100);
+        }
+        TimePickerView timePickerView= PickerViewFactor.newTimePickerViewBuilder(context,(date, v)->{
                 if(type==0){
                     startCalendar.setTime(date);
                     startCalendar.set(Calendar.HOUR_OF_DAY, 0);
@@ -52,7 +64,7 @@ public class HistoryPrenster implements IPrenster{
                     iVew.setToDateTv(TextUtil.getDateString(date));
                 }
             }
-        ).setRangDate(type==0? Calendar.getInstance():startCalendar,type==0? endCalendar:Calendar.getInstance())
+        ).setRangDate(type==0? c:startCalendar,type==0? endCalendar:c)
                 .setDate(type==0? startCalendar:endCalendar)
                 .build();
         iVew.showDateChoose(timePickerView);

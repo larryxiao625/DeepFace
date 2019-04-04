@@ -1,4 +1,4 @@
-package com.iustu.identification.ui.main.history.view.compare;
+package com.iustu.identification.ui.main.history.view;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -65,7 +65,7 @@ public class CompareHistoryFragment extends BaseFragment{
 
     private String faceId;
 
-    HistoryPrenster historyPrenster=new HistoryPrenster();
+    HistoryPrenster historyPrenster;
 
     @Override
     protected int postContentView() {
@@ -74,6 +74,7 @@ public class CompareHistoryFragment extends BaseFragment{
 
     @Override
     protected void initView(@Nullable Bundle savedInstanceState, View view) {
+        historyPrenster=new HistoryPrenster(getActivity());
         historyPrenster.attchView(iVew);
         historyPrenster.initCalender();
         mAdapter = new CompareHistoryItemAdapter(compareItemList);

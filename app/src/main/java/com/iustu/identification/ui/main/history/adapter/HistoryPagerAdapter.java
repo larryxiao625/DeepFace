@@ -5,8 +5,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.iustu.identification.ui.base.BaseFragment;
-import com.iustu.identification.ui.main.history.view.compare.CompareHistoryFragment;
-import com.iustu.identification.ui.main.history.view.face.FaceHistoryFragment;
 
 import java.util.List;
 
