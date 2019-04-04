@@ -74,7 +74,7 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
                     .hint1("库名称")
                     .hint2("备注")
                     .content1(library.libName)
-                    .content2(library.discribetion)
+                    .content2(library.discription)
                     .positive("提交", (v1, layout1, layout2) -> {
                         String name = layout1.getEditText().getText().toString();
                         if(name.trim().equals("")){

@@ -27,7 +27,7 @@ public class BottomBar extends LinearLayout implements View.OnClickListener{
 
     private TextView items[];
 
-    private final String [] icons = {"\ue600", "\ue601", "\ue9e8", "\ue60c", "\ue69a", "\ue60d"};
+    private final String [] icons = {"\ue600", "\ue60c", "\ue69a", "\ue60d"};
 
     private BottomBarSelectListener bottomBarSelectListener;
 
