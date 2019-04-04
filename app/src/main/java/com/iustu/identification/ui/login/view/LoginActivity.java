@@ -59,6 +59,7 @@ public class LoginActivity extends BaseActivity implements LibManager.OnLibLoadL
         return R.layout.activity_login;
     }
 
+    // 静态公共方法，供外部调用启动LoginActivity
     public static void start(Activity activity){
         Intent intent = new Intent(activity, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);

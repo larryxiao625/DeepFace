@@ -103,6 +103,7 @@ public class MainActivity extends BaseActivity implements BottomBar.BottomBarSel
         return R.layout.activity_main;
     }
 
+    // 不涉及网络访问，删
     private void keepAlive(){
         if(keepAliveDisposable != null){
             keepAliveDisposable.dispose();
@@ -150,6 +151,7 @@ public class MainActivity extends BaseActivity implements BottomBar.BottomBarSel
             mFragmentList.add(new ConfigFragment());
             mFragmentList.add(new CompareFragment());
             Fragment fragment;
+            // 保证在内存重启的时候，使用已有的Fragment(通过构造器新建的会重新执行生命周期，从而到这)
             for(int i = 0; i < mFragmentList.size(); i++){
                 fragment = mFragmentManager.findFragmentByTag(TAGS[i + 1]);
                 if(fragment != null){
