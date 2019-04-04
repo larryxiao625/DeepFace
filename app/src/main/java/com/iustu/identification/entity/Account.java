@@ -12,7 +12,7 @@ import retrofit2.http.GET;
  */
 public class Account {
     public String name;     // 作为主键
-    public String password;
+    public String password;  // not null, 且最多10位，不含中文字符
 
     // 将对象转化为json字符串，存进SharePreference中
     private String toJsonString() {
