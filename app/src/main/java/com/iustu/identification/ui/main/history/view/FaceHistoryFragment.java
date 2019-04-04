@@ -17,6 +17,7 @@ import com.iustu.identification.ui.main.history.view.HistoryFragment;
 import com.iustu.identification.ui.main.history.view.IVew;
 import com.iustu.identification.ui.main.history.view.CompareHistoryFragment;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
+import com.iustu.identification.ui.widget.dialog.SingleButtonDialog;
 import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
 import com.iustu.identification.util.PageSetHelper;
 
@@ -56,9 +57,9 @@ public class FaceHistoryFragment extends BaseFragment {
 
     @Override
     protected void initView(@Nullable Bundle savedInstanceState, View view) {
-        historyPrenster=new HistoryPrenster(getActivity());
-        historyPrenster.attchView(iVew);
-        historyPrenster.initCalender();
+        historyPrenster=HistoryPrenster.getInstance(getActivity());
+        historyPrenster.attchFaceHistoryView(iVew);
+        historyPrenster.initCalender(0);
         itemList = new ArrayList<>();
         mAdapter = new FaceCollectItemAdapter(itemList);
         mAdapter.setOnPageItemClickListener((view1, position, index) -> {
@@ -87,37 +88,17 @@ public class FaceHistoryFragment extends BaseFragment {
 
     @OnClick(R.id.date_from_tv)
     public void fromDateChoose(){
-        historyPrenster.initDateChoose(0);
+        historyPrenster.initDateChoose(0,0);
     }
 
     @OnClick(R.id.date_to_tv)
     public void toDateChoose(){
-        historyPrenster.initDateChoose(1);
+        historyPrenster.initDateChoose(0,1);
     }
 
     @OnClick(R.id.start_query_tv)
     public void startQuery(){
         loadData(0);
-    }
-
-    public void onFail(String extraMessage){
-        if(waitProgressDialog != null){
-            waitProgressDialog.dismiss();
-        }
-        new NormalDialog.Builder()
-                .title("错误")
-                .content("查询失败," + extraMessage)
-                .positive("重试", v->loadData(0))
-                .negative("确定", null)
-                .show(mActivity.getFragmentManager());
-    }
-
-    public void showSingleButton(){
-        waitProgressDialog = new WaitProgressDialog.Builder()
-                .title("正在查询")
-                .button("取消", v-> dispose())
-                .build();
-        waitProgressDialog.show(mActivity.getFragmentManager(), "wait");
     }
 
     @OnClick(R.id.last_page_iv)
@@ -147,6 +128,22 @@ public class FaceHistoryFragment extends BaseFragment {
         @Override
         public void showDateChoose(TimePickerView timePickerView) {
             timePickerView.show();
+        }
+
+
+        @Override
+        public void showQueryError(NormalDialog normalDialog) {
+            normalDialog.show(mActivity.getFragmentManager(),"queryError");
+        }
+
+        @Override
+        public void showQueryProcessing(WaitProgressDialog waitProgressDialog) {
+            waitProgressDialog.show(mActivity.getFragmentManager(),"queryProcessing");
+        }
+
+        @Override
+        public void showArgumentsError(SingleButtonDialog singleButtonDialog) {
+            singleButtonDialog.show(mActivity.getFragmentManager(),"argumentsError");
         }
     };
 }

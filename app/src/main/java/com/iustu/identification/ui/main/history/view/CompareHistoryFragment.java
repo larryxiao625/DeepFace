@@ -26,6 +26,7 @@ import com.iustu.identification.ui.main.history.view.HistoryFragment;
 import com.iustu.identification.ui.main.history.view.IVew;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.ui.widget.dialog.SingleButtonDialog;
+import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
 import com.iustu.identification.util.ExceptionUtil;
 import com.iustu.identification.util.PageSetHelper;
 import com.iustu.identification.util.PickerViewFactor;
@@ -74,9 +75,9 @@ public class CompareHistoryFragment extends BaseFragment{
 
     @Override
     protected void initView(@Nullable Bundle savedInstanceState, View view) {
-        historyPrenster=new HistoryPrenster(getActivity());
-        historyPrenster.attchView(iVew);
-        historyPrenster.initCalender();
+        historyPrenster=HistoryPrenster.getInstance(getActivity());
+        historyPrenster.attchCompareHistoryView(iVew);
+        historyPrenster.initCalender(1);
         mAdapter = new CompareHistoryItemAdapter(compareItemList);
         recyclerView.setLayoutManager(new GridLayoutManager(mActivity, 3, LinearLayoutManager.HORIZONTAL, false){
             @Override
@@ -93,13 +94,13 @@ public class CompareHistoryFragment extends BaseFragment{
         super.onShow();
         Bundle bundle = getArguments();
         if(bundle == null){
-            onArgumentsError();
+            historyPrenster.argumentsError(1);
             return;
         }
 
         faceId = bundle.getString(KEY_FACE_ID, null);
         if(faceId == null){
-            onArgumentsError();
+            historyPrenster.argumentsError(1);
             return;
         }
         mAdapter.setTargetPhotoUrl(Api.getFaceSearchImageUrl(faceId));
@@ -121,34 +122,14 @@ public class CompareHistoryFragment extends BaseFragment{
 
     @OnClick(R.id.compare_date_from_tv)
     public void fromDateChoose(){
-        historyPrenster.initDateChoose(0);
+        historyPrenster.initDateChoose(1,0);
     }
 
     @OnClick(R.id.compare_date_to_tv)
     public void toDateChoose(){
-        historyPrenster.initDateChoose(1);
+        historyPrenster.initDateChoose(1,1);
     }
 
-    private void onFail(){
-        ((MainActivity)mActivity).dismissWaiDialog();
-        new NormalDialog.Builder()
-                .title("错误")
-                .content("查询失败")
-                .cancelable(false)
-                .positive("重试", v->startQuery())
-                .negative("返回", v-> ((HistoryFragment)getParentFragment()).switchFragment(HistoryFragment.ID_FACE))
-                .show(mActivity.getFragmentManager());
-    }
-
-    public void onArgumentsError(){
-        Log.d("CompareHistoryFragment","onArgumentsError");
-        new SingleButtonDialog.Builder()
-                .title("错误")
-                .cancelable(false)
-                .content("参数错误")
-                .button("确定", v-> ((HistoryFragment)getParentFragment()).switchFragment(HistoryFragment.ID_FACE))
-                .show(mActivity.getFragmentManager());
-    }
 
     @Override
     protected void dispose() {
@@ -191,6 +172,21 @@ public class CompareHistoryFragment extends BaseFragment{
         @Override
         public void showDateChoose(TimePickerView timePickerView) {
             timePickerView.show();
+        }
+
+        @Override
+        public void showQueryError(NormalDialog normalDialog) {
+            normalDialog.show(mActivity.getFragmentManager(),"queryError");
+        }
+
+        @Override
+        public void showQueryProcessing(WaitProgressDialog waitProgressDialog) {
+            waitProgressDialog.show(mActivity.getFragmentManager(),"queryProcessing");
+        }
+
+        @Override
+        public void showArgumentsError(SingleButtonDialog singleButtonDialog) {
+            singleButtonDialog.show(mActivity.getFragmentManager(),"argumentsError");
         }
     };
 }
