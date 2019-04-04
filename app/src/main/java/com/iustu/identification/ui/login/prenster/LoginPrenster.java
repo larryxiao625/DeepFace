@@ -15,6 +15,15 @@ import okhttp3.HttpUrl;
 public class LoginPrenster implements IPrenster{
     IVew iVew;
     WaitProgressDialog waitProgressDialog;
+    static LoginPrenster instance;
+    public static LoginPrenster getInstance(){
+        if(instance==null){
+            LoginPrenster loginPrenster=new LoginPrenster();
+            instance=loginPrenster;
+        }
+        return instance;
+    }
+
     @Override
     public void attchView(IVew iVew) {
         this.iVew=iVew;

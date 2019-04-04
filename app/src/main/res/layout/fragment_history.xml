@@ -14,16 +14,15 @@
     </com.iustu.identification.ui.widget.TitleBar>
 
 
-    <FrameLayout
-        android:id="@+id/histoy_fragment_layout"
+    <android.support.design.widget.TabLayout
+        android:id="@+id/history_tab_layout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-        <fragment
-            android:tag="face_history"
-            android:name="com.iustu.identification.ui.main.history.face.FaceHistoryFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-    </FrameLayout>
+        android:layout_height="wrap_content">
+    </android.support.design.widget.TabLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/history_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></android.support.v4.view.ViewPager>
 
 </LinearLayout>
