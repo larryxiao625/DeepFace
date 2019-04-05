@@ -11,9 +11,14 @@ android {
         versionName "1.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+<<<<<<< HEAD
 
         ndk {
             abiFilters 'armeabi-v7a'
+=======
+        ndk {
+            abiFilters "armeabi-v7a"
+>>>>>>> 012ec74b65d56c8ceb5871fa05c09227ef6a46d1
         }
     }
     buildTypes {

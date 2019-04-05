@@ -82,4 +82,6 @@
     <string name="hint_username">用户名</string>
     <string name="hint_password">密码</string>
     <string name="login_face">刷脸登录</string>
+    <string name="camera_dpi">摄像头分辨率</string>
+    <string name="equal">等于</string>
 </resources>

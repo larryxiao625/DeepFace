@@ -56,12 +56,20 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
     EditText checkFactor2;
     @BindView(R.id.check_factor3)
     EditText checkFactor3;
+    @BindView(R.id.save_dpi_tv)
+    EditText dpiSetTv;
 
     private OptionsPickerView displayCountPicker;
     private OptionsPickerView saveCountPicker;
+    private OptionsPickerView dpiPicker;
 
     private List<Integer> displayCountList = new ArrayList<>();         // 设置显示结果数量的源
     private List<Integer> saveCountList = new ArrayList<>();          // 设置保存记录数的源
+    private List<Integer> dpiWidth=new ArrayList<>();     // 设置分辨率宽度的源
+    private List<Integer> dpiHeight=new ArrayList<>();       // 设置分辨率高度的源
+    private List<String> dpiStringList=new ArrayList<>();       // 设置分辨率的源
+
+    String dpi;
 
     @Override
     protected int postContentView() {
@@ -83,8 +91,28 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
         saveCountList.add(1000);
         saveCountList.add(5000);
         saveCountList.add(10000);
+        dpiWidth.add(1920);
+        dpiWidth.add(1280);
+        dpiWidth.add(2048);
+        dpiWidth.add(1600);
+        dpiWidth.add(1280);
+        dpiWidth.add(1280);
+        dpiWidth.add(1024);
+        dpiHeight.add(1080);
+        dpiHeight.add(720);
+        dpiHeight.add(1536);
+        dpiHeight.add(1200);
+        dpiHeight.add(1024);
+        dpiHeight.add(960);
+        dpiHeight.add(768);
+        getDpiStringList();
     }
 
+    public void getDpiStringList(){
+        for(int i=0;i<dpiHeight.size();i++){
+            dpiStringList.add(dpiWidth.get(i)+"x"+dpiHeight.get(i));
+        }
+    }
     @Override
     public void onPause() {
         if(parametersConfig != null) {
@@ -112,7 +140,7 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
     public void setDisplayCount(){
         if(displayCountPicker == null) {
             displayCountPicker = PickerViewFactor.newPickerViewBuilder(mActivity, (options1, options2, options3, v) -> {
-                //parametersConfig.setDisplayCount(countList.get(options1));
+                parametersConfig.setDisplayCount(displayCountList.get(options1));
                 displayCountTv.setText(String.format(Locale.ENGLISH, FORMAT_COUNT, displayCountList.get(options1)));
             })
                     .setSelectOptions(parametersConfig.getDisplayCount() - 10)
@@ -128,7 +156,7 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
     public void setSaveCount() {
         if(saveCountPicker == null) {
             saveCountPicker = PickerViewFactor.newPickerViewBuilder(mActivity, (options1, options2, options3, v) -> {
-                //parametersConfig.setDisplayCount(countList.get(options1));
+                parametersConfig.setDisplayCount(displayCountList.get(options1));
                 saveCountTv.setText(String.format(Locale.ENGLISH, FORMAT_COUNT, saveCountList.get(options1)));
             })
                     .setSelectOptions(parametersConfig.getDisplayCount() - 10)
@@ -144,5 +172,24 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
     @OnClick(R.id.save_tv)
     public void save() {
 
+    }
+    //摄像头分辨率配置界面
+    @OnClick(R.id.save_dpi_ll)
+    public void setDpi(){
+        if(dpiPicker==null){
+            dpiPicker=PickerViewFactor.newPickerViewBuilder(mActivity,(options1, options2, options3, v) ->{
+                parametersConfig.setDpiHeight(dpiHeight.get(options1));
+                parametersConfig.setDpiWidth(dpiWidth.get(options1));
+                parametersConfig.setDpiCount(options1);
+                dpiSetTv.setText(dpiStringList.get(options1));
+            } )
+                    .setSelectOptions(parametersConfig.getDpiCount())
+                    .setTitleText("摄像头分辨率")
+                    .build();
+
+            dpiPicker.setPicker(dpiStringList);
+        }
+
+        dpiPicker.show();
     }
 }

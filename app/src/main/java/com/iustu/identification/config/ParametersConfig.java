@@ -16,6 +16,9 @@ public class ParametersConfig {
     private static final String KEY_AGE_MIN = "ageMin";
     private static final String KEY_AGE_MAX = "ageMax";
     private static final String KEY_LOCATION = "location";
+    private static final String KEY_DPI_WIDTH="dpiWidth";
+    private static final String KEY_DPI_HEIGHT="dpiHeight";
+    private static final String KEY_DPI_COUNT="dpiCount";
 
     private static ParametersConfig mInstance;
 
@@ -27,9 +30,13 @@ public class ParametersConfig {
         thresholdValuePaper = preferences.getFloat(KEY_THRESHOLD_VALUE_PAPER, 0.3F);
         displayCount = preferences.getInt(KEY_DISPLAY_COUNT, 10);
         sex = preferences.getInt(KEY_SEX, 0);
+        dpiCount=preferences.getInt(KEY_DPI_COUNT,0);
         ageMin = preferences.getInt(KEY_AGE_MIN, 0);
         ageMax = preferences.getInt(KEY_AGE_MAX, 100);
         location = preferences.getString(KEY_LOCATION, "无限制");
+        dpiWidth=preferences.getInt(KEY_DPI_WIDTH,1920);
+        dpiHeight=preferences.getInt(KEY_DPI_HEIGHT,1080);
+
     }
 
     public static ParametersConfig getInstance(){
@@ -49,6 +56,9 @@ public class ParametersConfig {
                 .putInt(KEY_AGE_MIN, ageMin)
                 .putInt(KEY_AGE_MAX, ageMax)
                 .putString(KEY_LOCATION, location)
+                .putInt(KEY_DPI_WIDTH,dpiWidth)
+                .putInt(KEY_DPI_HEIGHT,dpiHeight)
+                .putInt(KEY_DPI_COUNT,dpiCount)
                 .apply();
     }
 
@@ -59,6 +69,9 @@ public class ParametersConfig {
     private int ageMin;
     private int ageMax;
     private String location;
+    private int dpiWidth;
+    private int dpiHeight;
+    private int dpiCount;
 
     public static String getKeyThresholdValueFace() {
         return KEY_THRESHOLD_VALUE_FACE;
@@ -150,5 +163,29 @@ public class ParametersConfig {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public int getDpiWidth() {
+        return dpiWidth;
+    }
+
+    public void setDpiWidth(int dpiWidth) {
+        this.dpiWidth = dpiWidth;
+    }
+
+    public int getDpiHeight() {
+        return dpiHeight;
+    }
+
+    public void setDpiHeight(int dpiHeight) {
+        this.dpiHeight = dpiHeight;
+    }
+
+    public int getDpiCount() {
+        return dpiCount;
+    }
+
+    public void setDpiCount(int dpiCount) {
+        this.dpiCount = dpiCount;
     }
 }
