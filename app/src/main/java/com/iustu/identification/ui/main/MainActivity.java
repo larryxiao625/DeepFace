@@ -178,13 +178,13 @@ public class MainActivity extends BaseActivity implements BottomBar.BottomBarSel
         }
         if(fragmentNow == 0){
             transaction.remove(ff);
-        }else if(fragmentNow == 6 && to == 0){
+        }else if(fragmentNow == 3 && to == 0){
             transaction.remove(ff);
         }
         transaction.show(tf).commit();
-        if(to == 6){
+        if(to == 3){
             isInCompare = true;
-        }else if(fragmentNow == 6 && to == 0){
+        }else if(fragmentNow == 3 && to == 0){
             isInCompare = false;
         }
         fragmentNow = to;

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.Surface;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -46,7 +47,6 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
     FrameLayout frameLayout;
     @BindView(R.id.capture_uvc_camera)
     UVCCameraTextureView cameraTextureView;
-    private UVCCameraTextureView cameraPreview;
 
     CameraPrenster cameraPrenster=new CameraPrenster();
 
@@ -57,24 +57,48 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
 
     @Override
     protected void initView(@Nullable Bundle savedInstanceState, View view) {
+        Log.d("CameraFragment","initView");
         IconFontUtil util = IconFontUtil.getDefault();
-        cameraPreview.setCallback(this);
-        cameraHelper.setDefaultPreviewSize(1280,720);
-        cameraHelper.initUSBMonitor(getActivity(),cameraPreview,cameraPrenster);
+        if(cameraHelper.getUSBMonitor()==null) {
+            cameraHelper.setDefaultPreviewSize(1280, 720);
+        }
+        cameraTextureView.setCallback(this);
+        cameraHelper.initUSBMonitor(getActivity(),cameraTextureView,cameraPrenster);
 
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        Log.d("CameraFragment","hideChange");
+        if(hidden) {
+
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
         onHide();
-        frameLayout.removeView(cameraPreview);
-        cameraPreview = null;
+        cameraHelper.unregisterUSB();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        cameraHelper.unregisterUSB();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        cameraHelper.unregisterUSB();
     }
 
 
     @Override
-    public void onHide() {}
+    public void onHide() {
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

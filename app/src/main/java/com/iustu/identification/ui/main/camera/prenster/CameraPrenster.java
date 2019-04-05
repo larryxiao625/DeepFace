@@ -11,8 +11,8 @@ import com.serenegiant.usb.widget.CameraViewInterface;
 
 public class CameraPrenster implements UVCCameraHelper.OnMyDevConnectListener,IPenster {
     boolean isRequest=false;
-    boolean isPreview=false;
     UVCCameraHelper cameraHelper= UVCCameraHelper.getInstance();
+    IVew iVew;
     @Override
     public void onAttachDev(UsbDevice device) {
         //申请相机权限
@@ -35,17 +35,17 @@ public class CameraPrenster implements UVCCameraHelper.OnMyDevConnectListener,IP
 
     @Override
     public void onConnectDev(UsbDevice device, boolean isConnected) {
-
+        iVew.showShortMsg("摄像头已连接");
     }
 
     @Override
     public void onDisConnectDev(UsbDevice device) {
-
+        iVew.showShortMsg("摄像头已断开连接");
     }
 
     @Override
     public void attchView(IVew iVew) {
-
+        this.iVew=iVew;
     }
 
 }
