@@ -7,73 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:visibility="gone"
-        android:id="@+id/cancel_iv"
-        android:src="@drawable/ic_close"
-        android:padding="@dimen/x20"
-        android:layout_width="@dimen/x132"
-        android:layout_height="@dimen/x132" />
-
-    <ImageView
-        android:visibility="gone"
-        android:id="@+id/ok_iv"
-        android:src="@drawable/ic_check"
-        android:layout_gravity="right"
-        android:padding="@dimen/x20"
-        android:layout_width="@dimen/x132"
-        android:layout_height="@dimen/x132"
-        tools:ignore="RtlHardcoded" />
-
-    <TextView
-        android:visibility="gone"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:id="@+id/switch_tv"
-        android:paddingTop="@dimen/y30"
-        android:paddingBottom="@dimen/y30"
-        android:paddingRight="@dimen/x65"
-        android:paddingLeft="@dimen/x65"
-        android:layout_gravity="right"
-        android:textSize="@dimen/x80"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-
-
-    <FrameLayout
-        tools:visibility="visible"
-        android:visibility="gone"
-        android:id="@+id/button_layout"
-        android:layout_marginTop="@dimen/y1300"
+    <com.serenegiant.usb.widget.UVCCameraTextureView
+        android:id="@+id/capture_uvc_camera"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:gravity="center"
-            android:layout_marginLeft="@dimen/x100"
-            android:textColor="@color/white"
-            android:id="@+id/history_tv"
-            android:layout_gravity="center_vertical"
-            android:textSize="@dimen/x110"
-            android:layout_width="@dimen/x120"
-            android:layout_height="@dimen/x120" />
-
-        <ImageView
-            android:id="@+id/take_photo_iv"
-            android:scaleType="centerInside"
-            android:layout_gravity="center"
-            android:src="@drawable/take_photo"
-            android:layout_width="@dimen/x330"
-            android:layout_height="@dimen/x330" />
-
-        <TextView
-            android:gravity="center"
-            android:layout_marginRight="@dimen/x100"
-            android:textColor="@color/white"
-            android:id="@+id/album_tv"
-            android:layout_gravity="right|center_vertical"
-            android:textSize="@dimen/x95"
-            android:layout_width="@dimen/x120"
-            android:layout_height="@dimen/x120" />
-    </FrameLayout>
+        android:layout_height="200dp" />
 </FrameLayout>
