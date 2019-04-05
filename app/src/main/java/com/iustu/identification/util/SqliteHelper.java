@@ -83,7 +83,7 @@ class SQLString {
     public static final String TABLE_PERSIONINFO = PersionInfo.class.getSimpleName();
     public static final String TABLE_TAKERECORD = TakeRecord.class.getSimpleName();
 
-    public static final String CREATE_TABLE_LIBRARY = "create table Library (int libId primary key autoincrement, libName varchar not null, description varchar, int count not null)";
+    public static final String CREATE_TABLE_LIBRARY = "create table Library (libId integer primary key autoincrement, libName varchar not null, description varchar, int count not null)";
     public static final String CREATE_TABLE_ACCOUNT = "create table Account (name varchar(6) primary key, password varchar(11) not null)";
     public static final String CREATE_TABLE_COMPARERECORD = "create table CompareRecord (time varchar primary key, uploadPhotoPath varchar not null, feature varchar not null, rate float not null)";
     public static final String CREATE_TABLE_PERSIONINFO = "create table PersionInfo (feature varchar primary key, libId int not null, name varchar not null, gender varchar not null, nation varchar, photoPath varchar not null, identity varchar, home varchar, other varchar)";
