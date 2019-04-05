@@ -2,6 +2,7 @@ package com.iustu.identification.ui.main.camera.prenster;
 
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
+import android.util.Log;
 import android.view.Surface;
 
 import com.iustu.identification.ui.main.camera.view.IVew;
@@ -35,11 +36,13 @@ public class CameraPrenster implements UVCCameraHelper.OnMyDevConnectListener,IP
 
     @Override
     public void onConnectDev(UsbDevice device, boolean isConnected) {
+        Log.d("cameraPrenster","cameraConnect");
         iVew.showShortMsg("摄像头已连接");
     }
 
     @Override
     public void onDisConnectDev(UsbDevice device) {
+        Log.d("cameraPrenster","cameraDisConnect");
         iVew.showShortMsg("摄像头已断开连接");
     }
 

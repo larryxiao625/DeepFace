@@ -59,42 +59,16 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
     protected void initView(@Nullable Bundle savedInstanceState, View view) {
         Log.d("CameraFragment","initView");
         IconFontUtil util = IconFontUtil.getDefault();
+        cameraPrenster.attchView(iVew);
         if(cameraHelper.getUSBMonitor()==null) {
             cameraHelper.setDefaultPreviewSize(1280, 720);
         }
         cameraTextureView.setCallback(this);
         cameraHelper.initUSBMonitor(getActivity(),cameraTextureView,cameraPrenster);
-
-    }
-
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        Log.d("CameraFragment","hideChange");
-        if(hidden) {
-
+        if(cameraHelper!=null){
+            cameraHelper.registerUSB();
         }
     }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        onHide();
-        cameraHelper.unregisterUSB();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        cameraHelper.unregisterUSB();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        cameraHelper.unregisterUSB();
-    }
-
 
     @Override
     public void onHide() {
@@ -126,11 +100,6 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
         }
     }
 
-    IVew iVew=new IVew() {
-        @Override
-        public void showShortMsg(String rea) {
-            Toast.makeText(getActivity(),rea,Toast.LENGTH_SHORT);
-        }
-    };
+    IVew iVew= rea -> Toast.makeText(getActivity(),rea,Toast.LENGTH_SHORT).show();
 
 }
