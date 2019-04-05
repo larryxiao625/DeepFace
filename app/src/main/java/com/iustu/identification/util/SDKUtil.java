@@ -40,7 +40,7 @@ public class SDKUtil {
         verifyHandler.initial();
 
         // 初始化属性检测句柄
-        attributeHandler = (AttributeHandler) HandlerFactory.createAttribute("\"/sdcard/detect-Framework3-cpu-xxxx.model\"");
+        attributeHandler = (AttributeHandler) HandlerFactory.createAttribute("/sdcard/attr-Framework1-cpu-0a15-bc0a.model");
         attributeHandler.initial();
     }
 
