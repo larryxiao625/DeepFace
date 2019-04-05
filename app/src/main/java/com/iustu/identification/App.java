@@ -1,10 +1,9 @@
 package com.iustu.identification;
 
 import android.content.Context;
-import android.widget.MultiAutoCompleteTextView;
-
+import com.iustu.identification.util.SqliteHelper;
+import com.iustu.identification.util.SqliteUtil;
 import com.tencent.bugly.Bugly;
-import com.tencent.bugly.crashreport.CrashReport;
 
 import org.litepal.LitePalApplication;
 
@@ -19,6 +18,12 @@ public class App extends LitePalApplication {
         super.onCreate();
 //        CrashReport.initCrashReport(getApplicationContext());
         Bugly.init(getApplicationContext(), "9c3bdbe293", false );
+        SqliteHelper.init(getApplicationContext());
+        try {
+            SqliteUtil.init();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         context=getApplicationContext();
     }
 

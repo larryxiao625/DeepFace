@@ -34,7 +34,7 @@ public class LibrariesManageAdapter extends PageRecyclerViewAdapter<LibrariesMan
         Library library = mDataLast.get(index);
         holder.id.setText(String.valueOf(library.libId));
         holder.name.setText(library.libName);
-        holder.number.setText(String.valueOf(library.numberCount));
+        holder.number.setText(String.valueOf(library.count));
         IconFontUtil.getDefault().setText(holder.select, IconFontUtil.UNSELECT_SINGLE);
         /*
         if(isAdmin){

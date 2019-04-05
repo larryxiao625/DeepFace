@@ -16,12 +16,10 @@ import com.iustu.identification.ui.SplashActivity;
 import com.iustu.identification.ui.base.BaseActivity;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.login.view.LoginActivity;
-import com.iustu.identification.ui.main.batch.BatchFragment;
 import com.iustu.identification.ui.main.camera.view.CameraFragment;
 import com.iustu.identification.ui.main.config.ConfigFragment;
 import com.iustu.identification.ui.main.history.view.HistoryFragment;
 import com.iustu.identification.ui.main.library.LibraryFragment;
-import com.iustu.identification.ui.main.verify.VerifyFragment;
 import com.iustu.identification.ui.widget.BottomBar;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
@@ -44,7 +42,7 @@ public class MainActivity extends BaseActivity implements BottomBar.BottomBarSel
     @BindView(R.id.bottom_bar)
     public BottomBar bottomBar;
 
-    private static final String [] TAGS = {"camera", "batch", "verify","history","library","config", "compare"};
+    private static final String [] TAGS = {"camera","history","library","config"};
 
     private List<BaseFragment> mFragmentList;
     private FragmentManager mFragmentManager;
@@ -102,6 +100,7 @@ public class MainActivity extends BaseActivity implements BottomBar.BottomBarSel
         return R.layout.activity_main;
     }
 
+    // 不涉及网络访问，删
     private void keepAlive(){
         if(keepAliveDisposable != null){
             keepAliveDisposable.dispose();
@@ -142,13 +141,11 @@ public class MainActivity extends BaseActivity implements BottomBar.BottomBarSel
         bottomBar.post(() -> {
             mFragmentManager = getSupportFragmentManager();
             mFragmentList = new ArrayList<>();
-            mFragmentList.add(new BatchFragment());
-            mFragmentList.add(new VerifyFragment());
             mFragmentList.add(new HistoryFragment());
             mFragmentList.add(new LibraryFragment());
             mFragmentList.add(new ConfigFragment());
-            mFragmentList.add(new CompareFragment());
             Fragment fragment;
+            // 保证在内存重启的时候，使用已有的Fragment(通过构造器新建的会重新执行生命周期，从而到这)
             for(int i = 0; i < mFragmentList.size(); i++){
                 fragment = mFragmentManager.findFragmentByTag(TAGS[i + 1]);
                 if(fragment != null){

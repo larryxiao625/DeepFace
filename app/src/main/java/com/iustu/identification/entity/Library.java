@@ -8,6 +8,6 @@ package com.iustu.identification.entity;
 public class Library {
     public String libName;
     public int libId;       // key
-    public String discribetion;      // 库描述
-    public int numberCount;      // 库数量
+    public String discription;      // 库描述
+    public int count;      // 库数量
 }

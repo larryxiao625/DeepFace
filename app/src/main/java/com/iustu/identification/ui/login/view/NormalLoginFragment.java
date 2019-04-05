@@ -29,7 +29,6 @@ public class NormalLoginFragment extends BaseFragment {
     @BindView(R.id.login_password_et)
     EditText passwordEdit;
 
-
     @Override
     protected int postContentView() {
         return R.layout.fragment_normal_login;
@@ -45,11 +44,6 @@ public class NormalLoginFragment extends BaseFragment {
         loginPrenster.setServer();
     }
 
-//    @OnClick(R.id.btn_test)
-//    public void test(){
-//        CrashReport.testJavaCrash();
-//    }
-
     @OnClick(R.id.login_normal_tv)
     public void login(){
         String username = usernameEdit.getText().toString().trim();
@@ -64,6 +58,5 @@ public class NormalLoginFragment extends BaseFragment {
             return;
         }
         loginPrenster.normalLogin(username,password);
-
     }
 }
