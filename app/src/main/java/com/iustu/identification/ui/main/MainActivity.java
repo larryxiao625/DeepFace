@@ -48,8 +48,6 @@ public class MainActivity extends BaseActivity implements BottomBar.BottomBarSel
     private FragmentManager mFragmentManager;
     private int fragmentNow;
 
-    private boolean isInCompare;
-
     private WaitProgressDialog waitDialog;
 
     private boolean isSessionOutOfDate;
@@ -137,7 +135,6 @@ public class MainActivity extends BaseActivity implements BottomBar.BottomBarSel
         if(UserCache.getUser().isVerify()) {
             keepAlive();
         }
-        isInCompare = false;
         bottomBar.post(() -> {
             mFragmentManager = getSupportFragmentManager();
             mFragmentList = new ArrayList<>();
@@ -176,17 +173,10 @@ public class MainActivity extends BaseActivity implements BottomBar.BottomBarSel
         if(!tf.isAdded()){
             transaction.add(R.id.fragment_fm, tf, TAGS[to]);
         }
-        if(fragmentNow == 0){
-            transaction.remove(ff);
-        }else if(fragmentNow == 3 && to == 0){
+        if(fragmentNow == 0) {
             transaction.remove(ff);
         }
         transaction.show(tf).commit();
-        if(to == 3){
-            isInCompare = true;
-        }else if(fragmentNow == 3 && to == 0){
-            isInCompare = false;
-        }
         fragmentNow = to;
     }
 
@@ -201,10 +191,6 @@ public class MainActivity extends BaseActivity implements BottomBar.BottomBarSel
 
     @Override
     public void onSelect(int id) {
-        if(id == 0 && isInCompare){
-            id = 6;
-        }
-
         switchFragment(id);
     }
 
