@@ -54,4 +54,7 @@ dependencies {
 
     implementation 'com.tencent.bugly:crashreport_upgrade:latest.release'
     implementation 'com.tencent.bugly:nativecrashreport:latest.release'
+
+    implementation 'com.github.jiangdongguo:AndroidUSBCamera:2.2.8'
+
 }

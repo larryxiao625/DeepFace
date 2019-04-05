@@ -1,4 +1,4 @@
-package com.iustu.identification.ui.main.camera;
+package com.iustu.identification.ui.main.camera.adapter;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -12,7 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CenterInside;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;

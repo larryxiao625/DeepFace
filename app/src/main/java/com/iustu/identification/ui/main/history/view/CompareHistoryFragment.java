@@ -117,7 +117,7 @@ public class CompareHistoryFragment extends BaseFragment{
     }
     @OnClick(R.id.compare_start_query_tv)
     public void startQuery(){
-
+        historyPrenster.startQuery();
     }
 
     @OnClick(R.id.compare_date_from_tv)

@@ -21,7 +21,7 @@ import com.iustu.identification.config.SystemConfig;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.main.batch.folder.FolderChooseFragment;
 import com.iustu.identification.ui.main.batch.img.ImgChooseFragment;
-import com.iustu.identification.ui.main.camera.CompareItemAdapter;
+import com.iustu.identification.ui.main.camera.adapter.CompareItemAdapter;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
 import com.iustu.identification.util.ExceptionUtil;
