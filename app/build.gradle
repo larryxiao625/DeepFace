@@ -11,9 +11,14 @@ android {
         versionName "1.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+<<<<<<< HEAD
 
         ndk {
             abiFilters 'armeabi-v7a'
+=======
+        ndk {
+            abiFilters "armeabi-v7a"
+>>>>>>> fa9d0d19e54256023fed2e2b0b9b970e89905f8c
         }
     }
     buildTypes {
@@ -56,7 +61,7 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
 
-    implementation files('libs/facerecsdk_java_api.jar')
+    implementation files('libs/armeabi-v7a/facerecsdk_java_api.jar')
 
     implementation 'com.tencent.bugly:crashreport_upgrade:latest.release'
     implementation 'com.tencent.bugly:nativecrashreport:latest.release'

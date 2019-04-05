@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.iustu.identification.App;
 import com.iustu.identification.R;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.main.MainActivity;
@@ -100,6 +101,6 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
         }
     }
 
-    IVew iVew= rea -> Toast.makeText(getActivity(),rea,Toast.LENGTH_SHORT).show();
+    IVew iVew= rea -> Toast.makeText(App.getContext(),rea,Toast.LENGTH_SHORT).show();
 
 }

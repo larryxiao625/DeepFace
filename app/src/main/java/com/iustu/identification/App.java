@@ -1,21 +1,12 @@
 package com.iustu.identification;
 
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Environment;
-import android.util.Log;
-
-import com.example.agin.facerecsdk.FacerecUtil;
-import com.iustu.identification.util.SDKUtil;
 import android.content.Context;
-
 import com.iustu.identification.util.SqliteHelper;
 import com.iustu.identification.util.SqliteUtil;
 import com.tencent.bugly.Bugly;
 
 import org.litepal.LitePalApplication;
 
-import java.io.File;
 
 /**
  * Created by Liu Yuchuan on 2017/11/4.
@@ -28,6 +19,10 @@ public class App extends LitePalApplication {
 
     static Context context;
 
+
+    static {
+        System.loadLibrary("facerecsdk_java");
+    }
     @Override
     public void onCreate() {
         super.onCreate();
@@ -40,8 +35,8 @@ public class App extends LitePalApplication {
             e.printStackTrace();
         }
         context = this;
-    }
 
+    }
 
 
     public static Context getContext(){
