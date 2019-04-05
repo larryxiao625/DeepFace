@@ -17,9 +17,13 @@ public class ParameterConfig {
     float threshold3;
     int saveCount;
     int displayCount;
+    int dpiWidth;
+    int dpiHeight;
+    String dpi;
 
     public ParameterConfig(){}
-    public ParameterConfig(int min_size, float factor, float threshold1, float threshold2, float threshold3, int saveCount, int displayCount) {
+
+    public ParameterConfig(int min_size, float factor, float threshold1, float threshold2, float threshold3, int saveCount, int displayCount, int dpiWidth, int dpiHeight, String dpi) {
         this.min_size = min_size;
         this.factor = factor;
         this.threshold1 = threshold1;
@@ -27,7 +31,11 @@ public class ParameterConfig {
         this.threshold3 = threshold3;
         this.saveCount = saveCount;
         this.displayCount = displayCount;
+        this.dpiWidth = dpiWidth;
+        this.dpiHeight = dpiHeight;
+        this.dpi = dpi;
     }
+
     // 将对象转化为json字符串，存进SharePreference中
     private String toJsonString() {
         Gson gson = new Gson();

@@ -57,7 +57,7 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
     @BindView(R.id.check_factor3)
     EditText checkFactor3;
     @BindView(R.id.save_dpi_tv)
-    EditText dpiSetTv;
+    TextView dpiSetTv;
 
     private OptionsPickerView displayCountPicker;
     private OptionsPickerView saveCountPicker;

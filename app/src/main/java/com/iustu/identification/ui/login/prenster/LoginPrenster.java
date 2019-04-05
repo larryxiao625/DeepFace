@@ -8,6 +8,7 @@ import com.iustu.identification.ui.widget.dialog.EditDialog;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.ui.widget.dialog.SingleButtonDialog;
 import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
+import com.iustu.identification.util.DataCache;
 import com.iustu.identification.util.LibManager;
 
 import okhttp3.HttpUrl;
@@ -90,6 +91,7 @@ public class LoginPrenster implements IPrenster{
     public void normalLogin(String username,String password) {
         if(TextUtils.equals(username,"admin")&&TextUtils.equals(password,"123456")) {
             LibManager.loadData();
+            DataCache.initCache();
         }else{
             getLoginFailDialog("用户名或密码错误");
         }
