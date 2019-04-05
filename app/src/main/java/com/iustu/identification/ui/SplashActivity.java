@@ -5,13 +5,17 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
+import com.example.agin.facerecsdk.FacerecUtil;
 import com.iustu.identification.R;
 import com.iustu.identification.api.Api;
 import com.iustu.identification.bean.User;
@@ -22,8 +26,10 @@ import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.ui.widget.dialog.SingleButtonDialog;
 import com.iustu.identification.util.ExceptionUtil;
 import com.iustu.identification.util.LibManager;
+import com.iustu.identification.util.SDKUtil;
 import com.iustu.identification.util.UserCache;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -36,7 +42,9 @@ public class SplashActivity extends BaseActivity {
 
     private final String [] permissions = {
             Manifest.permission.CAMERA,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_PHONE_STATE,
+            Manifest.permission.BLUETOOTH
     };
 
     private List<String> permissionList = new ArrayList<>();
@@ -166,4 +174,5 @@ public class SplashActivity extends BaseActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
         activity.startActivity(intent);
     }
+
 }
