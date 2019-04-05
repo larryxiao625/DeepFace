@@ -24,6 +24,7 @@ import com.iustu.identification.ui.login.view.LoginActivity;
 import com.iustu.identification.ui.main.MainActivity;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.ui.widget.dialog.SingleButtonDialog;
+import com.iustu.identification.util.CopyModelUtil;
 import com.iustu.identification.util.ExceptionUtil;
 import com.iustu.identification.util.LibManager;
 import com.iustu.identification.util.SDKUtil;
@@ -66,6 +67,7 @@ public class SplashActivity extends BaseActivity {
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> checkPermissions());
+        CopyModelUtil.copyAssetsToSD(this);
     }
 
     private void checkPermissions(){
