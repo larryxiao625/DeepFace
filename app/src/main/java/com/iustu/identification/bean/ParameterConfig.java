@@ -17,9 +17,13 @@ public class ParameterConfig {
     float threshold3;
     int saveCount;
     int displayCount;
+    int dpiWidth=1920;
+    int dpiHeight=1080;
+    int dpiCount=0;
 
     public ParameterConfig(){}
-    public ParameterConfig(int min_size, float factor, float threshold1, float threshold2, float threshold3, int saveCount, int displayCount) {
+
+    public ParameterConfig(int min_size, float factor, float threshold1, float threshold2, float threshold3, int saveCount, int displayCount, int dpiWidth, int dpiHeight, int dpiCount) {
         this.min_size = min_size;
         this.factor = factor;
         this.threshold1 = threshold1;
@@ -27,7 +31,11 @@ public class ParameterConfig {
         this.threshold3 = threshold3;
         this.saveCount = saveCount;
         this.displayCount = displayCount;
+        this.dpiWidth = dpiWidth;
+        this.dpiHeight = dpiHeight;
+        this.dpiCount = dpiCount;
     }
+
     // 将对象转化为json字符串，存进SharePreference中
     private String toJsonString() {
         Gson gson = new Gson();
@@ -46,11 +54,91 @@ public class ParameterConfig {
     // 将ParameterConfig对象转化为json字符串之后保存到SharePreference中
     public void save() {
         String jsonString = this.toJsonString();
-        MSP.getInstance(MSP.SP_PARAMETERS).edit().putString(MSP.PARAMETERS, jsonString).commit();
+        MSP.getInstance(MSP.SP_PARAMETERS).edit().putString(MSP.PARAMETERS, jsonString).apply();
     }
 
     // 从json中解析对象并返回
     public static ParameterConfig getFromSP() {
-        return fromJsonString(MSP.getInstance(MSP.SP_PARAMETERS).getString(MSP.PARAMETERS, null));
+        return fromJsonString(MSP.getInstance(MSP.SP_PARAMETERS).getString(MSP.PARAMETERS, new ParameterConfig().toJsonString()));
+    }
+
+    public int getMin_size() {
+        return min_size;
+    }
+
+    public void setMin_size(int min_size) {
+        this.min_size = min_size;
+    }
+
+    public float getFactor() {
+        return factor;
+    }
+
+    public void setFactor(float factor) {
+        this.factor = factor;
+    }
+
+    public float getThreshold1() {
+        return threshold1;
+    }
+
+    public void setThreshold1(float threshold1) {
+        this.threshold1 = threshold1;
+    }
+
+    public float getThreshold2() {
+        return threshold2;
+    }
+
+    public void setThreshold2(float threshold2) {
+        this.threshold2 = threshold2;
+    }
+
+    public float getThreshold3() {
+        return threshold3;
+    }
+
+    public void setThreshold3(float threshold3) {
+        this.threshold3 = threshold3;
+    }
+
+    public int getSaveCount() {
+        return saveCount;
+    }
+
+    public void setSaveCount(int saveCount) {
+        this.saveCount = saveCount;
+    }
+
+    public int getDisplayCount() {
+        return displayCount;
+    }
+
+    public void setDisplayCount(int displayCount) {
+        this.displayCount = displayCount;
+    }
+
+    public int getDpiWidth() {
+        return dpiWidth;
+    }
+
+    public void setDpiWidth(int dpiWidth) {
+        this.dpiWidth = dpiWidth;
+    }
+
+    public int getDpiHeight() {
+        return dpiHeight;
+    }
+
+    public void setDpiHeight(int dpiHeight) {
+        this.dpiHeight = dpiHeight;
+    }
+
+    public int getDpiCount() {
+        return dpiCount;
+    }
+
+    public void setDpiCount(int dpiCount) {
+        this.dpiCount = dpiCount;
     }
 }

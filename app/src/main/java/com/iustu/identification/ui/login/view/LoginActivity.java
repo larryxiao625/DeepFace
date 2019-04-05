@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import com.iustu.identification.R;
+import com.iustu.identification.bean.ParameterConfig;
 import com.iustu.identification.config.SystemConfig;
 import com.iustu.identification.ui.base.BaseActivity;
 import com.iustu.identification.ui.base.BaseFragment;
@@ -17,7 +18,9 @@ import com.iustu.identification.ui.widget.dialog.EditDialog;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.ui.widget.dialog.SingleButtonDialog;
 import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
+import com.iustu.identification.util.DataCache;
 import com.iustu.identification.util.LibManager;
+import com.iustu.identification.util.MSP;
 import com.iustu.identification.util.SDKUtil;
 
 import java.util.ArrayList;

@@ -11,6 +11,7 @@ import com.iustu.identification.R;
 import com.iustu.identification.config.ParametersConfig;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.widget.seekbar.BubbleSeekBar;
+import com.iustu.identification.util.DataCache;
 import com.iustu.identification.util.PickerViewFactor;
 
 import java.util.ArrayList;
@@ -57,7 +58,7 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
     @BindView(R.id.check_factor3)
     EditText checkFactor3;
     @BindView(R.id.save_dpi_tv)
-    EditText dpiSetTv;
+    TextView dpiSetTv;
 
     private OptionsPickerView displayCountPicker;
     private OptionsPickerView saveCountPicker;
@@ -68,8 +69,6 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
     private List<Integer> dpiWidth=new ArrayList<>();     // 设置分辨率宽度的源
     private List<Integer> dpiHeight=new ArrayList<>();       // 设置分辨率高度的源
     private List<String> dpiStringList=new ArrayList<>();       // 设置分辨率的源
-
-    String dpi;
 
     @Override
     protected int postContentView() {
@@ -83,7 +82,7 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
         faceSeekBar.setProgress((int) (parametersConfig.getThresholdValueFace() * 1000));
         faceSeekBar.setOnProgressChangeListener(this);
         displayCountTv.setText(String.valueOf(parametersConfig.getDisplayCount()));
-
+        dpiSetTv.setText(dpiStringList.get(DataCache.getParameterConfig().getDpiCount()));
         for(int i = 10; i <= 50; i++){
             displayCountList.add(i);
         }
@@ -178,9 +177,9 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
     public void setDpi(){
         if(dpiPicker==null){
             dpiPicker=PickerViewFactor.newPickerViewBuilder(mActivity,(options1, options2, options3, v) ->{
-                parametersConfig.setDpiHeight(dpiHeight.get(options1));
-                parametersConfig.setDpiWidth(dpiWidth.get(options1));
-                parametersConfig.setDpiCount(options1);
+                DataCache.getParameterConfig().setDpiHeight(dpiHeight.get(options1));
+                DataCache.getParameterConfig().setDpiWidth(dpiWidth.get(options1));
+                DataCache.getParameterConfig().setDpiCount(options1);
                 dpiSetTv.setText(dpiStringList.get(options1));
             } )
                     .setSelectOptions(parametersConfig.getDpiCount())

@@ -19,4 +19,28 @@ public class DataCache {
         chosenLibConfig = ChosenLibConfig.getFromSP();
         account = Account.getFromSP();
     }
+
+    public static ParameterConfig getParameterConfig() {
+        return parameterConfig;
+    }
+
+    public static void setParameterConfig(ParameterConfig parameterConfig) {
+        DataCache.parameterConfig = parameterConfig;
+    }
+
+    public static Account getAccount() {
+        return account;
+    }
+
+    public static void setAccount(Account account) {
+        DataCache.account = account;
+    }
+
+    public static ChosenLibConfig getChosenLibConfig() {
+        return chosenLibConfig;
+    }
+
+    public static void setChosenLibConfig(ChosenLibConfig chosenLibConfig) {
+        DataCache.chosenLibConfig = chosenLibConfig;
+    }
 }

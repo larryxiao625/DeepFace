@@ -15,12 +15,14 @@ import android.widget.Toast;
 
 import com.iustu.identification.App;
 import com.iustu.identification.R;
+import com.iustu.identification.bean.ParameterConfig;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.main.MainActivity;
 import com.iustu.identification.ui.main.camera.prenster.CameraPrenster;
 import com.iustu.identification.ui.widget.camera.CameraPreview;
 import com.iustu.identification.ui.widget.dialog.SingleButtonDialog;
 import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
+import com.iustu.identification.util.DataCache;
 import com.iustu.identification.util.ExceptionUtil;
 import com.iustu.identification.util.FileCallBack;
 import com.iustu.identification.util.IconFontUtil;
@@ -43,6 +45,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class CameraFragment extends BaseFragment implements CameraViewInterface.Callback {
     boolean isPreview=false;
+    boolean isFirstTime=true;
     UVCCameraHelper cameraHelper=UVCCameraHelper.getInstance();
     @BindView(R.id.photo_layout)
     FrameLayout frameLayout;
@@ -61,13 +64,21 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
         Log.d("CameraFragment","initView");
         IconFontUtil util = IconFontUtil.getDefault();
         cameraPrenster.attchView(iVew);
-        if(cameraHelper.getUSBMonitor()==null) {
-            cameraHelper.setDefaultPreviewSize(1280, 720);
-        }
         cameraTextureView.setCallback(this);
-        cameraHelper.initUSBMonitor(getActivity(),cameraTextureView,cameraPrenster);
-        if(cameraHelper!=null){
-            cameraHelper.registerUSB();
+        if(cameraHelper.getUSBMonitor()==null) {
+            cameraHelper.setDefaultPreviewSize(1920, 1080);
+            cameraHelper.initUSBMonitor(getActivity(),cameraTextureView,cameraPrenster);
+        }else {
+            cameraHelper.updateResolution(DataCache.getParameterConfig().getDpiWidth(), DataCache.getParameterConfig().getDpiHeight());
+        }
+        cameraHelper.registerUSB();
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(hidden){
+            cameraHelper.unregisterUSB();
         }
     }
 
@@ -90,7 +101,6 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
 
     @Override
     public void onSurfaceChanged(CameraViewInterface view, Surface surface, int width, int height) {
-
     }
 
     @Override
@@ -98,6 +108,9 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
         if(isPreview&&cameraHelper.isCameraOpened()){
             cameraHelper.stopPreview();
             isPreview=false;
+        }else if(isFirstTime){
+            cameraHelper.stopPreview();
+            isFirstTime=false;
         }
     }
 
