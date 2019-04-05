@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.iustu.identification.entity.Account;
+import com.iustu.identification.entity.CompareRecord;
 import com.iustu.identification.entity.Library;
 
 /**
@@ -34,6 +35,17 @@ public class SqliteUtil {
         values.put("count", library.count);
         database.beginTransaction();
         database.insert(SQLString.TABLE_LIBRARY, null, values);
+        database.endTransaction();
+    }
+
+    public void insertCompareRecord(CompareRecord compareRecord) {
+        ContentValues values = new ContentValues();
+        values.put("time", compareRecord.time);
+        values.put("rate", compareRecord.rate);
+        values.put("uploadPhotoPath", compareRecord.uploadPhotoPath);
+        values.put("feature", compareRecord.feature.toString());
+        database.beginTransaction();
+        database.insert(SQLString.TABLE_COMPARERECORD, null, values);
         database.endTransaction();
     }
 }

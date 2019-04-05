@@ -52,6 +52,8 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
 
+    implementation files('libs/facerecsdk_java_api.jar')
+
     implementation 'com.tencent.bugly:crashreport_upgrade:latest.release'
     implementation 'com.tencent.bugly:nativecrashreport:latest.release'
 }
