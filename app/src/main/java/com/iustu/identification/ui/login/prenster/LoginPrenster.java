@@ -10,6 +10,7 @@ import com.iustu.identification.ui.widget.dialog.SingleButtonDialog;
 import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
 import com.iustu.identification.util.DataCache;
 import com.iustu.identification.util.LibManager;
+import com.iustu.identification.util.MSP;
 
 import okhttp3.HttpUrl;
 
@@ -96,4 +97,5 @@ public class LoginPrenster implements IPrenster{
             getLoginFailDialog("用户名或密码错误");
         }
     }
+
 }

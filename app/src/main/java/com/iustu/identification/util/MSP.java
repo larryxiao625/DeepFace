@@ -18,6 +18,7 @@ public class MSP {
     public static final String CHOSEN = "chosen";          // 从人脸库中取出数据
     public static final String SP_ACCOUNT = "lib_account";   // 保存登录的账户
     public static final String ACCOUNT = "account";
+    public static final String IS_FIRST_TIME="is_first_time";   //检测是否是第一次进入应用
     private static SharedPreferences preferences;
 
     private static String lastName;

@@ -15,12 +15,14 @@ import android.widget.Toast;
 
 import com.iustu.identification.App;
 import com.iustu.identification.R;
+import com.iustu.identification.bean.ParameterConfig;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.main.MainActivity;
 import com.iustu.identification.ui.main.camera.prenster.CameraPrenster;
 import com.iustu.identification.ui.widget.camera.CameraPreview;
 import com.iustu.identification.ui.widget.dialog.SingleButtonDialog;
 import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
+import com.iustu.identification.util.DataCache;
 import com.iustu.identification.util.ExceptionUtil;
 import com.iustu.identification.util.FileCallBack;
 import com.iustu.identification.util.IconFontUtil;
@@ -66,6 +68,8 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
         if(cameraHelper.getUSBMonitor()==null) {
             cameraHelper.setDefaultPreviewSize(1920, 1080);
             cameraHelper.initUSBMonitor(getActivity(),cameraTextureView,cameraPrenster);
+        }else {
+            cameraHelper.updateResolution(DataCache.getParameterConfig().getDpiWidth(), DataCache.getParameterConfig().getDpiHeight());
         }
         cameraHelper.registerUSB();
     }
@@ -75,8 +79,6 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
         super.onHiddenChanged(hidden);
         if(hidden){
             cameraHelper.unregisterUSB();
-        }else if(!hidden){
-            cameraHelper.registerUSB();
         }
     }
 
