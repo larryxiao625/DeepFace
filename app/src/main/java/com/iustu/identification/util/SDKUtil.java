@@ -59,7 +59,7 @@ public class SDKUtil {
             Log.d("testSdk","sdk合法");
         }
 
-        SDKUtil.init();
+        //SDKUtil.init();
     }
 
     private static void updateFile(String filePath) {
