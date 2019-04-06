@@ -82,7 +82,6 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
         faceSeekBar.setProgress((int) (parametersConfig.getThresholdValueFace() * 1000));
         faceSeekBar.setOnProgressChangeListener(this);
         displayCountTv.setText(String.valueOf(parametersConfig.getDisplayCount()));
-        dpiSetTv.setText(dpiStringList.get(DataCache.getParameterConfig().getDpiCount()));
         for(int i = 10; i <= 50; i++){
             displayCountList.add(i);
         }
@@ -105,6 +104,7 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
         dpiHeight.add(960);
         dpiHeight.add(768);
         getDpiStringList();
+        dpiSetTv.setText(dpiStringList.get(DataCache.getParameterConfig().getDpiCount()));
     }
 
     public void getDpiStringList(){
