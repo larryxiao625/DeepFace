@@ -64,21 +64,28 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
         Log.d("CameraFragment","initView");
         IconFontUtil util = IconFontUtil.getDefault();
         cameraPrenster.attchView(iVew);
-        cameraTextureView.setCallback(this);
         if(cameraHelper.getUSBMonitor()==null) {
+            Log.d("CameraFragment","initMonitor");
             cameraHelper.setDefaultPreviewSize(1920, 1080);
             cameraHelper.initUSBMonitor(getActivity(),cameraTextureView,cameraPrenster);
         }else {
+            Log.d("CameraFragment","updateDpi");
             cameraHelper.updateResolution(DataCache.getParameterConfig().getDpiWidth(), DataCache.getParameterConfig().getDpiHeight());
         }
+        cameraTextureView.setCallback(this);
         cameraHelper.registerUSB();
     }
 
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        if(hidden){
+        if(hidden&&cameraTextureView!=null){
             cameraHelper.unregisterUSB();
+            if(cameraHelper.getUsbDeviceCount()!=0){
+                cameraPrenster.onDettachDev(cameraHelper.getUsbDeviceList().get(0));
+            }
+            cameraHelper.release();
+            cameraTextureView.onPause();
         }
     }
 
@@ -93,7 +100,12 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
 
     @Override
     public void onSurfaceCreated(CameraViewInterface view, Surface surface) {
+        Log.d("CameraFragment","onSurfaceCreated");
+        Log.d("CameraFragment",String.valueOf(cameraHelper.isCameraOpened()));
+        Log.d("CameraFragment","IsPreview:"+isPreview);
+        Log.d("CameraFragment","IsFirstTime:"+isFirstTime);
         if(!isPreview&&cameraHelper.isCameraOpened()){
+            Log.d("CameraFragment","startPreview");
             cameraHelper.startPreview(cameraTextureView);
             isPreview=true;
         }
@@ -105,11 +117,15 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
 
     @Override
     public void onSurfaceDestroy(CameraViewInterface view, Surface surface) {
+        Log.d("CameraFragment","surfaceDestroy");
         if(isPreview&&cameraHelper.isCameraOpened()){
+            Log.d("CameraFragment","stopPreview");
             cameraHelper.stopPreview();
             isPreview=false;
-        }else if(isFirstTime){
+        }else if(isFirstTime && !cameraHelper.isCameraOpened()){
+            Log.d("CameraFragment","stopPreview");
             cameraHelper.stopPreview();
+            isPreview=false;
             isFirstTime=false;
         }
     }

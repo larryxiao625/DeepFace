@@ -16,6 +16,7 @@ public class CameraPrenster implements UVCCameraHelper.OnMyDevConnectListener,IP
     IVew iVew;
     @Override
     public void onAttachDev(UsbDevice device) {
+        Log.d("CameraPrenster","attachDev");
         //申请相机权限
         if(!isRequest){
             isRequest=true;
@@ -27,6 +28,7 @@ public class CameraPrenster implements UVCCameraHelper.OnMyDevConnectListener,IP
 
     @Override
     public void onDettachDev(UsbDevice device) {
+        Log.d("CameraPrenster","dettachDev");
         //释放camera资源
         if(isRequest){
             isRequest=false;

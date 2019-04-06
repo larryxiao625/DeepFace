@@ -12,7 +12,7 @@ import org.litepal.LitePalApplication;
  * Created by Liu Yuchuan on 2017/11/4.
  */
 
-public class App extends LitePalApplication {
+public class App extends LitePalApplication{
     static {
         System.loadLibrary("facerecsdk_java");
     }
