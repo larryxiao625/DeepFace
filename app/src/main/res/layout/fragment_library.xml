@@ -13,10 +13,18 @@
         android:layout_height="wrap_content">
     </com.iustu.identification.ui.widget.TitleBar>
 
+    <TextView
+        android:id="@+id/tv_sure"
+        android:textAlignment="center"
+        android:padding="12dp"
+        android:visibility="visible"
+        android:textColor="@color/WHITE"
+        android:text="密码错误，点击该文本重新输入"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
     <FrameLayout
         android:id="@+id/fragment_library_layout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent">
     </FrameLayout>
 </LinearLayout>
