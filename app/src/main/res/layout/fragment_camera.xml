@@ -6,11 +6,14 @@
     tools:background="@color/colorBackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <com.serenegiant.usb.widget.UVCCameraTextureView
-        android:id="@+id/capture_uvc_camera"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp" />
+        android:layout_height="match_parent">
+        <com.serenegiant.usb.widget.UVCCameraTextureView
+            android:id="@+id/capture_uvc_camera"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
 
 
+    </LinearLayout>
 </FrameLayout>
