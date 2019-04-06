@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Surface;
 import android.view.View;
@@ -18,6 +21,7 @@ import com.iustu.identification.R;
 import com.iustu.identification.bean.ParameterConfig;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.main.MainActivity;
+import com.iustu.identification.ui.main.camera.adapter.CompareItemAdapter;
 import com.iustu.identification.ui.main.camera.prenster.CameraPrenster;
 import com.iustu.identification.ui.widget.camera.CameraPreview;
 import com.iustu.identification.ui.widget.dialog.SingleButtonDialog;
@@ -32,6 +36,7 @@ import com.serenegiant.usb.widget.CameraViewInterface;
 import com.serenegiant.usb.widget.UVCCameraTextureView;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -51,6 +56,8 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
     FrameLayout frameLayout;
     @BindView(R.id.capture_uvc_camera)
     UVCCameraTextureView cameraTextureView;
+    @BindView(R.id.item_compare_recycler_view)
+    RecyclerView itemCompareRecyclerView;
 
     CameraPrenster cameraPrenster=new CameraPrenster();
 
@@ -63,10 +70,11 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
     protected void initView(@Nullable Bundle savedInstanceState, View view) {
         Log.d("CameraFragment","initView");
         IconFontUtil util = IconFontUtil.getDefault();
+        CompareItemAdapter compareItemAdapter=new CompareItemAdapter(new ArrayList<>());
         cameraPrenster.attchView(iVew);
         if(cameraHelper.getUSBMonitor()==null) {
             Log.d("CameraFragment","initMonitor");
-            cameraHelper.setDefaultPreviewSize(1920, 1080);
+            cameraHelper.setDefaultPreviewSize(DataCache.getParameterConfig().getDpiWidth(), DataCache.getParameterConfig().getDpiHeight());
             cameraHelper.initUSBMonitor(getActivity(),cameraTextureView,cameraPrenster);
         }else {
             Log.d("CameraFragment","updateDpi");
@@ -74,6 +82,8 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
         }
         cameraTextureView.setCallback(this);
         cameraHelper.registerUSB();
+        itemCompareRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        itemCompareRecyclerView.setAdapter(compareItemAdapter);
     }
 
     @Override

@@ -15,7 +15,7 @@ public class SearchCompareItem{
     private String photoUrl;
     private boolean isInitInfo;
     private boolean isInitPhotoUrl;
-    private boolean isExtend;
+    private boolean isExtend=false; // 判断是否展开方法
     private int width;
     private int height;
     private String rect;

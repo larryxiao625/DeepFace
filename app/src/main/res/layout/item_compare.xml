@@ -68,6 +68,7 @@
     </FrameLayout>
 
     <LinearLayout
+        android:alpha="0"
         android:id="@+id/more_info_ll"
         tools:visibility="visible"
         android:visibility="gone"

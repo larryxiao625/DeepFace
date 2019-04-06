@@ -22,6 +22,7 @@ import com.iustu.identification.bean.PersonInfo;
 import com.iustu.identification.bean.SearchCompareItem;
 import com.iustu.identification.ui.widget.ScaleView;
 import com.iustu.identification.util.ExceptionUtil;
+import com.iustu.identification.util.ExpandableViewHoldersUtil;
 import com.iustu.identification.util.ImageUtils;
 import com.iustu.identification.util.LibManager;
 import com.iustu.identification.util.TextUtil;
@@ -41,8 +42,6 @@ import io.reactivex.disposables.Disposable;
 
 public class CompareItemAdapter extends RecyclerView.Adapter<CompareItemAdapter.Holder>{
     private List<SearchCompareItem> searchCompareItemList;
-
-    private CompositeDisposable compositeDisposable;
 
     public CompareItemAdapter(List<SearchCompareItem> searchCompareItemList) {
         this.searchCompareItemList = searchCompareItemList;
@@ -119,67 +118,23 @@ public class CompareItemAdapter extends RecyclerView.Adapter<CompareItemAdapter.
         holder.foldButton.setOnClickListener(v -> {
             if(item.isExtend()){
                 item.setExtend(false);
-                holder.moreInfoLayout.setVisibility(View.GONE);
-                holder.foldImage.setImageResource(R.drawable.xiangs2);
+                ExpandableViewHoldersUtil.rotateExpandIcon(holder.foldImage,0,180);
+                ExpandableViewHoldersUtil.collapseHolder(holder, 145,335,true);
             }else {
                 item.setExtend(true);
-                holder.moreInfoLayout.setVisibility(View.VISIBLE);
-                holder.foldImage.setImageResource(R.drawable.xiangs1);
+                ExpandableViewHoldersUtil.rotateExpandIcon(holder.foldImage,180,0);
+                ExpandableViewHoldersUtil.expandHolder(holder,335,145,true);
             }
         });
     }
 
     private void loadInfo(int index){
         SearchCompareItem item = searchCompareItemList.get(index);
-        Api.getPeopleInfo(item.getFaceSetId(), item.getPeopleId())
-                .doOnSubscribe(this::addDisposable)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(personInfoMessage -> {
-                    if(personInfoMessage.getCode() == Message.CODE_SUCCESS){
-                        personInfoMessage.getBody().setFaceSetId(item.getFaceSetId());
-                        personInfoMessage.getBody().setId(item.getPeopleId());
-                        item.setPersonInfo(personInfoMessage.getBody());
-                        notifyItemChanged(index);
-                        item.setInitInfo(true);
-                    }else {
-                        item.setInitInfo(false);
-                    }
-                },throwable -> {
-                    ExceptionUtil.getThrowableMessage(CompareItemAdapter.this.getClass().getSimpleName(), throwable);
-                    item.setInitInfo(false);
-                });
-    }
-//
-//    private void loadPicUrl(int index){
-//        PersonInfo personInfo  = searchCompareItemList.get(index).getPersonInfo();
-//        Api.getFaceList(personInfo.getFaceSetId(), personInfo.getId())
-//                .doOnSubscribe(this::addDisposable)
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(listMessage -> {
-//                    if(listMessage.getCode() == Message.CODE_SUCCESS){
-//                        personInfo.setFaceUrlList(listMessage.getBody());
-//                        personInfo.setInitUrls(true);
-//                        notifyItemChanged(index);
-//                    }
-//                }, t->{
-//                    ExceptionUtil.getThrowableMessage(CompareItemAdapter.class.getSimpleName(), t);
-//                    personInfo.setInitUrls(false);
-//                });
-//    }
-
-    private void addDisposable(Disposable d){
-        if(compositeDisposable == null){
-            compositeDisposable = new CompositeDisposable();
-        }
-        if(d != null){
-            compositeDisposable.add(d);
-        }
     }
 
-    public void dispose(){
-        if(compositeDisposable != null){
-            compositeDisposable.clear();
-        }
+    public void updateSingleData(SearchCompareItem searchCompareItem,int position){
+        searchCompareItemList.add(position,searchCompareItem);
+        notifyItemChanged(0);
     }
 
     @Override
@@ -187,7 +142,7 @@ public class CompareItemAdapter extends RecyclerView.Adapter<CompareItemAdapter.
         return searchCompareItemList == null? 0 : searchCompareItemList.size();
     }
 
-    static class Holder extends RecyclerView.ViewHolder{
+    public static class Holder extends RecyclerView.ViewHolder{
         @BindView(R.id.photo_capture_iv)
         ImageView capturePhoto;
         @BindView(R.id.photo_match_iv)
