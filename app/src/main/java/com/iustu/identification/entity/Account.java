@@ -11,8 +11,8 @@ import retrofit2.http.GET;
  * 用来记录登录账户的数据表
  */
 public class Account {
-    public String name;     // 作为主键
-    public String password;  // not null, 且最多10位，不含中文字符
+    public String name = "admin";     // 作为主键
+    public String password = "123456";  // not null, 且最多10位，不含中文字符
 
     // 将对象转化为json字符串，存进SharePreference中
     private String toJsonString() {
@@ -37,6 +37,6 @@ public class Account {
 
     // 从json中解析对象并返回
     public static Account getFromSP() {
-        return fromJsonString(MSP.getInstance(MSP.SP_ACCOUNT).getString(MSP.ACCOUNT, null));
+        return fromJsonString(MSP.getInstance(MSP.SP_ACCOUNT).getString(MSP.ACCOUNT, new Account().toJsonString()));
     }
 }

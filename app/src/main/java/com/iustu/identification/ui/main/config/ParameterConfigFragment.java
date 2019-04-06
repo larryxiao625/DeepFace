@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.bigkoo.pickerview.OptionsPickerView;
 import com.iustu.identification.R;
-import com.iustu.identification.config.ParametersConfig;
+import com.iustu.identification.bean.ParameterConfig;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.widget.seekbar.BubbleSeekBar;
 import com.iustu.identification.util.DataCache;
@@ -39,7 +39,7 @@ import butterknife.OnClick;
  */
 
 public class ParameterConfigFragment extends BaseFragment implements BubbleSeekBar.OnProgressChangeListener{
-    private ParametersConfig parametersConfig;
+    private ParameterConfig config;
 
     private static final String FORMAT_COUNT = "%d";
 
@@ -78,10 +78,8 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
     @Override
     protected void initView(@Nullable Bundle savedInstanceState, View view) {
         super.initView(savedInstanceState, view);
-        parametersConfig = ParametersConfig.getInstance();
-        faceSeekBar.setProgress((int) (parametersConfig.getThresholdValueFace() * 1000));
+        config = DataCache.getParameterConfig();
         faceSeekBar.setOnProgressChangeListener(this);
-        displayCountTv.setText(String.valueOf(parametersConfig.getDisplayCount()));
         for(int i = 10; i <= 50; i++){
             displayCountList.add(i);
         }
@@ -104,7 +102,20 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
         dpiHeight.add(960);
         dpiHeight.add(768);
         getDpiStringList();
-        dpiSetTv.setText(dpiStringList.get(DataCache.getParameterConfig().getDpiCount()));
+        initData();
+    }
+
+    // 将从DataCache获取的数据加载到空间上
+    public void initData() {
+        config = DataCache.getParameterConfig();
+        faceSeekBar.setProgress((int)(config.getFactor() * 1000));
+        minFace.setText(config.getMin_size() + "");
+        checkFactor1.setText(config.getThreshold1() + "");
+        checkFactor2.setText(config.getThreshold2() + "");
+        checkFactor3.setText(config.getThreshold3() + "");
+        displayCountTv.setText(config.getDisplayCount() + "");
+        saveCountTv.setText(config.getSaveCount() + "");
+        dpiSetTv.setText(dpiStringList.get(config.getDpiCount()) + "");
     }
 
     public void getDpiStringList(){
@@ -114,8 +125,12 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
     }
     @Override
     public void onPause() {
-        if(parametersConfig != null) {
-            parametersConfig.save();
+        if(config != null) {
+            config.setMin_size(Integer.valueOf(minFace.getText().toString()));
+            config.setThreshold1(Float.valueOf(checkFactor1.getText().toString()));
+            config.setThreshold2(Float.valueOf(checkFactor2.getText().toString()));
+            config.setThreshold3(Float.valueOf(checkFactor3.getText().toString()));
+            config.save();
         }
         super.onPause();
     }
@@ -123,15 +138,15 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
     @Override
     public void onHide() {
         super.onHide();
-        if(parametersConfig != null){
-            parametersConfig.save();
+        if(config != null){
+            config.save();
         }
     }
 
     @Override
     public void onProgressChange(View view, int progress) {
         if(view.getId() == R.id.face_bsb){
-            parametersConfig.setThresholdValueFace(progress/1000f);
+            config.setFactor(progress/1000f);
         }
     }
 
@@ -139,10 +154,11 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
     public void setDisplayCount(){
         if(displayCountPicker == null) {
             displayCountPicker = PickerViewFactor.newPickerViewBuilder(mActivity, (options1, options2, options3, v) -> {
-                parametersConfig.setDisplayCount(displayCountList.get(options1));
+                config.setDisplayCount(displayCountList.get(options1));
+                config.setDiaplayPosition(options1);
                 displayCountTv.setText(String.format(Locale.ENGLISH, FORMAT_COUNT, displayCountList.get(options1)));
             })
-                    .setSelectOptions(parametersConfig.getDisplayCount() - 10)
+                    .setSelectOptions(config.getDisplayCount())
                     .setTitleText("显示结果数量")
                     .build();
 
@@ -155,10 +171,11 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
     public void setSaveCount() {
         if(saveCountPicker == null) {
             saveCountPicker = PickerViewFactor.newPickerViewBuilder(mActivity, (options1, options2, options3, v) -> {
-                parametersConfig.setDisplayCount(displayCountList.get(options1));
+                config.setSaveCount(saveCountList.get(options1));
+                config.setSavePosition(options1);
                 saveCountTv.setText(String.format(Locale.ENGLISH, FORMAT_COUNT, saveCountList.get(options1)));
             })
-                    .setSelectOptions(parametersConfig.getDisplayCount() - 10)
+                    .setSelectOptions(config.getSavePosition())
                     .setTitleText("保存记录数量")
                     .build();
 
@@ -167,22 +184,17 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
         saveCountPicker.show();
     }
 
-    // “保存”按钮的点击事件
-    @OnClick(R.id.save_tv)
-    public void save() {
-
-    }
     //摄像头分辨率配置界面
     @OnClick(R.id.save_dpi_ll)
     public void setDpi(){
         if(dpiPicker==null){
             dpiPicker=PickerViewFactor.newPickerViewBuilder(mActivity,(options1, options2, options3, v) ->{
-                DataCache.getParameterConfig().setDpiHeight(dpiHeight.get(options1));
-                DataCache.getParameterConfig().setDpiWidth(dpiWidth.get(options1));
-                DataCache.getParameterConfig().setDpiCount(options1);
+                config.setDpiHeight(dpiHeight.get(options1));
+                config.setDpiWidth(dpiWidth.get(options1));
+                config.setDpiCount(options1);
                 dpiSetTv.setText(dpiStringList.get(options1));
             } )
-                    .setSelectOptions(parametersConfig.getDpiCount())
+                    .setSelectOptions(config.getDpiCount())
                     .setTitleText("摄像头分辨率")
                     .build();
 

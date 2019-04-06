@@ -16,7 +16,9 @@ public class ParameterConfig {
     float threshold2;
     float threshold3;
     int saveCount;
+    int savePosition;      // saveCount 选中的位置
     int displayCount;
+    int diaplayPosition;    // displayCount 选中的位置
     int dpiWidth=1920;
     int dpiHeight=1080;
     int dpiCount=0;
@@ -104,6 +106,21 @@ public class ParameterConfig {
 
     public int getSaveCount() {
         return saveCount;
+    }
+
+    public int getSavePosition() {
+        return savePosition;
+    }
+
+    public void setSavePosition(int position) {
+        this.savePosition = position;
+    }
+
+    public void setDiaplayPosition(int position) {
+        this.diaplayPosition = position;
+    }
+    public int getDiaplayPosition() {
+        return diaplayPosition;
     }
 
     public void setSaveCount(int saveCount) {
