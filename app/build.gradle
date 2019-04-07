@@ -64,4 +64,6 @@ dependencies {
 
     implementation 'com.github.jiangdongguo:AndroidUSBCamera:2.2.8'
 
+    implementation 'com.facebook.stetho:stetho:1.5.0'
+
 }

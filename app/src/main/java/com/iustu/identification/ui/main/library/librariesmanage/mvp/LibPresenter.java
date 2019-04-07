@@ -1,8 +1,18 @@
 package com.iustu.identification.ui.main.library.librariesmanage.mvp;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+
 import com.iustu.identification.entity.Library;
+import com.iustu.identification.util.RxUtil;
+import com.iustu.identification.util.SqliteHelper;
 
 import java.util.List;
+
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 /**
  * created by sgh, 2019-4-3
@@ -25,6 +35,7 @@ public class LibPresenter {
      * 初始加载界面的时候获取所有的人脸库
      */
     public void onInitData() {
+
     }
 
     /**

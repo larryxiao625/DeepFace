@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.iustu.identification.entity.Account;
 import com.iustu.identification.entity.CompareRecord;
@@ -15,7 +16,7 @@ import com.iustu.identification.entity.TakeRecord;
  * created by sgh, 2019-4-2
  *
  * SQLiteOpenHelper的实现类
- *
+ * 作用就是获取数据库对象
  * 在创建新的数据表的时候：一定要在开头声明数据表的名称
  */
 public class SqliteHelper extends SQLiteOpenHelper {
@@ -37,7 +38,7 @@ public class SqliteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.beginTransaction();
+        //sqLiteDatabase.beginTransaction();
         sqLiteDatabase.execSQL(SQLString.CREATE_TABLE_ACCOUNT);
         sqLiteDatabase.execSQL(SQLString.CREATE_TABLE_LIBRARY);
         sqLiteDatabase.execSQL(SQLString.CREATE_TABLE_COMPARERECORD);
@@ -47,7 +48,7 @@ public class SqliteHelper extends SQLiteOpenHelper {
         String insertAdminAccount = "insert into " + SQLString.TABLE_ACCOUNT + " values(\"admin\", \"123456\")";
         sqLiteDatabase.execSQL(insertAdminAccount);
         sqLiteDatabase.execSQL(insertUserAccount);
-        sqLiteDatabase.endTransaction();
+        //sqLiteDatabase.endTransaction();
     }
 
     @Override

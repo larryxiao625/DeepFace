@@ -1,6 +1,8 @@
 package com.iustu.identification;
 
 import android.content.Context;
+
+import com.facebook.stetho.Stetho;
 import com.iustu.identification.util.SqliteHelper;
 import com.iustu.identification.util.SqliteUtil;
 import com.tencent.bugly.Bugly;
@@ -26,6 +28,7 @@ public class App extends LitePalApplication{
     @Override
     public void onCreate() {
         super.onCreate();
+        Stetho.initializeWithDefaults(this);
 //        CrashReport.initCrashReport(getApplicationContext());
         Bugly.init(getApplicationContext(), "9c3bdbe293", false );
         SqliteHelper.init(getApplicationContext());

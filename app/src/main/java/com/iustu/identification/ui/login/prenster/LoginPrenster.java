@@ -1,8 +1,11 @@
 package com.iustu.identification.ui.login.prenster;
 
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 
 import com.iustu.identification.config.SystemConfig;
+import com.iustu.identification.entity.Account;
 import com.iustu.identification.ui.login.view.IVew;
 import com.iustu.identification.ui.widget.dialog.EditDialog;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
@@ -11,7 +14,12 @@ import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
 import com.iustu.identification.util.DataCache;
 import com.iustu.identification.util.LibManager;
 import com.iustu.identification.util.MSP;
+import com.iustu.identification.util.RxUtil;
+import com.iustu.identification.util.SqliteHelper;
 
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 import okhttp3.HttpUrl;
 
 public class LoginPrenster implements IPrenster{
@@ -90,12 +98,46 @@ public class LoginPrenster implements IPrenster{
 
     @Override
     public void normalLogin(String username,String password) {
-        if(TextUtils.equals(username,"admin")&&TextUtils.equals(password,"123456")) {
-            LibManager.loadData();
-            DataCache.initCache();
-        }else{
-            getLoginFailDialog("用户名或密码错误");
-        }
+        getWaitProgressDialog("正在登陆");
+        final Disposable[] disposable = new Disposable[1];
+        Observable observable = RxUtil.getQuaryObservalbe(false, RxUtil.DB_ACCOUNT, new String[]{"name", "password"}, "name = ?", new String[]{username}, null, null, null, null);
+        observable.subscribe(new Observer<Cursor>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                disposable[0] = d;
+            }
+
+            @Override
+            public void onNext(Cursor o) {
+                waitProgressDialog.dismiss();
+                // 说明没有改账户
+                if (o.getCount() == 0){
+                    getLoginFailDialog("无此账户");
+                    return;
+                }
+                while (o.moveToNext()) {
+                    if (o.getString(1).equals(password)) {
+                        LibManager.loadData();
+                        Account account = new Account(username, password);
+                        DataCache.initCache(account);
+                        return;
+                    }
+                }
+                getLoginFailDialog("用户名或密码错误");
+                return;
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+                disposable[0].dispose();
+            }
+
+            @Override
+            public void onComplete() {
+                disposable[0].dispose();
+            }
+        });
     }
 
 }

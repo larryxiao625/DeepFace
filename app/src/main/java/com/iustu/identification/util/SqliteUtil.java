@@ -10,6 +10,7 @@ import com.iustu.identification.entity.Library;
 /**
  * created by sgh, 2019-4-4
  * 操作Sqlite数据库的工具类
+ * 只包含增删改，查的功能在RxUtil中
  */
 public class SqliteUtil {
     private static SQLiteDatabase database;

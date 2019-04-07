@@ -14,6 +14,11 @@ public class Account {
     public String name = "admin";     // 作为主键
     public String password = "123456";  // not null, 且最多10位，不含中文字符
 
+    public Account(){}
+    public Account(String name, String password) {
+        this.name = name;
+        this.password = password;
+    }
     // 将对象转化为json字符串，存进SharePreference中
     private String toJsonString() {
         Gson gson = new Gson();

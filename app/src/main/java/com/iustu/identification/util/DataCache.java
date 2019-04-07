@@ -14,10 +14,10 @@ public class DataCache {
     private static ChosenLibConfig chosenLibConfig;         // 记录已被选中的人脸库
 
     // 该方法需要在登录成功时的回调中调用
-    public static void initCache() {
+    public static void initCache(Account maccount) {
         parameterConfig = ParameterConfig.getFromSP();
         chosenLibConfig = ChosenLibConfig.getFromSP();
-        account = Account.getFromSP();
+        account = maccount;
     }
 
     public static ParameterConfig getParameterConfig() {

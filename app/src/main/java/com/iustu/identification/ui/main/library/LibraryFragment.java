@@ -21,6 +21,7 @@ import com.iustu.identification.ui.main.library.peoplemagnage.mvp.PersionPresent
 import com.iustu.identification.ui.widget.TitleBar;
 import com.iustu.identification.ui.widget.dialog.EditDialog;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
+import com.iustu.identification.util.DataCache;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,6 +88,12 @@ public class LibraryFragment extends BaseFragment implements TitleBar.TitleBarLi
             if(fragment != null){
                 mFragmentList.set(i, fragment);
             }
+        }
+        if (DataCache.getAccount().name.equals("admin")) {
+            confirm.setVisibility(View.GONE);
+            needConfirm = false;
+            switchFragment(fragmentNow);
+            return;
         }
         confirm.setVisibility(View.INVISIBLE);
         new EditDialog.Builder()
