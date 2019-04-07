@@ -22,6 +22,9 @@ public class RxUtil {
     public static final String DB_TAKERECORD = "TakeRecord";     // 对应TakeRecord数据表
     public static final String DB_COMPARERECORD = "CompareRecord";  // 对应CompareRecord数据表
 
+    public static final String[] ACCOUNT_COLUMNS = new String[]{"name", "password"};    // Account的所有列
+    public static final String[] LIBRARY_COLUMNS = new String[]{"libName", "libId", "description", "count"}; // Library的所有列
+
     // 获取查询数据库时的游标
     public static Observable<Cursor> getQuaryObservalbe(boolean distinct, String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit) {
         return io.reactivex.Observable.create(new ObservableOnSubscribe<Cursor>() {

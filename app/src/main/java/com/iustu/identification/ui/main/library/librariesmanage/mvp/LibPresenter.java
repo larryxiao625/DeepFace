@@ -5,9 +5,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.iustu.identification.entity.Library;
+import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
+import com.iustu.identification.util.LibManager;
 import com.iustu.identification.util.RxUtil;
 import com.iustu.identification.util.SqliteHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -19,6 +22,7 @@ import io.reactivex.disposables.Disposable;
  * 人脸库管理界面的Presenter
  */
 public class LibPresenter {
+    private Disposable disposable;
 
     private LibModel mModel;
     private LibView mView;
@@ -35,7 +39,38 @@ public class LibPresenter {
      * 初始加载界面的时候获取所有的人脸库
      */
     public void onInitData() {
+        Log.e("", "onInitData: ===========----------------");
+        Observable observable = RxUtil.getQuaryObservalbe(false, RxUtil.DB_LIBRARY, RxUtil.LIBRARY_COLUMNS, null, null, null, null, null, null);
+        observable.subscribe(new Observer<Cursor>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                disposable = d;
+            }
 
+            @Override
+            public void onNext(Cursor cursor) {
+                Log.e("", "onInitData-onNext: ===========----------------");
+                if (cursor.getCount() == 0)
+                    return;
+                List<Library> data = new ArrayList<>();
+                while (cursor.moveToNext()) {
+                    Library library = new Library(cursor.getString(0), cursor.getInt(1), cursor.getString(2), cursor.getInt(3));
+                    data.add(library);
+                }
+                mView.bindData(data);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+                disposable.dispose();
+            }
+
+            @Override
+            public void onComplete() {
+                disposable.dispose();
+            }
+        });
     }
 
     /**

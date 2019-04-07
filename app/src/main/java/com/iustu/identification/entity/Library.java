@@ -10,4 +10,11 @@ public class Library {
     public int libId;       // key
     public String discription;      // 库描述
     public int count;      // 库数量
+
+    public Library(String libName, int libId, String discription, int count) {
+        this.libName = libName;
+        this.count = count;
+        this.discription = discription;
+        this.libId = libId;
+    }
 }

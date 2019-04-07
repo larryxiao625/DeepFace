@@ -1,6 +1,7 @@
 package com.iustu.identification.ui.main.library.librariesmanage.mvp;
 
 import com.iustu.identification.entity.Library;
+import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
 
 import java.util.List;
 
@@ -11,4 +12,6 @@ import java.util.List;
 public interface LibView {
     void setPresenter (LibPresenter presenter);
     void bindData(List<Library> data);
+    void showWaitDialog();
+    void dissmissDialog();
 }
