@@ -15,4 +15,5 @@ public interface LibView {
     void showWaitDialog(String content);
     void dissmissDialog();
     void deletePosition(int position);
+    void modifyPosition(String name, String des, int position);
 }

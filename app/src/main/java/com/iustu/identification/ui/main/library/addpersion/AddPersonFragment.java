@@ -5,23 +5,20 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.iustu.identification.R;
-import com.iustu.identification.api.Api;
-import com.iustu.identification.api.message.Message;
-import com.iustu.identification.bean.Library;
-import com.iustu.identification.bean.PersonInfo;
+import com.iustu.identification.entity.PersionInfo;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.main.MainActivity;
 import com.iustu.identification.ui.main.library.LibraryFragment;
 import com.iustu.identification.ui.main.library.addpersion.mvp.AddPersionPresenter;
 import com.iustu.identification.ui.main.library.addpersion.mvp.AddPersionView;
 import com.iustu.identification.ui.widget.dialog.SingleButtonDialog;
+import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
 import com.iustu.identification.util.ExceptionUtil;
 import com.iustu.identification.util.FileCallBack;
 import com.iustu.identification.util.ImageUtils;
@@ -43,18 +40,16 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class AddPersonFragment extends BaseFragment implements AddPersionView {
-    private static final String KEY_LIB_NAME = "lib name";
-    private static final String KEY_FACE_SET_ID = "face set id";
+    private static final String KEY_LIB_NAME = "libName";
     private static final String FORMAT_LIB_NAME = "人脸库名称——%s";
-    private static final String KEY_PHOTO_PATH = "path";
-    private static final String KEY_FACE_SET_INDEX = "index";
+    private static final String KEY_LIB_ID= "libId";
 
 
     private AddPersionPresenter presenter;
+    private WaitProgressDialog waitProgressDialog;
 
     private String libName;
-    private String faceSetId;
-    private int faceSetIndex;
+    private int libId;
     private String photoPath;
 
     @BindView(R.id.lib_name_tv)
@@ -67,12 +62,8 @@ public class AddPersonFragment extends BaseFragment implements AddPersionView {
     TextView sexEdit;
     @BindView(R.id.location_edit)
     TextView locationEdit;
-    @BindView(R.id.race_edit)
-    TextView raceEdit;
-    @BindView(R.id.phone_number_edit)
-    TextView phoneNumberEdit;
     @BindView(R.id.remark_edit)
-    TextView remarkEdit;
+    TextView remarkEdit;   //备注
     @BindView(R.id.photo_iv)
     ImageView photoIv;
 
@@ -99,26 +90,20 @@ public class AddPersonFragment extends BaseFragment implements AddPersionView {
         Bundle bundle = getArguments();
         if(bundle != null){
             libName = bundle.getString(KEY_LIB_NAME, null);
-            faceSetId = bundle.getString(KEY_FACE_SET_ID, null);
             libNameTv.setText(TextUtil.format(FORMAT_LIB_NAME, libName));
-            faceSetIndex = bundle.getInt(KEY_FACE_SET_INDEX, -1);
-            Log.e(AddPersonFragment.class.getSimpleName(), libName + " " + faceSetId + " " + faceSetIndex);
-            if(faceSetIndex == -1){
-                onArgumentsError();
-            }
+            libId = bundle.getInt(KEY_LIB_ID, -1);
         }else {
             onArgumentsError();
         }
     }
 
-    public void setArguments(String libName, String faceSetId, int faceSetIndex){
+    public void setArguments(int libId, String libName){
         Bundle bundle = getArguments();
         if(bundle == null){
             bundle = new Bundle();
         }
-        bundle.putString(KEY_LIB_NAME, libName);
-        bundle.putString(KEY_FACE_SET_ID, faceSetId);
-        bundle.putInt(KEY_FACE_SET_INDEX, faceSetIndex);
+        bundle.putInt("libId", libId);
+        bundle.putString("libName", libName);
         setArguments(bundle);
     }
 
@@ -141,51 +126,17 @@ public class AddPersonFragment extends BaseFragment implements AddPersionView {
         }
         String idCardNumber = idCardEdit.getText().toString().trim();
         String location = locationEdit.getText().toString().trim();
-        String race = raceEdit.getText().toString().trim();
-        String tel = phoneNumberEdit.getText().toString().trim();
         String remark = remarkEdit.getText().toString().trim();
-        PersonInfo personInfo = new PersonInfo();
-        personInfo.setName(name);
-        personInfo.setCode(idCardNumber);
-        personInfo.setGender(sex);
-        personInfo.setAddress(location);
-        personInfo.setRace(race);
-        personInfo.setTel(tel);
-        personInfo.setRemark(remark);
-        personInfo.setFaceSetId(faceSetId);
-        Api.addPeople(personInfo)
-                .subscribeOn(Schedulers.io())
-                .doOnSubscribe(this::addDisposable)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(stringMessage -> {
-                    if(stringMessage.getCode() == Message.CODE_SUCCESS){
-                        ToastUtil.show("添加人员成功");
-                        Library library = LibManager.getLibraryList().get(faceSetIndex);
-                        LibManager.getIdNameMap().put(library.getIdOnServer(), library.getName());
-                        personInfo.setId(stringMessage.getBody());
-                        ((LibraryFragment)getParentFragment()).switchFragment(LibraryFragment.ID_LIBRARIES_MANAGE);
-                        if(photoPath != null) {
-                            Api.addFace(faceSetId, stringMessage.getBody(), new File(photoPath))
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .subscribe(stringMessage1 -> {
-                                        if(stringMessage1.getCode() == Message.CODE_SUCCESS) {
-                                            library.setCount(library.getCount() + 1);
-                                            ToastUtil.show("添加照片成功");
-                                        }else {
-                                            ToastUtil.show("添加照片失败,错误码(" + stringMessage1.getCode() + ")");
-                                        }
-                                    }, t->{
-                                        ToastUtil.show("添加照片失败");
-                                        ExceptionUtil.getThrowableMessage(AddPersonFragment.class.getSimpleName(), t);
-                                    });
-                        }
-                    }else {
-                        ToastUtil.show("添加失败!");
-                    }
-                }, t->{
-                    ExceptionUtil.getThrowableMessage(t);
-                    ExceptionUtil.toastServerError();
-                });
+        PersionInfo persionInfo = new PersionInfo();
+        persionInfo.feature = null;
+        persionInfo.gender = sex;
+        persionInfo.name = name;
+        persionInfo.home = location;
+        persionInfo.identity = idCardNumber;
+        persionInfo.other = remark;
+        persionInfo.photoPath = "test";
+        persionInfo.libId = libId;
+        presenter.onAddPersion(persionInfo);
     }
 
     @OnClick(R.id.photo_iv)
@@ -242,7 +193,31 @@ public class AddPersonFragment extends BaseFragment implements AddPersionView {
     }
 
     @Override
-    public void onAddPersion() {
-        presenter.onAddPersion();
+    public void onAddPersion(PersionInfo p) {
+        presenter.onAddPersion(p);
+    }
+
+    @Override
+    public void showWaitDialog(String content) {
+        waitProgressDialog = new WaitProgressDialog.Builder()
+                .title(content)
+                .cancelable(false)
+                .build();
+        waitProgressDialog.show(mActivity.getFragmentManager(), "Loading");
+    }
+
+    @Override
+    public void dissmissDialog() {
+        waitProgressDialog.dismiss();
+        waitProgressDialog = null;
+    }
+
+    // 将所有EditText清空
+    public void clear() {
+        nameEdit.setText("");
+        idCardEdit.setText("");
+        sexEdit.setText("");
+        locationEdit.setText("");
+        remarkEdit.setText("");
     }
 }

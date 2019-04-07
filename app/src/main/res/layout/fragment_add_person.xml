@@ -89,29 +89,6 @@
             <FrameLayout
                 style="@style/LibraryEditLayout">
                 <TextView
-                    android:text="@string/race"
-                    style="@style/LibraryText"/>
-                <EditText
-                    android:id="@+id/race_edit"
-                    android:hint="@string/fill_race"
-                    style="@style/LibraryEditText"/>
-            </FrameLayout>
-            <include layout="@layout/divider_horizontal"/>
-            <FrameLayout
-                style="@style/LibraryEditLayout">
-                <TextView
-                    android:text="@string/phone_number"
-                    style="@style/LibraryText"/>
-                <EditText
-                    android:id="@+id/phone_number_edit"
-                    android:inputType="phone"
-                    android:hint="@string/fill_phone_number"
-                    style="@style/LibraryEditText"/>
-            </FrameLayout>
-            <include layout="@layout/divider_horizontal"/>
-            <FrameLayout
-                style="@style/LibraryEditLayout">
-                <TextView
                     android:text="@string/remark"
                     style="@style/LibraryText"/>
                 <EditText

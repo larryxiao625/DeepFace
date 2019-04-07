@@ -29,25 +29,15 @@ public class LibrariesManageAdapter extends PageRecyclerViewAdapter<LibrariesMan
 
     }
 
+    // index 是以所有数据源中的当前数据的位置；而position代表单前页中该数据的位置
     @Override
     public void onBindHolder(Holder holder, int index, int position) {
         Library library = mDataLast.get(index);
-        holder.id.setText(String.valueOf(position));
+        holder.id.setText(String.valueOf(index));
         holder.name.setText(library.libName);
         holder.number.setText(String.valueOf(library.count));
+
         IconFontUtil.getDefault().setText(holder.select, IconFontUtil.UNSELECT_SINGLE);
-        /*
-        if(isAdmin){
-            holder.lock.setVisibility(View.VISIBLE);
-            if(library.isLock()) {
-                IconFontUtil.getDefault().setText(holder.lock, IconFontUtil.LOCK);
-            }else {
-                IconFontUtil.getDefault().setText(holder.lock, IconFontUtil.UNLOCK);
-            }
-        }else {
-            holder.lock.setVisibility(View.INVISIBLE);
-        }
-        */
         IconFontUtil.getMyDefault().setText(holder.batch, IconFontUtil.PEOPLE_IMPORT);
         IconFontUtil.getDefault().setText(holder.edit, IconFontUtil.ALTER);
         IconFontUtil.getDefault().setText(holder.add, IconFontUtil.MEMBER_NEW);
