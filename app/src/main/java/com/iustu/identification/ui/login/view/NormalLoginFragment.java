@@ -1,22 +1,17 @@
 package com.iustu.identification.ui.login.view;
 
-import android.util.Log;
+import android.database.sqlite.SQLiteDatabase;
 import android.widget.EditText;
 
 import com.iustu.identification.R;
-import com.iustu.identification.api.Api;
-import com.iustu.identification.api.message.Message;
-import com.iustu.identification.bean.User;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.login.prenster.LoginPrenster;
-import com.iustu.identification.util.ExceptionUtil;
-import com.iustu.identification.util.LibManager;
+
+import com.iustu.identification.util.SqliteHelper;
 import com.iustu.identification.util.ToastUtil;
-import com.iustu.identification.util.UserCache;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by Liu Yuchuan on 2017/11/15.

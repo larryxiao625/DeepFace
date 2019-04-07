@@ -46,6 +46,12 @@ public class SqliteHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(SQLString.CREATE_TABLE_TAKERECORD);
         String insertUserAccount = "insert into " + SQLString.TABLE_ACCOUNT + " values(\"user\", \"123456\")";
         String insertAdminAccount = "insert into " + SQLString.TABLE_ACCOUNT + " values(\"admin\", \"123456\")";
+        sqLiteDatabase.execSQL("insert into Library values(1, \"test\", \"测试\", 2)");
+        sqLiteDatabase.execSQL("insert into Library values(2, \"sgh\", \"测试\", 2)");
+        sqLiteDatabase.execSQL("insert into Library values(3, \"xiao\", \"测试\", 2)");
+        sqLiteDatabase.execSQL("insert into Library values(4, \"chen\", \"测试\", 2)");
+        sqLiteDatabase.execSQL("insert into Library values(5, \"uestc\", \"测试\", 2)");
+        sqLiteDatabase.execSQL("insert into Library values(6, \"test2\", \"测试\", 2)");
         sqLiteDatabase.execSQL(insertAdminAccount);
         sqLiteDatabase.execSQL(insertUserAccount);
         //sqLiteDatabase.endTransaction();
@@ -84,7 +90,7 @@ class SQLString {
     public static final String TABLE_PERSIONINFO = PersionInfo.class.getSimpleName();
     public static final String TABLE_TAKERECORD = TakeRecord.class.getSimpleName();
 
-    public static final String CREATE_TABLE_LIBRARY = "create table Library (libId integer primary key autoincrement, libName varchar not null, description varchar, int count not null)";
+    public static final String CREATE_TABLE_LIBRARY = "create table Library (libId integer primary key autoincrement, libName varchar not null, description varchar, count int not null)";
     public static final String CREATE_TABLE_ACCOUNT = "create table Account (name varchar(6) primary key, password varchar(11) not null)";
     public static final String CREATE_TABLE_COMPARERECORD = "create table CompareRecord (time varchar primary key, uploadPhotoPath varchar not null, feature varchar not null, rate float not null)";
     public static final String CREATE_TABLE_PERSIONINFO = "create table PersionInfo (feature varchar primary key, libId int not null, name varchar not null, gender varchar not null, nation varchar, photoPath varchar not null, identity varchar, home varchar, other varchar)";

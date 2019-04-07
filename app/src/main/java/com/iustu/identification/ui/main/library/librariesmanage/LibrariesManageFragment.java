@@ -19,7 +19,9 @@ import com.iustu.identification.ui.main.library.librariesmanage.mvp.LibView;
 import com.iustu.identification.ui.main.library.peoplemagnage.PeopleManageFragment;
 import com.iustu.identification.ui.widget.dialog.Edit2Dialog;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
+import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
 import com.iustu.identification.util.IconFontUtil;
+import com.iustu.identification.util.LibManager;
 import com.iustu.identification.util.PageSetHelper;
 
 import java.util.ArrayList;
@@ -48,6 +50,12 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
     @BindView(R.id.new_icon_tv)
     TextView newIconTv;
 
+    private WaitProgressDialog waitProgressDialog = new WaitProgressDialog.Builder()
+            .title("正在加载数据")
+            .button("取消", v->{
+    })
+            .cancelable(false)
+            .build();
 
     private LibPresenter presenter;
     private PageSetHelper pageSetHelper;
@@ -222,4 +230,15 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
         mLibraryList.addAll(data);
         mAdapter.notifyDataChange();
     }
+
+    @Override
+    public void showWaitDialog() {
+        waitProgressDialog.show(mActivity.getFragmentManager(), "Loading");
+    }
+
+    @Override
+    public void dissmissDialog() {
+        waitProgressDialog.dismiss();
+    }
+
 }
