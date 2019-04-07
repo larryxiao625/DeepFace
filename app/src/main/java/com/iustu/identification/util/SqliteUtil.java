@@ -20,6 +20,10 @@ public class SqliteUtil {
         database = SqliteHelper.getInstance().getWritableDatabase();
     }
 
+    public static SQLiteDatabase getDatabase() {
+        return database;
+    }
+
     public void insertAccount(Account account) {
         ContentValues values = new ContentValues();
         values.put("name", account.name);
@@ -32,7 +36,7 @@ public class SqliteUtil {
     public void insertLibrary(Library library) {
         ContentValues values = new ContentValues();
         values.put("libName", library.libName);
-        values.put("description", library.discription);
+        values.put("description", library.description);
         values.put("count", library.count);
         database.beginTransaction();
         database.insert(SQLString.TABLE_LIBRARY, null, values);

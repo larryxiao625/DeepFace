@@ -23,12 +23,16 @@ import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
 import com.iustu.identification.util.IconFontUtil;
 import com.iustu.identification.util.LibManager;
 import com.iustu.identification.util.PageSetHelper;
+import com.iustu.identification.util.RxUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by Liu Yuchuan on 2017/11/20.
@@ -50,12 +54,7 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
     @BindView(R.id.new_icon_tv)
     TextView newIconTv;
 
-    private WaitProgressDialog waitProgressDialog = new WaitProgressDialog.Builder()
-            .title("正在加载数据")
-            .button("取消", v->{
-    })
-            .cancelable(false)
-            .build();
+    private WaitProgressDialog waitProgressDialog;
 
     private LibPresenter presenter;
     private PageSetHelper pageSetHelper;
@@ -82,7 +81,7 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
                     .hint1("库名称")
                     .hint2("备注")
                     .content1(library.libName)
-                    .content2(library.discription)
+                    .content2(library.description)
                     .positive("提交", (v1, layout1, layout2) -> {
                         String name = layout1.getEditText().getText().toString();
                         if(name.trim().equals("")){
@@ -175,7 +174,7 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
                 .title("提示")
                 .content("确定删除库 " + mLibraryList.get(index).libName + " 吗？")
                 .positive("确定", view->{
-                    //deleteLib(mLibraryList.get(index)., index);
+                    deleteLib(mLibraryList.get(index).libId, index);
                 })
                 .negative("取消", null)
                 .show(mActivity.getFragmentManager());
@@ -194,15 +193,15 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
                         layout1.setError("库名称不能为空");
                         return false;
                     }
-                    //createNewLib(name, layout2.getEditText().getText().toString());
+                    createNewLib(name, layout2.getEditText().getText().toString());
                     return true;
                 })
                 .negative("取消", null)
                 .show(mActivity.getFragmentManager());
     }
 
-    public void deleteLib(String id, int index){
-
+    public void deleteLib(int id, int position){
+        presenter.onDeleteLib(id, position);
     }
 
     // 更改库名称
@@ -210,8 +209,8 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
 
     }
 
-    public void createNewLib(String name, String remark){
-
+    public void createNewLib(String name, String des){
+        presenter.onCreateNewLib(name, des);
     }
 
     // 初始加载时进行数据初始化
@@ -232,13 +231,24 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
     }
 
     @Override
-    public void showWaitDialog() {
+    public void showWaitDialog(String content) {
+        waitProgressDialog = new WaitProgressDialog.Builder()
+                .title(content)
+                .cancelable(false)
+                .build();
         waitProgressDialog.show(mActivity.getFragmentManager(), "Loading");
     }
 
     @Override
     public void dissmissDialog() {
         waitProgressDialog.dismiss();
+        waitProgressDialog = null;
+    }
+
+    @Override
+    public void deletePosition(int position) {
+        mLibraryList.remove(position);
+        mAdapter.notifyDataChange();
     }
 
 }

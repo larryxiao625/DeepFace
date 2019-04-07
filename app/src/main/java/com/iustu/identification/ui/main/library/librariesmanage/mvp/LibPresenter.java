@@ -1,5 +1,6 @@
 package com.iustu.identification.ui.main.library.librariesmanage.mvp;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -39,8 +40,8 @@ public class LibPresenter {
      * 初始加载界面的时候获取所有的人脸库
      */
     public void onInitData() {
-        Log.e("", "onInitData: ===========----------------");
         Observable observable = RxUtil.getQuaryObservalbe(false, RxUtil.DB_LIBRARY, RxUtil.LIBRARY_COLUMNS, null, null, null, null, null, null);
+        mView.showWaitDialog("正在获取数据...");
         observable.subscribe(new Observer<Cursor>() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -49,7 +50,6 @@ public class LibPresenter {
 
             @Override
             public void onNext(Cursor cursor) {
-                Log.e("", "onInitData-onNext: ===========----------------");
                 if (cursor.getCount() == 0)
                     return;
                 List<Library> data = new ArrayList<>();
@@ -69,6 +69,8 @@ public class LibPresenter {
             @Override
             public void onComplete() {
                 disposable.dispose();
+                mView.dissmissDialog();
+                disposable = null;
             }
         });
     }
@@ -82,15 +84,70 @@ public class LibPresenter {
     /**
      * 添加新人脸库的逻辑代码
      */
-    public void onCreateNewLib() {
+    public void onCreateNewLib(String name, String description) {
+        Library library = new Library(name, description, 0);
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("libName", library.libName);
+        contentValues.put("description", library.description);
+        contentValues.put("count", library.count);
+        Observable observable = RxUtil.getInsertObservable(RxUtil.DB_LIBRARY, contentValues);
+        mView.showWaitDialog("正在添加人脸库...");
+        observable.subscribe(new Observer() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                disposable = d;
+            }
 
+            @Override
+            public void onNext(Object o) {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+                List<Library> list = new ArrayList();
+                list.add(library);
+                mView.bindData(list);
+                disposable.dispose();
+                mView.dissmissDialog();
+            }
+        });
     }
 
     /**
      * 删除人脸库的逻辑代码
      */
-    public void onDeleteLib() {
+    public void onDeleteLib(int id, int position) {
+        mView.showWaitDialog("正在删除人脸库...");
+        Observable observable = RxUtil.getDeleteObservable(RxUtil.DB_LIBRARY, "libId = " + id);
+        observable.subscribe(new Observer() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                disposable = d;
+            }
 
+            @Override
+            public void onNext(Object o) {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+                mView.deletePosition(position);
+                disposable.dispose();
+                mView.dissmissDialog();
+            }
+        });
     }
 
     /**
