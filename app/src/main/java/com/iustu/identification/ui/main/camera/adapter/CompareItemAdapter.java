@@ -153,8 +153,10 @@ public class CompareItemAdapter extends RecyclerView.Adapter<CompareItemAdapter.
         LinearLayout moreInfoLayout;
         @BindView(R.id.people_library_tv)
         TextView libNameTv;
-        @BindView(R.id.name_and_nationality_tv)
-        TextView nameAndNationalityTv;
+        @BindView(R.id.name_tv)
+        TextView nameTv;
+        @BindView(R.id.nationality_tv)
+        TextView nationalityTv;
         @BindView(R.id.birthday_tv)
         TextView birthTv;
         @BindView(R.id.id_card_tv)
@@ -173,17 +175,14 @@ public class CompareItemAdapter extends RecyclerView.Adapter<CompareItemAdapter.
 
         private void setPersonInfo(PersonInfo info){
             if(info == null){
-                libNameTv.setText("人脸库:");
-                nameAndNationalityTv.setText("姓名:      民族:    ");
-                birthTv.setText("生日:");
-                idCardTv.setText("身份证号:");
-                locationTv.setText("籍贯:");
+
             }else {
-                libNameTv.setText(TextUtil.format("人脸库:%s", LibManager.getLibName(info.getFaceSetId())));
-                nameAndNationalityTv.setText(TextUtil.format("姓名:%s 民族:%s", info.getName(), info.getRace()));
-                birthTv.setText(TextUtil.format("生日:%s", info.getBirthday()));
-                idCardTv.setText(TextUtil.format("身份证号:%s", info.getCode()));
-                locationTv.setText(TextUtil.format("籍贯:%s", info.getAddress()));
+                libNameTv.setText(TextUtil.format(LibManager.getLibName(info.getFaceSetId())));
+                nameTv.setText(TextUtil.format(info.getName()));
+                birthTv.setText(TextUtil.format(info.getBirthday()));
+                idCardTv.setText(TextUtil.format(info.getCode()));
+                locationTv.setText(TextUtil.format(info.getAddress()));
+                nationalityTv.setText(TextUtil.format(info.getRace()));
             }
         }
     }
