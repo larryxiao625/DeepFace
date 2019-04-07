@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.hardware.Camera;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -42,6 +44,7 @@ import com.serenegiant.usb.widget.UVCCameraTextureView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -63,7 +66,7 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
     UVCCameraTextureView cameraTextureView;
     @BindView(R.id.item_compare_recycler_view)
     RecyclerView itemCompareRecyclerView;
-
+    PowerManager.WakeLock mWakeLock;
     CameraPrenster cameraPrenster=new CameraPrenster();
     Intent serviceIntent;
     CapturePicService.CaptureBind captureBind;
@@ -94,6 +97,7 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
         itemCompareRecyclerView.setAdapter(compareItemAdapter);
 //        cameraPrenster.capturePic();
         getActivity().bindService(serviceIntent,myServiceConnection,Context.BIND_AUTO_CREATE);
+
     }
 
     @Override
@@ -152,6 +156,21 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
         }
     }
 
+
+      /**
+      * 同步方法   得到休眠锁
+      * @param context
+      * @return
+      */
+    synchronized private void getLock(Context context){
+        if(mWakeLock==null){
+        PowerManager mgr=(PowerManager)context.getSystemService(Context.POWER_SERVICE);
+        mWakeLock=mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,CapturePicService.class.getName());
+        mWakeLock.setReferenceCounted(true);
+        mWakeLock.acquire(5000);
+        }
+    }
+
     IVew iVew= rea -> Toast.makeText(App.getContext(),rea,Toast.LENGTH_SHORT).show();
 
     @Override
@@ -192,6 +211,7 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
             CameraFragment.this.captureBind= (CapturePicService.CaptureBind) service;
             ((CapturePicService.CaptureBind) service).setOnMyDevConnectListener(cameraPrenster);
             ((CapturePicService.CaptureBind) service).getService().capturePic();
+            getLock(getActivity());
         }
 
         @Override
@@ -199,4 +219,6 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
             CameraFragment.this.captureBind=null;
         }
     };
+
+
 }

@@ -58,13 +58,28 @@ public class SDKUtil {
         if (FacerecUtil.facerecsdkValid()) {
             Log.d("testSdk","sdk合法");
         }
-
-        //SDKUtil.init();
+        SDKUtil.init();
     }
 
     private static void updateFile(String filePath) {
         Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         scanIntent.setData(Uri.fromFile(new File(filePath)));
         context.getApplicationContext().sendBroadcast(scanIntent);
+    }
+
+    public static DetectHandler getDetectHandler() {
+        return detectHandler;
+    }
+
+    public static VerifyHandler getVerifyHandler() {
+        return verifyHandler;
+    }
+
+    public static SearchHandler getSearchHandler() {
+        return searchHandler;
+    }
+
+    public static AttributeHandler getAttributeHandler() {
+        return attributeHandler;
     }
 }
