@@ -1,9 +1,13 @@
 package com.iustu.identification.ui.main.camera.view;
 
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,6 +27,7 @@ import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.main.MainActivity;
 import com.iustu.identification.ui.main.camera.adapter.CompareItemAdapter;
 import com.iustu.identification.ui.main.camera.prenster.CameraPrenster;
+import com.iustu.identification.ui.main.camera.prenster.CapturePicService;
 import com.iustu.identification.ui.widget.camera.CameraPreview;
 import com.iustu.identification.ui.widget.dialog.SingleButtonDialog;
 import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
@@ -60,6 +65,8 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
     RecyclerView itemCompareRecyclerView;
 
     CameraPrenster cameraPrenster=new CameraPrenster();
+    Intent serviceIntent;
+    CapturePicService.CaptureBind captureBind;
 
     @Override
     protected int postContentView() {
@@ -72,6 +79,7 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
         IconFontUtil util = IconFontUtil.getDefault();
         CompareItemAdapter compareItemAdapter=new CompareItemAdapter(new ArrayList<>());
         cameraPrenster.attchView(iVew);
+        serviceIntent=new Intent(getActivity(), CapturePicService.class);
         if(cameraHelper.getUSBMonitor()==null) {
             Log.d("CameraFragment","initMonitor");
             cameraHelper.setDefaultPreviewSize(DataCache.getParameterConfig().getDpiWidth(), DataCache.getParameterConfig().getDpiHeight());
@@ -84,11 +92,14 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
         cameraHelper.registerUSB();
         itemCompareRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         itemCompareRecyclerView.setAdapter(compareItemAdapter);
+//        cameraPrenster.capturePic();
+        getActivity().bindService(serviceIntent,myServiceConnection,Context.BIND_WAIVE_PRIORITY);
     }
 
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
+        Log.d("CameraFragment","onHidden");
         if(hidden&&cameraTextureView!=null){
             cameraHelper.unregisterUSB();
             if(cameraHelper.getUsbDeviceCount()!=0){
@@ -142,4 +153,49 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
 
     IVew iVew= rea -> Toast.makeText(App.getContext(),rea,Toast.LENGTH_SHORT).show();
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d("CameraFragment","onStart");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("CameraFragment","onResume");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d("CameraFragment","onPause");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d("CameraFragment","onStop");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d("CameraFragment","onDestroy");
+        getActivity().unbindService(myServiceConnection);
+    }
+
+    ServiceConnection myServiceConnection=new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            Log.d("CameraFragment","onConnected");
+            CameraFragment.this.captureBind= (CapturePicService.CaptureBind) service;
+            ((CapturePicService.CaptureBind) service).setOnMyDevConnectListener(cameraPrenster);
+            ((CapturePicService.CaptureBind) service).getService().capturePic();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            CameraFragment.this.captureBind=null;
+        }
+    };
 }
