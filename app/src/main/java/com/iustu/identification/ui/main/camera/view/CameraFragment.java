@@ -93,7 +93,7 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
         itemCompareRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         itemCompareRecyclerView.setAdapter(compareItemAdapter);
 //        cameraPrenster.capturePic();
-        getActivity().bindService(serviceIntent,myServiceConnection,Context.BIND_AUTO_CREATE);
+        getActivity().bindService(serviceIntent,myServiceConnection,Context.BIND_WAIVE_PRIORITY);
     }
 
     @Override
@@ -182,7 +182,6 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
         super.onDestroy();
         Log.d("CameraFragment","onDestroy");
         getActivity().unbindService(myServiceConnection);
-        getActivity().stopService(serviceIntent);
     }
 
     ServiceConnection myServiceConnection=new ServiceConnection() {
