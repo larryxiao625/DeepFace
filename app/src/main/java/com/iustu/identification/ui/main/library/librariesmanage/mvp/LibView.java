@@ -12,6 +12,7 @@ import java.util.List;
 public interface LibView {
     void setPresenter (LibPresenter presenter);
     void bindData(List<Library> data);
-    void showWaitDialog();
+    void showWaitDialog(String content);
     void dissmissDialog();
+    void deletePosition(int position);
 }

@@ -1,5 +1,6 @@
 package com.iustu.identification.util;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -30,14 +31,49 @@ public class RxUtil {
         return io.reactivex.Observable.create(new ObservableOnSubscribe<Cursor>() {
             @Override
             public void subscribe(ObservableEmitter e) {
-                try {
-                    SQLiteDatabase database = SqliteHelper.getInstance().getWritableDatabase();
-                    Cursor cursor = database.query(distinct, table, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
-                    e.onNext(cursor);
-                    e.onComplete();
-                } catch (Exception e1) {
-                    e.onError(e1);
-                }
+                SQLiteDatabase database = SqliteUtil.getDatabase();
+                Cursor cursor = database.query(distinct, table, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
+                e.onNext(cursor);
+                e.onComplete();
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    // 获取插入数据库的Observable
+    public static Observable getInsertObservable(String tableName, ContentValues values) {
+        return Observable.create(new ObservableOnSubscribe<Object>() {
+            @Override
+            public void subscribe(ObservableEmitter<Object> e) {
+                SQLiteDatabase database = SqliteUtil.getDatabase();
+                database.insert(tableName, null, values);
+                e.onComplete();
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    // 获取更新数据表中数据的Observable
+    public static Observable getUpdateObservable(String tableName, String where, ContentValues contentValues) {
+        return Observable.create(new ObservableOnSubscribe<Object>() {
+            @Override
+            public void subscribe(ObservableEmitter<Object> e) {
+                SQLiteDatabase database = SqliteUtil.getDatabase();
+                database.update(tableName, contentValues, where, null);
+                e.onComplete();
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    // 获取删除数据表中数据的Observable
+    public static Observable getDeleteObservable(String tableName, String where) {
+        return Observable.create(new ObservableOnSubscribe<Object>() {
+            @Override
+            public void subscribe(ObservableEmitter<Object> e) {
+                SQLiteDatabase database = SqliteUtil.getDatabase();
+                database.delete(tableName, where, null);
+                e.onComplete();
             }
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

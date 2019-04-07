@@ -32,7 +32,7 @@ public class LibrariesManageAdapter extends PageRecyclerViewAdapter<LibrariesMan
     @Override
     public void onBindHolder(Holder holder, int index, int position) {
         Library library = mDataLast.get(index);
-        holder.id.setText(String.valueOf(library.libId));
+        holder.id.setText(String.valueOf(position));
         holder.name.setText(library.libName);
         holder.number.setText(String.valueOf(library.count));
         IconFontUtil.getDefault().setText(holder.select, IconFontUtil.UNSELECT_SINGLE);
