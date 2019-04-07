@@ -93,7 +93,7 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
         itemCompareRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         itemCompareRecyclerView.setAdapter(compareItemAdapter);
 //        cameraPrenster.capturePic();
-        getActivity().bindService(serviceIntent,myServiceConnection,Context.BIND_WAIVE_PRIORITY);
+        getActivity().bindService(serviceIntent,myServiceConnection,Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -104,6 +104,7 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
             cameraHelper.unregisterUSB();
             if(cameraHelper.getUsbDeviceCount()!=0){
                 cameraPrenster.onDettachDev(cameraHelper.getUsbDeviceList().get(0));
+                        getActivity().unbindService(myServiceConnection);
             }
             cameraHelper.release();
             cameraTextureView.onPause();
@@ -181,7 +182,7 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
     public void onDestroy() {
         super.onDestroy();
         Log.d("CameraFragment","onDestroy");
-        getActivity().unbindService(myServiceConnection);
+//        getActivity().stopService(serviceIntent);
     }
 
     ServiceConnection myServiceConnection=new ServiceConnection() {
