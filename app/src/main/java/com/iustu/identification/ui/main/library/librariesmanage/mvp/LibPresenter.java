@@ -124,16 +124,18 @@ public class LibPresenter {
      */
     public void onDeleteLib(int id, int position) {
         mView.showWaitDialog("正在删除人脸库...");
-        Observable observable = RxUtil.getDeleteObservable(RxUtil.DB_LIBRARY, "libId = " + id);
-        observable.subscribe(new Observer() {
+        ContentValues values = new ContentValues();
+        values.put("libId", id);
+        Observable<Cursor> observable = RxUtil.getDeleteObservable(RxUtil.DB_LIBRARY, values);
+        observable.subscribe(new Observer<Cursor>() {
             @Override
             public void onSubscribe(Disposable d) {
                 disposable = d;
             }
 
             @Override
-            public void onNext(Object o) {
-
+            public void onNext(Cursor o) {
+                // 通过游标删除数据库关联的PersionInfo
             }
 
             @Override
@@ -153,7 +155,34 @@ public class LibPresenter {
     /**
      * 更改人脸库信息的逻辑代码
      */
-    public void onModifyLib() {
+    public void onModifyLib(String name, String des, int libId, int position) {
+        mView.showWaitDialog("正在更改人脸库名称...");
+        ContentValues values = new ContentValues();
+        values.put("libName", name);
+        values.put("description", des);
+        Observable observable = RxUtil.getUpdateObservable(RxUtil.DB_LIBRARY, "libId = " + libId, values);
+        observable.subscribe(new Observer() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                disposable = d;
+            }
 
+            @Override
+            public void onNext(Object o) {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+                mView.modifyPosition(name, des, position);
+                disposable.dispose();
+                mView.dissmissDialog();
+            }
+        });
     }
 }

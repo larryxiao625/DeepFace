@@ -75,7 +75,7 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
         mAdapter.setPageSetHelper(pageSetHelper);
         // RecyclerView的Item点击事件实现更改库名称
         mAdapter.setOnPageItemClickListener((view1, index, position) -> {
-            Library library = mLibraryList.get(index);
+            Library library = mLibraryList.get(position);
             new Edit2Dialog.Builder()
                     .title("修改人脸库")
                     .hint1("库名称")
@@ -88,7 +88,7 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
                             layout1.setError("库名称不能为空");
                             return false;
                         }
-                        //modifyLibName(name, layout2.getEditText().getText().toString(), library.getIdOnServer(), index, position);
+                        modifyLibName(name, layout2.getEditText().getText().toString(), library.libId, position);
                         return true;
                     })
                     .negative("取消", null)
@@ -153,7 +153,7 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
         Library library = mLibraryList.get(index);
         LibraryFragment libraryFragment = (LibraryFragment) getParentFragment();
         ((AddPersonFragment)libraryFragment.getFragment(LibraryFragment.ID_ADD_PERSON))
-                .setArguments(library.libName, "", index);
+                .setArguments(library.libId, library.libName);
         libraryFragment.switchFragment(LibraryFragment.ID_ADD_PERSON);
     }
 
@@ -205,8 +205,8 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
     }
 
     // 更改库名称
-    public void modifyLibName(String name, String remark, String id, int index, int position){
-
+    public void modifyLibName(String newName, String newDes, int libId, int position){
+        presenter.onModifyLib(newName, newDes, libId, position);
     }
 
     public void createNewLib(String name, String des){
@@ -248,6 +248,14 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
     @Override
     public void deletePosition(int position) {
         mLibraryList.remove(position);
+        mAdapter.notifyDataChange();
+    }
+
+    @Override
+    public void modifyPosition(String name, String des, int position) {
+        Library library = mLibraryList.get(position);
+        library.libName = name;
+        library.description = des;
         mAdapter.notifyDataChange();
     }
 
