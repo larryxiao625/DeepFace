@@ -28,7 +28,7 @@ public interface PersionView {
     /**
      * 点击"添加照片"的时候调用
      */
-    void onAddPhoto();
+    void onAddPhoto(int index);
 
     /**
      * 点击“删除照片”的时候调用

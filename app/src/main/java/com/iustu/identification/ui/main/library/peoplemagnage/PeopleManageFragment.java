@@ -65,12 +65,15 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
     @BindView(R.id.page_tv)
     TextView pageTv;
 
+    private String photoPath;     // 添加的照片的路径
     private WaitProgressDialog waitProgressDialog;
 
     private List<PersionInfo> mPersonList;
     private PersonInfoAdapter mAdapter;
     private PageSetHelper pageSetHelper;
     private PersionPresenter presenter;
+
+    private int currentPersionPosition;      // 表示当前正在添加图片的Persion
 
     private String libName;
     private int libId;
@@ -227,9 +230,11 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == ImageUtils.REQUEST_GALLERY && resultCode == Activity.RESULT_OK){
             String path = ImageUtils.getRealPathFromUri(mActivity, data.getData());
+            photoPath = path;
             int degree = ImageUtils.readPictureDegree(path);
             if(degree == 0){
-                addPhoto(new File(path));
+                //addPhoto(new File(path));
+                presenter.onAddPhoto(mPersonList.get(currentPersionPosition), photoPath, currentPersionPosition);
             }else {
                 Observable<File> observable = ImageUtils.modifiedSavePhoto("添加照片", path, ImageUtils.readPictureDegree(path), new FileCallBack() {
                     @Override
@@ -245,7 +250,8 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
                 observable.observeOn(AndroidSchedulers.mainThread())
                         .subscribe(f -> {
                             ((MainActivity)mActivity).dismissWaiDialog();
-                            addPhoto(new File(path));
+                            //addPhoto(new File(path));
+                            presenter.onAddPhoto(mPersonList.get(currentPersionPosition), photoPath, currentPersionPosition);
                         }, t->{
                             ((MainActivity)mActivity).dismissWaiDialog();
                             ToastUtil.show("照片处理失败");
@@ -293,8 +299,9 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
     }
 
     @Override
-    public void onAddPhoto() {
-        presenter.onAddPhoto();
+    public void onAddPhoto(int index) {
+        currentPersionPosition = index;
+        ImageUtils.startChoose(this);
     }
 
     @Override
@@ -348,6 +355,8 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
                 mAdapter.notifyDataChange();
                 break;
             case TYPE_DELETE_PHOTO:
+                mPersonList.get(position).photoPath = values.getAsString("photoPath");
+                mAdapter.notifyDataChange();
                 break;
         }
     }

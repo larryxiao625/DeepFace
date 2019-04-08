@@ -85,9 +85,49 @@ public class PersionPresenter {
 
     /**
      * 点击"添加照片"的时候调用
+     * @param persionInfo 表示需要添加图片的对象
+     * @param path 表项添加的图片路径
+     * @param position 表示其所在的位置
      */
-    public void onAddPhoto() {
+    public void onAddPhoto(PersionInfo persionInfo, String path, int position) {
+        mView.showWaitDialog("正在添加图片...");
+        ContentValues values = new ContentValues();
+        values.put("feature", System.currentTimeMillis() + "");
+        values.put("libId", persionInfo.libId);
+        values.put("name", persionInfo.name);
+        values.put("gender", persionInfo.gender);
+        values.put("photoPath", persionInfo.photoPath + ";" + path);
+        values.put("identity", persionInfo.identity);
+        values.put("home", persionInfo.home);
+        values.put("other", persionInfo.other);
+        Observable observable = RxUtil.getUpdateObservable(RxUtil.DB_PERSIONINFO, "libId = " + persionInfo.libId + " and name = '" + persionInfo.name +"'", values);
+        observable.subscribe(new Observer() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                disposable = d;
+            }
 
+            @Override
+            public void onNext(Object o) {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+                mView.onFailed(e.getMessage());
+            }
+
+            @Override
+            public void onComplete() {
+                disposable.dispose();
+                mView.dissmissDialog();
+                disposable = null;
+                ContentValues values1 = new ContentValues();
+                values1.put("photoPath", persionInfo.photoPath);
+                mView.onSuccess(PersionView.TYPE_ADD_PHOTO, position, values1);
+            }
+        });
     }
 
     /**

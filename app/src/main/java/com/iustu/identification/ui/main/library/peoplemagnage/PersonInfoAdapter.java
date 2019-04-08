@@ -1,7 +1,9 @@
 package com.iustu.identification.ui.main.library.peoplemagnage;
 
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,17 +13,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.iustu.identification.R;
-import com.iustu.identification.api.Api;
-import com.iustu.identification.api.message.Message;
 import com.iustu.identification.entity.PersionInfo;
 import com.iustu.identification.ui.base.PageRecyclerViewAdapter;
 import com.iustu.identification.ui.main.library.peoplemagnage.mvp.PersionView;
-import com.iustu.identification.util.ExceptionUtil;
 import com.iustu.identification.util.IconFontUtil;
 import com.iustu.identification.util.TextUtil;
 
+import java.io.File;
 import java.util.List;
 
 import butterknife.BindView;
@@ -67,12 +66,12 @@ public class PersonInfoAdapter extends PageRecyclerViewAdapter<PersonInfoAdapter
 
         holder.add.setOnClickListener(v->{
             if(personView != null){
-                personView.onAddPhoto();
+                personView.onAddPhoto(index);
             }
         });
         holder.addIcon.setOnClickListener(v->{
             if(personView != null){
-                personView.onAddPhoto();
+                personView.onAddPhoto(index);
             }
         });
         holder.delete.setOnClickListener(v->{
@@ -91,12 +90,6 @@ public class PersonInfoAdapter extends PageRecyclerViewAdapter<PersonInfoAdapter
             if(personView != null){
                 personView.onDeletePhoto();
             }
-        });
-        holder.nextImg.setOnClickListener(v->{
-
-        });
-        holder.lastImg.setOnClickListener(v->{
-
         });
     }
 
@@ -136,6 +129,9 @@ public class PersonInfoAdapter extends PageRecyclerViewAdapter<PersonInfoAdapter
     }
 
     static class Holder extends RecyclerView.ViewHolder{
+        private String[] paths = null;   // 用来保存PersionInfo中所有的图片路径
+        private int currentPage;   // 表示图片的当前页
+        private int maxPage;     // 表示总共几张图片
         @BindView(R.id.last_img_tv) TextView lastImg;
         @BindView(R.id.next_img_tv) TextView nextImg;
         @BindView(R.id.img_page_tv) TextView imgPage;
@@ -173,6 +169,30 @@ public class PersonInfoAdapter extends PageRecyclerViewAdapter<PersonInfoAdapter
             idCard.setText(p.identity);
             sex.setText(p.gender);
             location.setText(p.home);
+            paths = p.photoPath.split(";");
+            maxPage = paths.length;
+            currentPage = 0;
+            imgPage.setText(currentPage + 1 + "/" + maxPage);
+            File file = new File(paths[0]);
+            Glide.with(itemView).load(Uri.fromFile(file)).into(photo);
+
+            lastImg.setEnabled(true);
+            lastImg.setOnClickListener(v -> {
+                Log.e("", "setPersionInfo: =================");
+                currentPage = currentPage == 0 ? paths.length - 1 : currentPage - 1;
+                imgPage.setText(currentPage + 1 + "/" + maxPage);
+                File f = new File(paths[currentPage]);
+                Glide.with(itemView).load(Uri.fromFile(f)).into(photo);
+                f = null;
+            });
+            nextImg.setOnClickListener(v -> {
+                Log.e("", "setPersionInfo: =================");
+                currentPage = currentPage == paths.length - 1 ? 0 : currentPage + 1;
+                imgPage.setText(currentPage + 1 + "/" + maxPage);
+                File f = new File(paths[currentPage]);
+                Glide.with(itemView).load(Uri.fromFile(f)).into(photo);
+                f = null;
+            });
         }
 
         private void setEditEnable(boolean enable){

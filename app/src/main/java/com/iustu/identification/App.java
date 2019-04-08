@@ -25,10 +25,6 @@ public class App extends LitePalApplication{
 
     static Context context;
 
-
-    static {
-        System.loadLibrary("facerecsdk_java");
-    }
     @Override
     public void onCreate() {
         super.onCreate();
