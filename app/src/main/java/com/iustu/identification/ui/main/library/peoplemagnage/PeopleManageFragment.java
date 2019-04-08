@@ -1,6 +1,7 @@
 package com.iustu.identification.ui.main.library.peoplemagnage;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -64,12 +65,15 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
     @BindView(R.id.page_tv)
     TextView pageTv;
 
+    private String photoPath;     // 添加的照片的路径
     private WaitProgressDialog waitProgressDialog;
 
     private List<PersionInfo> mPersonList;
     private PersonInfoAdapter mAdapter;
     private PageSetHelper pageSetHelper;
     private PersionPresenter presenter;
+
+    private int currentPersionPosition;      // 表示当前正在添加图片的Persion
 
     private String libName;
     private int libId;
@@ -226,9 +230,11 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == ImageUtils.REQUEST_GALLERY && resultCode == Activity.RESULT_OK){
             String path = ImageUtils.getRealPathFromUri(mActivity, data.getData());
+            photoPath = path;
             int degree = ImageUtils.readPictureDegree(path);
             if(degree == 0){
-                addPhoto(new File(path));
+                //addPhoto(new File(path));
+                presenter.onAddPhoto(mPersonList.get(currentPersionPosition), photoPath, currentPersionPosition);
             }else {
                 Observable<File> observable = ImageUtils.modifiedSavePhoto("添加照片", path, ImageUtils.readPictureDegree(path), new FileCallBack() {
                     @Override
@@ -244,7 +250,8 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
                 observable.observeOn(AndroidSchedulers.mainThread())
                         .subscribe(f -> {
                             ((MainActivity)mActivity).dismissWaiDialog();
-                            addPhoto(new File(path));
+                            //addPhoto(new File(path));
+                            presenter.onAddPhoto(mPersonList.get(currentPersionPosition), photoPath, currentPersionPosition);
                         }, t->{
                             ((MainActivity)mActivity).dismissWaiDialog();
                             ToastUtil.show("照片处理失败");
@@ -292,8 +299,9 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
     }
 
     @Override
-    public void onAddPhoto() {
-        presenter.onAddPhoto();
+    public void onAddPhoto(int index) {
+        currentPersionPosition = index;
+        ImageUtils.startChoose(this);
     }
 
     @Override
@@ -302,13 +310,13 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
     }
 
     @Override
-    public void onDeletePer(PersionInfo persionInfo) {
-        presenter.onDeletePer(persionInfo);
+    public void onDeletePer(int position, PersionInfo persionInfo) {
+        presenter.onDeletePer(position, persionInfo);
     }
 
     @Override
-    public void onSaveChange(PersionInfo persionInfo) {
-        presenter.onSaveChange(persionInfo);
+    public void onSaveChange(int position, PersionInfo persionInfo) {
+        presenter.onSaveChange(position, persionInfo);
     }
 
     @Override
@@ -324,5 +332,32 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
     public void dissmissDialog() {
         waitProgressDialog.dismiss();
         waitProgressDialog = null;
+    }
+
+    @Override
+    public void onFailed(String message) {
+        ToastUtil.show("操作失败:" + message);
+    }
+
+    @Override
+    public void onSuccess(int type, int position, ContentValues values) {
+        switch (type) {
+            case TYPE_SAVE_CHANGE:
+                PersionInfo persionInfo = mPersonList.get(position);
+                persionInfo.name = values.getAsString("name");
+                persionInfo.home = values.getAsString("home");
+                persionInfo.gender = values.getAsString("gender");
+                persionInfo.identity = values.getAsString("identity");
+                mAdapter.notifyDataChange();
+                break;
+            case TYPE_DELETE_PER:
+                mPersonList.remove(position);
+                mAdapter.notifyDataChange();
+                break;
+            case TYPE_DELETE_PHOTO:
+                mPersonList.get(position).photoPath = values.getAsString("photoPath");
+                mAdapter.notifyDataChange();
+                break;
+        }
     }
 }

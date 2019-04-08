@@ -105,7 +105,9 @@ public class LibPresenter {
 
             @Override
             public void onError(Throwable e) {
-
+                e.printStackTrace();
+                // 说明操作失败
+                mView.onError(e.getMessage());
             }
 
             @Override
@@ -115,6 +117,7 @@ public class LibPresenter {
                 mView.bindData(list);
                 disposable.dispose();
                 mView.dissmissDialog();
+                mView.onSuccess(LibView.TYPE_ADD_LIB, 0, null);
             }
         });
     }
@@ -140,12 +143,14 @@ public class LibPresenter {
 
             @Override
             public void onError(Throwable e) {
-
+                e.printStackTrace();
+                // 说明操作失败
+                mView.onError(e.getMessage());
             }
 
             @Override
             public void onComplete() {
-                mView.deletePosition(position);
+                mView.onSuccess(LibView.TYPE_DELETE_LIB, position, null);
                 disposable.dispose();
                 mView.dissmissDialog();
             }
@@ -179,7 +184,10 @@ public class LibPresenter {
 
             @Override
             public void onComplete() {
-                mView.modifyPosition(name, des, position);
+                ContentValues values1 = new ContentValues();
+                values1.put("libName", name);
+                values1.put("description", des);
+                mView.onSuccess(LibView.TYPE_MODIFY_LIB, position, values1);
                 disposable.dispose();
                 mView.dissmissDialog();
             }

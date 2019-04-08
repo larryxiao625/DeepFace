@@ -1,5 +1,6 @@
 package com.iustu.identification.ui.main.library.librariesmanage;
 
+import android.content.ContentValues;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
@@ -24,6 +25,7 @@ import com.iustu.identification.util.IconFontUtil;
 import com.iustu.identification.util.LibManager;
 import com.iustu.identification.util.PageSetHelper;
 import com.iustu.identification.util.RxUtil;
+import com.iustu.identification.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +49,7 @@ import io.reactivex.disposables.Disposable;
  */
 
 public class LibrariesManageFragment extends BaseFragment implements LibView, LibrariesManageAdapter.OnLibrariesItemButtonClickedListener{
+
     @BindView(R.id.libraries_manage_recycler_view)
     RecyclerView recyclerView;
     @BindView(R.id.page_tv)
@@ -245,18 +248,27 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
         waitProgressDialog = null;
     }
 
+
     @Override
-    public void deletePosition(int position) {
-        mLibraryList.remove(position);
-        mAdapter.notifyDataChange();
+    public void onError(String message) {
+        ToastUtil.show("操作失败:" + message);
     }
 
     @Override
-    public void modifyPosition(String name, String des, int position) {
-        Library library = mLibraryList.get(position);
-        library.libName = name;
-        library.description = des;
-        mAdapter.notifyDataChange();
+    public void onSuccess(int type, int position, ContentValues values) {
+        switch (type) {
+            case TYPE_ADD_LIB:
+                ToastUtil.show("添加成功");
+                break;
+            case TYPE_DELETE_LIB:
+                mLibraryList.remove(position);
+                mAdapter.notifyDataChange();
+                break;
+            case TYPE_MODIFY_LIB:
+                Library library = mLibraryList.get(position);
+                library.libName = values.getAsString("libName");
+                library.description = values.getAsString("description");
+                mAdapter.notifyDataChange();
+        }
     }
-
 }
