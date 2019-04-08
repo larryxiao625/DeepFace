@@ -107,7 +107,7 @@ public class LibPresenter {
             public void onError(Throwable e) {
                 e.printStackTrace();
                 // 说明操作失败
-                mView.onError();
+                mView.onError(e.getMessage());
             }
 
             @Override
@@ -145,7 +145,7 @@ public class LibPresenter {
             public void onError(Throwable e) {
                 e.printStackTrace();
                 // 说明操作失败
-                mView.onError();
+                mView.onError(e.getMessage());
             }
 
             @Override

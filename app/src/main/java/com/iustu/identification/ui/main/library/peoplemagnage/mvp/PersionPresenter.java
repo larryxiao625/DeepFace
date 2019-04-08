@@ -64,6 +64,7 @@ public class PersionPresenter {
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
+                mView.onFailed(e.getMessage());
             }
 
             @Override
@@ -99,7 +100,7 @@ public class PersionPresenter {
     /**
      * 点击“删除”的时候调用
      */
-    public void onDeletePer(PersionInfo persionInfo) {
+    public void onDeletePer(int position, PersionInfo persionInfo) {
         mView.showWaitDialog("正在删除...");
         ContentValues values = new ContentValues();
         values.put("libId", persionInfo.libId);
@@ -119,6 +120,7 @@ public class PersionPresenter {
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
+                mView.onFailed(e.getMessage());
             }
 
             @Override
@@ -126,6 +128,7 @@ public class PersionPresenter {
                 disposable.dispose();
                 mView.dissmissDialog();
                 disposable = null;
+                mView.onSuccess(PersionView.TYPE_DELETE_PER, position, null);
             }
         });
     }
@@ -133,7 +136,7 @@ public class PersionPresenter {
     /**
      * 点击“保存”的时候调用
      */
-    public void onSaveChange(PersionInfo persionInfo) {
+    public void onSaveChange(int position, PersionInfo persionInfo) {
         mView.showWaitDialog("正在修改...");
         ContentValues values = new ContentValues();
         values.put("feature", System.currentTimeMillis() + "");
@@ -159,6 +162,7 @@ public class PersionPresenter {
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
+                mView.onFailed(e.getMessage());
             }
 
             @Override
@@ -166,6 +170,7 @@ public class PersionPresenter {
                 disposable.dispose();
                 mView.dissmissDialog();
                 disposable = null;
+                mView.onSuccess(PersionView.TYPE_SAVE_CHANGE, position, values);
             }
         });
     }

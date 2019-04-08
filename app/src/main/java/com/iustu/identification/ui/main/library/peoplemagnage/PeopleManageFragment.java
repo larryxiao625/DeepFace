@@ -1,6 +1,7 @@
 package com.iustu.identification.ui.main.library.peoplemagnage;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -302,13 +303,13 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
     }
 
     @Override
-    public void onDeletePer(PersionInfo persionInfo) {
-        presenter.onDeletePer(persionInfo);
+    public void onDeletePer(int position, PersionInfo persionInfo) {
+        presenter.onDeletePer(position, persionInfo);
     }
 
     @Override
-    public void onSaveChange(PersionInfo persionInfo) {
-        presenter.onSaveChange(persionInfo);
+    public void onSaveChange(int position, PersionInfo persionInfo) {
+        presenter.onSaveChange(position, persionInfo);
     }
 
     @Override
@@ -324,5 +325,30 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
     public void dissmissDialog() {
         waitProgressDialog.dismiss();
         waitProgressDialog = null;
+    }
+
+    @Override
+    public void onFailed(String message) {
+        ToastUtil.show("操作失败:" + message);
+    }
+
+    @Override
+    public void onSuccess(int type, int position, ContentValues values) {
+        switch (type) {
+            case TYPE_SAVE_CHANGE:
+                PersionInfo persionInfo = mPersonList.get(position);
+                persionInfo.name = values.getAsString("name");
+                persionInfo.home = values.getAsString("home");
+                persionInfo.gender = values.getAsString("gender");
+                persionInfo.identity = values.getAsString("identity");
+                mAdapter.notifyDataChange();
+                break;
+            case TYPE_DELETE_PER:
+                mPersonList.remove(position);
+                mAdapter.notifyDataChange();
+                break;
+            case TYPE_DELETE_PHOTO:
+                break;
+        }
     }
 }

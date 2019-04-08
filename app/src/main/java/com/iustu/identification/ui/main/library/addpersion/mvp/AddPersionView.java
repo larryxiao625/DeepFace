@@ -12,6 +12,6 @@ public interface AddPersionView {
     void onAddPersion(PersionInfo persionInfo);
     void showWaitDialog(String content);
     void dissmissDialog();
-    void onAddError();
+    void onAddError(String information);
     void onAddSuccess();
 }

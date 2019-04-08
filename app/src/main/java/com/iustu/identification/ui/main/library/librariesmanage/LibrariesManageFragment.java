@@ -250,8 +250,8 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
 
 
     @Override
-    public void onError() {
-        ToastUtil.show("操作失败");
+    public void onError(String message) {
+        ToastUtil.show("操作失败:" + message);
     }
 
     @Override

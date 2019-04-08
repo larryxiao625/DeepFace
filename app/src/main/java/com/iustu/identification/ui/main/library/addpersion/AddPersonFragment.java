@@ -217,13 +217,13 @@ public class AddPersonFragment extends BaseFragment implements AddPersionView {
     }
 
     @Override
-    public void onAddError() {
-        ToastUtil.show("添加失败");
+    public void onAddError(String information) {
+        ToastUtil.show("添加失败:" + information);
     }
 
     @Override
     public void onAddSuccess() {
-        ToastUtil.show("添加失败");
+        ToastUtil.show("添加成功");
     }
 
     // 将所有EditText清空

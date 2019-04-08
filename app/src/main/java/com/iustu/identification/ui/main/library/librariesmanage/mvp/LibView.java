@@ -20,6 +20,6 @@ public interface LibView {
     void bindData(List<Library> data);
     void showWaitDialog(String content);
     void dissmissDialog();
-    void onError();
+    void onError(String message);
     void onSuccess(int type, int position, ContentValues values);
 }

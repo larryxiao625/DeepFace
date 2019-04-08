@@ -66,7 +66,7 @@ public class AddPersionPresenter {
             public void onError(Throwable e) {
                 e.printStackTrace();
                 // 调用onError说明添加失败
-                view.onAddError();
+                view.onAddError(e.getMessage());
             }
 
             @Override

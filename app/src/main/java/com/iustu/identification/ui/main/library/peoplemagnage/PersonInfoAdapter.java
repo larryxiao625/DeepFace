@@ -55,8 +55,7 @@ public class PersonInfoAdapter extends PageRecyclerViewAdapter<PersonInfoAdapter
             persionInfo.home = holder.location.getText().toString();
             persionInfo.gender = holder.sex.getText().toString();
             persionInfo.identity = holder.idCard.getText().toString();
-            notifyDataSetChanged();
-            personView.onSaveChange(persionInfo);
+            personView.onSaveChange(index, persionInfo);
         });
 
         holder.setEditListener(v -> {
@@ -79,17 +78,13 @@ public class PersonInfoAdapter extends PageRecyclerViewAdapter<PersonInfoAdapter
         holder.delete.setOnClickListener(v->{
             if(personView != null){
                 PersionInfo persionInfo = mDataLast.get(index);
-                mDataLast.remove(index);
-                notifyDataSetChanged();
-                personView.onDeletePer(persionInfo);
+                personView.onDeletePer(index, persionInfo);
             }
         });
         holder.deleteIcon.setOnClickListener(v->{
             if(personView != null){
                 PersionInfo persionInfo = mDataLast.get(index);
-                mDataLast.remove(index);
-                notifyDataSetChanged();
-                personView.onDeletePer(persionInfo);
+                personView.onDeletePer(index, persionInfo);
             }
         });
         holder.deletePhoto.setOnClickListener(v->{
