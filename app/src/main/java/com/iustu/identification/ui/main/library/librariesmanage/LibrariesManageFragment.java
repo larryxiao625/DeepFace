@@ -164,7 +164,7 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
         // 可见ChildFragment的相互切换还是委托给ParentFragment来完成的
         LibraryFragment libraryFragment = (LibraryFragment) getParentFragment();
         PeopleManageFragment peopleManageFragment = (PeopleManageFragment) libraryFragment.getFragment(LibraryFragment.ID_PEOPLE_MANAGE);
-        peopleManageFragment.setArguments("", index);
+        peopleManageFragment.setArguments("", mLibraryList.get(index).libId);
         libraryFragment.switchFragment(LibraryFragment.ID_PEOPLE_MANAGE);
     }
 

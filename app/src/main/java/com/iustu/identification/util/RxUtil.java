@@ -27,7 +27,7 @@ public class RxUtil {
 
     public static final String[] ACCOUNT_COLUMNS = new String[]{"name", "password"};    // Account的所有列
     public static final String[] LIBRARY_COLUMNS = new String[]{"libName", "libId", "description", "count"}; // Library的所有列
-    public static final String[] PERSIONAL_COLUMNS = new String[]{"feature", "libId", "name", "gender", "nation", "photoPath", "identity", "home", "other"};
+    public static final String[] PERSIONINFO_COLUMNS = new String[]{"feature", "libId", "name", "gender", "photoPath", "identity", "home", "other"};
 
 
     // 获取查询数据库时的游标
@@ -44,7 +44,7 @@ public class RxUtil {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    // 获取插入数据库的Observable
+    // 获取插入数据库的Observable，具体关联别的数据库的操作要根据tableName来定，而其where语句则根据values来定
     public static Observable getInsertObservable(String tableName, ContentValues values) {
         return Observable.create(new ObservableOnSubscribe<Object>() {
             @Override
@@ -73,6 +73,7 @@ public class RxUtil {
 
     // 获取更新数据表中数据的Observable
     public static Observable getUpdateObservable(String tableName, String where, ContentValues contentValues) {
+        Log.e("", "onSaveChange: ------------------" + contentValues.getAsString("libId") + contentValues.getAsString("name"));
         return Observable.create(new ObservableOnSubscribe<Object>() {
             @Override
             public void subscribe(ObservableEmitter<Object> e) {
@@ -84,7 +85,7 @@ public class RxUtil {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    // 获取删除数据表中数据的Observable
+    // 获取删除数据表中数据的Observable,具体关联别的数据库的操作要根据tableName来定，而其where语句则根据values来定
     public static Observable getDeleteObservable(String tableName, ContentValues values) {
         return Observable.create(new ObservableOnSubscribe<Object>() {
             @Override
@@ -101,12 +102,12 @@ public class RxUtil {
                 } else if(tableName.equals(DB_PERSIONINFO)) {         // 删除PersionInfo的情况
                     int libId = values.getAsInteger("libId");
                     t = DB_LIBRARY;
-                    Cursor cursor = database.query(false, t, null,"libId = " + libId, null, null, null, null, null);
+                    Cursor cursor = database.query(false, t, LIBRARY_COLUMNS,"libId = " + libId, null, null, null, null, null);
                     cursor.moveToNext();
                     int count = cursor.getInt(3);
                     ContentValues values1 = new ContentValues();
                     values1.put("count", count - 1);
-                    database.update(t, null, "libId = " + libId, null);
+                    database.update(t, values1, "libId = " + libId, null);
                 }
                 e.onComplete();
             }

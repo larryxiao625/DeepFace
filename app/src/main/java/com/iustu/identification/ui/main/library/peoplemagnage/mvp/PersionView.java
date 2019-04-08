@@ -31,10 +31,13 @@ public interface PersionView {
     /**
      * 点击“删除”的时候调用
      */
-    void onDeletePer();
+    void onDeletePer(PersionInfo persionInfo);
 
     /**
      * 点击“保存”的时候调用
      */
-    void onSaveChange();
+    void onSaveChange(PersionInfo persionInfo);
+
+    void showWaitDialog(String content);
+    void dissmissDialog();
 }

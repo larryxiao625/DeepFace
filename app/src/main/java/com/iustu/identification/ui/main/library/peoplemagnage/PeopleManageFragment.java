@@ -27,6 +27,7 @@ import com.iustu.identification.ui.main.library.peoplemagnage.mvp.PersionView;
 import com.iustu.identification.ui.widget.dialog.EditDialog;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.ui.widget.dialog.SingleButtonDialog;
+import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
 import com.iustu.identification.util.ExceptionUtil;
 import com.iustu.identification.util.FileCallBack;
 import com.iustu.identification.util.ImageUtils;
@@ -55,21 +56,23 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
  */
 
 public class PeopleManageFragment extends BaseFragment implements PersionView, PageRecyclerViewAdapter.LoadMoreListener{
-    private static final String KEY_FACE_SET_ID = "face set id";
-    private static final String KEY_FACE_SET_INDEX = "face set index";
+    private static final String KEY_LIB_ID = "libId";
+    private static final String KEY_LIB_NAME = "libName";
 
     @BindView(R.id.people_manage_recycler_view)
     RecyclerView recyclerView;
     @BindView(R.id.page_tv)
     TextView pageTv;
 
-    private List<PersonInfo> mPersonList;
+    private WaitProgressDialog waitProgressDialog;
+
+    private List<PersionInfo> mPersonList;
     private PersonInfoAdapter mAdapter;
     private PageSetHelper pageSetHelper;
     private PersionPresenter presenter;
 
-    private String faceSetId;
-    private int faceSetIndex;
+    private String libName;
+    private int libId;
 
     private int totalPage;
     private int page;
@@ -77,6 +80,13 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
 
     private int addPhotoIndex;
     private int addPhotoPosition;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.libId = getArguments().getInt(KEY_LIB_ID);
+        this.libName = getArguments().getString(KEY_LIB_NAME);
+    }
 
     @Override
     protected int postContentView() {
@@ -99,47 +109,14 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
         });
         pageSetHelper = new PageSetHelper(recyclerView, pageTv);
         recyclerView.post(this::onShow);
+        onInitData();
     }
 
     private void loadData(int page){
         if(page != 0 && page >= totalPage){
             return;
         }
-        Api.getPeopleList(faceSetId, page)
-                .doOnSubscribe(d->{
-                    addDisposable(d);
-                    isOnLoadMore = true;
-                    if(page == 0){
-                        ((MainActivity)mActivity).showWaitDialog("正在加载", v -> ((LibraryFragment)getParentFragment()).switchFragment(LibraryFragment.ID_LIBRARIES_MANAGE));
-                        mPersonList.clear();
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(peopleListResponseMessage -> {
-                    ((MainActivity)mActivity).dismissWaiDialog();
-                    if(peopleListResponseMessage.getCode() != Message.CODE_SUCCESS){
-                        onLoadError("错误码(" + peopleListResponseMessage.getCode() + ")");
-                    }else {
-                        isInitData = true;
-                    }
-                    if(peopleListResponseMessage.getBody() != null) {
-                        mPersonList.addAll(peopleListResponseMessage.getBody().getPeoples());
-                        for (PersonInfo personInfo : mPersonList) {
-                            personInfo.setFaceSetId(faceSetId);
-                        }
-                        totalPage = peopleListResponseMessage.getBody().getTotalPage();
-                        mAdapter.notifyDataChange();
-                        pageSetHelper.notifyChange();
-                    }
-                    isOnLoadMore = false;
-                }, t->{
-                    ((MainActivity)mActivity).dismissWaiDialog();
-                    ExceptionUtil.getThrowableMessage(t);
-                    isOnLoadMore = false;
-                    if(page == 0) {
-                        onLoadError("无法连接服务器");
-                    }
-                });
+
     }
 
     public void onLoadError(String extra){
@@ -164,12 +141,8 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
     public void onShow() {
         Bundle bundle = getArguments();
         if(bundle != null){
-            faceSetId = bundle.getString(KEY_FACE_SET_ID, null);
-            faceSetIndex = bundle.getInt(KEY_FACE_SET_INDEX, -1);
-        }
-        if(faceSetId == null || faceSetIndex == -1){
-            onArgsError();
-            return;
+            libName = bundle.getString(KEY_LIB_NAME, null);
+            libId = bundle.getInt(KEY_LIB_ID, -1);
         }
         page = 0;
         loadData(0);
@@ -184,13 +157,13 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
                 .show(mActivity.getFragmentManager());
     }
 
-    public void setArguments(String faceSetId, int index){
+    public void setArguments(String libName, int libId){
         Bundle bundle = getArguments();
         if(bundle == null){
             bundle = new Bundle();
         }
-        bundle.putString(KEY_FACE_SET_ID, faceSetId);
-        bundle.putInt(KEY_FACE_SET_INDEX, index);
+        bundle.putString(KEY_LIB_NAME, libName);
+        bundle.putInt(KEY_LIB_ID, libId);
         setArguments(bundle);
     }
 
@@ -207,38 +180,12 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
 
 
     private void deletePhoto(int index, int position, String id, int urlPosition){
-        PersonInfo personInfo = mPersonList.get(index);
-        Api.delFace(faceSetId, personInfo.getId(), id)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(message -> {
-                    if (message.getCode() == Message.CODE_SUCCESS) {
-                        mPersonList.get(index).deletePhoto(urlPosition);
-                        mAdapter.notifyItemChanged(position);
-                        Library library = LibManager.getLibraryList().get(faceSetIndex);
-                        library.setCount(library.getCount() - 1);
-                        ToastUtil.show("删除照片成功");
-                    } else {
-                        ExceptionUtil.toastOptFail("删除照片失败", message);
-                    }
-                }, throwable -> ExceptionUtil.toastServerError());
+        PersionInfo personInfo = mPersonList.get(index);
+
     }
 
     private void deletePerson(int index) {
-        Api.delPeople(mPersonList.get(index).getId(), faceSetId)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(messageResp -> {
-                    if(messageResp.getCode() == Message.CODE_SUCCESS){
-                        mPersonList.remove(index);
-                        mAdapter.notifyDataChange();
-                        pageSetHelper.notifyChange();
-                        ToastUtil.show("删除成功!");
-                    }else {
-                        ToastUtil.show("删除失败!");
-                    }
-                }, t->{
-                    ExceptionUtil.getThrowableMessage(t);
-                    ExceptionUtil.toastServerError();
-                });
+
     }
 
 
@@ -312,23 +259,7 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
             ToastUtil.show("无法找到添加对象!");
             return;
         }
-        PersonInfo personInfo = mPersonList.get(addPhotoIndex);
-        Api.addFace(faceSetId, personInfo.getId(), file)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(stringMessage -> {
-                    if(stringMessage.getCode() != Message.CODE_SUCCESS){
-                        ExceptionUtil.toastOptFail("添加失败", stringMessage);
-                    }else {
-                        personInfo.addPhoto(stringMessage.getId());
-                        mAdapter.notifyItemChanged(addPhotoPosition);
-                        Library library = LibManager.getLibraryList().get(faceSetIndex);
-                        library.setCount(library.getCount() + 1);
-                        ToastUtil.show("添加成功");
-                    }
-                }, t->{
-                    ExceptionUtil.getThrowableMessage(t);
-                    ExceptionUtil.toastServerError();
-                });
+
     }
 
     @Override
@@ -346,12 +277,13 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
 
     @Override
     public void bindData(List<PersionInfo> data) {
-
+        mPersonList.addAll(data);
+        mAdapter.notifyDataChange();
     }
 
     @Override
     public void onInitData() {
-        presenter.onInitData();
+        presenter.onInitData(libId);
     }
 
     @Override
@@ -370,12 +302,27 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
     }
 
     @Override
-    public void onDeletePer() {
-        presenter.onDeletePer();
+    public void onDeletePer(PersionInfo persionInfo) {
+        presenter.onDeletePer(persionInfo);
     }
 
     @Override
-    public void onSaveChange() {
-        presenter.onSaveChange();
+    public void onSaveChange(PersionInfo persionInfo) {
+        presenter.onSaveChange(persionInfo);
+    }
+
+    @Override
+    public void showWaitDialog(String content) {
+        waitProgressDialog = new WaitProgressDialog.Builder()
+                .title(content)
+                .cancelable(false)
+                .build();
+        waitProgressDialog.show(mActivity.getFragmentManager(), "Loading");
+    }
+
+    @Override
+    public void dissmissDialog() {
+        waitProgressDialog.dismiss();
+        waitProgressDialog = null;
     }
 }

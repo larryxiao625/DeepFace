@@ -15,7 +15,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.iustu.identification.R;
 import com.iustu.identification.api.Api;
 import com.iustu.identification.api.message.Message;
-import com.iustu.identification.bean.PersonInfo;
+import com.iustu.identification.entity.PersionInfo;
 import com.iustu.identification.ui.base.PageRecyclerViewAdapter;
 import com.iustu.identification.ui.main.library.peoplemagnage.mvp.PersionView;
 import com.iustu.identification.util.ExceptionUtil;
@@ -34,50 +34,30 @@ import io.reactivex.disposables.Disposable;
  * Created by Liu Yuchuan on 2017/11/21.
  */
 
-public class PersonInfoAdapter extends PageRecyclerViewAdapter<PersonInfoAdapter.Holder, PersonInfo> {
+public class PersonInfoAdapter extends PageRecyclerViewAdapter<PersonInfoAdapter.Holder, PersionInfo> {
 
     private CompositeDisposable compositeDisposable;
 
-    public PersonInfoAdapter(List<PersonInfo> dataLast) {
+    public PersonInfoAdapter(List<PersionInfo> dataLast) {
         super(dataLast);
         setDisplayCountPerPage(3);
     }
 
     @Override
     public void onBindHolder(Holder holder, int index, int position) {
-        PersonInfo p = mDataLast.get(index);
+        PersionInfo p = mDataLast.get(index);
 
-        holder.setPersonInfo(p);
+        holder.setPersionInfo(p);
         holder.setEditEnable(false);
 
-        int pos = p.getUrlPosition();
-        if(pos != -1){
-            holder.deletePhoto.setVisibility(View.VISIBLE);
-            Glide.with(holder.photo)
-                    .applyDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.photo_holder))
-                    .load(p.getUrlAt(pos))
-                    .into(holder.photo);
-        }else if(!p.isInitUrls()){
-            holder.deletePhoto.setVisibility(View.GONE);
-            loadPicUrls(index);
-        }else {
-            holder.deletePhoto.setVisibility(View.GONE);
-            Glide.with(holder.photo)
-                    .applyDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.photo_holder))
-                    .load(R.drawable.photo_holder)
-                    .into(holder.photo);
-        }
-
         holder.setSaveListener(v -> {
-            if(personView!= null){
-                holder.setEditEnable(false);
-                PersonInfo personInfo = new PersonInfo(p);
-                personInfo.setName(holder.name.getText().toString().trim());
-                personInfo.setCode(holder.idCard.getText().toString().trim());
-                personInfo.setGender(holder.sex.getText().toString().trim());
-                personInfo.setAddress(holder.location.getText().toString().trim());
-                personView.onSaveChange();
-            }
+            PersionInfo persionInfo = mDataLast.get(index);
+            persionInfo.name = holder.name.getText().toString();
+            persionInfo.home = holder.location.getText().toString();
+            persionInfo.gender = holder.sex.getText().toString();
+            persionInfo.identity = holder.idCard.getText().toString();
+            notifyDataSetChanged();
+            personView.onSaveChange(persionInfo);
         });
 
         holder.setEditListener(v -> {
@@ -99,12 +79,18 @@ public class PersonInfoAdapter extends PageRecyclerViewAdapter<PersonInfoAdapter
         });
         holder.delete.setOnClickListener(v->{
             if(personView != null){
-                personView.onDeletePer();
+                PersionInfo persionInfo = mDataLast.get(index);
+                mDataLast.remove(index);
+                notifyDataSetChanged();
+                personView.onDeletePer(persionInfo);
             }
         });
         holder.deleteIcon.setOnClickListener(v->{
             if(personView != null){
-                personView.onDeletePer();
+                PersionInfo persionInfo = mDataLast.get(index);
+                mDataLast.remove(index);
+                notifyDataSetChanged();
+                personView.onDeletePer(persionInfo);
             }
         });
         holder.deletePhoto.setOnClickListener(v->{
@@ -113,20 +99,10 @@ public class PersonInfoAdapter extends PageRecyclerViewAdapter<PersonInfoAdapter
             }
         });
         holder.nextImg.setOnClickListener(v->{
-            if(p.nextPosition()){
-                Glide.with(holder.photo)
-                        .applyDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.photo_holder))
-                        .load(p.getUrlAt(p.getUrlPosition()))
-                        .into(holder.photo);
-            }
+
         });
         holder.lastImg.setOnClickListener(v->{
-            if(p.lastPosition()) {
-                Glide.with(holder.photo)
-                        .applyDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.photo_holder))
-                        .load(p.getUrlAt(p.getUrlPosition()))
-                        .into(holder.photo);
-            }
+
         });
     }
 
@@ -145,22 +121,8 @@ public class PersonInfoAdapter extends PageRecyclerViewAdapter<PersonInfoAdapter
     }
 
     private void loadPicUrls(int index){
-        PersonInfo personInfo = mDataLast.get(index);
-        Api.getFaceList(personInfo.getFaceSetId(), personInfo.getId())
-                .doOnSubscribe(this::addDisposable)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(listMessage -> {
-                    if(listMessage.getCode() == Message.CODE_SUCCESS){
-                        personInfo.setInitUrls(true);
-                        personInfo.setFaceUrlList(listMessage.getBody());
-                    }
-                    if(inCurrentPage(index)) {
-                        notifyItemChanged(calculatePosition(index));
-                    }
-                }, throwable -> {
-                    personInfo.setInitUrls(false);
-                    ExceptionUtil.getThrowableMessage(getClass().getSimpleName(), throwable);
-                });
+        PersionInfo personInfo = mDataLast.get(index);
+
     }
 
     private void addDisposable(Disposable disposable){
@@ -212,11 +174,11 @@ public class PersonInfoAdapter extends PageRecyclerViewAdapter<PersonInfoAdapter
             switchPhotoLayout.setBackgroundColor(Color.argb(122, 24, 38, 67));
         }
 
-        void setPersonInfo(PersonInfo p){
-            name.setText(p.getName());
-            idCard.setText(p.getCode());
-            sex.setText(p.getGender());
-            location.setText(p.getAddress());
+        void setPersionInfo(PersionInfo p){
+            name.setText(p.name);
+            idCard.setText(p.identity);
+            sex.setText(p.gender);
+            location.setText(p.home);
         }
 
         private void setEditEnable(boolean enable){
