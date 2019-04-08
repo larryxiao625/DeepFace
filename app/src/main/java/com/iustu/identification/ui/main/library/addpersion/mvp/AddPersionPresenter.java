@@ -3,9 +3,13 @@ package com.iustu.identification.ui.main.library.addpersion.mvp;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.example.agin.facerecsdk.DetectResult;
+import com.example.agin.facerecsdk.FacerecUtil;
+import com.example.agin.facerecsdk.FeatureResult;
 import com.iustu.identification.entity.PersionInfo;
 import com.iustu.identification.ui.main.library.addpersion.AddPersonFragment;
 import com.iustu.identification.util.RxUtil;
+import com.iustu.identification.util.SDKUtil;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -19,6 +23,10 @@ public class AddPersionPresenter {
 
     AddPersionModel model;
     AddPersionView view;
+
+    int NO_FACE=0; //未检测到人脸
+    int MORE_THAN_ONE_FACE=2; //检测到多张人脸
+
 
     public AddPersionPresenter(AddPersionModel model) {
         this.model = model;
@@ -69,5 +77,23 @@ public class AddPersionPresenter {
                 view.onAddSuccess();
             }
         });
+    }
+
+    /**
+     * 添加人脸信息调用方法
+     * @param picPath 图片路径
+     * @return 特征数据长度(否则返回 FACEREC_ERROR)
+     */
+    public int getPersonFeat(String picPath){
+        DetectResult detectResult=new DetectResult();
+        int num=SDKUtil.getDetectHandler().faceDetector(picPath,detectResult);
+        if(num==1){
+            FeatureResult featureResult=new FeatureResult();
+            return SDKUtil.getVerifyHandler().extractFeature(detectResult,featureResult);
+        }else if(num==0){
+            return NO_FACE;
+        }else {
+            return MORE_THAN_ONE_FACE;
+        }
     }
 }
