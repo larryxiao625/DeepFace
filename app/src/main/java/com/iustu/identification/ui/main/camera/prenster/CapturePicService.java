@@ -1,5 +1,6 @@
 package com.iustu.identification.ui.main.camera.prenster;
 
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
@@ -8,8 +9,11 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.example.agin.facerecsdk.DetectResult;
+import com.iustu.identification.util.SDKUtil;
 import com.iustu.identification.util.TextUtil;
 import com.jiangdg.usbcamera.UVCCameraHelper;
+import com.serenegiant.usb.common.AbstractUVCCameraHandler;
 
 import java.io.File;
 import java.util.Calendar;
@@ -18,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
-public class CapturePicService extends Service {
+public class CapturePicService extends Service implements AbstractUVCCameraHandler.OnCaptureListener {
     UVCCameraHelper cameraHelper=UVCCameraHelper.getInstance();
     String picPath= Environment.getExternalStorageDirectory()+"/DeepFace";
     private CameraPrenster cameraPrenster;
@@ -40,15 +44,16 @@ public class CapturePicService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        return START_NOT_STICKY;
+        return START_STICKY;
     }
 
+    @SuppressLint("CheckResult")
     public void capturePic() {
         createDir(picPath);
-        Observable.interval(2000, TimeUnit.MILLISECONDS)
+        Observable.interval(500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(c-> {
-                    cameraHelper.capturePicture(picPath+"/"+ TextUtil.dateMessage(Calendar.getInstance().getTime())+".jpg",cameraPrenster);
+                    cameraHelper.capturePicture(picPath+"/"+ TextUtil.dateMessage(Calendar.getInstance().getTime())+".jpg",this);
                     Log.d("CameraFragment",TextUtil.dateMessage(Calendar.getInstance().getTime()));
                 });
     }
@@ -70,4 +75,17 @@ public class CapturePicService extends Service {
     public boolean onUnbind(Intent intent) {
         return super.onUnbind(intent);
     }
+
+    @Override
+    public void onCaptureResult(String picPath) {
+        DetectResult detectResult=new DetectResult();
+        Log.d("Camera", String.valueOf(SDKUtil.getDetectHandler().faceDetector(picPath,detectResult)));
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d("Camera","onDestroy");
+    }
+
 }

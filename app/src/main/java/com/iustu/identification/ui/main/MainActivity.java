@@ -16,6 +16,7 @@ import com.iustu.identification.ui.SplashActivity;
 import com.iustu.identification.ui.base.BaseActivity;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.login.view.LoginActivity;
+import com.iustu.identification.ui.main.camera.prenster.CapturePicService;
 import com.iustu.identification.ui.main.camera.view.CameraFragment;
 import com.iustu.identification.ui.main.config.ConfigFragment;
 import com.iustu.identification.ui.main.history.view.HistoryFragment;
@@ -199,5 +200,6 @@ public class MainActivity extends BaseActivity implements BottomBar.BottomBarSel
         isActivityAlive = false;
         LibManager.dispose();
         super.onDestroy();
+//        stopService(new Intent(MainActivity.this, CapturePicService.class));
     }
 }

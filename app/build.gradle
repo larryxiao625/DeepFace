@@ -12,7 +12,6 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
 
-
         ndk {
             abiFilters 'armeabi-v7a'
         }
@@ -26,7 +25,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
+    configurations.all {
+        resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+            def requested = details.requested
+            if (requested.group == 'com.android.support') {
+                if (!requested.name.startsWith("multidex")) {
+                    details.useVersion '27.1.0'
+                }
+            }
+        }
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -65,5 +73,7 @@ dependencies {
     implementation 'com.github.jiangdongguo:AndroidUSBCamera:2.2.8'
 
     implementation 'com.facebook.stetho:stetho:1.5.0'
+    implementation 'com.fanjun:keeplive:1.1.8'
+
 
 }

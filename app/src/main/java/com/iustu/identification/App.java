@@ -3,6 +3,10 @@ package com.iustu.identification;
 import android.content.Context;
 
 import com.facebook.stetho.Stetho;
+import com.fanjun.keeplive.KeepLive;
+import com.fanjun.keeplive.config.ForegroundNotification;
+import com.fanjun.keeplive.config.KeepLiveService;
+import com.iustu.identification.ui.main.camera.prenster.CapturePicService;
 import com.iustu.identification.util.SqliteHelper;
 import com.iustu.identification.util.SqliteUtil;
 import com.tencent.bugly.Bugly;
@@ -38,11 +42,28 @@ public class App extends LitePalApplication{
             e.printStackTrace();
         }
         context = this;
+        keepAlive();
 
     }
 
 
     public static Context getContext(){
         return context;
+    }
+
+    // 应用保活
+    public void keepAlive(){
+        ForegroundNotification foregroundNotification=new ForegroundNotification("DeepFace","应用正在实时检测",R.mipmap.ic_launcher);
+        KeepLive.startWork(this, KeepLive.RunMode.ENERGY, foregroundNotification, new KeepLiveService() {
+            @Override
+            public void onWorking() {
+
+            }
+
+            @Override
+            public void onStop() {
+
+            }
+        });
     }
 }
