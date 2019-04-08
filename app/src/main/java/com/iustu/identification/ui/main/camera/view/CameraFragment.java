@@ -45,6 +45,7 @@ import com.serenegiant.usb.widget.UVCCameraTextureView;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -201,7 +202,7 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
     public void onDestroy() {
         super.onDestroy();
         Log.d("CameraFragment","onDestroy");
-//        getActivity().stopService(serviceIntent);
+        Objects.requireNonNull(getActivity()).stopService(serviceIntent);
     }
 
     ServiceConnection myServiceConnection=new ServiceConnection() {

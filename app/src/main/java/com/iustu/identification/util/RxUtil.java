@@ -1,16 +1,25 @@
 package com.iustu.identification.util;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 
+import com.example.agin.facerecsdk.DetectResult;
+import com.example.agin.facerecsdk.FeatureResult;
+import com.example.agin.facerecsdk.SearchResultItem;
 import com.iustu.identification.entity.Library;
+
+import java.util.ArrayList;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -28,7 +37,8 @@ public class RxUtil {
     public static final String[] ACCOUNT_COLUMNS = new String[]{"name", "password"};    // Account的所有列
     public static final String[] LIBRARY_COLUMNS = new String[]{"libName", "libId", "description", "count"}; // Library的所有列
     public static final String[] PERSIONINFO_COLUMNS = new String[]{"feature", "libId", "name", "gender", "photoPath", "identity", "home", "other"};
-
+    public static final Integer VERIFY_SUCCESS=1;
+    public static final Integer VERIFY_FAIL=0;
 
     // 获取查询数据库时的游标
     public static Observable<Cursor> getQuaryObservalbe(boolean distinct, String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit) {
@@ -113,5 +123,56 @@ public class RxUtil {
             }
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    /**
+     *  人脸搜索方法
+     * @param feat 待搜索的特征数据feat
+     * @return
+     */
+    public static Observable getSearchFaceObservable(float[] feat){
+        return Observable.create((ObservableOnSubscribe<ArrayList<SearchResultItem>>) e -> {
+            ArrayList<SearchResultItem> searchResultItems=new ArrayList<>();
+            SDKUtil.getSearchHandler().searchFind(feat,10,searchResultItems,85);
+            e.onNext(searchResultItems);
+        }).map(searchResultItems -> {
+            SearchResultItem searchResultItem=searchResultItems.get(0);
+            for(int i=1;i<searchResultItems.size();i++){
+                if(searchResultItems.get(i).score>searchResultItem.score){
+                    searchResultItem=searchResultItems.get(i);
+                }
+            }
+            return searchResultItem;
+        }).subscribeOn(Schedulers.io()).observeOn(Schedulers.io());
+    }
+
+    /**
+     * 人脸特征识别方法
+     * @param detectResult 人脸识别结果
+     * @return
+     */
+    public static Observable getFeatureResultObservable(ArrayList<DetectResult> detectResult){
+        return Observable.create((ObservableOnSubscribe<FeatureResult>) e -> {
+            FeatureResult featureResult=new FeatureResult();
+            SDKUtil.getVerifyHandler().extractFeatureBatch(detectResult,featureResult);
+            e.onNext(featureResult);
+        }).observeOn(Schedulers.io()).subscribeOn(Schedulers.io());
+    }
+
+    /**
+     * 人脸识别方法
+     * @param picPaths 待识别路径集合
+     * @return
+     */
+    public static Observable getDetectObservable(ArrayList<String> picPaths){
+        return Observable.create((ObservableOnSubscribe<ArrayList<DetectResult>>) e -> {
+            ArrayList<DetectResult> detectResults=new ArrayList<>();
+            for(int i=0;i<picPaths.size();i++){
+                DetectResult detectResult=new DetectResult();
+                SDKUtil.getDetectHandler().faceDetector(picPaths.get(0),detectResult);
+                detectResults.add(detectResult);
+                e.onNext(detectResults);
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(Schedulers.io());
     }
 }

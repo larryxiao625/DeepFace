@@ -10,17 +10,24 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.example.agin.facerecsdk.DetectResult;
+import com.example.agin.facerecsdk.FeatureResult;
+import com.example.agin.facerecsdk.SearchDBItem;
+import com.example.agin.facerecsdk.SearchResultItem;
+import com.iustu.identification.util.RxUtil;
 import com.iustu.identification.util.SDKUtil;
 import com.iustu.identification.util.TextUtil;
 import com.jiangdg.usbcamera.UVCCameraHelper;
 import com.serenegiant.usb.common.AbstractUVCCameraHandler;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.observers.DefaultObserver;
 
 public class CapturePicService extends Service implements AbstractUVCCameraHandler.OnCaptureListener {
     UVCCameraHelper cameraHelper=UVCCameraHelper.getInstance();
@@ -40,6 +47,29 @@ public class CapturePicService extends Service implements AbstractUVCCameraHandl
     public void onCreate() {
         super.onCreate();
         mBind=new CaptureBind();
+        /**
+         * 测试数据
+         */
+        ArrayList<SearchDBItem> searchDBItems=new ArrayList<>();
+        ArrayList<String> picPaths=new ArrayList<>();
+        picPaths.add(picPath+"/2019-04-08 21:42:18.jpg");
+        RxUtil.getDetectObservable(picPaths).subscribe(new Consumer<ArrayList<DetectResult>>() {
+            @Override
+            public void accept(ArrayList<DetectResult> o) throws Exception {
+                RxUtil.getFeatureResultObservable(o).subscribe(new Consumer<FeatureResult>() {
+                    @Override
+                    public void accept(FeatureResult o) throws Exception {
+                        ArrayList<SearchDBItem> searchDBItems1=new ArrayList<>();
+                        SearchDBItem searchDBItem=new SearchDBItem();
+                        searchDBItem.feat=o.getFeat(0).get(0);
+                        searchDBItem.image_id="test";
+                        searchDBItems1.add(searchDBItem);
+                        Log.d("Camera", String.valueOf(searchDBItems1.size()));
+                        setSearchLib(searchDBItems1);
+                    }
+                });
+            }
+        });
     }
 
     @Override
@@ -50,7 +80,7 @@ public class CapturePicService extends Service implements AbstractUVCCameraHandl
     @SuppressLint("CheckResult")
     public void capturePic() {
         createDir(picPath);
-        Observable.interval(500, TimeUnit.MILLISECONDS)
+        Observable.interval(1000, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(c-> {
                     cameraHelper.capturePicture(picPath+"/"+ TextUtil.dateMessage(Calendar.getInstance().getTime())+".jpg",this);
@@ -64,6 +94,11 @@ public class CapturePicService extends Service implements AbstractUVCCameraHandl
             Log.d("Camera", String.valueOf(file.mkdirs()));
         }
     }
+
+    public void setSearchLib(ArrayList<SearchDBItem> searchDBItems){
+        SDKUtil.getSearchHandler().searchBuildLib(searchDBItems);
+    }
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -78,14 +113,27 @@ public class CapturePicService extends Service implements AbstractUVCCameraHandl
 
     @Override
     public void onCaptureResult(String picPath) {
-        DetectResult detectResult=new DetectResult();
-        Log.d("Camera", String.valueOf(SDKUtil.getDetectHandler().faceDetector(picPath,detectResult)));
+        ArrayList<String> picPaths=new ArrayList<>();
+        picPaths.add(picPath);
+        RxUtil.getDetectObservable(picPaths).subscribe((Consumer<ArrayList<DetectResult>>) o -> {
+            getVerify(o);
+        });
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         Log.d("Camera","onDestroy");
+    }
+    public void getVerify(ArrayList<DetectResult> detectResults){
+        RxUtil.getFeatureResultObservable(detectResults).subscribe((Consumer<FeatureResult>) f -> searchFace(f.getFeat(0).get(0)));
+        Log.d("Camera","getVerify");
+    }
+    public void searchFace(float[] feat){
+        ArrayList<SearchResultItem> searchResultItems=new ArrayList<>();
+        RxUtil.getSearchFaceObservable(feat).subscribe((Consumer<SearchResultItem>) o -> {
+            Log.d("Camera", String.valueOf(o.score));
+        });
     }
 
 }
