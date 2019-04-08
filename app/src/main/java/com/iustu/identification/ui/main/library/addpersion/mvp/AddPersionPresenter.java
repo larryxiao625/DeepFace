@@ -33,14 +33,14 @@ public class AddPersionPresenter {
     public void onAddPersion(PersionInfo persionInfo) {
         view.showWaitDialog("正在添加...");
         ContentValues values = new ContentValues();
-        values.put("libId", persionInfo.libId);
-        values.put("gender", persionInfo.gender);
-        values.put("home", persionInfo.home);
-        values.put("identity", persionInfo.identity);
-        values.put("name", persionInfo.name);
-        values.put("other", persionInfo.other);
-        values.put("photoPath", persionInfo.photoPath);
         values.put("feature", System.currentTimeMillis() + "");
+        values.put("libId", persionInfo.libId);
+        values.put("name", persionInfo.name);
+        values.put("gender", persionInfo.gender);
+        values.put("photoPath", persionInfo.photoPath);
+        values.put("identity", persionInfo.identity);
+        values.put("home", persionInfo.home);
+        values.put("other", persionInfo.other);
         Observable observable = RxUtil.getInsertObservable(RxUtil.DB_PERSIONINFO, values);
         observable.subscribe(new Observer<Object>() {
 
@@ -56,7 +56,9 @@ public class AddPersionPresenter {
 
             @Override
             public void onError(Throwable e) {
-
+                e.printStackTrace();
+                // 调用onError说明添加失败
+                view.onAddError();
             }
 
             @Override
@@ -64,6 +66,7 @@ public class AddPersionPresenter {
                 ((AddPersonFragment)view).clear();
                 disposable.dispose();
                 view.dissmissDialog();
+                view.onAddSuccess();
             }
         });
     }

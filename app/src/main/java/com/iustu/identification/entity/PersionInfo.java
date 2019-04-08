@@ -13,5 +13,5 @@ public class PersionInfo {
     public String identity;         // 身份证号(选)
     public String home;           // 籍贯(选)
     public String other;         // 备注
-    public float[] feature;     // key 人脸特点，SDK生成的，用来唯一标识人脸
+    public String feature;     // key 人脸特点，SDK生成的，用来唯一标识人脸
 }

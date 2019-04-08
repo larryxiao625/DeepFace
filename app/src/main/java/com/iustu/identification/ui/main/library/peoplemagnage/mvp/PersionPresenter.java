@@ -63,7 +63,7 @@ public class PersionPresenter {
 
             @Override
             public void onError(Throwable e) {
-
+                e.printStackTrace();
             }
 
             @Override
@@ -103,6 +103,7 @@ public class PersionPresenter {
         mView.showWaitDialog("正在删除...");
         ContentValues values = new ContentValues();
         values.put("libId", persionInfo.libId);
+        values.put("name", persionInfo.name);
         Observable observable = RxUtil.getDeleteObservable(RxUtil.DB_PERSIONINFO, values);
         observable.subscribe(new Observer() {
             @Override
@@ -117,7 +118,7 @@ public class PersionPresenter {
 
             @Override
             public void onError(Throwable e) {
-
+                e.printStackTrace();
             }
 
             @Override
@@ -143,7 +144,7 @@ public class PersionPresenter {
         values.put("identity", persionInfo.identity);
         values.put("home", persionInfo.home);
         values.put("other", persionInfo.other);
-        Observable observable = RxUtil.getUpdateObservable(RxUtil.DB_PERSIONINFO, "feature = " + persionInfo.feature, values);
+        Observable observable = RxUtil.getUpdateObservable(RxUtil.DB_PERSIONINFO, "name = '" + persionInfo.name + "' and libId = " + persionInfo.libId, values);
         observable.subscribe(new Observer() {
             @Override
             public void onSubscribe(Disposable d) {

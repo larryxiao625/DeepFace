@@ -93,6 +93,6 @@ class SQLString {
     public static final String CREATE_TABLE_LIBRARY = "create table Library (libId integer primary key autoincrement, libName varchar not null, description varchar, count int not null)";
     public static final String CREATE_TABLE_ACCOUNT = "create table Account (name varchar(6) primary key, password varchar(11) not null)";
     public static final String CREATE_TABLE_COMPARERECORD = "create table CompareRecord (time varchar primary key, uploadPhotoPath varchar not null, feature varchar not null, rate float not null)";
-    public static final String CREATE_TABLE_PERSIONINFO = "create table PersionInfo (feature varchar primary key, libId int not null, name varchar not null, gender varchar not null, photoPath varchar not null, identity varchar, home varchar, other varchar)";
+    public static final String CREATE_TABLE_PERSIONINFO = "create table PersonInfo (feature varchar, libId int not null, name varchar primary key, gender varchar not null, photoPath varchar not null, identity varchar, home varchar, other varchar)";
     public static final String CREATE_TABLE_TAKERECORD = "create table TakeRecord (time varchar primary key, uploadPhotoPath varchar)";
 }

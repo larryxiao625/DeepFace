@@ -124,6 +124,10 @@ public class AddPersonFragment extends BaseFragment implements AddPersionView {
                     .show(mActivity.getFragmentManager());
             return;
         }
+        if(photoPath == null) {
+            ToastUtil.show("请选择图片");
+            return;
+        }
         String idCardNumber = idCardEdit.getText().toString().trim();
         String location = locationEdit.getText().toString().trim();
         String remark = remarkEdit.getText().toString().trim();
@@ -134,7 +138,7 @@ public class AddPersonFragment extends BaseFragment implements AddPersionView {
         persionInfo.home = location;
         persionInfo.identity = idCardNumber;
         persionInfo.other = remark;
-        persionInfo.photoPath = "test";
+        persionInfo.photoPath = photoPath;
         persionInfo.libId = libId;
         presenter.onAddPersion(persionInfo);
     }
@@ -210,6 +214,16 @@ public class AddPersonFragment extends BaseFragment implements AddPersionView {
     public void dissmissDialog() {
         waitProgressDialog.dismiss();
         waitProgressDialog = null;
+    }
+
+    @Override
+    public void onAddError() {
+        ToastUtil.show("添加失败");
+    }
+
+    @Override
+    public void onAddSuccess() {
+        ToastUtil.show("添加失败");
     }
 
     // 将所有EditText清空
