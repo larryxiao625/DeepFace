@@ -123,18 +123,62 @@ public class PersionPresenter {
                 disposable.dispose();
                 mView.dissmissDialog();
                 disposable = null;
-                ContentValues values1 = new ContentValues();
-                values1.put("photoPath", persionInfo.photoPath);
-                mView.onSuccess(PersionView.TYPE_ADD_PHOTO, position, values1);
+                mView.onSuccess(PersionView.TYPE_ADD_PHOTO, position, values);
             }
         });
     }
 
     /**
      * 点击“删除照片”的时候调用
+     * @param position 代表需要删除第几张图片
+     * @param persionInfo 代表需要删除的PersionInfo对象
      */
-    public void onDeletePhoto() {
+    public void onDeletePhoto(int position, PersionInfo persionInfo) {
+        mView.showWaitDialog("正在删除图片...");
+        ContentValues values = new ContentValues();
+        values.put("feature", System.currentTimeMillis() + "");
+        values.put("libId", persionInfo.libId);
+        values.put("name", persionInfo.name);
+        values.put("gender", persionInfo.gender);
+        String[] s = persionInfo.photoPath.split(";");
+        String finalPath = null;
+        for (int i = 0; i < s.length; i ++) {
+            if (i != position) {
+                finalPath = finalPath == null ? s[i] : (finalPath + ";" + s[i]);
+            } else {
+                continue;
+            }
+        }
+        values.put("photoPath", finalPath);
+        values.put("identity", persionInfo.identity);
+        values.put("home", persionInfo.home);
+        values.put("other", persionInfo.other);
+        Observable observable = RxUtil.getUpdateObservable(RxUtil.DB_PERSIONINFO, "name = '" + persionInfo.name + "' and libId = " + persionInfo.libId, values);
+        observable.subscribe(new Observer() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                disposable = d;
+            }
 
+            @Override
+            public void onNext(Object o) {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+                mView.onFailed(e.getMessage());
+            }
+
+            @Override
+            public void onComplete() {
+                disposable.dispose();
+                mView.dissmissDialog();
+                disposable = null;
+                mView.onSuccess(PersionView.TYPE_DELETE_PHOTO, position, values);
+            }
+        });
     }
 
     /**

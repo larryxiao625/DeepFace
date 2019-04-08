@@ -88,7 +88,8 @@ public class PersonInfoAdapter extends PageRecyclerViewAdapter<PersonInfoAdapter
         });
         holder.deletePhoto.setOnClickListener(v->{
             if(personView != null){
-                personView.onDeletePhoto();
+                PersionInfo persionInfo = mDataLast.get(index);
+                personView.onDeletePhoto(index, holder.currentPage, persionInfo);
             }
         });
     }

@@ -305,8 +305,8 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
     }
 
     @Override
-    public void onDeletePhoto() {
-        presenter.onDeletePhoto();
+    public void onDeletePhoto(int index, int position, PersionInfo persionInfo) {
+        presenter.onDeletePhoto(position, persionInfo);
     }
 
     @Override
@@ -355,6 +355,10 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
                 mAdapter.notifyDataChange();
                 break;
             case TYPE_DELETE_PHOTO:
+                mPersonList.get(position).photoPath = values.getAsString("photoPath");
+                mAdapter.notifyDataChange();
+                break;
+            case TYPE_ADD_PHOTO:
                 mPersonList.get(position).photoPath = values.getAsString("photoPath");
                 mAdapter.notifyDataChange();
                 break;
