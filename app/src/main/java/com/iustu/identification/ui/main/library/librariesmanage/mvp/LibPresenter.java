@@ -64,6 +64,7 @@ public class LibPresenter {
             public void onError(Throwable e) {
                 e.printStackTrace();
                 disposable.dispose();
+                mView.dissmissDialog();
             }
 
             @Override
@@ -108,6 +109,7 @@ public class LibPresenter {
                 e.printStackTrace();
                 // 说明操作失败
                 mView.onError(e.getMessage());
+                mView.dissmissDialog();
             }
 
             @Override
@@ -146,6 +148,7 @@ public class LibPresenter {
                 e.printStackTrace();
                 // 说明操作失败
                 mView.onError(e.getMessage());
+                mView.dissmissDialog();
             }
 
             @Override
@@ -179,7 +182,9 @@ public class LibPresenter {
 
             @Override
             public void onError(Throwable e) {
-
+                e.printStackTrace();
+                mView.dissmissDialog();
+                mView.onError(e.getMessage());
             }
 
             @Override

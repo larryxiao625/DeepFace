@@ -19,6 +19,7 @@ import com.iustu.identification.ui.base.PageRecyclerViewAdapter;
 import com.iustu.identification.ui.main.library.peoplemagnage.mvp.PersionView;
 import com.iustu.identification.util.IconFontUtil;
 import com.iustu.identification.util.TextUtil;
+import com.iustu.identification.util.ToastUtil;
 
 import java.io.File;
 import java.util.List;
@@ -88,6 +89,10 @@ public class PersonInfoAdapter extends PageRecyclerViewAdapter<PersonInfoAdapter
         });
         holder.deletePhoto.setOnClickListener(v->{
             if(personView != null){
+                if (holder.maxPage == 1) {
+                    ToastUtil.show("已是最后一张，无法删除...");
+                    return;
+                }
                 PersionInfo persionInfo = mDataLast.get(index);
                 personView.onDeletePhoto(index, holder.currentPage, persionInfo);
             }

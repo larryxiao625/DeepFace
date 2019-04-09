@@ -10,6 +10,7 @@ import com.iustu.identification.entity.PersionInfo;
 import com.iustu.identification.ui.main.library.addpersion.AddPersonFragment;
 import com.iustu.identification.util.RxUtil;
 import com.iustu.identification.util.SDKUtil;
+import com.iustu.identification.util.ToastUtil;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -20,6 +21,7 @@ import io.reactivex.disposables.Disposable;
  */
 public class AddPersionPresenter {
     private Disposable disposable;
+    private FeatureResult featureResult;        // 用来保存人脸特征提取的结果
 
     AddPersionModel model;
     AddPersionView view;
@@ -40,6 +42,12 @@ public class AddPersionPresenter {
      */
     public void onAddPersion(PersionInfo persionInfo) {
         view.showWaitDialog("正在添加...");
+        int result = getPersonFeat(persionInfo.photoPath);
+        if (result == NO_FACE || result == MORE_THAN_ONE_FACE) {
+            ToastUtil.show("该图片含有多个人脸或者不含人脸，添加失败...");
+            view.dissmissDialog();
+            return;
+        }
         ContentValues values = new ContentValues();
         values.put("feature", System.currentTimeMillis() + "");
         values.put("libId", persionInfo.libId);
@@ -67,6 +75,7 @@ public class AddPersionPresenter {
                 e.printStackTrace();
                 // 调用onError说明添加失败
                 view.onAddError(e.getMessage());
+                view.dissmissDialog();
             }
 
             @Override
@@ -88,7 +97,7 @@ public class AddPersionPresenter {
         DetectResult detectResult=new DetectResult();
         int num=SDKUtil.getDetectHandler().faceDetector(picPath,detectResult);
         if(num==1){
-            FeatureResult featureResult=new FeatureResult();
+            featureResult=new FeatureResult();
             return SDKUtil.getVerifyHandler().extractFeature(detectResult,featureResult);
         }else if(num==0){
             return NO_FACE;
