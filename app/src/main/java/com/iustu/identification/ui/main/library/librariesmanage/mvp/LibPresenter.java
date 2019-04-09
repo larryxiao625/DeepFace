@@ -55,7 +55,12 @@ public class LibPresenter {
                 List<Library> data = new ArrayList<>();
                 Log.e("LibManagerPresenter", "onNext: ==============" + cursor.getColumnNames().toString());
                 while (cursor.moveToNext()) {
-                    Library library = new Library(cursor.getString(cursor.getColumnIndex("libName")), cursor.getInt(cursor.getColumnIndex("libId")), cursor.getString(cursor.getColumnIndex("description")), cursor.getInt(cursor.getColumnIndex("count")), cursor.getInt(cursor.getColumnIndex("inUsed")));
+                    Library library = new Library();
+                    library.libId = cursor.getInt(cursor.getColumnIndex("libId"));
+                    library.libName = cursor.getString(cursor.getColumnIndex("libName"));
+                    library.count = cursor.getInt(cursor.getColumnIndex("count"));
+                    library.inUsed = cursor.getInt(cursor.getColumnIndex("inUsed"));
+                    library.description = cursor.getString(cursor.getColumnIndex("description"));
                     data.add(library);
                 }
                 mView.bindData(data);
@@ -88,13 +93,10 @@ public class LibPresenter {
      */
     public void onCreateNewLib(String name, String description) {
         mView.showWaitDialog("正在添加人脸库...");
-        Library library = new Library(name, description, 0, 0);
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("libName", library.libName);
-        contentValues.put("description", library.description);
-        contentValues.put("count", library.count);
-        contentValues.put("inUsed", library.inUsed);
-        Observable observable = RxUtil.getInsertObservable(RxUtil.DB_LIBRARY, contentValues);
+        Library library = new Library();
+        library.libName = name;
+        library.description =description;
+        Observable observable = RxUtil.getAddLibraryObservable(library);
         observable.subscribe(new Observer() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -129,11 +131,9 @@ public class LibPresenter {
     /**
      * 删除人脸库的逻辑代码
      */
-    public void onDeleteLib(int id, int position) {
+    public void onDeleteLib(Library library, int position) {
         mView.showWaitDialog("正在删除人脸库...");
-        ContentValues values = new ContentValues();
-        values.put("libId", id);
-        Observable<Cursor> observable = RxUtil.getDeleteObservable(RxUtil.DB_LIBRARY, values);
+        Observable<Cursor> observable = RxUtil.getDeleteLibraryObservable(library);
         observable.subscribe(new Observer<Cursor>() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -165,12 +165,9 @@ public class LibPresenter {
     /**
      * 更改人脸库信息的逻辑代码
      */
-    public void onModifyLib(String name, String des, int libId, int position) {
+    public void onModifyLib(Library old, Library n, int position) {
         mView.showWaitDialog("正在更改人脸库名称...");
-        ContentValues values = new ContentValues();
-        values.put("libName", name);
-        values.put("description", des);
-        Observable observable = RxUtil.getUpdateObservable(RxUtil.DB_LIBRARY, "libId = " + libId, values);
+        Observable observable = RxUtil.getModifyLibraryObservable(old, n);
         observable.subscribe(new Observer() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -192,8 +189,8 @@ public class LibPresenter {
             @Override
             public void onComplete() {
                 ContentValues values1 = new ContentValues();
-                values1.put("libName", name);
-                values1.put("description", des);
+                values1.put("libName", n.libName);
+                values1.put("description", n.description);
                 mView.onSuccess(LibView.TYPE_MODIFY_LIB, position, values1);
                 disposable.dispose();
                 mView.dissmissDialog();

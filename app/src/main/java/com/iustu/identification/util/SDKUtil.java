@@ -9,12 +9,17 @@ import android.util.Log;
 
 import com.example.agin.facerecsdk.AttributeHandler;
 import com.example.agin.facerecsdk.DetectHandler;
+import com.example.agin.facerecsdk.DetectResult;
 import com.example.agin.facerecsdk.FacerecUtil;
+import com.example.agin.facerecsdk.FeatureResult;
 import com.example.agin.facerecsdk.HandlerFactory;
+import com.example.agin.facerecsdk.SearchDBItem;
 import com.example.agin.facerecsdk.SearchHandler;
 import com.example.agin.facerecsdk.VerifyHandler;
+import com.iustu.identification.entity.PersionInfo;
 
 import java.io.File;
+import java.util.Arrays;
 
 /**
  * created by sgh, 2019-4-5
@@ -57,6 +62,7 @@ public class SDKUtil {
         FacerecUtil.setLicensePath(file);
         if (FacerecUtil.facerecsdkValid()) {
             Log.d("testSdk","sdk合法");
+            Log.d("initSdk", FacerecUtil.getLicenseValidTime() + "");
         }
         SDKUtil.init();
     }
@@ -82,4 +88,25 @@ public class SDKUtil {
     public static AttributeHandler getAttributeHandler() {
         return attributeHandler;
     }
+
+    /**
+     * 获取图片的Feature的方法
+     * @param persionInfo 需要添加的人
+     * @return 人脸的特征
+     */
+    public static void sdkDoPerson(PersionInfo persionInfo) {
+        DetectResult detectResult=new DetectResult();
+        SDKUtil.getDetectHandler().faceDetector(persionInfo.photoPath,detectResult);
+        FeatureResult featureResult=new FeatureResult();
+        verifyHandler.extractFeature(detectResult,featureResult);
+        float[] floats = featureResult.getFeat(0).get(0);
+        persionInfo.feature = Arrays.asList(floats).toString();
+        SearchDBItem searchDBItem = new SearchDBItem();
+        searchDBItem.feat = floats;
+        searchDBItem.image_id = persionInfo.image_id;
+        SearchHandler searchHandler = (SearchHandler)HandlerFactory.createSearcher("/sdcard/DeepFace/" + persionInfo.libName, 0, 1);
+        searchHandler.searchAdd(searchDBItem);
+    }
+
+
 }

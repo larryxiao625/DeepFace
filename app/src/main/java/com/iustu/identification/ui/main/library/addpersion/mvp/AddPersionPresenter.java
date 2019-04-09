@@ -48,16 +48,7 @@ public class AddPersionPresenter {
             view.dissmissDialog();
             return;
         }
-        ContentValues values = new ContentValues();
-        values.put("feature", System.currentTimeMillis() + "");
-        values.put("libId", persionInfo.libId);
-        values.put("name", persionInfo.name);
-        values.put("gender", persionInfo.gender);
-        values.put("photoPath", persionInfo.photoPath);
-        values.put("identity", persionInfo.identity);
-        values.put("home", persionInfo.home);
-        values.put("other", persionInfo.other);
-        Observable observable = RxUtil.getInsertObservable(RxUtil.DB_PERSIONINFO, values);
+        Observable observable = RxUtil.getAddPersionObservable(persionInfo);
         observable.subscribe(new Observer<Object>() {
 
             @Override

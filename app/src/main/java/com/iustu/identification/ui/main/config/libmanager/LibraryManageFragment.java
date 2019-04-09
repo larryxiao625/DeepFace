@@ -99,7 +99,7 @@ public class LibraryManageFragment extends BaseFragment implements LibManagerVie
         super.onHide();
         if (mChooseList.isEmpty())
             return;
-        updateLibrary();
+        //updateLibrary();
     }
 
 

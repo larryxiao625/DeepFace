@@ -140,6 +140,7 @@ public class AddPersonFragment extends BaseFragment implements AddPersionView {
         persionInfo.other = remark;
         persionInfo.photoPath = photoPath;
         persionInfo.libId = libId;
+        persionInfo.libName = libName;
         presenter.onAddPersion(persionInfo);
     }
 

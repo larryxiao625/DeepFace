@@ -79,6 +79,10 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
         // RecyclerView的Item点击事件实现更改库名称
         mAdapter.setOnPageItemClickListener((view1, index, position) -> {
             Library library = mLibraryList.get(position);
+            Library library1 = new Library();
+            library1.libId = library.libId;
+            library1.inUsed = library.inUsed;
+            library1.count = library.count;
             new Edit2Dialog.Builder()
                     .title("修改人脸库")
                     .hint1("库名称")
@@ -91,7 +95,9 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
                             layout1.setError("库名称不能为空");
                             return false;
                         }
-                        modifyLibName(name, layout2.getEditText().getText().toString(), library.libId, position);
+                        library1.libName = name;
+                        library1.description = layout2.getEditText().getText().toString();
+                        modifyLibName(library, library1, index);
                         return true;
                     })
                     .negative("取消", null)
@@ -170,7 +176,7 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
         // 可见ChildFragment的相互切换还是委托给ParentFragment来完成的
         LibraryFragment libraryFragment = (LibraryFragment) getParentFragment();
         PeopleManageFragment peopleManageFragment = (PeopleManageFragment) libraryFragment.getFragment(LibraryFragment.ID_PEOPLE_MANAGE);
-        peopleManageFragment.setArguments("", mLibraryList.get(index).libId);
+        peopleManageFragment.setArguments(mLibraryList.get(index).libName, mLibraryList.get(index).libId);
         libraryFragment.switchFragment(LibraryFragment.ID_PEOPLE_MANAGE);
     }
 
@@ -180,7 +186,7 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
                 .title("提示")
                 .content("确定删除库 " + mLibraryList.get(index).libName + " 吗？")
                 .positive("确定", view->{
-                    deleteLib(mLibraryList.get(index).libId, index);
+                    deleteLib(mLibraryList.get(index), index);
                 })
                 .negative("取消", null)
                 .show(mActivity.getFragmentManager());
@@ -206,13 +212,13 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
                 .show(mActivity.getFragmentManager());
     }
 
-    public void deleteLib(int id, int position){
-        presenter.onDeleteLib(id, position);
+    public void deleteLib(Library library, int position){
+        presenter.onDeleteLib(library, position);
     }
 
     // 更改库名称
-    public void modifyLibName(String newName, String newDes, int libId, int position){
-        presenter.onModifyLib(newName, newDes, libId, position);
+    public void modifyLibName(Library old, Library n, int position){
+        presenter.onModifyLib(old, n, position);
     }
 
     public void createNewLib(String name, String des){

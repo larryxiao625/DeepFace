@@ -91,16 +91,9 @@ public class PersionPresenter {
      */
     public void onAddPhoto(PersionInfo persionInfo, String path, int position) {
         mView.showWaitDialog("正在添加图片...");
-        ContentValues values = new ContentValues();
-        values.put("feature", System.currentTimeMillis() + "");
-        values.put("libId", persionInfo.libId);
-        values.put("name", persionInfo.name);
-        values.put("gender", persionInfo.gender);
-        values.put("photoPath", persionInfo.photoPath + ";" + path);
-        values.put("identity", persionInfo.identity);
-        values.put("home", persionInfo.home);
-        values.put("other", persionInfo.other);
-        Observable observable = RxUtil.getUpdateObservable(RxUtil.DB_PERSIONINFO, "libId = " + persionInfo.libId + " and name = '" + persionInfo.name +"'", values);
+        persionInfo.photoPath = persionInfo.photoPath + ";" + path;
+        ContentValues values = persionInfo.toContentValues();
+        Observable observable = RxUtil.getAddPhotoObservable(persionInfo, path);
         observable.subscribe(new Observer() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -135,11 +128,6 @@ public class PersionPresenter {
      */
     public void onDeletePhoto(int position, PersionInfo persionInfo) {
         mView.showWaitDialog("正在删除图片...");
-        ContentValues values = new ContentValues();
-        values.put("feature", System.currentTimeMillis() + "");
-        values.put("libId", persionInfo.libId);
-        values.put("name", persionInfo.name);
-        values.put("gender", persionInfo.gender);
         String[] s = persionInfo.photoPath.split(";");
         String finalPath = null;
         for (int i = 0; i < s.length; i ++) {
@@ -149,11 +137,9 @@ public class PersionPresenter {
                 continue;
             }
         }
-        values.put("photoPath", finalPath);
-        values.put("identity", persionInfo.identity);
-        values.put("home", persionInfo.home);
-        values.put("other", persionInfo.other);
-        Observable observable = RxUtil.getUpdateObservable(RxUtil.DB_PERSIONINFO, "name = '" + persionInfo.name + "' and libId = " + persionInfo.libId, values);
+        persionInfo.photoPath = finalPath;
+        ContentValues values = persionInfo.toContentValues();
+        Observable observable = RxUtil.getDeletePhotoObservable(persionInfo);
         observable.subscribe(new Observer() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -186,10 +172,7 @@ public class PersionPresenter {
      */
     public void onDeletePer(int position, PersionInfo persionInfo) {
         mView.showWaitDialog("正在删除...");
-        ContentValues values = new ContentValues();
-        values.put("libId", persionInfo.libId);
-        values.put("name", persionInfo.name);
-        Observable observable = RxUtil.getDeleteObservable(RxUtil.DB_PERSIONINFO, values);
+        Observable observable = RxUtil.getDeletePersonObservable(persionInfo);
         observable.subscribe(new Observer() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -222,16 +205,8 @@ public class PersionPresenter {
      */
     public void onSaveChange(int position, PersionInfo persionInfo) {
         mView.showWaitDialog("正在修改...");
-        ContentValues values = new ContentValues();
-        values.put("feature", System.currentTimeMillis() + "");
-        values.put("libId", persionInfo.libId);
-        values.put("name", persionInfo.name);
-        values.put("gender", persionInfo.gender);
-        values.put("photoPath", persionInfo.photoPath);
-        values.put("identity", persionInfo.identity);
-        values.put("home", persionInfo.home);
-        values.put("other", persionInfo.other);
-        Observable observable = RxUtil.getUpdateObservable(RxUtil.DB_PERSIONINFO, "name = '" + persionInfo.name + "' and libId = " + persionInfo.libId, values);
+        ContentValues values = persionInfo.toContentValues();
+        Observable observable = RxUtil.getSavePersonChangeObservable(persionInfo);
         observable.subscribe(new Observer() {
             @Override
             public void onSubscribe(Disposable d) {

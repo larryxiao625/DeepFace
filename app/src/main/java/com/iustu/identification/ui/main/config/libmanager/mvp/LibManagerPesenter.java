@@ -37,9 +37,14 @@ public class LibManagerPesenter {
                 if (cursor.getCount() == 0)
                     return;
                 List<Library> data = new ArrayList<>();
-                Log.e("LibManagerPresenter", "onNext: ==============" + cursor.getColumnNames().toString());
+
                 while (cursor.moveToNext()) {
-                    Library library = new Library(cursor.getString(cursor.getColumnIndex("libName")), cursor.getInt(cursor.getColumnIndex("libId")), cursor.getString(cursor.getColumnIndex("description")), cursor.getInt(cursor.getColumnIndex("count")), cursor.getInt(cursor.getColumnIndex("inUsed")));
+                    Library library = new Library();
+                    library.libId = cursor.getInt(cursor.getColumnIndex("libId"));
+                    library.libName = cursor.getString(cursor.getColumnIndex("libName"));
+                    library.count = cursor.getInt(cursor.getColumnIndex("count"));
+                    library.inUsed = cursor.getInt(cursor.getColumnIndex("inUsed"));
+                    library.description = cursor.getString(cursor.getColumnIndex("description"));
                     data.add(library);
                 }
                 mView.bindData(data);
