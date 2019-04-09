@@ -8,6 +8,7 @@ import android.os.Environment;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.widget.ImageView;
 
 import com.example.agin.facerecsdk.DetectResult;
 import com.example.agin.facerecsdk.FeatureResult;
@@ -50,26 +51,17 @@ public class CapturePicService extends Service implements AbstractUVCCameraHandl
         /**
          * 测试数据
          */
-        ArrayList<SearchDBItem> searchDBItems=new ArrayList<>();
         ArrayList<String> picPaths=new ArrayList<>();
         picPaths.add(picPath+"/2019-04-08 21:42:18.jpg");
-        RxUtil.getDetectObservable(picPaths).subscribe(new Consumer<ArrayList<DetectResult>>() {
-            @Override
-            public void accept(ArrayList<DetectResult> o) throws Exception {
-                RxUtil.getFeatureResultObservable(o).subscribe(new Consumer<FeatureResult>() {
-                    @Override
-                    public void accept(FeatureResult o) throws Exception {
-                        ArrayList<SearchDBItem> searchDBItems1=new ArrayList<>();
-                        SearchDBItem searchDBItem=new SearchDBItem();
-                        searchDBItem.feat=o.getFeat(0).get(0);
-                        searchDBItem.image_id="test";
-                        searchDBItems1.add(searchDBItem);
-                        Log.d("Camera", String.valueOf(searchDBItems1.size()));
-                        setSearchLib(searchDBItems1);
-                    }
-                });
-            }
-        });
+        RxUtil.getDetectObservable(picPaths).subscribe((Consumer<ArrayList<DetectResult>>) o -> RxUtil.getFeatureResultObservable(o).subscribe((Consumer<FeatureResult>) o1 -> {
+            ArrayList<SearchDBItem> searchDBItems1=new ArrayList<>();
+            SearchDBItem searchDBItem=new SearchDBItem();
+            searchDBItem.feat= o1.getFeat(0).get(0);
+            searchDBItem.image_id="test";
+            searchDBItems1.add(searchDBItem);
+            Log.d("Camera", String.valueOf(searchDBItems1.size()));
+            setSearchLib(searchDBItems1);
+        }));
     }
 
     @Override

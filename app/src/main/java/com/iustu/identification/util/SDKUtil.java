@@ -27,6 +27,7 @@ public class SDKUtil {
     private static VerifyHandler verifyHandler;            // 特征提取句柄
     private static SearchHandler searchHandler;           // 人脸搜索句柄
     private static AttributeHandler attributeHandler;     // 属性检测句柄
+    public static String path=Environment.getExternalStorageDirectory()+"/faceLib";
 
     // 初始化方法
     public static void init() {
@@ -42,6 +43,12 @@ public class SDKUtil {
         // 初始化属性检测句柄
         attributeHandler = (AttributeHandler) HandlerFactory.createAttribute("/sdcard/attr-Framework1-cpu-0a15-bc0a.model");
         attributeHandler.initial();
+
+        File file=new File(path);
+        if(!file.exists()){
+            file.mkdirs();
+        }
+        searchHandler= (SearchHandler) HandlerFactory.createSearcher(path,0,1);
     }
 
     public static void initSdk(Context context) {
