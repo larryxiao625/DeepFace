@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.iustu.identification.App;
 import com.iustu.identification.R;
 import com.iustu.identification.bean.ParameterConfig;
+import com.iustu.identification.entity.CompareRecord;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.main.MainActivity;
 import com.iustu.identification.ui.main.camera.adapter.CompareItemAdapter;
@@ -172,7 +173,17 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
         }
     }
 
-    IVew iVew= rea -> Toast.makeText(App.getContext(),rea,Toast.LENGTH_SHORT).show();
+    IVew iVew=new IVew() {
+        @Override
+        public void showShortMsg(String rea) {
+            Toast.makeText(App.getContext(),rea,Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void updateSingleResult(CompareRecord compareRecord) {
+
+        }
+    };
 
     @Override
     public void onStart() {

@@ -1,4 +1,4 @@
-package com.iustu.identification.ui.main.library.addpersion.mvp;
+package com.iustu.identification.ui.main.library.addperson.mvp;
 
 public class AddPersionModel {
 

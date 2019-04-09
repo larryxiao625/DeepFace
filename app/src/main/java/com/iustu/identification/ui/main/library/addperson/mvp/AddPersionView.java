@@ -1,6 +1,6 @@
-package com.iustu.identification.ui.main.library.addpersion.mvp;
+package com.iustu.identification.ui.main.library.addperson.mvp;
 
-import com.iustu.identification.entity.PersionInfo;
+import com.iustu.identification.entity.PersonInfo;
 
 /**
  * created by sgh, 2019-4-3
@@ -9,7 +9,7 @@ import com.iustu.identification.entity.PersionInfo;
 public interface AddPersionView {
     void setPresenter(AddPersionPresenter presenter);
 
-    void onAddPersion(PersionInfo persionInfo);
+    void onAddPersion(PersonInfo personInfo);
     void showWaitDialog(String content);
     void dissmissDialog();
     void onAddError(String information);

@@ -14,7 +14,7 @@ import com.iustu.identification.entity.Library;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.base.PageRecyclerViewAdapter;
 import com.iustu.identification.ui.main.library.LibraryFragment;
-import com.iustu.identification.ui.main.library.addpersion.AddPersonFragment;
+import com.iustu.identification.ui.main.library.addperson.AddPersonFragment;
 import com.iustu.identification.ui.main.library.librariesmanage.mvp.LibPresenter;
 import com.iustu.identification.ui.main.library.librariesmanage.mvp.LibView;
 import com.iustu.identification.ui.main.library.peoplemagnage.PeopleManageFragment;
@@ -22,9 +22,7 @@ import com.iustu.identification.ui.widget.dialog.Edit2Dialog;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
 import com.iustu.identification.util.IconFontUtil;
-import com.iustu.identification.util.LibManager;
 import com.iustu.identification.util.PageSetHelper;
-import com.iustu.identification.util.RxUtil;
 import com.iustu.identification.util.ToastUtil;
 
 import java.util.ArrayList;
@@ -32,9 +30,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
 
 /**
  * Created by Liu Yuchuan on 2017/11/20.

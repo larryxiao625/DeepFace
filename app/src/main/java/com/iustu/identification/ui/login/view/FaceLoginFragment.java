@@ -5,9 +5,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.iustu.identification.R;
-import com.iustu.identification.api.Api;
 import com.iustu.identification.api.message.Message;
-import com.iustu.identification.bean.User;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.login.prenster.LoginPrenster;
 import com.iustu.identification.ui.widget.CameraDecor;
@@ -15,7 +13,6 @@ import com.iustu.identification.ui.widget.camera.CameraPreview;
 import com.iustu.identification.util.ExceptionUtil;
 import com.iustu.identification.util.LibManager;
 import com.iustu.identification.util.ToastUtil;
-import com.iustu.identification.util.UserCache;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -103,21 +100,5 @@ public class FaceLoginFragment extends BaseFragment{
     }
 
     public void faceLogin(byte[] bytes){
-        Api.faceLogin(bytes)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe(mActivity::addDisposable)
-                .subscribe(stringMessage -> {
-                    if(stringMessage.getCode() == Message.CODE_SUCCESS){
-                        dispose();
-                        User user = new User();
-                        user.setName(stringMessage.getBody().getName());
-                        user.setUsername(stringMessage.getBody().getUserName());
-                        user.setSession(stringMessage.getBody().getSession());
-                        user.setId(stringMessage.getId());
-                        UserCache.setUser(user);
-                        LibManager.loadData();
-                        ((LoginActivity)mActivity).startLogin();
-                    }
-                }, t-> ExceptionUtil.getThrowableMessage(getClass().getSimpleName(), t));
     }
 }

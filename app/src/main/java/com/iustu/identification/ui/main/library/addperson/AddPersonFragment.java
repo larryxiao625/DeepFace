@@ -1,4 +1,4 @@
-package com.iustu.identification.ui.main.library.addpersion;
+package com.iustu.identification.ui.main.library.addperson;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,18 +11,17 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.iustu.identification.R;
-import com.iustu.identification.entity.PersionInfo;
+import com.iustu.identification.entity.PersonInfo;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.main.MainActivity;
 import com.iustu.identification.ui.main.library.LibraryFragment;
-import com.iustu.identification.ui.main.library.addpersion.mvp.AddPersionPresenter;
-import com.iustu.identification.ui.main.library.addpersion.mvp.AddPersionView;
+import com.iustu.identification.ui.main.library.addperson.mvp.AddPersionPresenter;
+import com.iustu.identification.ui.main.library.addperson.mvp.AddPersionView;
 import com.iustu.identification.ui.widget.dialog.SingleButtonDialog;
 import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
 import com.iustu.identification.util.ExceptionUtil;
 import com.iustu.identification.util.FileCallBack;
 import com.iustu.identification.util.ImageUtils;
-import com.iustu.identification.util.LibManager;
 import com.iustu.identification.util.TextUtil;
 import com.iustu.identification.util.ToastUtil;
 
@@ -32,7 +31,6 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Liu Yuchuan on 2017/11/21.
@@ -131,16 +129,16 @@ public class AddPersonFragment extends BaseFragment implements AddPersionView {
         String idCardNumber = idCardEdit.getText().toString().trim();
         String location = locationEdit.getText().toString().trim();
         String remark = remarkEdit.getText().toString().trim();
-        PersionInfo persionInfo = new PersionInfo();
-        persionInfo.feature = null;
-        persionInfo.gender = sex;
-        persionInfo.name = name;
-        persionInfo.home = location;
-        persionInfo.identity = idCardNumber;
-        persionInfo.other = remark;
-        persionInfo.photoPath = photoPath;
-        persionInfo.libId = libId;
-        presenter.onAddPersion(persionInfo);
+        PersonInfo personInfo = new PersonInfo();
+        personInfo.feature = null;
+        personInfo.gender = sex;
+        personInfo.name = name;
+        personInfo.home = location;
+        personInfo.identity = idCardNumber;
+        personInfo.other = remark;
+        personInfo.photoPath = photoPath;
+        personInfo.libId = libId;
+        presenter.onAddPersion(personInfo);
     }
 
     @OnClick(R.id.photo_iv)
@@ -197,7 +195,7 @@ public class AddPersonFragment extends BaseFragment implements AddPersionView {
     }
 
     @Override
-    public void onAddPersion(PersionInfo p) {
+    public void onAddPersion(PersonInfo p) {
         presenter.onAddPersion(p);
     }
 

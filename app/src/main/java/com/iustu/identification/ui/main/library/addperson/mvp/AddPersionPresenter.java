@@ -1,13 +1,11 @@
-package com.iustu.identification.ui.main.library.addpersion.mvp;
+package com.iustu.identification.ui.main.library.addperson.mvp;
 
 import android.content.ContentValues;
-import android.database.Cursor;
 
 import com.example.agin.facerecsdk.DetectResult;
-import com.example.agin.facerecsdk.FacerecUtil;
 import com.example.agin.facerecsdk.FeatureResult;
-import com.iustu.identification.entity.PersionInfo;
-import com.iustu.identification.ui.main.library.addpersion.AddPersonFragment;
+import com.iustu.identification.entity.PersonInfo;
+import com.iustu.identification.ui.main.library.addperson.AddPersonFragment;
 import com.iustu.identification.util.RxUtil;
 import com.iustu.identification.util.SDKUtil;
 
@@ -38,17 +36,17 @@ public class AddPersionPresenter {
     /**
      * 点击“提交”按钮时触发
      */
-    public void onAddPersion(PersionInfo persionInfo) {
+    public void onAddPersion(PersonInfo personInfo) {
         view.showWaitDialog("正在添加...");
         ContentValues values = new ContentValues();
         values.put("feature", System.currentTimeMillis() + "");
-        values.put("libId", persionInfo.libId);
-        values.put("name", persionInfo.name);
-        values.put("gender", persionInfo.gender);
-        values.put("photoPath", persionInfo.photoPath);
-        values.put("identity", persionInfo.identity);
-        values.put("home", persionInfo.home);
-        values.put("other", persionInfo.other);
+        values.put("libId", personInfo.libId);
+        values.put("name", personInfo.name);
+        values.put("gender", personInfo.gender);
+        values.put("photoPath", personInfo.photoPath);
+        values.put("identity", personInfo.identity);
+        values.put("home", personInfo.home);
+        values.put("other", personInfo.other);
         Observable observable = RxUtil.getInsertObservable(RxUtil.DB_PERSIONINFO, values);
         observable.subscribe(new Observer<Object>() {
 

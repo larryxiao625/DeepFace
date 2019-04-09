@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.iustu.identification.R;
-import com.iustu.identification.entity.PersionInfo;
+import com.iustu.identification.entity.PersonInfo;
 import com.iustu.identification.ui.base.PageRecyclerViewAdapter;
 import com.iustu.identification.ui.main.library.peoplemagnage.mvp.PersionView;
 import com.iustu.identification.util.IconFontUtil;
@@ -32,29 +32,29 @@ import io.reactivex.disposables.Disposable;
  * Created by Liu Yuchuan on 2017/11/21.
  */
 
-public class PersonInfoAdapter extends PageRecyclerViewAdapter<PersonInfoAdapter.Holder, PersionInfo> {
+public class PersonInfoAdapter extends PageRecyclerViewAdapter<PersonInfoAdapter.Holder, PersonInfo> {
 
     private CompositeDisposable compositeDisposable;
 
-    public PersonInfoAdapter(List<PersionInfo> dataLast) {
+    public PersonInfoAdapter(List<PersonInfo> dataLast) {
         super(dataLast);
         setDisplayCountPerPage(3);
     }
 
     @Override
     public void onBindHolder(Holder holder, int index, int position) {
-        PersionInfo p = mDataLast.get(index);
+        PersonInfo p = mDataLast.get(index);
 
         holder.setPersionInfo(p);
         holder.setEditEnable(false);
 
         holder.setSaveListener(v -> {
-            PersionInfo persionInfo = mDataLast.get(index);
-            persionInfo.name = holder.name.getText().toString();
-            persionInfo.home = holder.location.getText().toString();
-            persionInfo.gender = holder.sex.getText().toString();
-            persionInfo.identity = holder.idCard.getText().toString();
-            personView.onSaveChange(index, persionInfo);
+            PersonInfo personInfo = mDataLast.get(index);
+            personInfo.name = holder.name.getText().toString();
+            personInfo.home = holder.location.getText().toString();
+            personInfo.gender = holder.sex.getText().toString();
+            personInfo.identity = holder.idCard.getText().toString();
+            personView.onSaveChange(index, personInfo);
         });
 
         holder.setEditListener(v -> {
@@ -76,20 +76,20 @@ public class PersonInfoAdapter extends PageRecyclerViewAdapter<PersonInfoAdapter
         });
         holder.delete.setOnClickListener(v->{
             if(personView != null){
-                PersionInfo persionInfo = mDataLast.get(index);
-                personView.onDeletePer(index, persionInfo);
+                PersonInfo personInfo = mDataLast.get(index);
+                personView.onDeletePer(index, personInfo);
             }
         });
         holder.deleteIcon.setOnClickListener(v->{
             if(personView != null){
-                PersionInfo persionInfo = mDataLast.get(index);
-                personView.onDeletePer(index, persionInfo);
+                PersonInfo personInfo = mDataLast.get(index);
+                personView.onDeletePer(index, personInfo);
             }
         });
         holder.deletePhoto.setOnClickListener(v->{
             if(personView != null){
-                PersionInfo persionInfo = mDataLast.get(index);
-                personView.onDeletePhoto(index, holder.currentPage, persionInfo);
+                PersonInfo personInfo = mDataLast.get(index);
+                personView.onDeletePhoto(index, holder.currentPage, personInfo);
             }
         });
     }
@@ -109,7 +109,7 @@ public class PersonInfoAdapter extends PageRecyclerViewAdapter<PersonInfoAdapter
     }
 
     private void loadPicUrls(int index){
-        PersionInfo personInfo = mDataLast.get(index);
+        PersonInfo personInfo = mDataLast.get(index);
 
     }
 
@@ -165,7 +165,7 @@ public class PersonInfoAdapter extends PageRecyclerViewAdapter<PersonInfoAdapter
             switchPhotoLayout.setBackgroundColor(Color.argb(122, 24, 38, 67));
         }
 
-        void setPersionInfo(PersionInfo p){
+        void setPersionInfo(PersonInfo p){
             name.setText(p.name);
             idCard.setText(p.identity);
             sex.setText(p.gender);

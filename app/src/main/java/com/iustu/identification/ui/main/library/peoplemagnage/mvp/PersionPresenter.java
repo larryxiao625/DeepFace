@@ -2,9 +2,8 @@ package com.iustu.identification.ui.main.library.peoplemagnage.mvp;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.util.Log;
 
-import com.iustu.identification.entity.PersionInfo;
+import com.iustu.identification.entity.PersonInfo;
 import com.iustu.identification.util.RxUtil;
 
 import java.util.ArrayList;
@@ -45,18 +44,18 @@ public class PersionPresenter {
 
             @Override
             public void onNext(Cursor cursor) {
-                List<PersionInfo> data = new ArrayList<>();
+                List<PersonInfo> data = new ArrayList<>();
                 while (cursor.moveToNext()) {
-                    PersionInfo persionInfo = new PersionInfo();
-                    persionInfo.feature = null;
-                    persionInfo.libId = cursor.getInt(1);
-                    persionInfo.name = cursor.getString(2);
-                    persionInfo.gender = cursor.getString(3);
-                    persionInfo.photoPath = cursor.getString(4);
-                    persionInfo.identity = cursor.getString(5);
-                    persionInfo.home = cursor.getString(6);
-                    persionInfo.other = cursor.getString(7);
-                    data.add(persionInfo);
+                    PersonInfo personInfo = new PersonInfo();
+                    personInfo.feature = null;
+                    personInfo.libId = cursor.getInt(1);
+                    personInfo.name = cursor.getString(2);
+                    personInfo.gender = cursor.getString(3);
+                    personInfo.photoPath = cursor.getString(4);
+                    personInfo.identity = cursor.getString(5);
+                    personInfo.home = cursor.getString(6);
+                    personInfo.other = cursor.getString(7);
+                    data.add(personInfo);
                 }
                 mView.bindData(data);
             }
@@ -85,22 +84,22 @@ public class PersionPresenter {
 
     /**
      * 点击"添加照片"的时候调用
-     * @param persionInfo 表示需要添加图片的对象
+     * @param personInfo 表示需要添加图片的对象
      * @param path 表项添加的图片路径
      * @param position 表示其所在的位置
      */
-    public void onAddPhoto(PersionInfo persionInfo, String path, int position) {
+    public void onAddPhoto(PersonInfo personInfo, String path, int position) {
         mView.showWaitDialog("正在添加图片...");
         ContentValues values = new ContentValues();
         values.put("feature", System.currentTimeMillis() + "");
-        values.put("libId", persionInfo.libId);
-        values.put("name", persionInfo.name);
-        values.put("gender", persionInfo.gender);
-        values.put("photoPath", persionInfo.photoPath + ";" + path);
-        values.put("identity", persionInfo.identity);
-        values.put("home", persionInfo.home);
-        values.put("other", persionInfo.other);
-        Observable observable = RxUtil.getUpdateObservable(RxUtil.DB_PERSIONINFO, "libId = " + persionInfo.libId + " and name = '" + persionInfo.name +"'", values);
+        values.put("libId", personInfo.libId);
+        values.put("name", personInfo.name);
+        values.put("gender", personInfo.gender);
+        values.put("photoPath", personInfo.photoPath + ";" + path);
+        values.put("identity", personInfo.identity);
+        values.put("home", personInfo.home);
+        values.put("other", personInfo.other);
+        Observable observable = RxUtil.getUpdateObservable(RxUtil.DB_PERSIONINFO, "libId = " + personInfo.libId + " and name = '" + personInfo.name +"'", values);
         observable.subscribe(new Observer() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -131,16 +130,16 @@ public class PersionPresenter {
     /**
      * 点击“删除照片”的时候调用
      * @param position 代表需要删除第几张图片
-     * @param persionInfo 代表需要删除的PersionInfo对象
+     * @param personInfo 代表需要删除的PersionInfo对象
      */
-    public void onDeletePhoto(int position, PersionInfo persionInfo) {
+    public void onDeletePhoto(int position, PersonInfo personInfo) {
         mView.showWaitDialog("正在删除图片...");
         ContentValues values = new ContentValues();
         values.put("feature", System.currentTimeMillis() + "");
-        values.put("libId", persionInfo.libId);
-        values.put("name", persionInfo.name);
-        values.put("gender", persionInfo.gender);
-        String[] s = persionInfo.photoPath.split(";");
+        values.put("libId", personInfo.libId);
+        values.put("name", personInfo.name);
+        values.put("gender", personInfo.gender);
+        String[] s = personInfo.photoPath.split(";");
         String finalPath = null;
         for (int i = 0; i < s.length; i ++) {
             if (i != position) {
@@ -150,10 +149,10 @@ public class PersionPresenter {
             }
         }
         values.put("photoPath", finalPath);
-        values.put("identity", persionInfo.identity);
-        values.put("home", persionInfo.home);
-        values.put("other", persionInfo.other);
-        Observable observable = RxUtil.getUpdateObservable(RxUtil.DB_PERSIONINFO, "name = '" + persionInfo.name + "' and libId = " + persionInfo.libId, values);
+        values.put("identity", personInfo.identity);
+        values.put("home", personInfo.home);
+        values.put("other", personInfo.other);
+        Observable observable = RxUtil.getUpdateObservable(RxUtil.DB_PERSIONINFO, "name = '" + personInfo.name + "' and libId = " + personInfo.libId, values);
         observable.subscribe(new Observer() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -184,11 +183,11 @@ public class PersionPresenter {
     /**
      * 点击“删除”的时候调用
      */
-    public void onDeletePer(int position, PersionInfo persionInfo) {
+    public void onDeletePer(int position, PersonInfo personInfo) {
         mView.showWaitDialog("正在删除...");
         ContentValues values = new ContentValues();
-        values.put("libId", persionInfo.libId);
-        values.put("name", persionInfo.name);
+        values.put("libId", personInfo.libId);
+        values.put("name", personInfo.name);
         Observable observable = RxUtil.getDeleteObservable(RxUtil.DB_PERSIONINFO, values);
         observable.subscribe(new Observer() {
             @Override
@@ -220,18 +219,18 @@ public class PersionPresenter {
     /**
      * 点击“保存”的时候调用
      */
-    public void onSaveChange(int position, PersionInfo persionInfo) {
+    public void onSaveChange(int position, PersonInfo personInfo) {
         mView.showWaitDialog("正在修改...");
         ContentValues values = new ContentValues();
         values.put("feature", System.currentTimeMillis() + "");
-        values.put("libId", persionInfo.libId);
-        values.put("name", persionInfo.name);
-        values.put("gender", persionInfo.gender);
-        values.put("photoPath", persionInfo.photoPath);
-        values.put("identity", persionInfo.identity);
-        values.put("home", persionInfo.home);
-        values.put("other", persionInfo.other);
-        Observable observable = RxUtil.getUpdateObservable(RxUtil.DB_PERSIONINFO, "name = '" + persionInfo.name + "' and libId = " + persionInfo.libId, values);
+        values.put("libId", personInfo.libId);
+        values.put("name", personInfo.name);
+        values.put("gender", personInfo.gender);
+        values.put("photoPath", personInfo.photoPath);
+        values.put("identity", personInfo.identity);
+        values.put("home", personInfo.home);
+        values.put("other", personInfo.other);
+        Observable observable = RxUtil.getUpdateObservable(RxUtil.DB_PERSIONINFO, "name = '" + personInfo.name + "' and libId = " + personInfo.libId, values);
         observable.subscribe(new Observer() {
             @Override
             public void onSubscribe(Disposable d) {

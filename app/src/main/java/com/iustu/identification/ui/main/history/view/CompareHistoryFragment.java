@@ -12,12 +12,10 @@ import android.widget.TextView;
 import com.bigkoo.pickerview.OptionsPickerView;
 import com.bigkoo.pickerview.TimePickerView;
 import com.iustu.identification.R;
-import com.iustu.identification.api.Api;
 import com.iustu.identification.api.message.Message;
-import com.iustu.identification.api.message.response.AdvancedFaceSearchResponse;
 import com.iustu.identification.bean.FaceResult;
 import com.iustu.identification.bean.FaceSetResult;
-import com.iustu.identification.bean.SearchCompareItem;
+import com.iustu.identification.entity.CompareRecord;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.main.MainActivity;
 import com.iustu.identification.ui.main.history.adapter.CompareHistoryItemAdapter;
@@ -62,7 +60,7 @@ public class CompareHistoryFragment extends BaseFragment{
     private PageSetHelper pageSetHelper;
     private CompareHistoryItemAdapter mAdapter;
 
-    private final List<SearchCompareItem> compareItemList = new ArrayList<>();
+    private final List<CompareRecord> compareItemList = new ArrayList<>();
 
     private String faceId;
 
@@ -103,7 +101,6 @@ public class CompareHistoryFragment extends BaseFragment{
             historyPrenster.argumentsError(1);
             return;
         }
-        mAdapter.setTargetPhotoUrl(Api.getFaceSearchImageUrl(faceId));
         startQuery();
     }
 

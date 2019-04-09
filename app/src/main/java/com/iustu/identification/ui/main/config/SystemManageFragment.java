@@ -11,12 +11,9 @@ import com.iustu.identification.bean.BatchCompareImg;
 import com.iustu.identification.config.SystemConfig;
 import com.iustu.identification.entity.Account;
 import com.iustu.identification.ui.base.BaseFragment;
-import com.iustu.identification.ui.login.view.LoginActivity;
-import com.iustu.identification.ui.widget.SwitchButton;
 import com.iustu.identification.ui.widget.dialog.EditDialog;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.util.DataCache;
-import com.iustu.identification.util.UserCache;
 import com.tencent.bugly.beta.Beta;
 
 import org.litepal.crud.DataSupport;

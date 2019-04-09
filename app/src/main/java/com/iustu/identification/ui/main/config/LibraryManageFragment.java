@@ -10,8 +10,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.iustu.identification.R;
-import com.iustu.identification.bean.Library;
 import com.iustu.identification.config.LibraryConfig;
+import com.iustu.identification.entity.Library;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.util.LibManager;
 import com.iustu.identification.util.PageSetHelper;
@@ -36,7 +36,7 @@ public class LibraryManageFragment extends BaseFragment {
     private LibraryConfig libraryConfig;
 
     private List<String> mChooseList;
-    private List<Library> mLibraryList;
+    private List<com.iustu.identification.entity.Library> mLibraryList;
 
     @Override
     protected int postContentView() {
@@ -48,13 +48,15 @@ public class LibraryManageFragment extends BaseFragment {
         super.initView(savedInstanceState, view);
         libraryConfig = LibraryConfig.getInstance();
         mChooseList = libraryConfig.getChosenLibs();
-        mLibraryList = LibManager.getLibraryList();
-        for (Library library : mLibraryList) {
-            if(mChooseList.contains(library.getIdOnServer())){
-                library.setInUse(true);
-            }else {
-                library.setInUse(false);
-            }
+        // TODO: 2019/4/9 写本地数据库获取方法 
+//        mLibraryList = LibManager.getLibraryList();   //本地测试不和后台联动
+        for (com.iustu.identification.entity.Library library : mLibraryList) {
+            // TODO: 2019/4/9 完善判断数据库是否在使用方法 
+//            if(mChooseList.contains(library.getIdOnServer())){
+//                library.setInUse(true);
+//            }else {
+//                library.setInUse(false);
+//            }
         }
         mAdapter = new LibraryManagerAdapter(mLibraryList);
         recyclerView.setLayoutManager(new GridLayoutManager(mActivity, mAdapter.getDisplayCountPerPage(), LinearLayoutManager.HORIZONTAL,false ){
@@ -65,15 +67,16 @@ public class LibraryManageFragment extends BaseFragment {
         });
         mAdapter.setOnPageItemClickListener((v, index, position)->{
             Library library = mLibraryList.get(index);
-            if(library.isInUse()){
-                library.setInUse(false);
-                mChooseList.remove(library.getIdOnServer());
-                Log.e(getClass().getSimpleName(), "remove " + library.getIdOnServer() + " " + mChooseList);
-            }else {
-                library.setInUse(true);
-                mChooseList.add(library.getIdOnServer());
-                Log.e(getClass().getSimpleName(), "add " + library.getIdOnServer() + " " + mChooseList);
-            }
+            // TODO: 2019/4/9 完善数据库改变使用状态方法 
+//            if(library.isInUse()){
+//                library.setInUse(false);
+//                mChooseList.remove(library.getIdOnServer());
+//                Log.e(getClass().getSimpleName(), "remove " + library.getIdOnServer() + " " + mChooseList);
+//            }else {
+//                library.setInUse(true);
+//                mChooseList.add(library.getIdOnServer());
+//                Log.e(getClass().getSimpleName(), "add " + library.getIdOnServer() + " " + mChooseList);
+//            }
             mAdapter.notifyItemChanged(position);
         });
         recyclerView.setAdapter(mAdapter);

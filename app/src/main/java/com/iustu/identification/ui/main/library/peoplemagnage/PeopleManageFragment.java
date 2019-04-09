@@ -13,16 +13,12 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.iustu.identification.R;
-import com.iustu.identification.api.Api;
-import com.iustu.identification.api.message.Message;
-import com.iustu.identification.bean.Library;
-import com.iustu.identification.bean.PersonInfo;
-import com.iustu.identification.entity.PersionInfo;
+import com.iustu.identification.entity.PersonInfo;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.base.PageRecyclerViewAdapter;
 import com.iustu.identification.ui.main.MainActivity;
 import com.iustu.identification.ui.main.library.LibraryFragment;
-import com.iustu.identification.ui.main.library.addpersion.AddPersonFragment;
+import com.iustu.identification.ui.main.library.addperson.AddPersonFragment;
 import com.iustu.identification.ui.main.library.peoplemagnage.mvp.PersionPresenter;
 import com.iustu.identification.ui.main.library.peoplemagnage.mvp.PersionView;
 import com.iustu.identification.ui.widget.dialog.EditDialog;
@@ -32,7 +28,6 @@ import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
 import com.iustu.identification.util.ExceptionUtil;
 import com.iustu.identification.util.FileCallBack;
 import com.iustu.identification.util.ImageUtils;
-import com.iustu.identification.util.LibManager;
 import com.iustu.identification.util.PageSetHelper;
 import com.iustu.identification.util.ToastUtil;
 
@@ -68,7 +63,7 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
     private String photoPath;     // 添加的照片的路径
     private WaitProgressDialog waitProgressDialog;
 
-    private List<PersionInfo> mPersonList;
+    private List<PersonInfo> mPersonList;
     private PersonInfoAdapter mAdapter;
     private PageSetHelper pageSetHelper;
     private PersionPresenter presenter;
@@ -184,7 +179,7 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
 
 
     private void deletePhoto(int index, int position, String id, int urlPosition){
-        PersionInfo personInfo = mPersonList.get(index);
+        PersonInfo personInfo = mPersonList.get(index);
 
     }
 
@@ -283,7 +278,7 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
     }
 
     @Override
-    public void bindData(List<PersionInfo> data) {
+    public void bindData(List<PersonInfo> data) {
         mPersonList.addAll(data);
         mAdapter.notifyDataChange();
     }
@@ -305,18 +300,18 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
     }
 
     @Override
-    public void onDeletePhoto(int index, int position, PersionInfo persionInfo) {
-        presenter.onDeletePhoto(position, persionInfo);
+    public void onDeletePhoto(int index, int position, PersonInfo personInfo) {
+        presenter.onDeletePhoto(position, personInfo);
     }
 
     @Override
-    public void onDeletePer(int position, PersionInfo persionInfo) {
-        presenter.onDeletePer(position, persionInfo);
+    public void onDeletePer(int position, PersonInfo personInfo) {
+        presenter.onDeletePer(position, personInfo);
     }
 
     @Override
-    public void onSaveChange(int position, PersionInfo persionInfo) {
-        presenter.onSaveChange(position, persionInfo);
+    public void onSaveChange(int position, PersonInfo personInfo) {
+        presenter.onSaveChange(position, personInfo);
     }
 
     @Override
@@ -343,11 +338,11 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
     public void onSuccess(int type, int position, ContentValues values) {
         switch (type) {
             case TYPE_SAVE_CHANGE:
-                PersionInfo persionInfo = mPersonList.get(position);
-                persionInfo.name = values.getAsString("name");
-                persionInfo.home = values.getAsString("home");
-                persionInfo.gender = values.getAsString("gender");
-                persionInfo.identity = values.getAsString("identity");
+                PersonInfo personInfo = mPersonList.get(position);
+                personInfo.name = values.getAsString("name");
+                personInfo.home = values.getAsString("home");
+                personInfo.gender = values.getAsString("gender");
+                personInfo.identity = values.getAsString("identity");
                 mAdapter.notifyDataChange();
                 break;
             case TYPE_DELETE_PER:

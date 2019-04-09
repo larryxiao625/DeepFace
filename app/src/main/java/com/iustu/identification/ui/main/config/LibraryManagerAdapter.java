@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.iustu.identification.R;
-import com.iustu.identification.bean.Library;
+import com.iustu.identification.entity.Library;
 import com.iustu.identification.ui.base.OnPageItemClickListener;
 import com.iustu.identification.ui.base.PageRecyclerViewAdapter;
 import com.iustu.identification.util.IconFontUtil;
@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 
 public class LibraryManagerAdapter extends PageRecyclerViewAdapter<LibraryManagerAdapter.Holder, Library>{
 
-    public LibraryManagerAdapter(List<Library> dataLast) {
+    public LibraryManagerAdapter(List<com.iustu.identification.entity.Library> dataLast) {
         super(dataLast);
     }
 
@@ -35,8 +35,8 @@ public class LibraryManagerAdapter extends PageRecyclerViewAdapter<LibraryManage
     }
     @Override
     public void onBindHolder(Holder holder, int index, int position) {
-        Library library = mDataLast.get(index);
-        holder.id.setText(String.valueOf(library.getId()));
+        com.iustu.identification.entity.Library library = mDataLast.get(index);
+        holder.id.setText(String.valueOf(library.getLibId()));
         if(!library.isInUse()) {
             IconFontUtil.getDefault().setText(holder.select, IconFontUtil.UNSELECT_SQUAD);
             holder.state.setText("未使用");
@@ -44,7 +44,7 @@ public class LibraryManagerAdapter extends PageRecyclerViewAdapter<LibraryManage
             IconFontUtil.getDefault().setText(holder.select, IconFontUtil.SELECT_ALL_SQUAD);
             holder.state.setText("正在使用");
         }
-        holder.name.setText(library.getName());
+        holder.name.setText(library.getLibName());
         holder.number.setText(String.valueOf(library.getCount()));
         holder.itemView.setOnClickListener(v -> {
             if(onPageItemClickListener != null){
