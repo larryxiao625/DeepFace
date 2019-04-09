@@ -1,4 +1,4 @@
-package com.iustu.identification.ui.main.config;
+package com.iustu.identification.ui.main.config.libmanager;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.iustu.identification.R;
-import com.iustu.identification.bean.Library;
+import com.iustu.identification.entity.Library;
 import com.iustu.identification.ui.base.OnPageItemClickListener;
 import com.iustu.identification.ui.base.PageRecyclerViewAdapter;
 import com.iustu.identification.util.IconFontUtil;
@@ -21,9 +21,9 @@ import butterknife.ButterKnife;
  * Created by Liu Yuchuan on 2017/11/13.
  */
 
-public class LibraryManagerAdapter extends PageRecyclerViewAdapter<LibraryManagerAdapter.Holder, Library>{
+public class LibraryManagerAdapter extends PageRecyclerViewAdapter<LibraryManagerAdapter.Holder, com.iustu.identification.entity.Library>{
 
-    public LibraryManagerAdapter(List<Library> dataLast) {
+    public LibraryManagerAdapter(List<com.iustu.identification.entity.Library> dataLast) {
         super(dataLast);
     }
 
@@ -36,16 +36,16 @@ public class LibraryManagerAdapter extends PageRecyclerViewAdapter<LibraryManage
     @Override
     public void onBindHolder(Holder holder, int index, int position) {
         Library library = mDataLast.get(index);
-        holder.id.setText(String.valueOf(library.getId()));
-        if(!library.isInUse()) {
+        holder.id.setText(String.valueOf(library.libId));
+        if(library.inUsed == 0) {
             IconFontUtil.getDefault().setText(holder.select, IconFontUtil.UNSELECT_SQUAD);
             holder.state.setText("未使用");
         }else {
             IconFontUtil.getDefault().setText(holder.select, IconFontUtil.SELECT_ALL_SQUAD);
             holder.state.setText("正在使用");
         }
-        holder.name.setText(library.getName());
-        holder.number.setText(String.valueOf(library.getCount()));
+        holder.name.setText(library.libName);
+        holder.number.setText(String.valueOf(library.count));
         holder.itemView.setOnClickListener(v -> {
             if(onPageItemClickListener != null){
                 onPageItemClickListener.onClick(v, position, index);

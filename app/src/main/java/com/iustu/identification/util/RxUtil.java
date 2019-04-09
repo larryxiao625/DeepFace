@@ -1,11 +1,16 @@
 package com.iustu.identification.util;
 
+import android.annotation.TargetApi;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Build;
 import android.util.Log;
 
 import com.iustu.identification.entity.Library;
+
+import java.util.HashSet;
+import java.util.function.Consumer;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -26,7 +31,7 @@ public class RxUtil {
     public static final String DB_COMPARERECORD = "CompareRecord";  // 对应CompareRecord数据表
 
     public static final String[] ACCOUNT_COLUMNS = new String[]{"name", "password"};    // Account的所有列
-    public static final String[] LIBRARY_COLUMNS = new String[]{"libName", "libId", "description", "count"}; // Library的所有列
+    public static final String[] LIBRARY_COLUMNS = new String[]{"libName", "libId", "description", "count", "inUsed"}; // Library的所有列
     public static final String[] PERSIONINFO_COLUMNS = new String[]{"feature", "libId", "name", "gender", "photoPath", "identity", "home", "other"};
 
 
@@ -61,8 +66,9 @@ public class RxUtil {
                         libId = values.getAsInteger("libId");
                         t = DB_LIBRARY;
                         Cursor cursor = database.query(false, t, null,"libId = " + libId, null, null, null, null, null);
-                        cursor.moveToNext();
-                        int count = cursor.getInt(3);
+                        cursor.moveToFirst();
+                        Log.e("", "subscribe: =======" + cursor.getColumnNames().toString());
+                        int count = cursor.getInt(cursor.getColumnIndex("count"));
                         ContentValues values1 = new ContentValues();
                         values1.put("count", count + 1);
                         database.update(t, values1, "libId = " + libId, null);
@@ -120,7 +126,7 @@ public class RxUtil {
                         t = DB_LIBRARY;
                         Cursor cursor = database.query(false, t, LIBRARY_COLUMNS,"libId = "+libId, null, null, null, null, null);
                         cursor.moveToNext();
-                        int count = cursor.getInt(3);
+                        int count = cursor.getInt(cursor.getColumnIndex("count"));
                         ContentValues values1 = new ContentValues();
                         values1.put("count", count - 1);
                         database.update(t, values1, "libId = " + libId, null);
@@ -133,5 +139,32 @@ public class RxUtil {
             }
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    // 批量更改人脸库的选中状态
+    public static Observable updataLibraries(HashSet<Integer> libIds) {
+        return Observable.create(new ObservableOnSubscribe<Object>() {
+            @TargetApi(Build.VERSION_CODES.N)
+            @Override
+            public void subscribe(ObservableEmitter<Object> e) {
+                SQLiteDatabase database = SqliteUtil.getDatabase();
+                database.beginTransaction();
+                try {
+                    database.beginTransaction();
+                    libIds.forEach(new Consumer<Integer>() {
+                        @Override
+                        public void accept(Integer integer) {
+                            ContentValues values1 = new ContentValues();
+                            values1.put("inUsed", 1);
+                            database.update("Library", values1, "libId = " + (int)integer, null);
+                        }
+                    });
+                    database.setTransactionSuccessful();
+                    e.onComplete();
+                }finally {
+                    database.endTransaction();
+                }
+            }
+        });
     }
 }

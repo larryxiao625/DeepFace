@@ -30,7 +30,7 @@ public class App extends LitePalApplication{
         super.onCreate();
         Stetho.initializeWithDefaults(this);
 //        CrashReport.initCrashReport(getApplicationContext());
-        Bugly.init(getApplicationContext(), "9c3bdbe293", false );
+        //Bugly.init(getApplicationContext(), "9c3bdbe293", false );
         SqliteHelper.init(getApplicationContext());
         try {
             SqliteUtil.init();

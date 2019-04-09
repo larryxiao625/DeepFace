@@ -21,36 +21,12 @@ public class SqliteUtil {
     }
 
     public static SQLiteDatabase getDatabase() {
+        if (database == null) {
+            synchronized (SQLiteDatabase.class) {
+                if (database == null)
+                    database = SqliteHelper.getInstance().getWritableDatabase();
+            }
+        }
         return database;
-    }
-
-    public void insertAccount(Account account) {
-        ContentValues values = new ContentValues();
-        values.put("name", account.name);
-        values.put("password", account.password);
-        database.beginTransaction();
-        database.insert(SQLString.TABLE_ACCOUNT, null, values);
-        database.endTransaction();
-    }
-
-    public void insertLibrary(Library library) {
-        ContentValues values = new ContentValues();
-        values.put("libName", library.libName);
-        values.put("description", library.description);
-        values.put("count", library.count);
-        database.beginTransaction();
-        database.insert(SQLString.TABLE_LIBRARY, null, values);
-        database.endTransaction();
-    }
-
-    public void insertCompareRecord(CompareRecord compareRecord) {
-        ContentValues values = new ContentValues();
-        values.put("time", compareRecord.time);
-        values.put("rate", compareRecord.rate);
-        values.put("uploadPhotoPath", compareRecord.uploadPhotoPath);
-        values.put("feature", compareRecord.feature.toString());
-        database.beginTransaction();
-        database.insert(SQLString.TABLE_COMPARERECORD, null, values);
-        database.endTransaction();
     }
 }

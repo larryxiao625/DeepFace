@@ -49,13 +49,13 @@ public class PersionPresenter {
                 while (cursor.moveToNext()) {
                     PersionInfo persionInfo = new PersionInfo();
                     persionInfo.feature = null;
-                    persionInfo.libId = cursor.getInt(1);
-                    persionInfo.name = cursor.getString(2);
-                    persionInfo.gender = cursor.getString(3);
-                    persionInfo.photoPath = cursor.getString(4);
-                    persionInfo.identity = cursor.getString(5);
-                    persionInfo.home = cursor.getString(6);
-                    persionInfo.other = cursor.getString(7);
+                    persionInfo.libId = cursor.getInt(cursor.getColumnIndex("libId"));
+                    persionInfo.name = cursor.getString(cursor.getColumnIndex("name"));
+                    persionInfo.gender = cursor.getString(cursor.getColumnIndex("gender"));
+                    persionInfo.photoPath = cursor.getString(cursor.getColumnIndex("photoPath"));
+                    persionInfo.identity = cursor.getString(cursor.getColumnIndex("identity"));
+                    persionInfo.home = cursor.getString(cursor.getColumnIndex("home"));
+                    persionInfo.other = cursor.getString(cursor.getColumnIndex("other"));
                     data.add(persionInfo);
                 }
                 mView.bindData(data);

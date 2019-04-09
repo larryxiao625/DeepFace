@@ -40,8 +40,8 @@ public class LibPresenter {
      * 初始加载界面的时候获取所有的人脸库
      */
     public void onInitData() {
-        Observable observable = RxUtil.getQuaryObservalbe(false, RxUtil.DB_LIBRARY, RxUtil.LIBRARY_COLUMNS, null, null, null, null, null, null);
         mView.showWaitDialog("正在获取数据...");
+        Observable observable = RxUtil.getQuaryObservalbe(false, RxUtil.DB_LIBRARY, RxUtil.LIBRARY_COLUMNS, null, null, null, null, null, null);
         observable.subscribe(new Observer<Cursor>() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -53,8 +53,9 @@ public class LibPresenter {
                 if (cursor.getCount() == 0)
                     return;
                 List<Library> data = new ArrayList<>();
+                Log.e("LibManagerPresenter", "onNext: ==============" + cursor.getColumnNames().toString());
                 while (cursor.moveToNext()) {
-                    Library library = new Library(cursor.getString(0), cursor.getInt(1), cursor.getString(2), cursor.getInt(3));
+                    Library library = new Library(cursor.getString(cursor.getColumnIndex("libName")), cursor.getInt(cursor.getColumnIndex("libId")), cursor.getString(cursor.getColumnIndex("description")), cursor.getInt(cursor.getColumnIndex("count")), cursor.getInt(cursor.getColumnIndex("inUsed")));
                     data.add(library);
                 }
                 mView.bindData(data);
@@ -86,13 +87,14 @@ public class LibPresenter {
      * 添加新人脸库的逻辑代码
      */
     public void onCreateNewLib(String name, String description) {
-        Library library = new Library(name, description, 0);
+        mView.showWaitDialog("正在添加人脸库...");
+        Library library = new Library(name, description, 0, 0);
         ContentValues contentValues = new ContentValues();
         contentValues.put("libName", library.libName);
         contentValues.put("description", library.description);
         contentValues.put("count", library.count);
+        contentValues.put("inUsed", library.inUsed);
         Observable observable = RxUtil.getInsertObservable(RxUtil.DB_LIBRARY, contentValues);
-        mView.showWaitDialog("正在添加人脸库...");
         observable.subscribe(new Observer() {
             @Override
             public void onSubscribe(Disposable d) {
