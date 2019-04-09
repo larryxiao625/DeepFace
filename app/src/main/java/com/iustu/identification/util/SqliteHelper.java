@@ -4,12 +4,11 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.iustu.identification.entity.Account;
 import com.iustu.identification.entity.CompareRecord;
 import com.iustu.identification.entity.Library;
-import com.iustu.identification.entity.PersionInfo;
+import com.iustu.identification.entity.PersonInfo;
 import com.iustu.identification.entity.TakeRecord;
 
 /**
@@ -79,7 +78,7 @@ class SQLString {
     public static final String TABLE_LIBRARY = Library.class.getSimpleName();
     public static final String TABLE_ACCOUNT = Account.class.getSimpleName();
     public static final String TABLE_COMPARERECORD = CompareRecord.class.getSimpleName();
-    public static final String TABLE_PERSIONINFO = PersionInfo.class.getSimpleName();
+    public static final String TABLE_PERSIONINFO = PersonInfo.class.getSimpleName();
     public static final String TABLE_TAKERECORD = TakeRecord.class.getSimpleName();
 
     public static final String CREATE_TABLE_LIBRARY = "create table Library (libId integer primary key autoincrement, libName varchar not null, description varchar, count integer not null, inUsed integer not null)";

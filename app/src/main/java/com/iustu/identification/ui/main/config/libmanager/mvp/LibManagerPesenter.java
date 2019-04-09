@@ -1,7 +1,6 @@
 package com.iustu.identification.ui.main.config.libmanager.mvp;
 
 import android.database.Cursor;
-import android.util.Log;
 
 import com.iustu.identification.entity.Library;
 import com.iustu.identification.util.RxUtil;

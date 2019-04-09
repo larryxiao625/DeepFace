@@ -15,6 +15,16 @@ public class Library {
     public int libId; // autoincre
 
 
+    public boolean isInUse;     //是否使用
+    public Library(){
+
+    }
+    public Library(String libName, int libId, String discription, int count) {
+        this.libName = libName;
+        this.count = count;
+        this.description = discription;
+        this.libId = libId;
+    }
 
     public ContentValues toContentValues() {
         ContentValues values = new ContentValues();
@@ -23,5 +33,53 @@ public class Library {
         values.put("description", description);
         values.put("inUsed", inUsed);
         return values;
+    }
+
+    public Library(String libName, int libId, String description, int count, boolean isInUse) {
+        this.libName = libName;
+        this.libId = libId;
+        this.description = description;
+        this.count = count;
+        this.isInUse = isInUse;
+    }
+
+    public String getLibName() {
+        return libName;
+    }
+
+    public void setLibName(String libName) {
+        this.libName = libName;
+    }
+
+    public int getLibId() {
+        return libId;
+    }
+
+    public void setLibId(int libId) {
+        this.libId = libId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public boolean isInUse() {
+        return isInUse;
+    }
+
+    public void setInUse(boolean inUse) {
+        isInUse = inUse;
     }
 }

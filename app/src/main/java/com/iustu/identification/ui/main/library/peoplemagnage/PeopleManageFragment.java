@@ -13,16 +13,13 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.iustu.identification.R;
-import com.iustu.identification.api.Api;
-import com.iustu.identification.api.message.Message;
-import com.iustu.identification.bean.Library;
-import com.iustu.identification.bean.PersonInfo;
 import com.iustu.identification.entity.PersionInfo;
+import com.iustu.identification.entity.PersonInfo;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.base.PageRecyclerViewAdapter;
 import com.iustu.identification.ui.main.MainActivity;
 import com.iustu.identification.ui.main.library.LibraryFragment;
-import com.iustu.identification.ui.main.library.addpersion.AddPersonFragment;
+import com.iustu.identification.ui.main.library.addperson.AddPersonFragment;
 import com.iustu.identification.ui.main.library.peoplemagnage.mvp.PersionPresenter;
 import com.iustu.identification.ui.main.library.peoplemagnage.mvp.PersionView;
 import com.iustu.identification.ui.widget.dialog.EditDialog;
@@ -32,7 +29,6 @@ import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
 import com.iustu.identification.util.ExceptionUtil;
 import com.iustu.identification.util.FileCallBack;
 import com.iustu.identification.util.ImageUtils;
-import com.iustu.identification.util.LibManager;
 import com.iustu.identification.util.PageSetHelper;
 import com.iustu.identification.util.ToastUtil;
 
@@ -179,17 +175,6 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
     @OnClick(R.id.next_page_iv)
     public void onNextPage(){
         pageSetHelper.nextPage();
-    }
-
-
-
-    private void deletePhoto(int index, int position, String id, int urlPosition){
-        PersionInfo personInfo = mPersonList.get(index);
-
-    }
-
-    private void deletePerson(int index) {
-
     }
 
 

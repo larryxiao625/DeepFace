@@ -2,12 +2,17 @@ package com.iustu.identification.util;
 
 import android.annotation.TargetApi;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 
+import com.example.agin.facerecsdk.DetectResult;
+import com.example.agin.facerecsdk.FeatureResult;
+import com.example.agin.facerecsdk.SearchResultItem;
 import com.iustu.identification.entity.Library;
 import com.iustu.identification.entity.PersionInfo;
 
@@ -15,10 +20,14 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.function.Consumer;
 
+import java.util.ArrayList;
+
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -34,8 +43,13 @@ public class RxUtil {
     public static final String DB_COMPARERECORD = "CompareRecord";  // 对应CompareRecord数据表
 
     public static final String[] ACCOUNT_COLUMNS = new String[]{"name", "password"};    // Account的所有列
+
     public static final String[] LIBRARY_COLUMNS = new String[]{"libName", "libId", "description", "count", "inUsed"}; // Library的所有列
     public static final String[] PERSIONINFO_COLUMNS = new String[]{"feature", "libId", "name", "gender", "photoPath", "identity", "home", "other", "image_id", "libName"};
+
+
+    public static final Integer VERIFY_SUCCESS=1;
+    public static final Integer VERIFY_FAIL=0;
 
 
     // 获取查询数据库时的游标

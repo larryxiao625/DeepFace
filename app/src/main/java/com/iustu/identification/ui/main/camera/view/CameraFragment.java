@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.iustu.identification.App;
 import com.iustu.identification.R;
 import com.iustu.identification.bean.ParameterConfig;
+import com.iustu.identification.entity.CompareRecord;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.main.MainActivity;
 import com.iustu.identification.ui.main.camera.adapter.CompareItemAdapter;
@@ -45,6 +46,7 @@ import com.serenegiant.usb.widget.UVCCameraTextureView;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -171,7 +173,17 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
         }
     }
 
-    IVew iVew= rea -> Toast.makeText(App.getContext(),rea,Toast.LENGTH_SHORT).show();
+    IVew iVew=new IVew() {
+        @Override
+        public void showShortMsg(String rea) {
+            Toast.makeText(App.getContext(),rea,Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void updateSingleResult(CompareRecord compareRecord) {
+
+        }
+    };
 
     @Override
     public void onStart() {
@@ -201,7 +213,7 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
     public void onDestroy() {
         super.onDestroy();
         Log.d("CameraFragment","onDestroy");
-//        getActivity().stopService(serviceIntent);
+        Objects.requireNonNull(getActivity()).stopService(serviceIntent);
     }
 
     ServiceConnection myServiceConnection=new ServiceConnection() {
@@ -210,7 +222,6 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
             Log.d("CameraFragment","onConnected");
             CameraFragment.this.captureBind= (CapturePicService.CaptureBind) service;
             ((CapturePicService.CaptureBind) service).setOnMyDevConnectListener(cameraPrenster);
-            ((CapturePicService.CaptureBind) service).getService().capturePic();
             getLock(getActivity());
         }
 

@@ -11,17 +11,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.iustu.identification.R;
-import com.iustu.identification.api.Api;
-import com.iustu.identification.api.message.Message;
-import com.iustu.identification.bean.PersonInfo;
-import com.iustu.identification.bean.SearchCompareItem;
+import com.iustu.identification.entity.CompareRecord;
+import com.iustu.identification.entity.PersonInfo;
 import com.iustu.identification.ui.widget.ScaleView;
-import com.iustu.identification.util.ExceptionUtil;
 import com.iustu.identification.util.ExpandableViewHoldersUtil;
 import com.iustu.identification.util.ImageUtils;
 import com.iustu.identification.util.LibManager;
@@ -32,18 +25,15 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 
 /**
  * Created by Liu Yuchuan on 2017/12/7.
  */
 
 public class CompareItemAdapter extends RecyclerView.Adapter<CompareItemAdapter.Holder>{
-    private List<SearchCompareItem> searchCompareItemList;
+    private List<CompareRecord> searchCompareItemList;
 
-    public CompareItemAdapter(List<SearchCompareItem> searchCompareItemList) {
+    public CompareItemAdapter(List<CompareRecord> searchCompareItemList) {
         this.searchCompareItemList = searchCompareItemList;
     }
 
@@ -56,38 +46,38 @@ public class CompareItemAdapter extends RecyclerView.Adapter<CompareItemAdapter.
 
     @Override
     public void onBindViewHolder(Holder holder, int position) {
-        SearchCompareItem item = searchCompareItemList.get(position);
+        CompareRecord item = searchCompareItemList.get(position);
+        // TODO: 2019/4/9 设置图片加载方法
+//        if(item.getWidth() == 0) {
+//            Glide.with(holder.capturePhoto)
+//                    .asBitmap()
+//                    .load(Uri.fromFile(new File(item.getPhotoPath())))
+//                    .into(new SimpleTarget<Bitmap>() {
+//                        @Override
+//                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+//                            if(resource.isRecycled()){
+//                                return;
+//                            }
+//                            item.setWidth(resource.getWidth());
+//                            item.setHeight(resource.getHeight());
+//                            Glide.with(holder.capturePhoto)
+//                                    .load(Uri.fromFile(new File(item.getPhotoPath())))
+//                                    .apply(new RequestOptions().transforms(new ImageUtils.CropFace(item.getWidth(), item.getHeight(), item.getRect())).placeholder(R.drawable.photo_holder).error(R.drawable.photo_holder))
+//                                    .into(holder.capturePhoto);
+//                        }
+//                    });
+//        }else {
+//            Glide.with(holder.capturePhoto)
+//                    .load(Uri.fromFile(new File(item.getPhotoPath())))
+//                    .apply(new RequestOptions().transforms(new ImageUtils.CropFace(item.getWidth(), item.getHeight(), item.getRect())).placeholder(R.drawable.photo_holder).error(R.drawable.photo_holder))
+//                    .into(holder.capturePhoto);
+//        }
 
-        if(item.getWidth() == 0) {
-            Glide.with(holder.capturePhoto)
-                    .asBitmap()
-                    .load(Uri.fromFile(new File(item.getPhotoPath())))
-                    .into(new SimpleTarget<Bitmap>() {
-                        @Override
-                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-                            if(resource.isRecycled()){
-                                return;
-                            }
-                            item.setWidth(resource.getWidth());
-                            item.setHeight(resource.getHeight());
-                            Glide.with(holder.capturePhoto)
-                                    .load(Uri.fromFile(new File(item.getPhotoPath())))
-                                    .apply(new RequestOptions().transforms(new ImageUtils.CropFace(item.getWidth(), item.getHeight(), item.getRect())).placeholder(R.drawable.photo_holder).error(R.drawable.photo_holder))
-                                    .into(holder.capturePhoto);
-                        }
-                    });
-        }else {
-            Glide.with(holder.capturePhoto)
-                    .load(Uri.fromFile(new File(item.getPhotoPath())))
-                    .apply(new RequestOptions().transforms(new ImageUtils.CropFace(item.getWidth(), item.getHeight(), item.getRect())).placeholder(R.drawable.photo_holder).error(R.drawable.photo_holder))
-                    .into(holder.capturePhoto);
-        }
-
-        holder.compareScaleView.setScale((int) (item.getScore() * 100));
-        if(!item.isInitInfo()){
-            holder.setPersonInfo(null);
-            loadInfo(position);
-        }else {
+//        holder.compareScaleView.setScale((int) (item.getScore() * 100));
+//        if(!item.isInitInfo()){
+//            holder.setPersonInfo(null);
+//            loadInfo(position);
+//        }else {
 //            PersonInfo personInfo = item.getPersonInfo();
 //            holder.setPersonInfo(item.getPersonInfo());
 //            if(personInfo.isInitUrls()) {
@@ -99,13 +89,13 @@ public class CompareItemAdapter extends RecyclerView.Adapter<CompareItemAdapter.
 //                loadPicUrl(position);
 //            }
 
-            holder.setPersonInfo(item.getPersonInfo());
-        }
-
-        Glide.with(holder.matchPhoto)
-                .applyDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.photo_holder).error(R.drawable.photo_holder))
-                .load(item.getPhotoUrl())
-                .into(holder.matchPhoto);
+//            holder.setPersonInfo(item.getPersonInfo());
+//        }
+//
+//        Glide.with(holder.matchPhoto)
+//                .applyDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.photo_holder).error(R.drawable.photo_holder))
+//                .load(item.getPhotoUrl())
+//                .into(holder.matchPhoto);
 
 
         if(item.isExtend()){
@@ -129,10 +119,10 @@ public class CompareItemAdapter extends RecyclerView.Adapter<CompareItemAdapter.
     }
 
     private void loadInfo(int index){
-        SearchCompareItem item = searchCompareItemList.get(index);
+        CompareRecord item = searchCompareItemList.get(index);
     }
 
-    public void updateSingleData(SearchCompareItem searchCompareItem,int position){
+    public void updateSingleData(CompareRecord searchCompareItem,int position){
         searchCompareItemList.add(position,searchCompareItem);
         notifyItemChanged(0);
     }
@@ -177,12 +167,13 @@ public class CompareItemAdapter extends RecyclerView.Adapter<CompareItemAdapter.
             if(info == null){
 
             }else {
-                libNameTv.setText(TextUtil.format(LibManager.getLibName(info.getFaceSetId())));
+                // TODO: 2019/4/9 根据人脸库获取中文名方法
+                libNameTv.setText(TextUtil.format(LibManager.getLibName(String.valueOf(info.getLibId()))));
                 nameTv.setText(TextUtil.format(info.getName()));
                 birthTv.setText(TextUtil.format(info.getBirthday()));
-                idCardTv.setText(TextUtil.format(info.getCode()));
+                idCardTv.setText(TextUtil.format(info.getIdentity()));
                 locationTv.setText(TextUtil.format(info.getAddress()));
-                nationalityTv.setText(TextUtil.format(info.getRace()));
+                nationalityTv.setText(TextUtil.format(info.getHome()));
             }
         }
     }

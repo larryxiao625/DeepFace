@@ -5,32 +5,20 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 
-import com.example.agin.facerecsdk.FacerecUtil;
 import com.iustu.identification.R;
-import com.iustu.identification.api.Api;
-import com.iustu.identification.bean.User;
 import com.iustu.identification.ui.base.BaseActivity;
 import com.iustu.identification.ui.login.view.LoginActivity;
-import com.iustu.identification.ui.main.MainActivity;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.ui.widget.dialog.SingleButtonDialog;
 import com.iustu.identification.util.CopyModelUtil;
-import com.iustu.identification.util.ExceptionUtil;
-import com.iustu.identification.util.LibManager;
-import com.iustu.identification.util.SDKUtil;
-import com.iustu.identification.util.UserCache;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -86,45 +74,8 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void startApp() {
-        Api.preLogin()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(preLoginResponseMessage -> {
-                    if(preLoginResponseMessage.getBody().isNeedAuth()){
-                        LoginActivity.start(this);
-                        finish();
-                    }else {
-                        LibManager.setOnLoadListener(new LibManager.OnLibLoadListener() {
-                            @Override
-                            public void onStartLoad() {
-
-                            }
-
-                            @Override
-                            public void onSuccessLoad() {
-                                UserCache.setUser(User.makeUnVerifiedUser());
-                                MainActivity.start(SplashActivity.this);
-                                SplashActivity.this.finish();
-                            }
-
-                            @Override
-                            public void onFailLoad() {
-                                new SingleButtonDialog.Builder()
-                                        .content("自动登录失败，请检查网络重试")
-                                        .button("确定", v->{
-                                            LoginActivity.start(SplashActivity.this);
-                                            finish();
-                                        })
-                                        .title("错误")
-                                        .show(getFragmentManager());
-                            }
-                        });
-                        LibManager.loadData();
-                    }
-                }, t->{
-                    ExceptionUtil.getThrowableMessage("SplashActivity", t);
-                    LoginActivity.start(this);
-                    finish();
-                });
+        LoginActivity.start(this);
+        finish();
     }
 
     @Override

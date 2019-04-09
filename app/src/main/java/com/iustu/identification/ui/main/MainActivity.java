@@ -10,7 +10,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
 import com.iustu.identification.R;
-import com.iustu.identification.api.Api;
 import com.iustu.identification.api.message.Message;
 import com.iustu.identification.ui.SplashActivity;
 import com.iustu.identification.ui.base.BaseActivity;
@@ -26,7 +25,6 @@ import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
 import com.iustu.identification.util.ExceptionUtil;
 import com.iustu.identification.util.LibManager;
-import com.iustu.identification.util.UserCache;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,13 +77,6 @@ public class MainActivity extends BaseActivity implements BottomBar.BottomBarSel
     @Override
     protected void onStart() {
         super.onStart();
-        if(UserCache.getUser().isVerify()){
-            dispose();
-            keepAlive();
-        }
-        if(isSessionOutOfDate){
-           onSessionOutOfDate();
-        }
     }
 
     public void dismissWaiDialog(){
@@ -99,30 +90,6 @@ public class MainActivity extends BaseActivity implements BottomBar.BottomBarSel
         return R.layout.activity_main;
     }
 
-    // 不涉及网络访问，删
-    private void keepAlive(){
-        if(keepAliveDisposable != null){
-            keepAliveDisposable.dispose();
-        }
-        keepAliveDisposable = Observable.interval(90, TimeUnit.SECONDS)
-                .takeUntil(aLong -> isSessionOutOfDate)
-                .subscribeOn(Schedulers.computation())
-                .doOnSubscribe(this::addDisposable)
-                .flatMap(aLong -> Api.keepAlive())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(message -> {
-                    if(message.getCode() == Message.CODE_SUCCESS){
-                        isSessionOutOfDate = false;
-                    }else if(message.getCode() == Message.VERIFY_ERROR){
-                        dispose();
-                        isSessionOutOfDate = true;
-                        if(isActivityAlive) {
-                            onSessionOutOfDate();
-                        }
-                    }
-                }, t-> ExceptionUtil.getThrowableMessage(MainActivity.this.getClass().getSimpleName(), t));
-    }
-
 
 
     @Override
@@ -132,9 +99,6 @@ public class MainActivity extends BaseActivity implements BottomBar.BottomBarSel
             dispose();
             SplashActivity.start(this);
             return;
-        }
-        if(UserCache.getUser().isVerify()) {
-            keepAlive();
         }
         bottomBar.post(() -> {
             mFragmentManager = getSupportFragmentManager();

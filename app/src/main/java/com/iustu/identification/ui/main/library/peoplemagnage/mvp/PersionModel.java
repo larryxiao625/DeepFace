@@ -1,6 +1,6 @@
 package com.iustu.identification.ui.main.library.peoplemagnage.mvp;
 
-import com.iustu.identification.entity.PersionInfo;
+import com.iustu.identification.entity.PersonInfo;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ public class PersionModel {
     /**
      * 初始加载数据在PersionPresenter中被调用
      */
-    public List<PersionInfo> initData() {
+    public List<PersonInfo> initData() {
         return null;
     }
 

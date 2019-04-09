@@ -3,6 +3,7 @@ package com.iustu.identification.ui.main.library.peoplemagnage.mvp;
 import android.content.ContentValues;
 
 import com.iustu.identification.entity.PersionInfo;
+import com.iustu.identification.entity.PersonInfo;
 
 import java.util.List;
 
@@ -33,6 +34,7 @@ public interface PersionView {
     /**
      * 点击“删除照片”的时候调用
      * @param index 表示代表第几个PersionInfo需要删除图片
+     * @param position 表示删除的是其第几个图片
      * @param persionInfo 表示需要删除图片的PersionInfo
      */
     void onDeletePhoto(int index, int position, PersionInfo persionInfo);

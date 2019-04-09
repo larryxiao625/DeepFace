@@ -2,9 +2,9 @@ package com.iustu.identification.ui.main.library.peoplemagnage.mvp;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.util.Log;
 
 import com.iustu.identification.entity.PersionInfo;
+import com.iustu.identification.entity.PersonInfo;
 import com.iustu.identification.util.RxUtil;
 
 import java.util.ArrayList;

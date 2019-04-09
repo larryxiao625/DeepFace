@@ -2,7 +2,6 @@ package com.iustu.identification.util;
 
 import android.util.Log;
 
-import com.iustu.identification.api.Api;
 import com.iustu.identification.api.message.Message;
 import com.iustu.identification.bean.FaceSet;
 import com.iustu.identification.bean.Library;

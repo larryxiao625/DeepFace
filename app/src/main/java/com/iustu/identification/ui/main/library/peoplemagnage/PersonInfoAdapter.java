@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.iustu.identification.R;
 import com.iustu.identification.entity.PersionInfo;
+import com.iustu.identification.entity.PersonInfo;
 import com.iustu.identification.ui.base.PageRecyclerViewAdapter;
 import com.iustu.identification.ui.main.library.peoplemagnage.mvp.PersionView;
 import com.iustu.identification.util.IconFontUtil;
@@ -50,12 +51,12 @@ public class PersonInfoAdapter extends PageRecyclerViewAdapter<PersonInfoAdapter
         holder.setEditEnable(false);
 
         holder.setSaveListener(v -> {
-            PersionInfo persionInfo = mDataLast.get(index);
-            persionInfo.name = holder.name.getText().toString();
-            persionInfo.home = holder.location.getText().toString();
-            persionInfo.gender = holder.sex.getText().toString();
-            persionInfo.identity = holder.idCard.getText().toString();
-            personView.onSaveChange(index, persionInfo);
+            PersionInfo personInfo = mDataLast.get(index);
+            personInfo.name = holder.name.getText().toString();
+            personInfo.home = holder.location.getText().toString();
+            personInfo.gender = holder.sex.getText().toString();
+            personInfo.identity = holder.idCard.getText().toString();
+            personView.onSaveChange(index, personInfo);
         });
 
         holder.setEditListener(v -> {

@@ -1,13 +1,12 @@
-package com.iustu.identification.ui.main.library.addpersion.mvp;
+package com.iustu.identification.ui.main.library.addperson.mvp;
 
 import android.content.ContentValues;
-import android.database.Cursor;
 
 import com.example.agin.facerecsdk.DetectResult;
-import com.example.agin.facerecsdk.FacerecUtil;
 import com.example.agin.facerecsdk.FeatureResult;
 import com.iustu.identification.entity.PersionInfo;
-import com.iustu.identification.ui.main.library.addpersion.AddPersonFragment;
+import com.iustu.identification.entity.PersonInfo;
+import com.iustu.identification.ui.main.library.addperson.AddPersonFragment;
 import com.iustu.identification.util.RxUtil;
 import com.iustu.identification.util.SDKUtil;
 import com.iustu.identification.util.ToastUtil;

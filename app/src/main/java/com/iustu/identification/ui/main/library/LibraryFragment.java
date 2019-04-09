@@ -9,9 +9,9 @@ import android.widget.TextView;
 
 import com.iustu.identification.R;
 import com.iustu.identification.ui.base.BaseFragment;
-import com.iustu.identification.ui.main.library.addpersion.AddPersonFragment;
-import com.iustu.identification.ui.main.library.addpersion.mvp.AddPersionModel;
-import com.iustu.identification.ui.main.library.addpersion.mvp.AddPersionPresenter;
+import com.iustu.identification.ui.main.library.addperson.AddPersonFragment;
+import com.iustu.identification.ui.main.library.addperson.mvp.AddPersionModel;
+import com.iustu.identification.ui.main.library.addperson.mvp.AddPersionPresenter;
 import com.iustu.identification.ui.main.library.librariesmanage.LibrariesManageFragment;
 import com.iustu.identification.ui.main.library.librariesmanage.mvp.LibModel;
 import com.iustu.identification.ui.main.library.librariesmanage.mvp.LibPresenter;

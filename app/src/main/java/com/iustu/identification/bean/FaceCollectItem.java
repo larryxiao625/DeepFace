@@ -1,7 +1,5 @@
 package com.iustu.identification.bean;
 
-import com.iustu.identification.api.Api;
-import com.iustu.identification.api.message.response.SearchImageHistoryResponse;
 
 import org.litepal.crud.DataSupport;
 
@@ -15,11 +13,11 @@ public class FaceCollectItem extends DataSupport{
     private String faceId;
     private int id;
 
-    public FaceCollectItem(SearchImageHistoryResponse.Result result){
-        this.time = result.getTime();
-        this.faceId = result.getId();
-        this.id = faceId.hashCode();
-        imgUrl = Api.getFaceSearchImageUrl(faceId);
+    public FaceCollectItem(String imgUrl, String time, String faceId, int id) {
+        this.imgUrl = imgUrl;
+        this.time = time;
+        this.faceId = faceId;
+        this.id = id;
     }
 
     public int getId() {

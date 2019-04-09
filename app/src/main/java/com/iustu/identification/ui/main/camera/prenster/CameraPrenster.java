@@ -57,4 +57,8 @@ public class CameraPrenster implements UVCCameraHelper.OnMyDevConnectListener,IP
         this.iVew=iVew;
     }
 
+    @Override
+    public void updateCompareResult(String imageId) {
+
+    }
 }
