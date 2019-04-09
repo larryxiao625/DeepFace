@@ -53,7 +53,6 @@ public class LibPresenter {
                 if (cursor.getCount() == 0)
                     return;
                 List<Library> data = new ArrayList<>();
-                Log.e("LibManagerPresenter", "onNext: ==============" + cursor.getColumnNames().toString());
                 while (cursor.moveToNext()) {
                     Library library = new Library();
                     library.libId = cursor.getInt(cursor.getColumnIndex("libId"));

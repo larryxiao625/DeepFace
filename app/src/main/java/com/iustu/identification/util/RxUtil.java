@@ -35,7 +35,7 @@ public class RxUtil {
 
     public static final String[] ACCOUNT_COLUMNS = new String[]{"name", "password"};    // Account的所有列
     public static final String[] LIBRARY_COLUMNS = new String[]{"libName", "libId", "description", "count", "inUsed"}; // Library的所有列
-    public static final String[] PERSIONINFO_COLUMNS = new String[]{"feature", "libId", "name", "gender", "photoPath", "identity", "home", "other"};
+    public static final String[] PERSIONINFO_COLUMNS = new String[]{"feature", "libId", "name", "gender", "photoPath", "identity", "home", "other", "image_id", "libName"};
 
 
     // 获取查询数据库时的游标
@@ -339,6 +339,7 @@ public class RxUtil {
                 SQLiteDatabase database = SqliteUtil.getDatabase();
                 database.beginTransaction();
                 try {
+                    Log.e("", "subscribe: ==================正在保存数据");
                     database.update(RxUtil.DB_PERSIONINFO, persionInfo.toContentValues(), "libId = " + persionInfo.libId + " and image_id = '" + persionInfo.image_id + "'", null);
                     database.setTransactionSuccessful();
                 } finally {
@@ -352,13 +353,25 @@ public class RxUtil {
     /**
      * 删除图片时调用
      * @param persionInfo 需要删除图片的人
+     * @param path 需要删除的照片的路径
      * @return Observable 对象
      */
-    public static Observable getDeletePhotoObservable(PersionInfo persionInfo) {
+    public static Observable getDeletePhotoObservable(PersionInfo persionInfo, String path) {
         return Observable.create(new ObservableOnSubscribe<Object>() {
             @Override
             public void subscribe(ObservableEmitter<Object> e) {
-
+                SQLiteDatabase database = SqliteUtil.getDatabase();
+                database.beginTransaction();
+                try {
+                    database.update(RxUtil.DB_PERSIONINFO, persionInfo.toContentValues(), "libId = " + persionInfo.libId + " and image_id = '" + persionInfo.image_id + "'", null);
+                    database.setTransactionSuccessful();
+                } finally {
+                    database.endTransaction();
+                }
+                // 其次进行文件拷贝
+                //String finalPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DeepFace/" + persionInfo.libName + "/" + persionInfo.name + System.currentTimeMillis() + ".jpg";
+                //FileUtil.delete(path);
+                e.onComplete();
             }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }

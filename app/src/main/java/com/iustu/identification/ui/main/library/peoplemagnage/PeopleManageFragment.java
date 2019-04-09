@@ -306,7 +306,7 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
 
     @Override
     public void onDeletePhoto(int index, int position, PersionInfo persionInfo) {
-        presenter.onDeletePhoto(position, persionInfo);
+        presenter.onDeletePhoto(index, position, persionInfo);
     }
 
     @Override

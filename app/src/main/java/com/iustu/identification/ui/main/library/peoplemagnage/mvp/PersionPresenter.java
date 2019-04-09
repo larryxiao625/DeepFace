@@ -48,7 +48,7 @@ public class PersionPresenter {
                 List<PersionInfo> data = new ArrayList<>();
                 while (cursor.moveToNext()) {
                     PersionInfo persionInfo = new PersionInfo();
-                    persionInfo.feature = null;
+                    persionInfo.feature = cursor.getString(cursor.getColumnIndex("feature"));
                     persionInfo.libId = cursor.getInt(cursor.getColumnIndex("libId"));
                     persionInfo.name = cursor.getString(cursor.getColumnIndex("name"));
                     persionInfo.gender = cursor.getString(cursor.getColumnIndex("gender"));
@@ -56,6 +56,8 @@ public class PersionPresenter {
                     persionInfo.identity = cursor.getString(cursor.getColumnIndex("identity"));
                     persionInfo.home = cursor.getString(cursor.getColumnIndex("home"));
                     persionInfo.other = cursor.getString(cursor.getColumnIndex("other"));
+                    persionInfo.libName = cursor.getString(cursor.getColumnIndex("libName"));
+                    persionInfo.image_id = cursor.getString(cursor.getColumnIndex("image_id"));
                     data.add(persionInfo);
                 }
                 mView.bindData(data);
@@ -123,23 +125,26 @@ public class PersionPresenter {
 
     /**
      * 点击“删除照片”的时候调用
+     * @param index 表示第几个PersionInfo需要删除图片
      * @param position 代表需要删除第几张图片
      * @param persionInfo 代表需要删除的PersionInfo对象
      */
-    public void onDeletePhoto(int position, PersionInfo persionInfo) {
+    public void onDeletePhoto(int index, int position, PersionInfo persionInfo) {
         mView.showWaitDialog("正在删除图片...");
         String[] s = persionInfo.photoPath.split(";");
         String finalPath = null;
+        String delete = null;
         for (int i = 0; i < s.length; i ++) {
             if (i != position) {
                 finalPath = finalPath == null ? s[i] : (finalPath + ";" + s[i]);
             } else {
+                delete = s[i];
                 continue;
             }
         }
         persionInfo.photoPath = finalPath;
         ContentValues values = persionInfo.toContentValues();
-        Observable observable = RxUtil.getDeletePhotoObservable(persionInfo);
+        Observable observable = RxUtil.getDeletePhotoObservable(persionInfo, delete);
         observable.subscribe(new Observer() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -162,7 +167,7 @@ public class PersionPresenter {
                 disposable.dispose();
                 mView.dissmissDialog();
                 disposable = null;
-                mView.onSuccess(PersionView.TYPE_DELETE_PHOTO, position, values);
+                mView.onSuccess(PersionView.TYPE_DELETE_PHOTO, index, values);
             }
         });
     }
