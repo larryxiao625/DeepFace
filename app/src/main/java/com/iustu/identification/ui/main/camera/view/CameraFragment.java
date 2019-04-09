@@ -211,7 +211,6 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
             Log.d("CameraFragment","onConnected");
             CameraFragment.this.captureBind= (CapturePicService.CaptureBind) service;
             ((CapturePicService.CaptureBind) service).setOnMyDevConnectListener(cameraPrenster);
-            ((CapturePicService.CaptureBind) service).getService().capturePic();
             getLock(getActivity());
         }
 

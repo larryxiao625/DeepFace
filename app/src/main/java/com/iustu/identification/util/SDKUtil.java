@@ -9,12 +9,21 @@ import android.util.Log;
 
 import com.example.agin.facerecsdk.AttributeHandler;
 import com.example.agin.facerecsdk.DetectHandler;
+import com.example.agin.facerecsdk.DetectResult;
 import com.example.agin.facerecsdk.FacerecUtil;
+import com.example.agin.facerecsdk.FeatureResult;
 import com.example.agin.facerecsdk.HandlerFactory;
 import com.example.agin.facerecsdk.SearchHandler;
+import com.example.agin.facerecsdk.SearchResultItem;
 import com.example.agin.facerecsdk.VerifyHandler;
 
 import java.io.File;
+import java.util.ArrayList;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * created by sgh, 2019-4-5
@@ -27,7 +36,7 @@ public class SDKUtil {
     private static VerifyHandler verifyHandler;            // 特征提取句柄
     private static SearchHandler searchHandler;           // 人脸搜索句柄
     private static AttributeHandler attributeHandler;     // 属性检测句柄
-    public static String path=Environment.getExternalStorageDirectory()+"/faceLib";
+//    public static String path=Environment.getExternalStorageDirectory()+"/DeepFace/faceLib";
 
     // 初始化方法
     public static void init() {
@@ -44,11 +53,11 @@ public class SDKUtil {
         attributeHandler = (AttributeHandler) HandlerFactory.createAttribute("/sdcard/attr-Framework1-cpu-0a15-bc0a.model");
         attributeHandler.initial();
 
-        File file=new File(path);
-        if(!file.exists()){
-            file.mkdirs();
-        }
-        searchHandler= (SearchHandler) HandlerFactory.createSearcher(path,0,1);
+//        File file=new File(path);
+//        if(!file.exists()){
+//            file.mkdirs();
+//        }
+//        searchHandler= (SearchHandler) HandlerFactory.createSearcher(path,0,1);
     }
 
     public static void initSdk(Context context) {
@@ -82,11 +91,38 @@ public class SDKUtil {
         return verifyHandler;
     }
 
-    public static SearchHandler getSearchHandler() {
-        return searchHandler;
-    }
+//    public static SearchHandler getSearchHandler() {
+//        return searchHandler;
+//    }
 
     public static AttributeHandler getAttributeHandler() {
         return attributeHandler;
+    }
+
+
+    /**
+     * 人脸特征识别方法
+     * @param detectResult 人脸识别结果
+     * @return
+     */
+    public static FeatureResult featureResult(ArrayList<DetectResult> detectResult){
+            FeatureResult featureResult=new FeatureResult();
+            SDKUtil.getVerifyHandler().extractFeatureBatch(detectResult,featureResult);
+            return featureResult;
+    }
+
+    /**
+     * 人脸识别方法
+     * @param picPaths 待识别路径集合
+     * @return
+     */
+    public static ArrayList<DetectResult> detectFace(ArrayList<String> picPaths){
+            ArrayList<DetectResult> detectResults=new ArrayList<>();
+            for(int i=0;i<picPaths.size();i++){
+                DetectResult detectResult=new DetectResult();
+                SDKUtil.getDetectHandler().faceDetector(picPaths.get(0),detectResult);
+                detectResults.add(detectResult);
+            }
+            return detectResults;
     }
 }
