@@ -5,30 +5,20 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.bigkoo.pickerview.OptionsPickerView;
 import com.bigkoo.pickerview.TimePickerView;
 import com.iustu.identification.R;
-import com.iustu.identification.api.message.Message;
-import com.iustu.identification.bean.FaceResult;
-import com.iustu.identification.bean.FaceSetResult;
 import com.iustu.identification.entity.CompareRecord;
+import com.iustu.identification.ui.base.BaseDialogFragment;
 import com.iustu.identification.ui.base.BaseFragment;
-import com.iustu.identification.ui.main.MainActivity;
 import com.iustu.identification.ui.main.history.adapter.CompareHistoryItemAdapter;
 import com.iustu.identification.ui.main.history.prenster.HistoryPrenster;
-import com.iustu.identification.ui.main.history.view.HistoryFragment;
-import com.iustu.identification.ui.main.history.view.IVew;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.ui.widget.dialog.SingleButtonDialog;
 import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
-import com.iustu.identification.util.ExceptionUtil;
 import com.iustu.identification.util.PageSetHelper;
-import com.iustu.identification.util.PickerViewFactor;
-import com.iustu.identification.util.TextUtil;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -36,7 +26,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 
 /**
  * Created by Liu Yuchuan on 2017/11/22.
@@ -65,6 +54,8 @@ public class CompareHistoryFragment extends BaseFragment{
     private String faceId;
 
     HistoryPrenster historyPrenster;
+
+    ArrayList<BaseDialogFragment> baseDialogFragments=new ArrayList<>();
 
     @Override
     protected int postContentView() {
@@ -114,7 +105,6 @@ public class CompareHistoryFragment extends BaseFragment{
     }
     @OnClick(R.id.compare_start_query_tv)
     public void startQuery(){
-        historyPrenster.startQuery();
     }
 
     @OnClick(R.id.compare_date_from_tv)
@@ -173,22 +163,45 @@ public class CompareHistoryFragment extends BaseFragment{
 
         @Override
         public void showQueryError(NormalDialog normalDialog) {
+            for(int i=0;i<baseDialogFragments.size();i++){
+                baseDialogFragments.get(i).dismiss();
+                baseDialogFragments.remove(i);
+            }
+            baseDialogFragments.add(normalDialog);
             normalDialog.show(mActivity.getFragmentManager(),"queryError");
         }
 
         @Override
         public void showQueryProcessing(WaitProgressDialog waitProgressDialog) {
+            for(int i=0;i<baseDialogFragments.size();i++){
+                baseDialogFragments.get(i).dismiss();
+                baseDialogFragments.remove(i);
+            }
+            baseDialogFragments.add(waitProgressDialog);
             waitProgressDialog.show(mActivity.getFragmentManager(),"queryProcessing");
         }
 
         @Override
         public void showArgumentsError(SingleButtonDialog singleButtonDialog) {
+            for(int i=0;i<baseDialogFragments.size();i++){
+                baseDialogFragments.get(i).dismiss();
+                baseDialogFragments.remove(i);
+            }
+            baseDialogFragments.add(singleButtonDialog);
             singleButtonDialog.show(mActivity.getFragmentManager(),"argumentsError");
         }
 
         @Override
         public void bindData(List data) {
 
+        }
+
+        @Override
+        public void showSuccess() {
+            for(int i=0;i<baseDialogFragments.size();i++){
+                baseDialogFragments.get(i).dismiss();
+                baseDialogFragments.remove(i);
+            }
         }
     };
 }

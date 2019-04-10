@@ -37,9 +37,7 @@ public class FaceCollectItemAdapter extends PageRecyclerViewAdapter<FaceCollectI
             return;
         }
         FaceCollectItem item = mDataLast.get(index);
-        // TODO: 2018/1/19 处理时间字符串
-        String [] time = item.getTime().split("T");
-        holder.timeTv.setText(TextUtil.fromHtml(time[0] + "<br><font><small>" + time[1] + "</small></font>"));
+        holder.timeTv.setText(item.getTime());
         Glide.with(holder.faceImg)
                 .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.photo_holder).error(R.drawable.photo_holder))
                 .load(item.getImgUrl())

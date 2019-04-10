@@ -37,12 +37,13 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.observers.SafeObserver;
 
-public class CapturePicService extends Service implements AbstractUVCCameraHandler.OnCaptureListener {
+public class CapturePicService extends Service {
     UVCCameraHelper cameraHelper=UVCCameraHelper.getInstance();
     String rootPath= Environment.getExternalStorageDirectory()+"/DeepFace";
     private CameraPrenster cameraPrenster;
     CaptureBind mBind;
     SearchHandler searchHandler;
+    Disposable disposable;
     public static String path=Environment.getExternalStorageDirectory()+"/DeepFace/faceLib";
     public class CaptureBind extends Binder{
         public CapturePicService getService(){
@@ -98,17 +99,20 @@ public class CapturePicService extends Service implements AbstractUVCCameraHandl
                 .subscribe(new Observer<Long>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        disposable=d;
                     }
 
                     @Override
                     public void onNext(Long aLong) {
-
                         Log.d("Camera", TextUtil.getDateString2(Calendar.getInstance().getTime()));
                         Calendar calendar=Calendar.getInstance();
                         String picPath=rootPath+"/"+TextUtil.dateMessage(calendar.getTime())+".jpg";
-                        cameraHelper.capturePicture(picPath,CapturePicService.this::onCaptureResult);
-                        SqliteUtil.insertFaceCollectionItem(picPath,TextUtil.getDateString2(calendar.getTime()));
+                        cameraHelper.capturePicture(picPath, picPath1 -> {
+                            ArrayList<String> picPaths=new ArrayList<>();
+                            picPaths.add(picPath);
+                            getVerify(SDKUtil.detectFace(picPaths));
+                            SqliteUtil.insertFaceCollectionItem(picPath,TextUtil.getDateString2(calendar.getTime()));
+                        });
                     }
 
                     @Override
@@ -147,15 +151,9 @@ public class CapturePicService extends Service implements AbstractUVCCameraHandl
     }
 
     @Override
-    public void onCaptureResult(String picPath) {
-        ArrayList<String> picPaths=new ArrayList<>();
-        picPaths.add(picPath);
-        getVerify(SDKUtil.detectFace(picPaths));
-    }
-
-    @Override
     public void onDestroy() {
         super.onDestroy();
+        disposable.dispose();
         Log.d("Camera","onDestroy");
     }
     public void getVerify(ArrayList<DetectResult> detectResults){

@@ -103,9 +103,9 @@ public class HistoryPrenster implements IPrenster{
                     startCalendar.set(Calendar.MINUTE, 0);
                     startCalendar.set(Calendar.SECOND, 0);
                     if(viewType==COMPARE_HISTORY_VIEW) {
-                        compareHistoryIVew.setFromDateTv(TextUtil.getDateString(date));
+                        compareHistoryIVew.setFromDateTv(TextUtil.getDateString2(date));
                     }else if(viewType==FACE_HISTORY_VIEW){
-                        faceHistoryIVew.setFromDateTv(TextUtil.getDateString(date));
+                        faceHistoryIVew.setFromDateTv(TextUtil.getDateString2(date));
                     }
                 }else if(calenderType==END_CALENDER){
                     endCalendar.setTime(date);
@@ -113,9 +113,9 @@ public class HistoryPrenster implements IPrenster{
                     endCalendar.set(Calendar.MINUTE, 59);
                     endCalendar.set(Calendar.SECOND, 59);
                     if (viewType==FACE_HISTORY_VIEW) {
-                        faceHistoryIVew.setToDateTv(TextUtil.getDateString(date));
+                        faceHistoryIVew.setToDateTv(TextUtil.getDateString2(date));
                     }else if(viewType==COMPARE_HISTORY_VIEW){
-                        compareHistoryIVew.setToDateTv(TextUtil.getDateString(date));
+                        compareHistoryIVew.setToDateTv(TextUtil.getDateString2(date));
                     }
                 }
             }
@@ -175,9 +175,9 @@ public class HistoryPrenster implements IPrenster{
     }
 
     @Override
-    public void getFaceCollectionData(String fromtime, String totime) {
+    public void getFaceCollectionData(String fromTime, String toTime) {
         queryProcessing(FACE_HISTORY_VIEW);
-        Observable observable = RxUtil.getQuaryObservalbe(false, RxUtil.DB_FACECOLLECTIOMITEM, RxUtil.FACECOLLECTION_COLUMNS, "datetime(time) between datetime('" + fromtime + "') and datetime('" + totime + "')", null, null, null, null, null);
+        Observable observable = RxUtil.getQuaryObservalbe(false, RxUtil.DB_FACECOLLECTIOMITEM, RxUtil.FACECOLLECTION_COLUMNS, "datetime(time) between datetime('" + fromTime + "') and datetime('" + toTime + "')", null, null, null, null, null);
         observable.subscribe(new Observer<Cursor>() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -186,6 +186,7 @@ public class HistoryPrenster implements IPrenster{
 
             @Override
             public void onNext(Cursor cursor) {
+                Log.d("History","startQuery");
                 if (cursor.getCount() == 0) {
                     ToastUtil.show("该期间无记录");
                     return;
@@ -212,6 +213,7 @@ public class HistoryPrenster implements IPrenster{
 
             @Override
             public void onComplete() {
+                faceHistoryIVew.showSuccess();
                 disposable.dispose();
                 disposable = null;
             }
