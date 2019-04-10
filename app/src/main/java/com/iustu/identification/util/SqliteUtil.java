@@ -2,6 +2,7 @@ package com.iustu.identification.util;
 
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.iustu.identification.bean.FaceCollectItem;
 import com.iustu.identification.entity.Account;
@@ -58,12 +59,14 @@ public class SqliteUtil {
 
             @Override
             public void onError(Throwable e) {
+                Log.d("Camera","onError");
                 e.printStackTrace();
                 ToastUtil.show(e.getMessage());
             }
 
             @Override
             public void onComplete() {
+                Log.d("Camera","onComplete");
                 ToastUtil.show("成功");
             }
         });
