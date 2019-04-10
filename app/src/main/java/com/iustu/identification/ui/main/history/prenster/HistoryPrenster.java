@@ -103,9 +103,9 @@ public class HistoryPrenster implements IPrenster{
                     startCalendar.set(Calendar.MINUTE, 0);
                     startCalendar.set(Calendar.SECOND, 0);
                     if(viewType==COMPARE_HISTORY_VIEW) {
-                        compareHistoryIVew.setFromDateTv(TextUtil.getDateString(date));
+                        compareHistoryIVew.setFromDateTv(TextUtil.getDateString2(date));
                     }else if(viewType==FACE_HISTORY_VIEW){
-                        faceHistoryIVew.setFromDateTv(TextUtil.getDateString(date));
+                        faceHistoryIVew.setFromDateTv(TextUtil.getDateString2(date));
                     }
                 }else if(calenderType==END_CALENDER){
                     endCalendar.setTime(date);
@@ -113,9 +113,9 @@ public class HistoryPrenster implements IPrenster{
                     endCalendar.set(Calendar.MINUTE, 59);
                     endCalendar.set(Calendar.SECOND, 59);
                     if (viewType==FACE_HISTORY_VIEW) {
-                        faceHistoryIVew.setToDateTv(TextUtil.getDateString(date));
+                        faceHistoryIVew.setToDateTv(TextUtil.getDateString2(date));
                     }else if(viewType==COMPARE_HISTORY_VIEW){
-                        compareHistoryIVew.setToDateTv(TextUtil.getDateString(date));
+                        compareHistoryIVew.setToDateTv(TextUtil.getDateString2(date));
                     }
                 }
             }
@@ -176,8 +176,9 @@ public class HistoryPrenster implements IPrenster{
 
     @Override
     public void getFaceCollectionData(String fromtime, String totime) {
-        queryProcessing(FACE_HISTORY_VIEW);
-        Observable observable = RxUtil.getQuaryObservalbe(false, RxUtil.DB_FACECOLLECTIOMITEM, RxUtil.FACECOLLECTION_COLUMNS, "datetime(time) between datetime('" + fromtime + "') and datetime('" + totime + "')", null, null, null, null, null);
+        //Log.e("", "getFaceCollectionData: ==============");
+        //queryProcessing(FACE_HISTORY_VIEW);
+        Observable observable = RxUtil.getQuaryObservalbe(false, RxUtil.DB_FACECOLLECTIOMITEM, RxUtil.FACECOLLECTION_COLUMNS, "datetime('time') between datetime('" + fromtime + "') and datetime('" + totime + "')", null, null, null, null, null);
         observable.subscribe(new Observer<Cursor>() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -190,6 +191,55 @@ public class HistoryPrenster implements IPrenster{
                     ToastUtil.show("该期间无记录");
                     return;
                 }
+
+                List<FaceCollectItem> data = new ArrayList<>();
+                while (cursor.moveToNext()) {
+                    FaceCollectItem faceCollectItem = new FaceCollectItem();
+                    faceCollectItem.setFaceId(cursor.getString(cursor.getColumnIndex("faceId")));
+                    faceCollectItem.setId(cursor.getInt(cursor.getColumnIndex("id")));
+                    faceCollectItem.setImgUrl(cursor.getString(cursor.getColumnIndex("imgUrl")));
+                    faceCollectItem.setTime(cursor.getString(cursor.getColumnIndex("time")));
+                    data.add(faceCollectItem);
+                }
+                faceHistoryIVew.bindData(data);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                queryError(FACE_HISTORY_VIEW);
+                e.printStackTrace();
+                disposable.dispose();
+                disposable = null;
+            }
+
+            @Override
+            public void onComplete() {
+                disposable.dispose();
+                disposable = null;
+            }
+        });
+    }
+
+    /**
+     * 获取比对记录的方法
+     * @param fromtime 查询的开始时间
+     * @param totime 查询的终止时间
+     */
+    public void getCompareRecord(String fromtime, String totime) {
+        Observable observable = RxUtil.getQuaryObservalbe(false, RxUtil.DB_COMPARERECORD, RxUtil.FACECOLLECTION_COLUMNS, "datetime('time') between datetime('" + fromtime + "') and datetime('" + totime + "')", null, null, null, null, null);
+        observable.subscribe(new Observer<Cursor>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                disposable = d;
+            }
+
+            @Override
+            public void onNext(Cursor cursor) {
+                if (cursor.getCount() == 0) {
+                    ToastUtil.show("该期间无记录");
+                    return;
+                }
+
                 List<FaceCollectItem> data = new ArrayList<>();
                 while (cursor.moveToNext()) {
                     FaceCollectItem faceCollectItem = new FaceCollectItem();

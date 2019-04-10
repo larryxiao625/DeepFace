@@ -90,18 +90,16 @@ public class AddPersonFragment extends BaseFragment implements AddPersionView {
         if(bundle != null){
             libName = bundle.getString(KEY_LIB_NAME, null);
             libNameTv.setText(TextUtil.format(FORMAT_LIB_NAME, libName));
-            libId = bundle.getInt(KEY_LIB_ID, -1);
         }else {
             onArgumentsError();
         }
     }
 
-    public void setArguments(int libId, String libName){
+    public void setArguments(String libName){
         Bundle bundle = getArguments();
         if(bundle == null){
             bundle = new Bundle();
         }
-        bundle.putInt("libId", libId);
         bundle.putString("libName", libName);
         setArguments(bundle);
     }
@@ -138,7 +136,6 @@ public class AddPersonFragment extends BaseFragment implements AddPersionView {
         persionInfo.identity = idCardNumber;
         persionInfo.other = remark;
         persionInfo.photoPath = photoPath;
-        persionInfo.libId = libId;
         persionInfo.libName = libName;
         presenter.onAddPersion(persionInfo);
     }

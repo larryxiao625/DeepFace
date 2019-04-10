@@ -75,7 +75,6 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
         mAdapter.setOnPageItemClickListener((view1, index, position) -> {
             Library library = mLibraryList.get(position);
             Library library1 = new Library();
-            library1.libId = library.libId;
             library1.inUsed = library.inUsed;
             library1.count = library.count;
             new Edit2Dialog.Builder()
@@ -160,7 +159,7 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
         Library library = mLibraryList.get(index);
         LibraryFragment libraryFragment = (LibraryFragment) getParentFragment();
         ((AddPersonFragment)libraryFragment.getFragment(LibraryFragment.ID_ADD_PERSON))
-                .setArguments(library.libId, library.libName);
+                .setArguments(library.libName);
         libraryFragment.switchFragment(LibraryFragment.ID_ADD_PERSON);
     }
 
@@ -171,7 +170,7 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
         // 可见ChildFragment的相互切换还是委托给ParentFragment来完成的
         LibraryFragment libraryFragment = (LibraryFragment) getParentFragment();
         PeopleManageFragment peopleManageFragment = (PeopleManageFragment) libraryFragment.getFragment(LibraryFragment.ID_PEOPLE_MANAGE);
-        peopleManageFragment.setArguments(mLibraryList.get(index).libName, mLibraryList.get(index).libId);
+        peopleManageFragment.setArguments(mLibraryList.get(index).libName);
         libraryFragment.switchFragment(LibraryFragment.ID_PEOPLE_MANAGE);
     }
 

@@ -42,7 +42,7 @@ public class LibraryManageFragment extends BaseFragment implements LibManagerVie
     private LibraryManagerAdapter mAdapter;
     private PageSetHelper pageSetHelper;
 
-    private HashSet<Integer> mChooseList;
+    private HashSet<String> mChooseList;
     private List<Library> mLibraryList;
 
     @Override
@@ -70,10 +70,10 @@ public class LibraryManageFragment extends BaseFragment implements LibManagerVie
             Library library = mLibraryList.get(index);
             if(library.inUsed == 1){
                 library.inUsed = 0;
-                mChooseList.remove(library.libId);
+                mChooseList.remove(library.libName);
             }else {
                 library.inUsed = 1;
-                mChooseList.add(library.libId);
+                mChooseList.add(library.libName);
             }
             mAdapter.notifyItemChanged(position);
         });
@@ -128,7 +128,7 @@ public class LibraryManageFragment extends BaseFragment implements LibManagerVie
         this.mLibraryList.addAll(data);
         for (Library library : mLibraryList) {
             if (library.inUsed == 1)
-                mChooseList.add(library.libId);
+                mChooseList.add(library.libName);
         }
         mAdapter.notifyDataChange();
     }

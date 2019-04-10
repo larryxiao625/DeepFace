@@ -12,18 +12,11 @@ public class Library {
     public String libName;  // key
     public String description;      // 库描述
     public int count;      // 库数量
-    public int libId; // autoincre
 
 
     public boolean isInUse;     //是否使用
     public Library(){
 
-    }
-    public Library(String libName, int libId, String discription, int count) {
-        this.libName = libName;
-        this.count = count;
-        this.description = discription;
-        this.libId = libId;
     }
 
     public ContentValues toContentValues() {
@@ -35,9 +28,8 @@ public class Library {
         return values;
     }
 
-    public Library(String libName, int libId, String description, int count, boolean isInUse) {
+    public Library(String libName, String description, int count, boolean isInUse) {
         this.libName = libName;
-        this.libId = libId;
         this.description = description;
         this.count = count;
         this.isInUse = isInUse;
@@ -51,13 +43,6 @@ public class Library {
         this.libName = libName;
     }
 
-    public int getLibId() {
-        return libId;
-    }
-
-    public void setLibId(int libId) {
-        this.libId = libId;
-    }
 
     public String getDescription() {
         return description;

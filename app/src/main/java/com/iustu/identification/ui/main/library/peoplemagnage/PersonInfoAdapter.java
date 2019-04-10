@@ -180,7 +180,7 @@ public class PersonInfoAdapter extends PageRecyclerViewAdapter<PersonInfoAdapter
             maxPage = paths.length;
             currentPage = 0;
             imgPage.setText(currentPage + 1 + "/" + maxPage);
-            String finalPath = "/sdcard/DeepFace/" + p.libId + "/" + paths[0];
+            String finalPath = "/sdcard/DeepFace/" + p.libName + "/" + paths[0];
             File file = new File(finalPath);
             Glide.with(itemView).load(Uri.fromFile(file)).into(photo);
 
@@ -188,7 +188,7 @@ public class PersonInfoAdapter extends PageRecyclerViewAdapter<PersonInfoAdapter
             lastImg.setOnClickListener(v -> {
                 currentPage = currentPage == 0 ? paths.length - 1 : currentPage - 1;
                 imgPage.setText(currentPage + 1 + "/" + maxPage);
-                String finalPath1 = "/sdcard/DeepFace/" + p.libId + "/" + paths[currentPage];
+                String finalPath1 = "/sdcard/DeepFace/" + p.libName + "/" + paths[currentPage];
                 File f = new File(finalPath1);
                 Glide.with(itemView).load(Uri.fromFile(f)).into(photo);
                 f = null;
@@ -196,7 +196,7 @@ public class PersonInfoAdapter extends PageRecyclerViewAdapter<PersonInfoAdapter
             nextImg.setOnClickListener(v -> {
                 currentPage = currentPage == paths.length - 1 ? 0 : currentPage + 1;
                 imgPage.setText(currentPage + 1 + "/" + maxPage);
-                String finalPath1 = "/sdcard/DeepFace/" + p.libId + "/" + paths[currentPage];
+                String finalPath1 = "/sdcard/DeepFace/" + p.libName + "/" + paths[currentPage];
                 File f = new File(finalPath1);
                 Glide.with(itemView).load(Uri.fromFile(f)).into(photo);
                 f = null;

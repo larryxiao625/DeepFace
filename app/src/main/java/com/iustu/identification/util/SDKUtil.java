@@ -115,7 +115,7 @@ public class SDKUtil {
         SearchDBItem searchDBItem = new SearchDBItem();
         searchDBItem.feat = floats;
         searchDBItem.image_id = persionInfo.image_id;
-        SearchHandler searchHandler = (SearchHandler)HandlerFactory.createSearcher("/sdcard/DeepFace/" + persionInfo.libId, 0, 1);
+        SearchHandler searchHandler = (SearchHandler)HandlerFactory.createSearcher("/sdcard/DeepFace/" + persionInfo.libName, 0, 1);
         searchHandler.searchAdd(searchDBItem);
     }
 

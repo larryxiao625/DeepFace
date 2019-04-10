@@ -34,9 +34,9 @@ public class PersionPresenter {
     /**
      * 初始加载数据调用
      */
-    public void onInitData(int libId) {
+    public void onInitData(String libName) {
         mView.showWaitDialog("正在加载数据...");
-        Observable observable = RxUtil.getQuaryObservalbe(false, RxUtil.DB_PERSIONINFO, RxUtil.PERSIONINFO_COLUMNS, "libId = " + libId, null, null, null, null, null);
+        Observable observable = RxUtil.getQuaryObservalbe(false, RxUtil.DB_PERSIONINFO, RxUtil.PERSIONINFO_COLUMNS, "libName = '" + libName + "'", null, null, null, null, null);
         observable.subscribe(new Observer<Cursor>() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -49,7 +49,6 @@ public class PersionPresenter {
                 while (cursor.moveToNext()) {
                     PersionInfo persionInfo = new PersionInfo();
                     persionInfo.feature = cursor.getString(cursor.getColumnIndex("feature"));
-                    persionInfo.libId = cursor.getInt(cursor.getColumnIndex("libId"));
                     persionInfo.name = cursor.getString(cursor.getColumnIndex("name"));
                     persionInfo.gender = cursor.getString(cursor.getColumnIndex("gender"));
                     persionInfo.photoPath = cursor.getString(cursor.getColumnIndex("photoPath"));
@@ -143,7 +142,7 @@ public class PersionPresenter {
                 continue;
             }
         }
-        delete = "/sdcard/DeepFace/" + persionInfo.libId + "/" + delete;
+        delete = "/sdcard/DeepFace/" + persionInfo.libName + "/" + delete;
         persionInfo.photoPath = finalPath;
         ContentValues values = persionInfo.toContentValues();
         Observable observable = RxUtil.getDeletePhotoObservable(persionInfo, delete);

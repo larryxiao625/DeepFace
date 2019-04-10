@@ -17,7 +17,6 @@ public class PersionInfo {
     public String other;         // 备注
     public String feature;     // 人脸特点，SDK生成的，用来唯一标识人脸
     public String image_id;    // key
-    public int libId;
 
     public ContentValues toContentValues() {
         ContentValues values = new ContentValues();
@@ -30,7 +29,6 @@ public class PersionInfo {
         values.put("other", other);
         values.put("feature", feature);
         values.put("image_id", image_id);
-        values.put("libId", libId);
         return values;
     }
 }

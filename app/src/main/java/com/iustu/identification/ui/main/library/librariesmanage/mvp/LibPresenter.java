@@ -55,7 +55,6 @@ public class LibPresenter {
                 List<Library> data = new ArrayList<>();
                 while (cursor.moveToNext()) {
                     Library library = new Library();
-                    library.libId = cursor.getInt(cursor.getColumnIndex("libId"));
                     library.libName = cursor.getString(cursor.getColumnIndex("libName"));
                     library.count = cursor.getInt(cursor.getColumnIndex("count"));
                     library.inUsed = cursor.getInt(cursor.getColumnIndex("inUsed"));

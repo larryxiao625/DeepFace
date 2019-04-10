@@ -23,6 +23,7 @@ import com.iustu.identification.util.ImageUtils;
 import com.iustu.identification.util.LibManager;
 import com.iustu.identification.util.TextUtil;
 
+import java.io.File;
 import java.util.List;
 
 import butterknife.BindView;
@@ -46,79 +47,11 @@ public class CompareHistoryItemAdapter extends PageRecyclerViewAdapter<CompareHi
         setDisplayCountPerPage(3);
     }
 
-    public void setTargetPhotoUrl(String targetPhotoUrl){
-        this.targetPhotoUrl = targetPhotoUrl;
-    }
-
     @Override
     public void onBindHolder(Holder holder, int index, int position) {
         CompareRecord item = mDataLast.get(index);
-        // TODO: 2019/4/9 完成历史记录插入方法
-//        if(item.isInitInfo()) {
-//            holder.setPersonInfo(item.getPersonInfo());
-//            holder.scaleView.setScale((int) (item.getScore() * 100));
-//            holder.libName.setText(LibManager.getLibName(item.getFaceSetId()));
-//            Glide.with(holder.libPhoto)
-//                    .load(item.getPhotoUrl())
-//                    .apply(new RequestOptions().placeholder(R.drawable.photo_holder).error(R.drawable.photo_holder))
-//                    .into(holder.libPhoto);
-//        }else {
-//            holder.setPersonInfo(null);
-//            loadInfo(index);
-//       }
-        // TODO: 2019/4/9 完善图片加载方法
-//        if(item.getWidth() == 0) {
-//            Glide.with(holder.targetPhoto)
-//                    .asBitmap()
-//                    .load(targetPhotoUrl)
-//                    .into(new SimpleTarget<Bitmap>() {
-//                        @Override
-//                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-//                            if (resource.isRecycled()) {
-//                                return;
-//                            }
-//                            item.setWidth(resource.getWidth());
-//                            item.setHeight(resource.getHeight());
-//                            Glide.with(holder.targetPhoto)
-//                                    .load(targetPhotoUrl)
-//                                    .apply(new RequestOptions()
-//                                            .transform(new ImageUtils.CropFace(item.getWidth(), item.getHeight(), item.getRect()))
-//                                            .placeholder(R.drawable.photo_holder)
-//                                            .error(R.drawable.photo_holder))
-//                                    .into(holder.targetPhoto);
-//                        }
-//                    });
-//        }else {
-//            Glide.with(holder.targetPhoto)
-//                    .load(targetPhotoUrl)
-//                    .apply(new RequestOptions()
-//                            .transform(new ImageUtils.CropFace(item.getWidth(), item.getHeight(), item.getRect()))
-//                            .placeholder(R.drawable.photo_holder)
-//                            .error(R.drawable.photo_holder))
-//                    .into(holder.targetPhoto);
-//        }
+        holder.setCompareRecord(item);
     }
-
-//    private void loadInfo(int index){
-//        CompareRecord item = mDataLast.get(index);
-//        Api.getPeopleInfo(item.getFaceSetId(), item.getPeopleId())
-//                .doOnSubscribe(this::addDisposable)
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(personInfoMessage -> {
-//                    if(personInfoMessage.getCode() == Message.CODE_SUCCESS){
-//                        item.setPersonInfo(personInfoMessage.getBody());
-//                        item.setInitInfo(true);
-//                        if(inCurrentPage(index)) {
-//                            notifyItemChanged(calculatePosition(index));
-//                        }
-//                    }else {
-//                        item.setInitInfo(false);
-//                    }
-//                },throwable -> {
-//                    ExceptionUtil.getThrowableMessage(getClass().getSimpleName(), throwable);
-//                    item.setInitInfo(false);
-//                });
-//    }
 
     private void addDisposable(Disposable d){
         if(compositeDisposable == null){
@@ -165,17 +98,21 @@ public class CompareHistoryItemAdapter extends PageRecyclerViewAdapter<CompareHi
             ButterKnife.bind(this, itemView);
         }
 
-        private void setPersonInfo(PersonInfo personInfo){
-            if(personInfo == null){
+        private void setCompareRecord(CompareRecord compareRecord){
+            if(compareRecord == null){
                 name.setText("姓名:");
                 idCard.setText("身份证号:");
                 nationality.setText("籍贯:");
                 libName.setText("目标库:");
+                Glide.with(itemView).load(new File(compareRecord.getUploadPhoto())).into(targetPhoto);
+                String[] photos = compareRecord.getPhotoPath().split(";");
+                String libPath = "/sdcard/DeepFace/" + compareRecord.getLibName() + photos[0];
+                Glide.with(itemView).load(new File(libPath)).into(libPhoto);
             }else {
-                name.setText(TextUtil.format("姓名:%s", personInfo.getName()));
-                idCard.setText(TextUtil.format("身份证号:%s", personInfo.getIdentity()));
-                nationality.setText(TextUtil.format("籍贯:", personInfo.getName()));
-                libName.setText(TextUtil.format("目标库:%s", LibManager.getLibName(String.valueOf(personInfo.getLibId()))));
+                name.setText(TextUtil.format("姓名:%s", compareRecord.getName()));
+                idCard.setText(TextUtil.format("身份证号:%s", compareRecord.getIdentity()));
+                nationality.setText(TextUtil.format("籍贯:", compareRecord.getName()));
+                libName.setText(TextUtil.format("目标库:%s", LibManager.getLibName(String.valueOf(compareRecord.getLibName()))));
             }
         }
     }

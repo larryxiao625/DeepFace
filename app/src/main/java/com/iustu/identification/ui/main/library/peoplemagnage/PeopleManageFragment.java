@@ -142,7 +142,6 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
         Bundle bundle = getArguments();
         if(bundle != null){
             libName = bundle.getString(KEY_LIB_NAME, null);
-            libId = bundle.getInt(KEY_LIB_ID, -1);
         }
         page = 0;
         loadData(0);
@@ -157,13 +156,12 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
                 .show(mActivity.getFragmentManager());
     }
 
-    public void setArguments(String libName, int libId){
+    public void setArguments(String libName){
         Bundle bundle = getArguments();
         if(bundle == null){
             bundle = new Bundle();
         }
         bundle.putString(KEY_LIB_NAME, libName);
-        bundle.putInt(KEY_LIB_ID, libId);
         setArguments(bundle);
     }
 
@@ -275,7 +273,7 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
 
     @Override
     public void onInitData() {
-        presenter.onInitData(libId);
+        presenter.onInitData(libName);
     }
 
     @Override

@@ -29,7 +29,6 @@ public class FaceCollectItem extends DataSupport{
         values.put("imgUrl", this.imgUrl);
         values.put("faceId", this.faceId);
         values.put("time", this.time);
-        values.put("id", this.id);
         return values;
     }
     public int getId() {

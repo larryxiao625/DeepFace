@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import com.example.agin.facerecsdk.SearchResultItem;
 import com.iustu.identification.bean.FaceCollectItem;
 import com.iustu.identification.entity.Account;
 import com.iustu.identification.entity.CompareRecord;
@@ -46,6 +47,45 @@ public class SqliteUtil {
         item.setTime(time);
         item.setImgUrl(imgPath);
         Observable observable = RxUtil.getInsertFaceCollectionItem(item);
+        observable.subscribe(new Observer() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(Object o) {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d("Camera","onError");
+                e.printStackTrace();
+                ToastUtil.show(e.getMessage());
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d("Camera","onComplete");
+                ToastUtil.show("成功");
+            }
+        });
+    }
+
+    /**
+     * 插入比对结果的方法
+     * @param resultItem 对比结果,由SDK生成
+     * @param time 时间戳
+     * @param uploadPhoto 抓拍生成的图片的路径
+     * @param
+     */
+    public static void insertComparedItem(SearchResultItem resultItem, String time, String uploadPhoto) {
+        CompareRecord compareRecord = new CompareRecord();
+        compareRecord.setRate(resultItem.score);
+        compareRecord.setTime(time);
+        compareRecord.setUploadPhoto(uploadPhoto);
+        Observable observable = RxUtil.getInsertCompareRecordObservable(compareRecord);
         observable.subscribe(new Observer() {
             @Override
             public void onSubscribe(Disposable d) {
