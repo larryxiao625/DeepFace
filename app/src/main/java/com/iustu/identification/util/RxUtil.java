@@ -44,11 +44,7 @@ public class RxUtil {
     public static final String[] FACECOLLECTION_COLUMNS = new String[]{"faceId", "imgUrl", "time", "id"};  //FaceCollectionItem的所有列
     public static final String[] LIBRARY_COLUMNS = new String[]{"libName", "description", "count", "inUsed"}; // Library的所有列
     public static final String[] PERSIONINFO_COLUMNS = new String[]{"feature", "name", "gender", "photoPath", "identity", "home", "other", "image_id", "libName"};
-    public static final String[] COMPARE_COLUMNS = new String[]{};
-
-    public static final Integer VERIFY_SUCCESS=1;
-    public static final Integer VERIFY_FAIL=0;
-
+    public static final String[] COMPARE_COLUMNS = new String[]{"time", "uploadPhoto", "image_id", "rate", "libName", "name", "gender", "home", "identity", "photoPath", "other"};
 
     // 获取查询数据库时的游标
     public static Observable<Cursor> getQuaryObservalbe(boolean distinct, String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit) {
@@ -361,7 +357,16 @@ public class RxUtil {
                 SQLiteDatabase database = SqliteUtil.getDatabase();
                 database.beginTransaction();
                 try {
-                    database.insert(RxUtil.DB_COMPARERECORD, null, compareRecord.toContentValues());
+                    Cursor cursor = database.query(RxUtil.DB_PERSIONINFO, RxUtil.PERSIONINFO_COLUMNS, "image_id = '" + compareRecord.getImage_id() + "'", null, null, null, null, null);
+                    while(cursor.moveToNext()) {
+                        compareRecord.setGender(cursor.getString(cursor.getColumnIndex("gender")));
+                        compareRecord.setHome(cursor.getString(cursor.getColumnIndex("home")));
+                        compareRecord.setLibName(cursor.getString(cursor.getColumnIndex("libName")));
+                        compareRecord.setIdentity(cursor.getString(cursor.getColumnIndex("identity")));
+                        compareRecord.setOther(cursor.getString(cursor.getColumnIndex("other")));
+                        compareRecord.setPhotoPath(cursor.getString(cursor.getColumnIndex("photoPath")));
+                        database.insert(RxUtil.DB_COMPARERECORD, null, compareRecord.toContentValues());
+                    }
                     database.setTransactionSuccessful();
                 }finally {
                     database.endTransaction();

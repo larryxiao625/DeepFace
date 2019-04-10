@@ -16,6 +16,7 @@ import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.main.config.libmanager.mvp.LibManagerPesenter;
 import com.iustu.identification.ui.main.config.libmanager.mvp.LibManagerView;
 import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
+import com.iustu.identification.util.DataCache;
 import com.iustu.identification.util.PageSetHelper;
 import com.iustu.identification.util.ToastUtil;
 
@@ -42,7 +43,7 @@ public class LibraryManageFragment extends BaseFragment implements LibManagerVie
     private LibraryManagerAdapter mAdapter;
     private PageSetHelper pageSetHelper;
 
-    private HashSet<String> mChooseList;
+    private HashSet<String> mChooseList = DataCache.getChosenLibConfig();     // 用来记录当前哪些库正在使用中，里面保存的是libName
     private List<Library> mLibraryList;
 
     @Override
@@ -54,11 +55,7 @@ public class LibraryManageFragment extends BaseFragment implements LibManagerVie
     protected void initView(@Nullable Bundle savedInstanceState, View view) {
         super.initView(savedInstanceState, view);
         mLibraryList = new ArrayList<>();
-        mChooseList = new HashSet<>();
         initData();
-        //libraryConfig = LibraryConfig.getInstance();
-        //mChooseList = libraryConfig.getChosenLibs();
-        //mLibraryList = LibManager.getLibraryList();
         mAdapter = new LibraryManagerAdapter(mLibraryList);
         recyclerView.setLayoutManager(new GridLayoutManager(mActivity, mAdapter.getDisplayCountPerPage(), LinearLayoutManager.HORIZONTAL,false ){
             @Override

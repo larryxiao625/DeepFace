@@ -10,6 +10,7 @@ import com.bigkoo.pickerview.OptionsPickerView;
 import com.bigkoo.pickerview.TimePickerView;
 import com.iustu.identification.App;
 import com.iustu.identification.bean.FaceCollectItem;
+import com.iustu.identification.entity.CompareRecord;
 import com.iustu.identification.ui.main.history.view.HistoryFragment;
 import com.iustu.identification.ui.main.history.view.IVew;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
@@ -240,14 +241,20 @@ public class HistoryPrenster implements IPrenster{
                     return;
                 }
 
-                List<FaceCollectItem> data = new ArrayList<>();
+                List<CompareRecord> data = new ArrayList<>();
                 while (cursor.moveToNext()) {
-                    FaceCollectItem faceCollectItem = new FaceCollectItem();
-                    faceCollectItem.setFaceId(cursor.getString(cursor.getColumnIndex("faceId")));
-                    faceCollectItem.setId(cursor.getInt(cursor.getColumnIndex("id")));
-                    faceCollectItem.setImgUrl(cursor.getString(cursor.getColumnIndex("imgUrl")));
-                    faceCollectItem.setTime(cursor.getString(cursor.getColumnIndex("time")));
-                    data.add(faceCollectItem);
+                    CompareRecord compareRecord = new CompareRecord();
+                    compareRecord.setImage_id(cursor.getString(cursor.getColumnIndex("image_id")));
+                    compareRecord.setTime(cursor.getString(cursor.getColumnIndex("time")));
+                    compareRecord.setRate(cursor.getFloat(cursor.getColumnIndex("rate")));
+                    compareRecord.setUploadPhoto(cursor.getString(cursor.getColumnIndex("uploadPhoto")));
+                    compareRecord.setGender(cursor.getString(cursor.getColumnIndex("gender")));
+                    compareRecord.setHome(cursor.getString(cursor.getColumnIndex("home")));
+                    compareRecord.setLibName(cursor.getString(cursor.getColumnIndex("libName")));
+                    compareRecord.setIdentity(cursor.getString(cursor.getColumnIndex("identity")));
+                    compareRecord.setOther(cursor.getString(cursor.getColumnIndex("other")));
+                    compareRecord.setPhotoPath(cursor.getString(cursor.getColumnIndex("photoPath")));
+                    data.add(compareRecord);
                 }
                 faceHistoryIVew.bindData(data);
             }

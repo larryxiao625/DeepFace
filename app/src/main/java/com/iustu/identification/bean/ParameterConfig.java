@@ -56,12 +56,12 @@ public class ParameterConfig {
     // 将ParameterConfig对象转化为json字符串之后保存到SharePreference中
     public void save() {
         String jsonString = this.toJsonString();
-        MSP.getInstance(MSP.SP_PARAMETERS).edit().putString(MSP.PARAMETERS, jsonString).apply();
+        MSP.getInstance(MSP.SP_PARAMETERS).edit().putString(MSP.SP_PARAMETERS, jsonString).apply();
     }
 
     // 从json中解析对象并返回
     public static ParameterConfig getFromSP() {
-        return fromJsonString(MSP.getInstance(MSP.SP_PARAMETERS).getString(MSP.PARAMETERS, new ParameterConfig().toJsonString()));
+        return fromJsonString(MSP.getInstance(MSP.SP_PARAMETERS).getString(MSP.SP_PARAMETERS, new ParameterConfig().toJsonString()));
     }
 
     public int getMin_size() {

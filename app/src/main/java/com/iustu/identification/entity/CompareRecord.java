@@ -17,7 +17,6 @@ public class CompareRecord {
     private String libName;            // 该属性并不绑定于一个Library，只是用来在创建
     private String name;
     private String gender;        // 性别
-    private int libId;
     private String home;           // 籍贯(选)
     private String other;         // 备注
     private String identity;
@@ -88,14 +87,6 @@ public class CompareRecord {
         return this.gender;
     }
 
-    public void setLibId(int libId) {
-        this.libId = libId;
-    }
-
-    public int getLibId() {
-        return libId;
-    }
-
     public void setHome(String home) {
         this.home = home;
     }
@@ -133,7 +124,6 @@ public class CompareRecord {
         values.put("uploadPhoto", uploadPhoto);
         values.put("rate", this.rate);
         values.put("image_id", image_id);
-        values.put("libId", libId);
         values.put("libName", libName);
         values.put("other", other);
         values.put("name", name);
