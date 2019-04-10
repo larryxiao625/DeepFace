@@ -56,7 +56,7 @@ public abstract class PageRecyclerViewAdapter<VH extends RecyclerView.ViewHolder
         if(pageNow >= pageMax){
             return;
         }
-        loadMoreListener.loadMore();
+//        loadMoreListener.loadMore();
         setPageNow(pageNow+1);
     }
 

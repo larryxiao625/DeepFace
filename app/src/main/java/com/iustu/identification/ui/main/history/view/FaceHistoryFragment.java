@@ -114,9 +114,9 @@ public class FaceHistoryFragment extends BaseFragment {
     @OnClick(R.id.next_page_iv)
     public void onNextPage(){
         pageSetHelper.nextPage();
-        if(mAdapter.getPageNow() >= mAdapter.getPageMax() - 1){
-            loadData(++page);
-        }
+//        if(mAdapter.getPageNow() >= mAdapter.getPageMax() - 1){
+//            loadData(++page);
+//        }
     }
 
     IVew iVew=new IVew() {
