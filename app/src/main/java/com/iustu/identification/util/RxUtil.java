@@ -222,15 +222,15 @@ public class RxUtil {
     /**
      * 人员添加照片的时候调用
      * @param persionInfo 需要添加照片的人员（未添加）
-     * @param newPhoto 添加的新照片
+     * @param newPhoto 添加的新照片的原路径
+     * @param fileName 添加的新照片的名字
      * @return Observable对象
      */
-    public static Observable getAddPhotoObservable(PersionInfo persionInfo, String newPhoto) {
+    public static Observable getAddPhotoObservable(PersionInfo persionInfo, String newPhoto, String fileName) {
         return Observable.create(new ObservableOnSubscribe<Object>() {
             @Override
             public void subscribe(ObservableEmitter<Object> e) {
                 // 进行文件拷贝
-                String fileName = persionInfo.name + System.currentTimeMillis() + ".jpg";
                 String finalPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DeepFace/" + persionInfo.libId + "/" + fileName;
                 FileUtil.copy(newPhoto, finalPath);
 

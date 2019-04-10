@@ -1,6 +1,7 @@
 package com.iustu.identification.ui.main.history.prenster;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.support.design.widget.TabLayout;
 import android.text.TextUtils;
 import android.util.Log;
@@ -8,19 +9,29 @@ import android.util.Log;
 import com.bigkoo.pickerview.OptionsPickerView;
 import com.bigkoo.pickerview.TimePickerView;
 import com.iustu.identification.App;
+import com.iustu.identification.bean.FaceCollectItem;
 import com.iustu.identification.ui.main.history.view.HistoryFragment;
 import com.iustu.identification.ui.main.history.view.IVew;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.ui.widget.dialog.SingleButtonDialog;
 import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
 import com.iustu.identification.util.PickerViewFactor;
+import com.iustu.identification.util.RxUtil;
 import com.iustu.identification.util.TextUtil;
+import com.iustu.identification.util.ToastUtil;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.disposables.Disposable;
 
 import static com.iustu.identification.util.LibManager.dispose;
 
 public class HistoryPrenster implements IPrenster{
+    private Disposable disposable;
     IVew compareHistoryIVew;
     IVew faceHistoryIVew;
     HistoryFragment.SwitchFragmentLister switchFragmentLister;
@@ -161,5 +172,49 @@ public class HistoryPrenster implements IPrenster{
         }else if(viewType==COMPARE_HISTORY_VIEW){
             compareHistoryIVew.showArgumentsError(singleButtonDialog);
         }
+    }
+
+    @Override
+    public void getFaceCollectionData(String fromtime, String totime) {
+        queryProcessing(FACE_HISTORY_VIEW);
+        Observable observable = RxUtil.getQuaryObservalbe(false, RxUtil.DB_TAKERECORD, null, null, null, null, null, null, null);
+        observable.subscribe(new Observer<Cursor>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                disposable = d;
+            }
+
+            @Override
+            public void onNext(Cursor cursor) {
+                if (cursor.getCount() == 0) {
+                    ToastUtil.show("该期间无记录");
+                    return;
+                }
+                List<FaceCollectItem> data = new ArrayList<>();
+                while (cursor.moveToNext()) {
+                    FaceCollectItem faceCollectItem = new FaceCollectItem();
+                    faceCollectItem.setFaceId(cursor.getString(cursor.getColumnIndex("faceId")));
+                    faceCollectItem.setId(cursor.getInt(cursor.getColumnIndex("id")));
+                    faceCollectItem.setImgUrl(cursor.getString(cursor.getColumnIndex("imgUrl")));
+                    faceCollectItem.setTime(cursor.getString(cursor.getColumnIndex("time")));
+                    data.add(faceCollectItem);
+                }
+                faceHistoryIVew.bindData(data);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                queryError(FACE_HISTORY_VIEW);
+                e.printStackTrace();
+                disposable.dispose();
+                disposable = null;
+            }
+
+            @Override
+            public void onComplete() {
+                disposable.dispose();
+                disposable = null;
+            }
+        });
     }
 }

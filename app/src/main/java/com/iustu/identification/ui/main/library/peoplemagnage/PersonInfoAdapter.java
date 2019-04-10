@@ -186,18 +186,18 @@ public class PersonInfoAdapter extends PageRecyclerViewAdapter<PersonInfoAdapter
 
             lastImg.setEnabled(true);
             lastImg.setOnClickListener(v -> {
-                Log.e("", "setPersionInfo: =================");
                 currentPage = currentPage == 0 ? paths.length - 1 : currentPage - 1;
                 imgPage.setText(currentPage + 1 + "/" + maxPage);
-                File f = new File(paths[currentPage]);
+                String finalPath1 = "/sdcard/DeepFace/" + p.libId + "/" + paths[currentPage];
+                File f = new File(finalPath1);
                 Glide.with(itemView).load(Uri.fromFile(f)).into(photo);
                 f = null;
             });
             nextImg.setOnClickListener(v -> {
-                Log.e("", "setPersionInfo: =================");
                 currentPage = currentPage == paths.length - 1 ? 0 : currentPage + 1;
                 imgPage.setText(currentPage + 1 + "/" + maxPage);
-                File f = new File(paths[currentPage]);
+                String finalPath1 = "/sdcard/DeepFace/" + p.libId + "/" + paths[currentPage];
+                File f = new File(finalPath1);
                 Glide.with(itemView).load(Uri.fromFile(f)).into(photo);
                 f = null;
             });

@@ -185,5 +185,10 @@ public class CompareHistoryFragment extends BaseFragment{
         public void showArgumentsError(SingleButtonDialog singleButtonDialog) {
             singleButtonDialog.show(mActivity.getFragmentManager(),"argumentsError");
         }
+
+        @Override
+        public void bindData(List data) {
+
+        }
     };
 }

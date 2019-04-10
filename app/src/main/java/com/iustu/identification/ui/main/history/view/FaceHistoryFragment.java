@@ -98,7 +98,8 @@ public class FaceHistoryFragment extends BaseFragment {
 
     @OnClick(R.id.start_query_tv)
     public void startQuery(){
-        loadData(0);
+        //loadData(0);
+        historyPrenster.getFaceCollectionData(fromDateTv.getText().toString(), toDateTv.getText().toString());
     }
 
     @OnClick(R.id.last_page_iv)
@@ -144,6 +145,12 @@ public class FaceHistoryFragment extends BaseFragment {
         @Override
         public void showArgumentsError(SingleButtonDialog singleButtonDialog) {
             singleButtonDialog.show(mActivity.getFragmentManager(),"argumentsError");
+        }
+
+        @Override
+        public void bindData(List data) {
+            itemList.addAll(data);
+            mAdapter.notifyDataChange();
         }
     };
 }

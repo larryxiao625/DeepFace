@@ -94,8 +94,9 @@ public class PersionPresenter {
     public void onAddPhoto(PersionInfo persionInfo, String path, int position) {
         mView.showWaitDialog("正在添加图片...");
         ContentValues values = persionInfo.toContentValues();
-        values.put("photoPath", persionInfo.photoPath + ";" + path);
-        Observable observable = RxUtil.getAddPhotoObservable(persionInfo, path);
+        String fileName = persionInfo.name + System.currentTimeMillis() + ".jpg";
+        values.put("photoPath", persionInfo.photoPath + ";" + fileName);
+        Observable observable = RxUtil.getAddPhotoObservable(persionInfo, path, fileName);
         observable.subscribe(new Observer() {
             @Override
             public void onSubscribe(Disposable d) {
