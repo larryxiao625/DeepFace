@@ -19,12 +19,14 @@ import com.example.agin.facerecsdk.SearchHandler;
 import com.example.agin.facerecsdk.SearchResultItem;
 import com.iustu.identification.util.RxUtil;
 import com.iustu.identification.util.SDKUtil;
+import com.iustu.identification.util.SqliteUtil;
 import com.iustu.identification.util.TextUtil;
 import com.jiangdg.usbcamera.UVCCameraHelper;
 import com.serenegiant.usb.common.AbstractUVCCameraHandler;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
@@ -37,7 +39,7 @@ import io.reactivex.observers.SafeObserver;
 
 public class CapturePicService extends Service implements AbstractUVCCameraHandler.OnCaptureListener {
     UVCCameraHelper cameraHelper=UVCCameraHelper.getInstance();
-    String picPath= Environment.getExternalStorageDirectory()+"/DeepFace";
+    String rootPath= Environment.getExternalStorageDirectory()+"/DeepFace";
     private CameraPrenster cameraPrenster;
     CaptureBind mBind;
     SearchHandler searchHandler;
@@ -64,7 +66,7 @@ public class CapturePicService extends Service implements AbstractUVCCameraHandl
          * 测试数据
          */
         ArrayList<String> picPaths=new ArrayList<>();
-        picPaths.add(picPath+"/2019-04-09 20:44:42.jpg");
+        picPaths.add(rootPath+"/2019-04-09 20:44:42.jpg");
         ArrayList<DetectResult> detectResults=SDKUtil.detectFace(picPaths);
         if(detectResults.size()!=0){
             FeatureResult featureResult=SDKUtil.featureResult(detectResults);
@@ -80,7 +82,7 @@ public class CapturePicService extends Service implements AbstractUVCCameraHandl
             }
 
         }
-
+        capturePic();
     }
 
     @Override
@@ -90,7 +92,7 @@ public class CapturePicService extends Service implements AbstractUVCCameraHandl
 
     @SuppressLint("CheckResult")
     public void capturePic() {
-        createDir(picPath);
+        createDir(rootPath);
         Observable.interval(1000, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Long>() {
@@ -101,8 +103,12 @@ public class CapturePicService extends Service implements AbstractUVCCameraHandl
 
                     @Override
                     public void onNext(Long aLong) {
-                        cameraHelper.capturePicture(picPath+"/"+ TextUtil.dateMessage(Calendar.getInstance().getTime())+".jpg",CapturePicService.this::onCaptureResult);
-                        Log.d("CameraFragment",TextUtil.dateMessage(Calendar.getInstance().getTime()));
+
+                        Log.d("Camera", TextUtil.getDateString2(Calendar.getInstance().getTime()));
+                        Calendar calendar=Calendar.getInstance();
+                        String picPath=rootPath+"/"+TextUtil.dateMessage(calendar.getTime())+".jpg";
+                        cameraHelper.capturePicture(picPath,CapturePicService.this::onCaptureResult);
+                        SqliteUtil.insertFaceCollectionItem(picPath,TextUtil.getDateString2(calendar.getTime()));
                     }
 
                     @Override
@@ -126,7 +132,6 @@ public class CapturePicService extends Service implements AbstractUVCCameraHandl
 
     public void setSearchLib(ArrayList<SearchDBItem> searchDBItems){
         searchHandler.searchBuildLib(searchDBItems);
-        capturePic();
     }
 
     @Nullable

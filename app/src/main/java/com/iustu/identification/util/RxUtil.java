@@ -344,12 +344,13 @@ public class RxUtil {
         return Observable.create(new ObservableOnSubscribe<Object>() {
             @Override
             public void subscribe(ObservableEmitter<Object> e) {
+                Log.d("Camera","FaceSubscribe");
                 SQLiteDatabase database = SqliteUtil.getDatabase();
                 database.beginTransaction();
                 try {
                     database.insert(RxUtil.DB_FACECOLLECTIOMITEM, null, item.toContentValues());
                     database.setTransactionSuccessful();
-                } finally {
+                }finally {
                     database.endTransaction();
                 }
                 e.onComplete();
