@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
+
+import com.iustu.identification.bean.FaceCollectItem;
 import com.iustu.identification.entity.Library;
 import com.iustu.identification.entity.PersionInfo;
 
@@ -33,11 +35,12 @@ public class RxUtil {
     public static final String DB_ACCOUNT = "Account";          // 对应Account数据表
     public static final String DB_LIBRARY = "Library";          // 对应Library数据表
     public static final String DB_PERSIONINFO = "PersonInfo";   // 对应PersionInfo数据表
-    public static final String DB_TAKERECORD = "TakeRecord";     // 对应TakeRecord数据表
+    //public static final String DB_TAKERECORD = "TakeRecord";     // 对应TakeRecord数据表
     public static final String DB_COMPARERECORD = "CompareRecord";  // 对应CompareRecord数据表
+    public static final String DB_FACECOLLECTIOMITEM = "FaceCollectionItem"; // 对应FaceCollectionItem数据表
 
     public static final String[] ACCOUNT_COLUMNS = new String[]{"name", "password"};    // Account的所有列
-
+    public static final String[] FACECOLLECTION_COLUMNS = new String[]{"faceId", "imgUri", "time", "id"};  //FaceCollectionItem的所有列
     public static final String[] LIBRARY_COLUMNS = new String[]{"libName", "libId", "description", "count", "inUsed"}; // Library的所有列
     public static final String[] PERSIONINFO_COLUMNS = new String[]{"feature", "libId", "name", "gender", "photoPath", "identity", "home", "other", "image_id", "libName"};
 
@@ -330,6 +333,28 @@ public class RxUtil {
             }
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    /**
+     * 插入抓拍记录的时候调用
+     * @param item 需要插入的对象
+     * @return Observable对象
+     */
+    public static Observable getInsertFaceCollectionItem(FaceCollectItem item) {
+        return Observable.create(new ObservableOnSubscribe<Object>() {
+            @Override
+            public void subscribe(ObservableEmitter<Object> e) {
+                SQLiteDatabase database = SqliteUtil.getDatabase();
+                database.beginTransaction();
+                try {
+                    database.insert(RxUtil.DB_FACECOLLECTIOMITEM, null, item.toContentValues());
+                    database.setTransactionSuccessful();
+                } finally {
+                    database.endTransaction();
+                }
+                e.onComplete();
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 
 }
