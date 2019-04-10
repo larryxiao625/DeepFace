@@ -75,16 +75,13 @@ public class SqliteHelper extends SQLiteOpenHelper {
  * 用来写SQL语句
  */
 class SQLString {
-    public static final String TABLE_LIBRARY = Library.class.getSimpleName();
     public static final String TABLE_ACCOUNT = Account.class.getSimpleName();
-    public static final String TABLE_COMPARERECORD = CompareRecord.class.getSimpleName();
-    public static final String TABLE_PERSIONINFO = PersonInfo.class.getSimpleName();
-    public static final String TABLE_TAKERECORD = TakeRecord.class.getSimpleName();
 
     public static final String CREATE_TABLE_LIBRARY = "create table Library (libName varchar primary key, description varchar, count integer not null, inUsed integer not null)";
     public static final String CREATE_TABLE_ACCOUNT = "create table Account (name varchar(6) primary key, password varchar(11) not null)";
+
     public static final String CREATE_TABLE_COMPARERECORD = "create table CompareRecord (time varchar primary key, uploadPhoto varchar not null, image_id varchar not null, rate float not null, libName varchar, name varchar, gender varchar, home varchar, identity varchar, photoPath varchar, other varchar)";
     public static final String CREATE_TABLE_PERSIONINFO = "create table PersonInfo (feature varchar, libName varchar, image_id varchar, name varchar primary key, gender varchar not null, photoPath varchar not null, identity varchar, home varchar, other varchar)";
     public static final String CREATE_TABLE_FACECOLLECTIOMITEM = "create table FaceCollectionItem (time varchar, id integer primary key autoincrement, imgUrl varchar not null, faceId varchar)";
-    public static final String CREATE_TABLE_TAKERECORD = "create table TakeRecord (time varchar primary key, uploadPhotoPath varchar)";
+
 }

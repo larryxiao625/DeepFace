@@ -42,6 +42,7 @@ public class RxUtil {
 
     public static final String[] ACCOUNT_COLUMNS = new String[]{"name", "password"};    // Account的所有列
     public static final String[] FACECOLLECTION_COLUMNS = new String[]{"faceId", "imgUrl", "time", "id"};  //FaceCollectionItem的所有列
+
     public static final String[] LIBRARY_COLUMNS = new String[]{"libName", "description", "count", "inUsed"}; // Library的所有列
     public static final String[] PERSIONINFO_COLUMNS = new String[]{"feature", "name", "gender", "photoPath", "identity", "home", "other", "image_id", "libName"};
     public static final String[] COMPARE_COLUMNS = new String[]{"time", "uploadPhoto", "image_id", "rate", "libName", "name", "gender", "home", "identity", "photoPath", "other"};

@@ -1,15 +1,18 @@
 package com.iustu.identification.ui.main.history.view;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.bigkoo.pickerview.TimePickerView;
 import com.iustu.identification.R;
 import com.iustu.identification.bean.FaceCollectItem;
+import com.iustu.identification.ui.base.BaseDialogFragment;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.main.history.adapter.FaceCollectItemAdapter;
 import com.iustu.identification.ui.main.history.prenster.HistoryPrenster;
@@ -51,9 +54,10 @@ public class FaceHistoryFragment extends BaseFragment {
     private int page;
     private int totalPage;
 
-    private WaitProgressDialog waitProgressDialog;
 
     HistoryPrenster historyPrenster;
+
+    ArrayList<BaseDialogFragment> dialogArrayList=new ArrayList();
 
     @Override
     protected void initView(@Nullable Bundle savedInstanceState, View view) {
@@ -98,7 +102,7 @@ public class FaceHistoryFragment extends BaseFragment {
 
     @OnClick(R.id.start_query_tv)
     public void startQuery(){
-        //loadData(0);
+        Log.d("history","getHistory");
         historyPrenster.getFaceCollectionData(fromDateTv.getText().toString(), toDateTv.getText().toString());
     }
 
@@ -110,9 +114,9 @@ public class FaceHistoryFragment extends BaseFragment {
     @OnClick(R.id.next_page_iv)
     public void onNextPage(){
         pageSetHelper.nextPage();
-        if(mAdapter.getPageNow() >= mAdapter.getPageMax() - 1){
-            loadData(++page);
-        }
+//        if(mAdapter.getPageNow() >= mAdapter.getPageMax() - 1){
+//            loadData(++page);
+//        }
     }
 
     IVew iVew=new IVew() {
@@ -134,23 +138,47 @@ public class FaceHistoryFragment extends BaseFragment {
 
         @Override
         public void showQueryError(NormalDialog normalDialog) {
+            for(int i=0;i<dialogArrayList.size();i++){
+                dialogArrayList.get(i).dismiss();
+                dialogArrayList.remove(i);
+            }
+            dialogArrayList.add(normalDialog);
             normalDialog.show(mActivity.getFragmentManager(),"queryError");
         }
 
         @Override
         public void showQueryProcessing(WaitProgressDialog waitProgressDialog) {
+            for(int i=0;i<dialogArrayList.size();i++){
+                dialogArrayList.get(i).dismiss();
+                dialogArrayList.remove(i);
+            }
+            dialogArrayList.add(waitProgressDialog);
             waitProgressDialog.show(mActivity.getFragmentManager(),"queryProcessing");
         }
 
         @Override
         public void showArgumentsError(SingleButtonDialog singleButtonDialog) {
+            for(int i=0;i<dialogArrayList.size();i++){
+                dialogArrayList.get(i).dismiss();
+                dialogArrayList.remove(i);
+            }
+            dialogArrayList.add(singleButtonDialog);
             singleButtonDialog.show(mActivity.getFragmentManager(),"argumentsError");
         }
 
         @Override
         public void bindData(List data) {
+            itemList.clear();
             itemList.addAll(data);
             mAdapter.notifyDataChange();
+        }
+
+        @Override
+        public void showSuccess() {
+            for (int i=0;i<dialogArrayList.size();i++){
+                dialogArrayList.get(i).dismiss();
+                dialogArrayList.remove(i);
+            }
         }
     };
 }

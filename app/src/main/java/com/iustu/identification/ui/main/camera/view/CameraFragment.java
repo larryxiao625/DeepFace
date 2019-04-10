@@ -114,6 +114,7 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
             }
             cameraHelper.release();
             cameraTextureView.onPause();
+            Objects.requireNonNull(getActivity()).stopService(serviceIntent);
         }
     }
 

@@ -115,7 +115,7 @@ public class SDKUtil {
         SearchDBItem searchDBItem = new SearchDBItem();
         searchDBItem.feat = floats;
         searchDBItem.image_id = persionInfo.image_id;
-        SearchHandler searchHandler = (SearchHandler)HandlerFactory.createSearcher("/sdcard/DeepFace/" + persionInfo.libNamej, 0, 1);
+        SearchHandler searchHandler = (SearchHandler)HandlerFactory.createSearcher("/sdcard/DeepFace/" + persionInfo.libName, 0, 1);
         searchHandler.searchAdd(searchDBItem);
     }
 
@@ -140,8 +140,10 @@ public class SDKUtil {
             ArrayList<DetectResult> detectResults=new ArrayList<>();
             for(int i=0;i<picPaths.size();i++){
                 DetectResult detectResult=new DetectResult();
-                SDKUtil.getDetectHandler().faceDetector(picPaths.get(0),detectResult);
-                detectResults.add(detectResult);
+                int faceNum=SDKUtil.getDetectHandler().faceDetector(picPaths.get(0),detectResult);
+                if(faceNum!=0){
+                    detectResults.add(detectResult);
+                }
             }
             return detectResults;
     }

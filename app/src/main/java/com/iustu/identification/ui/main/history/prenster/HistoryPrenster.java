@@ -176,10 +176,16 @@ public class HistoryPrenster implements IPrenster{
     }
 
     @Override
+<<<<<<< HEAD
     public void getFaceCollectionData(String fromtime, String totime) {
         //Log.e("", "getFaceCollectionData: ==============");
         //queryProcessing(FACE_HISTORY_VIEW);
         Observable observable = RxUtil.getQuaryObservalbe(false, RxUtil.DB_FACECOLLECTIOMITEM, RxUtil.FACECOLLECTION_COLUMNS, "datetime('time') between datetime('" + fromtime + "') and datetime('" + totime + "')", null, null, null, null, null);
+=======
+    public void getFaceCollectionData(String fromTime, String toTime) {
+        queryProcessing(FACE_HISTORY_VIEW);
+        Observable observable = RxUtil.getQuaryObservalbe(false, RxUtil.DB_FACECOLLECTIOMITEM, RxUtil.FACECOLLECTION_COLUMNS, "datetime(time) between datetime('" + fromTime + "') and datetime('" + toTime + "')", null, null, null, null, null);
+>>>>>>> 9ba296e0d1a9c5d0e030ddc604426157011f827e
         observable.subscribe(new Observer<Cursor>() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -188,6 +194,7 @@ public class HistoryPrenster implements IPrenster{
 
             @Override
             public void onNext(Cursor cursor) {
+                Log.d("History","startQuery");
                 if (cursor.getCount() == 0) {
                     ToastUtil.show("该期间无记录");
                     return;
@@ -215,6 +222,7 @@ public class HistoryPrenster implements IPrenster{
 
             @Override
             public void onComplete() {
+                faceHistoryIVew.showSuccess();
                 disposable.dispose();
                 disposable = null;
             }

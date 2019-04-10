@@ -16,4 +16,5 @@ public interface IVew {
     void showQueryProcessing(WaitProgressDialog waitProgressDialog);
     void showArgumentsError(SingleButtonDialog singleButtonDialog);
     void bindData(List data);
+    void showSuccess();
 }
