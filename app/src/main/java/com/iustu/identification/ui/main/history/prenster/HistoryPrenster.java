@@ -224,11 +224,11 @@ public class HistoryPrenster implements IPrenster{
 
     /**
      * 获取比对记录的方法
-     * @param fromtime 查询的开始时间
-     * @param totime 查询的终止时间
+     * @param fromTime 查询的开始时间
+     * @param toTime 查询的终止时间
      */
-    public void getCompareRecord(String fromtime, String totime) {
-        Observable observable = RxUtil.getQuaryObservalbe(false, RxUtil.DB_COMPARERECORD, RxUtil.FACECOLLECTION_COLUMNS, "datetime('time') between datetime('" + fromtime + "') and datetime('" + totime + "')", null, null, null, null, null);
+    public void getCompareRecord(String fromTime, String toTime) {
+        Observable observable = RxUtil.getQuaryObservalbe(false, RxUtil.DB_COMPARERECORD, RxUtil.COMPARE_COLUMNS, "datetime(time) between datetime('" + fromTime + "') and datetime('" + toTime + "')", null, null, null, null, null);
         observable.subscribe(new Observer<Cursor>() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -257,7 +257,7 @@ public class HistoryPrenster implements IPrenster{
                     compareRecord.setPhotoPath(cursor.getString(cursor.getColumnIndex("photoPath")));
                     data.add(compareRecord);
                 }
-                faceHistoryIVew.bindData(data);
+                compareHistoryIVew.bindData(data);
             }
 
             @Override

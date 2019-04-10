@@ -105,6 +105,7 @@ public class CompareHistoryFragment extends BaseFragment{
     }
     @OnClick(R.id.compare_start_query_tv)
     public void startQuery(){
+        historyPrenster.getCompareRecord(fromDateTv.getText().toString(),toDateTv.getText().toString());
     }
 
     @OnClick(R.id.compare_date_from_tv)
@@ -193,7 +194,9 @@ public class CompareHistoryFragment extends BaseFragment{
 
         @Override
         public void bindData(List data) {
-
+            compareItemList.clear();
+            compareItemList.addAll(data);
+            mAdapter.notifyDataChange();
         }
 
         @Override
