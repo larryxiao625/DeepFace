@@ -180,7 +180,8 @@ public class PersonInfoAdapter extends PageRecyclerViewAdapter<PersonInfoAdapter
             maxPage = paths.length;
             currentPage = 0;
             imgPage.setText(currentPage + 1 + "/" + maxPage);
-            File file = new File(paths[0]);
+            String finalPath = "/sdcard/DeepFace/" + p.libId + "/" + paths[0];
+            File file = new File(finalPath);
             Glide.with(itemView).load(Uri.fromFile(file)).into(photo);
 
             lastImg.setEnabled(true);

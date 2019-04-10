@@ -2,17 +2,11 @@ package com.iustu.identification.util;
 
 import android.annotation.TargetApi;
 import android.content.ContentValues;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Environment;
 import android.util.Log;
-import android.widget.ArrayAdapter;
-
-import com.example.agin.facerecsdk.DetectResult;
-import com.example.agin.facerecsdk.FeatureResult;
-import com.example.agin.facerecsdk.SearchResultItem;
 import com.iustu.identification.entity.Library;
 import com.iustu.identification.entity.PersionInfo;
 
@@ -114,7 +108,7 @@ public class RxUtil {
                 }
                 // 然后执行的是创建人脸库的路径
                 int libId = library.libId;
-                String finalPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DeepFace/" + library.libName;
+                String finalPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DeepFace/" + library.libId;
                 File file = new File(finalPath);
                 if (!file.exists())
                     file.mkdir();
@@ -144,7 +138,7 @@ public class RxUtil {
                     database.endTransaction();
                 }
                 // 删掉对相应的文件夹
-                String finalPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DeepFace/" + library.libName;
+                String finalPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DeepFace/" + library.libId;
                 FileUtil.delete(finalPath);
                 e.onComplete();
             }
@@ -174,9 +168,9 @@ public class RxUtil {
                 }
 
                 // 修改文件夹的名称
-                String finalPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DeepFace/" + old.libName;
-                String newPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DeepFace/" + newLib.libName;
-                FileUtil.modify(finalPath, newPath);
+                //String finalPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DeepFace/" + old.libName;
+                //String newPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DeepFace/" + newLib.libName;
+                //FileUtil.modify(finalPath, newPath);
                 e.onComplete();
             }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
@@ -195,7 +189,13 @@ public class RxUtil {
                 persionInfo.image_id = image_id;
                 SDKUtil.sdkDoPerson(persionInfo);
 
+                // 其次将选中的图片复制到人脸库的路径中
+                String fileName = persionInfo.name + System.currentTimeMillis() + ".jpg";
+                String finalPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DeepFace/" + persionInfo.libId + "/" + fileName;
+                FileUtil.copy(persionInfo.photoPath, finalPath);
+
                 // 往数据库中添加信息
+                persionInfo.photoPath = fileName;
                 ContentValues values = persionInfo.toContentValues();
                 SQLiteDatabase database = SqliteUtil.getDatabase();
                 database.beginTransaction();
@@ -214,9 +214,6 @@ public class RxUtil {
                     database.endTransaction();
                 }
 
-                // 其次将选中的图片复制到人脸库的路径中
-                String finalPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DeepFace/" + persionInfo.libName + "/" + persionInfo.name + System.currentTimeMillis() + ".jpg";
-                FileUtil.copy(persionInfo.photoPath, finalPath);
                 e.onComplete();
             }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
@@ -224,7 +221,7 @@ public class RxUtil {
 
     /**
      * 人员添加照片的时候调用
-     * @param persionInfo 需要添加照片的人员（已经添加）
+     * @param persionInfo 需要添加照片的人员（未添加）
      * @param newPhoto 添加的新照片
      * @return Observable对象
      */
@@ -232,7 +229,13 @@ public class RxUtil {
         return Observable.create(new ObservableOnSubscribe<Object>() {
             @Override
             public void subscribe(ObservableEmitter<Object> e) {
-                // 首先执行数据库操作
+                // 进行文件拷贝
+                String fileName = persionInfo.name + System.currentTimeMillis() + ".jpg";
+                String finalPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DeepFace/" + persionInfo.libId + "/" + fileName;
+                FileUtil.copy(newPhoto, finalPath);
+
+                // 执行数据库操作
+                persionInfo.photoPath = persionInfo.photoPath + ";" + fileName;
                 SQLiteDatabase database = SqliteUtil.getDatabase();
                 database.beginTransaction();
                 try {
@@ -241,9 +244,6 @@ public class RxUtil {
                 } finally {
                     database.endTransaction();
                 }
-                // 其次进行文件拷贝
-                String finalPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DeepFace/" + persionInfo.libName + "/" + persionInfo.name + System.currentTimeMillis() + ".jpg";
-                FileUtil.copy(newPhoto, finalPath);
                 e.onComplete();
             }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
@@ -290,9 +290,9 @@ public class RxUtil {
                 } finally {
                     database.endTransaction();
                 }
-                // 其次进行文件拷贝
+                // 其次进行文件删除
                 //String finalPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DeepFace/" + persionInfo.libName + "/" + persionInfo.name + System.currentTimeMillis() + ".jpg";
-                //FileUtil.delete(path);
+                FileUtil.delete(path);
                 e.onComplete();
             }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());

@@ -93,8 +93,8 @@ public class PersionPresenter {
      */
     public void onAddPhoto(PersionInfo persionInfo, String path, int position) {
         mView.showWaitDialog("正在添加图片...");
-        persionInfo.photoPath = persionInfo.photoPath + ";" + path;
         ContentValues values = persionInfo.toContentValues();
+        values.put("photoPath", persionInfo.photoPath + ";" + path);
         Observable observable = RxUtil.getAddPhotoObservable(persionInfo, path);
         observable.subscribe(new Observer() {
             @Override
@@ -142,6 +142,7 @@ public class PersionPresenter {
                 continue;
             }
         }
+        delete = "/sdcard/DeepFace/" + persionInfo.libId + "/" + delete;
         persionInfo.photoPath = finalPath;
         ContentValues values = persionInfo.toContentValues();
         Observable observable = RxUtil.getDeletePhotoObservable(persionInfo, delete);
