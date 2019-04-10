@@ -67,7 +67,7 @@ public class SqliteUtil {
 
             @Override
             public void onComplete() {
-                Log.d("Camera","onComplete");
+                Log.d("Camera","onComplete1");
                 ToastUtil.show("成功");
             }
         });
@@ -85,6 +85,7 @@ public class SqliteUtil {
         compareRecord.setRate(resultItem.score);
         compareRecord.setTime(time);
         compareRecord.setUploadPhoto(uploadPhoto);
+        compareRecord.setImage_id(resultItem.image_id);
         Observable observable = RxUtil.getInsertCompareRecordObservable(compareRecord);
         observable.subscribe(new Observer() {
             @Override
@@ -106,7 +107,7 @@ public class SqliteUtil {
 
             @Override
             public void onComplete() {
-                Log.d("Camera","onComplete");
+                Log.d("Camera","onComplete2");
                 ToastUtil.show("成功");
             }
         });

@@ -355,17 +355,21 @@ public class RxUtil {
         return Observable.create(new ObservableOnSubscribe<Object>() {
             @Override
             public void subscribe(ObservableEmitter<Object> e) {
+                Log.d("Camera","getInsert");
                 SQLiteDatabase database = SqliteUtil.getDatabase();
                 database.beginTransaction();
                 try {
                     Cursor cursor = database.query(RxUtil.DB_PERSIONINFO, RxUtil.PERSIONINFO_COLUMNS, "image_id = '" + compareRecord.getImage_id() + "'", null, null, null, null, null);
+                    Log.d("CameraCursor", String.valueOf(cursor.getCount()));
                     while(cursor.moveToNext()) {
+                        Log.d("Camera","moveToNext");
                         compareRecord.setGender(cursor.getString(cursor.getColumnIndex("gender")));
                         compareRecord.setHome(cursor.getString(cursor.getColumnIndex("home")));
                         compareRecord.setLibName(cursor.getString(cursor.getColumnIndex("libName")));
                         compareRecord.setIdentity(cursor.getString(cursor.getColumnIndex("identity")));
                         compareRecord.setOther(cursor.getString(cursor.getColumnIndex("other")));
                         compareRecord.setPhotoPath(cursor.getString(cursor.getColumnIndex("photoPath")));
+                        compareRecord.setName(cursor.getString(cursor.getColumnIndex("name")));
                         database.insert(RxUtil.DB_COMPARERECORD, null, compareRecord.toContentValues());
                     }
                     database.setTransactionSuccessful();
