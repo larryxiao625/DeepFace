@@ -177,7 +177,7 @@ public class HistoryPrenster implements IPrenster{
     @Override
     public void getFaceCollectionData(String fromtime, String totime) {
         queryProcessing(FACE_HISTORY_VIEW);
-        Observable observable = RxUtil.getQuaryObservalbe(false, RxUtil.DB_FACECOLLECTIOMITEM, RxUtil.FACECOLLECTION_COLUMNS, null, null, null, null, null, null);
+        Observable observable = RxUtil.getQuaryObservalbe(false, RxUtil.DB_FACECOLLECTIOMITEM, RxUtil.FACECOLLECTION_COLUMNS, "datetime(time) between datetime('" + fromtime + "') and datetime('" + totime + "')", null, null, null, null, null);
         observable.subscribe(new Observer<Cursor>() {
             @Override
             public void onSubscribe(Disposable d) {
