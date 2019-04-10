@@ -80,11 +80,11 @@ public class HistoryPrenster implements IPrenster{
         endCalendar.set(Calendar.MINUTE, 59);
         endCalendar.set(Calendar.SECOND, 59);
         if(viewType==FACE_HISTORY_VIEW) {
-            faceHistoryIVew.setFromDateTv(TextUtil.getDateString(startCalendar.getTime()));
-            faceHistoryIVew.setToDateTv(TextUtil.getDateString(endCalendar.getTime()));
+            faceHistoryIVew.setFromDateTv(TextUtil.getDateString2(startCalendar.getTime()));
+            faceHistoryIVew.setToDateTv(TextUtil.getDateString2(endCalendar.getTime()));
         }else if(viewType==COMPARE_HISTORY_VIEW){
-            compareHistoryIVew.setFromDateTv(TextUtil.getDateString(startCalendar.getTime()));
-            compareHistoryIVew.setToDateTv(TextUtil.getDateString(endCalendar.getTime()));
+            compareHistoryIVew.setFromDateTv(TextUtil.getDateString2(startCalendar.getTime()));
+            compareHistoryIVew.setToDateTv(TextUtil.getDateString2(endCalendar.getTime()));
         }
     }
 
