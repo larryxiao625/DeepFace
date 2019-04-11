@@ -145,6 +145,8 @@ public class SqliteUtil {
             @Override
             public void onComplete() {
                 ToastUtil.show("修改成功");
+                if (accountName.equals("admin"))
+                    DataCache.getAdmin().setPassword(accountPassword);
             }
         });
     }

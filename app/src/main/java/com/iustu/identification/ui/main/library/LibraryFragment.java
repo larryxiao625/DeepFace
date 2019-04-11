@@ -100,7 +100,7 @@ public class LibraryFragment extends BaseFragment implements TitleBar.TitleBarLi
                 .title("获取管理员权限")
                 .hint("请输入管理员账户密码")
                 .positive("确定", (v, content, layout) -> {
-                    if (content.equals("123456")) {
+                    if (content.equals(DataCache.getAdmin().password)) {
                         needConfirm = false;
                         confirm.setVisibility(View.GONE);
                         switchFragment(fragmentNow);

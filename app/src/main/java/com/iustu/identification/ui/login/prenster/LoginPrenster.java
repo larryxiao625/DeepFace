@@ -116,7 +116,7 @@ public class LoginPrenster implements IPrenster{
                     return;
                 }
                 while (o.moveToNext()) {
-                    if (o.getString(1).equals(password)) {
+                    if (o.getString(o.getColumnIndex("password")).equals(password)) {
                         LibManager.loadData();
                         Account account = new Account(username, password);
                         DataCache.initCache(account);

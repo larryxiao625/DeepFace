@@ -167,11 +167,7 @@ public class CapturePicService extends Service {
             }
             Log.d("CameraSearch", String.valueOf(searchResultItems.get(0).score));
             Log.d("CameraSearch",searchResultItems.get(0).image_id);
-<<<<<<< HEAD
             SqliteUtil.insertComparedItem(searchResultItem,TextUtil.getDateString2(calendar.getTime()),photoPath, cameraPrenster);
-=======
-            SqliteUtil.insertComparedItem(searchResultItem,TextUtil.getDateString2(calendar.getTime()),photoPath,cameraPrenster);
->>>>>>> 19adfaed756e84018d5d4b861ce389d5cc210e85
         }
     }
 

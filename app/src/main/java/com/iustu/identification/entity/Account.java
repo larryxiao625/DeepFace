@@ -22,6 +22,10 @@ public class Account {
         this.password = password;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public ContentValues toContentValues() {
         ContentValues contentValues = new ContentValues();
         contentValues.put("name", this.name);

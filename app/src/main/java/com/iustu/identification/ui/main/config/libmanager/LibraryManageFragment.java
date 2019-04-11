@@ -80,22 +80,6 @@ public class LibraryManageFragment extends BaseFragment implements LibManagerVie
         pageSetHelper = new PageSetHelper(recyclerView, pageTv);
     }
 
-    @Override
-    public void onShow() {
-        mLibraryList.clear();
-        initData();
-
-    }
-
-    @Override
-    public void onHide() {
-        super.onHide();
-        if (mChooseList.isEmpty())
-            return;
-        //updateLibrary();
-    }
-
-
     @OnClick(R.id.last_page_iv)
     public void lastPage(){
         pageSetHelper.lastPage();
