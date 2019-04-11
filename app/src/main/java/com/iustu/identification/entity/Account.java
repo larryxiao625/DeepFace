@@ -37,11 +37,11 @@ public class Account {
     // 将ParameterConfig对象转化为json字符串之后保存到SharePreference中
     public void save() {
         String jsonString = this.toJsonString();
-        MSP.getInstance(MSP.SP_ACCOUNT).edit().putString(MSP.ACCOUNT, jsonString).commit();
+        MSP.getInstance(MSP.SP_ACCOUNT).edit().putString(MSP.SP_ACCOUNT, jsonString).commit();
     }
 
     // 从json中解析对象并返回
     public static Account getFromSP() {
-        return fromJsonString(MSP.getInstance(MSP.SP_ACCOUNT).getString(MSP.ACCOUNT, new Account().toJsonString()));
+        return fromJsonString(MSP.getInstance(MSP.SP_ACCOUNT).getString(MSP.SP_ACCOUNT, new Account().toJsonString()));
     }
 }
