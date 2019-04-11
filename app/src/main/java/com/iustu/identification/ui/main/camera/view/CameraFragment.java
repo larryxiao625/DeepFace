@@ -46,6 +46,7 @@ import com.serenegiant.usb.widget.UVCCameraTextureView;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
@@ -73,6 +74,8 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
     Intent serviceIntent;
     CapturePicService.CaptureBind captureBind;
 
+    private List<CompareRecord> dataSource;
+    private CompareItemAdapter mAdapter;
     @Override
     protected int postContentView() {
         return R.layout.fragment_camera;
@@ -82,7 +85,8 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
     protected void initView(@Nullable Bundle savedInstanceState, View view) {
         Log.d("CameraFragment","initView");
         IconFontUtil util = IconFontUtil.getDefault();
-        CompareItemAdapter compareItemAdapter=new CompareItemAdapter(new ArrayList<>());
+        dataSource = new ArrayList<>();
+        mAdapter = new CompareItemAdapter(dataSource);
         cameraPrenster.attchView(iVew);
         serviceIntent=new Intent(getActivity(), CapturePicService.class);
         if(cameraHelper.getUSBMonitor()==null) {
@@ -96,7 +100,7 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
         cameraTextureView.setCallback(this);
         cameraHelper.registerUSB();
         itemCompareRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        itemCompareRecyclerView.setAdapter(compareItemAdapter);
+        itemCompareRecyclerView.setAdapter(mAdapter);
 //        cameraPrenster.capturePic();
         getActivity().bindService(serviceIntent,myServiceConnection,Context.BIND_AUTO_CREATE);
 
@@ -182,7 +186,8 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
 
         @Override
         public void updateSingleResult(CompareRecord compareRecord) {
-
+            dataSource.add(compareRecord);
+            mAdapter.notifyDataSetChanged();
         }
     };
 

@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.iustu.identification.R;
 import com.iustu.identification.entity.CompareRecord;
 import com.iustu.identification.entity.PersonInfo;
@@ -47,6 +48,7 @@ public class CompareItemAdapter extends RecyclerView.Adapter<CompareItemAdapter.
     @Override
     public void onBindViewHolder(Holder holder, int position) {
         CompareRecord item = searchCompareItemList.get(position);
+        holder.setCompareRecord(item);
         // TODO: 2019/4/9 设置图片加载方法
 //        if(item.getWidth() == 0) {
 //            Glide.with(holder.capturePhoto)
@@ -163,16 +165,20 @@ public class CompareItemAdapter extends RecyclerView.Adapter<CompareItemAdapter.
             ButterKnife.bind(this, itemView);
         }
 
-        private void setPersonInfo(PersonInfo info){
+        private void setCompareRecord(CompareRecord info){
             if(info == null){
 
             }else {
                 // TODO: 2019/4/9 根据人脸库获取中文名方法
-                libNameTv.setText(TextUtil.format(LibManager.getLibName(String.valueOf(info.getLibId()))));
+                Glide.with(itemView).load(new File(info.getUploadPhoto())).into(capturePhoto);
+                String[] photos = info.getPhotoPath().split(";");
+                String libPath = "/sdcard/DeepFace/" + info.getLibName() + photos[0];
+                Glide.with(itemView).load(new File(libPath)).into(matchPhoto);
+                libNameTv.setText(TextUtil.format(LibManager.getLibName(String.valueOf(info.getLibName()))));
                 nameTv.setText(TextUtil.format(info.getName()));
-                birthTv.setText(TextUtil.format(info.getBirthday()));
+                birthTv.setText(TextUtil.format(info.getGender()));
                 idCardTv.setText(TextUtil.format(info.getIdentity()));
-                locationTv.setText(TextUtil.format(info.getAddress()));
+                locationTv.setText(TextUtil.format(info.getHome()));
                 nationalityTv.setText(TextUtil.format(info.getHome()));
             }
         }

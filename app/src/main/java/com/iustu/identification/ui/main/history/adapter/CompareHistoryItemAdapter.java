@@ -104,6 +104,8 @@ public class CompareHistoryItemAdapter extends PageRecyclerViewAdapter<CompareHi
                 idCard.setText("身份证号:");
                 nationality.setText("籍贯:");
                 libName.setText("目标库:");
+                compareTime.setText(compareRecord.getTime());
+                scaleView.setScale((int) (compareRecord.getRate() * 100));
                 Glide.with(itemView).load(new File(compareRecord.getUploadPhoto())).into(targetPhoto);
                 String[] photos = compareRecord.getPhotoPath().split(";");
                 String libPath = "/sdcard/DeepFace/" + compareRecord.getLibName() + photos[0];
