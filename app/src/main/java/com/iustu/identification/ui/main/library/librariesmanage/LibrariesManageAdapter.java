@@ -50,7 +50,7 @@ public class LibrariesManageAdapter extends PageRecyclerViewAdapter<LibrariesMan
         });
 
         holder.batch.setOnClickListener(v -> {
-            if(isAdmin && onLibrariesItemButtonClickedListener != null){
+            if(onLibrariesItemButtonClickedListener != null){
                 onLibrariesItemButtonClickedListener.onImportMany(v, index);
             }
         });

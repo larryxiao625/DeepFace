@@ -1,14 +1,18 @@
 package com.iustu.identification.ui.main.library.librariesmanage;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.donkingliang.imageselector.utils.ImageSelector;
+import com.donkingliang.imageselector.utils.ImageSelectorUtils;
 import com.iustu.identification.R;
 import com.iustu.identification.entity.Library;
 import com.iustu.identification.ui.base.BaseFragment;
@@ -45,6 +49,7 @@ import butterknife.OnClick;
 
 public class LibrariesManageFragment extends BaseFragment implements LibView, LibrariesManageAdapter.OnLibrariesItemButtonClickedListener{
 
+    public static final int MULITI_PICTURES = 0;      // 进行图片批量选择的requestCode
     @BindView(R.id.libraries_manage_recycler_view)
     RecyclerView recyclerView;
     @BindView(R.id.page_tv)
@@ -58,6 +63,8 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
     private PageSetHelper pageSetHelper;
     private LibrariesManageAdapter mAdapter;
     private List<Library> mLibraryList = new ArrayList<>();
+
+    private String libName;         // 批量导入的时候用来记录导入的人脸库
 
     @Override
     protected int postContentView() {
@@ -149,7 +156,13 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
 
     @Override
     public void onImportMany(View v, int index) {
-
+        ImageSelector.builder()
+                .useCamera(true)
+                .setSingle(false)
+                .setMaxSelectCount(0)
+                .setViewImage(true)
+                .start(this, MULITI_PICTURES);
+        libName = mLibraryList.get(index).libName;
     }
 
     // 点击新增人员按钮时，直接跳转到对应的Fragment
@@ -272,6 +285,17 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
                 library.libName = values.getAsString("libName");
                 library.description = values.getAsString("description");
                 mAdapter.notifyDataChange();
+        }
+    }
+
+    // 点击批量导入的时候的响应
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == MULITI_PICTURES && data != null) {
+            ArrayList<String> images = data.getStringArrayListExtra(ImageSelectorUtils.SELECT_RESULT);
+            Log.e("selectImages", "onActivityResult: " + images.toString());
+            presenter.importBatchPictures(images, libName);
         }
     }
 }

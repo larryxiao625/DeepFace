@@ -7,6 +7,7 @@ import com.fanjun.keeplive.KeepLive;
 import com.fanjun.keeplive.config.ForegroundNotification;
 import com.fanjun.keeplive.config.KeepLiveService;
 import com.iustu.identification.ui.main.camera.prenster.CapturePicService;
+import com.iustu.identification.util.SDKUtil;
 import com.iustu.identification.util.SqliteHelper;
 import com.iustu.identification.util.SqliteUtil;
 import com.tencent.bugly.Bugly;
@@ -42,6 +43,11 @@ public class App extends LitePalApplication{
 
     }
 
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        SDKUtil.destory();
+    }
 
     public static Context getContext(){
         return context;

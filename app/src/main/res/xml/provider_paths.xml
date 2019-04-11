@@ -4,4 +4,8 @@
     <external-path name="beta_external_path" path="Download/"/>
     <!--/storage/emulated/0/Android/data/${applicationId}/files/apk/-->
     <external-path name="beta_external_files_path" path="Android/data/"/>
+    <!--这个是保存拍照图片的路径-->
+    <external-path
+        name="images"
+        path="Pictures"/>
 </paths>

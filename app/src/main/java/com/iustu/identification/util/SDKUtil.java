@@ -77,6 +77,12 @@ public class SDKUtil {
         SDKUtil.init();
     }
 
+    // 销毁句柄，在Application的onDestory方法中调用
+    public static void destory() {
+        detectHandler.destroy();
+        verifyHandler.destroy();
+        attributeHandler.destroy();
+    }
     private static void updateFile(String filePath) {
         Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         scanIntent.setData(Uri.fromFile(new File(filePath)));
@@ -103,7 +109,6 @@ public class SDKUtil {
     /**
      * 获取图片的Feature的方法,在往人脸库添加新成员的时候调用{@link RxUtil}
      * @param persionInfo 需要添加的人
-     * @return 人脸的特征
      */
     public static void sdkDoPerson(PersionInfo persionInfo) {
         DetectResult detectResult=new DetectResult();
@@ -117,6 +122,28 @@ public class SDKUtil {
         searchDBItem.image_id = persionInfo.image_id;
         SearchHandler searchHandler = (SearchHandler)HandlerFactory.createSearcher("/sdcard/DeepFace/" + persionInfo.libName, 0, 1);
         searchHandler.searchAdd(searchDBItem);
+    }
+
+    /**
+     * 在往人脸库批量导入的时候调用{@link RxUtil}
+     * @param persionInfos 需要添加的人
+     */
+    public static void sdkDoBatchPersion(ArrayList<PersionInfo> persionInfos) {
+        ArrayList<SearchDBItem> searchDBItems = new ArrayList<>();
+        for (PersionInfo persionInfo : persionInfos) {
+            DetectResult detectResult=new DetectResult();
+            SDKUtil.getDetectHandler().faceDetector(persionInfo.photoPath,detectResult);
+            FeatureResult featureResult=new FeatureResult();
+            verifyHandler.extractFeature(detectResult,featureResult);
+            float[] floats = featureResult.getFeat(0).get(0);
+            persionInfo.feature = Arrays.asList(floats).toString();
+            SearchDBItem searchDBItem = new SearchDBItem();
+            searchDBItem.feat = floats;
+            searchDBItem.image_id = persionInfo.image_id;
+            searchDBItems.add(searchDBItem);
+        }
+        SearchHandler searchHandler = (SearchHandler)HandlerFactory.createSearcher("/sdcard/DeepFace/" + persionInfos.get(0).libName, 0, 1);
+        searchHandler.searchBuildLib(searchDBItems);
     }
 
 

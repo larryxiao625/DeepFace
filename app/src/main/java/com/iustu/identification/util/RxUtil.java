@@ -16,6 +16,7 @@ import com.iustu.identification.entity.PersionInfo;
 
 import java.io.File;
 import java.util.HashSet;
+import java.util.List;
 import java.util.function.Consumer;
 
 import java.util.ArrayList;
@@ -224,6 +225,52 @@ public class RxUtil {
                     database.endTransaction();
                 }
 
+                e.onComplete();
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    /**
+     * 批量导入图片的时候调用
+     * @param persionInfos 需要被导入的人员
+     * @return Observable对象
+     */
+    public static Observable<Integer> getImportBatchPersionObservable(ArrayList<PersionInfo> persionInfos) {
+        return Observable.create(new ObservableOnSubscribe<Integer>() {
+            @Override
+            public void subscribe(ObservableEmitter<Integer> e) {
+                ArrayList<ContentValues> values = new ArrayList<>();
+                // 首先调用SDK生成feature
+                SDKUtil.sdkDoBatchPersion(persionInfos);
+                Log.d("rxutil", "subscribe: ");
+                for(PersionInfo persionInfo : persionInfos) {
+                    // 其次将选中的图片复制到人脸库的路径中
+                    String fileName = persionInfo.name + System.currentTimeMillis() + ".jpg";
+                    Log.d("rxutil", "filename " + fileName);
+                    String finalPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DeepFace/" + persionInfo.libName + "/" + fileName;
+                    FileUtil.copy(persionInfo.photoPath, finalPath);
+                    persionInfo.photoPath = fileName;
+                    values.add(persionInfo.toContentValues());
+                }
+
+                SQLiteDatabase database = SqliteUtil.getDatabase();
+                database.beginTransaction();
+                try {
+                    for (int i = 0; i < persionInfos.size(); i ++) {
+                        database.insert(RxUtil.DB_PERSIONINFO, null, values.get(i));
+                        // 如果往PersionInfo中添加新数据，则需要修改Library的信息
+                        Cursor cursor = database.query(false, RxUtil.DB_LIBRARY, RxUtil.LIBRARY_COLUMNS,"libName = '" + persionInfos.get(i).libName + "'", null, null, null, null, null);
+                        cursor.moveToFirst();
+                        int count = cursor.getInt(cursor.getColumnIndex("count"));
+                        ContentValues values1 = new ContentValues();
+                        values1.put("count", count + 1);
+                        database.update(RxUtil.DB_LIBRARY, values1, "libName = '" + persionInfos.get(i).libName + "'", null);
+                        e.onNext(i);
+                    }
+                    database.setTransactionSuccessful();
+                } finally {
+                    database.endTransaction();
+                }
                 e.onComplete();
             }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());

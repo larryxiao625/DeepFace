@@ -7,8 +7,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 
+import com.donkingliang.imageselector.utils.ImageSelectorUtils;
 import com.iustu.identification.R;
 import com.iustu.identification.api.message.Message;
 import com.iustu.identification.ui.SplashActivity;
@@ -37,6 +39,8 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+
+import static com.iustu.identification.ui.main.library.librariesmanage.LibrariesManageFragment.MULITI_PICTURES;
 
 public class MainActivity extends BaseActivity implements BottomBar.BottomBarSelectListener{
 
@@ -180,4 +184,5 @@ public class MainActivity extends BaseActivity implements BottomBar.BottomBarSel
         super.onDestroy();
 //        stopService(new Intent(MainActivity.this, CapturePicService.class));
     }
+
 }

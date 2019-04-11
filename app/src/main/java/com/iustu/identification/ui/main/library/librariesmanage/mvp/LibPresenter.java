@@ -6,10 +6,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.iustu.identification.entity.Library;
+import com.iustu.identification.entity.PersionInfo;
 import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
 import com.iustu.identification.util.LibManager;
 import com.iustu.identification.util.RxUtil;
 import com.iustu.identification.util.SqliteHelper;
+import com.iustu.identification.util.StringUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -192,6 +194,44 @@ public class LibPresenter {
                 mView.onSuccess(LibView.TYPE_MODIFY_LIB, position, values1);
                 disposable.dispose();
                 mView.dissmissDialog();
+            }
+        });
+    }
+
+    /**
+     * 进行批量导入的时候的调用
+     * @param pictures 需要导入的图片
+     * @param libName 导入的目标人脸库
+     */
+    public void importBatchPictures(ArrayList<String> pictures, String libName) {
+        ArrayList<PersionInfo> persionInfos = StringUtil.clipPictures(pictures);
+        if (persionInfos == null)
+            return;
+        for(PersionInfo persionInfo : persionInfos) {
+            persionInfo.libName = libName;
+            persionInfo.image_id = System.currentTimeMillis() + "";
+            Log.d("logphoto", "importBatchPictures: " + persionInfo.photoPath);
+        }
+        Observable<Integer> observable = RxUtil.getImportBatchPersionObservable(persionInfos);
+        observable.subscribe(new Observer<Integer>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                disposable = d;
+            }
+
+            @Override
+            public void onNext(Integer o) {
+                Log.d("batchPictures", "onNext: " + o);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onComplete() {
+                disposable.dispose();
             }
         });
     }
