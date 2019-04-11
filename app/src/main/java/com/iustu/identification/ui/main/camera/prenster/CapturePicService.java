@@ -18,6 +18,7 @@ import com.example.agin.facerecsdk.SearchDBItem;
 import com.example.agin.facerecsdk.SearchHandler;
 import com.example.agin.facerecsdk.SearchResultItem;
 import com.facebook.stetho.common.ListUtil;
+import com.iustu.identification.bean.ParameterConfig;
 import com.iustu.identification.util.DataCache;
 import com.iustu.identification.util.SDKUtil;
 import com.iustu.identification.util.SqliteUtil;
@@ -166,7 +167,11 @@ public class CapturePicService extends Service {
             }
             Log.d("CameraSearch", String.valueOf(searchResultItems.get(0).score));
             Log.d("CameraSearch",searchResultItems.get(0).image_id);
+<<<<<<< HEAD
             SqliteUtil.insertComparedItem(searchResultItem,TextUtil.getDateString2(calendar.getTime()),photoPath, cameraPrenster);
+=======
+            SqliteUtil.insertComparedItem(searchResultItem,TextUtil.getDateString2(calendar.getTime()),photoPath,cameraPrenster);
+>>>>>>> 19adfaed756e84018d5d4b861ce389d5cc210e85
         }
     }
 
@@ -174,14 +179,20 @@ public class CapturePicService extends Service {
         if(!cutFile.exists()){
             cutFile.mkdirs();
         }
-        BitmapFactory.Options options=new BitmapFactory.Options();
-        options.inSampleSize=2;
+//        BitmapFactory.Options options=new BitmapFactory.Options();
+//        options.inSampleSize=2;
         for(int i=0;i<num;i++) {
             Log.d("Camera","detectResult:"+num);
             String cutPathName=cutPath+TextUtil.dateMessage(calendar.getTime())+"_"+i+".jpg";
-            int height=Math.abs(detectResult.getRects().get(i).bottom-detectResult.getRects().get(i).top);
-            int width=Math.abs(detectResult.getRects().get(i).right-detectResult.getRects().get(i).left);
-            Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(picPath),Math.abs(detectResult.getRects().get(i).left),Math.abs(detectResult.getRects().get(i).top),width,height);
+            int height=(detectResult.getRects().get(i).bottom> ParameterConfig.getFromSP().getDpiHeight()? ParameterConfig.getFromSP().getDpiHeight():detectResult.getRects().get(i).bottom)-(detectResult.getRects().get(i).top<0? 0:detectResult.getRects().get(i).top);
+            int width=(detectResult.getRects().get(i).right> ParameterConfig.getFromSP().getDpiWidth()? ParameterConfig.getFromSP().getDpiWidth():detectResult.getRects().get(i).right)-(detectResult.getRects().get(i).left<0? 0:detectResult.getRects().get(i).left);
+            Log.d("CameraRight", String.valueOf(detectResult.getRects().get(i).right));
+            Log.d("CameraTop", String.valueOf(detectResult.getRects().get(i).top));
+            Log.d("CameraLeft", String.valueOf(detectResult.getRects().get(i).left));
+            Log.d("CameraBottom", String.valueOf(detectResult.getRects().get(i).bottom));
+            Log.d("CameraBitMapHeight", String.valueOf(BitmapFactory.decodeFile(picPath).getHeight()));
+            Log.d("CameraBitMapWidth", String.valueOf(BitmapFactory.decodeFile(picPath).getWidth()));
+            Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(picPath),detectResult.getRects().get(i).left<0? 0:detectResult.getRects().get(i).left,detectResult.getRects().get(i).top<0? 0:detectResult.getRects().get(i).top,width,height);
             SqliteUtil.insertFaceCollectionItem(cutPathName,TextUtil.getDateString2(calendar.getTime()));
             try {
                 File file=new File(cutPathName);

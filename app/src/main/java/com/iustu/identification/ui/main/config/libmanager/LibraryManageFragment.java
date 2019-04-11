@@ -79,7 +79,7 @@ public class LibraryManageFragment extends BaseFragment implements LibManagerVie
         recyclerView.setAdapter(mAdapter);
         pageSetHelper = new PageSetHelper(recyclerView, pageTv);
     }
-    
+
     @Override
     public void onShow() {
         mLibraryList.clear();

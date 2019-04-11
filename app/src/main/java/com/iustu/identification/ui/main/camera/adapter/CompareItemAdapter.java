@@ -111,11 +111,11 @@ public class CompareItemAdapter extends RecyclerView.Adapter<CompareItemAdapter.
             if(item.isExtend()){
                 item.setExtend(false);
                 ExpandableViewHoldersUtil.rotateExpandIcon(holder.foldImage,0,180);
-                ExpandableViewHoldersUtil.collapseHolder(holder, 145,335,true);
+                ExpandableViewHoldersUtil.collapseHolder(holder, 300,0,true);
             }else {
                 item.setExtend(true);
                 ExpandableViewHoldersUtil.rotateExpandIcon(holder.foldImage,180,0);
-                ExpandableViewHoldersUtil.expandHolder(holder,335,145,true);
+                ExpandableViewHoldersUtil.expandHolder(holder,0,300,true);
             }
         });
     }
@@ -172,14 +172,19 @@ public class CompareItemAdapter extends RecyclerView.Adapter<CompareItemAdapter.
                 // TODO: 2019/4/9 根据人脸库获取中文名方法
                 Glide.with(itemView).load(new File(info.getUploadPhoto())).into(capturePhoto);
                 String[] photos = info.getPhotoPath().split(";");
+<<<<<<< HEAD
                 String libPath = "/sdcard/DeepFace/" + info.getLibName()+ "/" + photos[0];
+=======
+                String libPath = "/sdcard/DeepFace/" + info.getLibName()+"/" + photos[0];
+>>>>>>> 19adfaed756e84018d5d4b861ce389d5cc210e85
                 Glide.with(itemView).load(new File(libPath)).into(matchPhoto);
-                libNameTv.setText(TextUtil.format(LibManager.getLibName(String.valueOf(info.getLibName()))));
+                libNameTv.setText(TextUtil.format(String.valueOf(info.getLibName())));
                 nameTv.setText(TextUtil.format(info.getName()));
                 birthTv.setText(TextUtil.format(info.getGender()));
                 idCardTv.setText(TextUtil.format(info.getIdentity()));
                 locationTv.setText(TextUtil.format(info.getHome()));
                 nationalityTv.setText(TextUtil.format(info.getHome()));
+                compareScaleView.setScale((int) (info.getRate()*100));
             }
         }
     }
