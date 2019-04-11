@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.iustu.identification.bean.FaceCollectItem;
+import com.iustu.identification.entity.Account;
 import com.iustu.identification.entity.CompareRecord;
 import com.iustu.identification.entity.Library;
 import com.iustu.identification.entity.PersionInfo;
@@ -62,7 +63,7 @@ public class RxUtil {
     }
 
     // 批量更改人脸库的选中状态
-    public static Observable updataLibraries(HashSet<String> libIds) {
+    public static Observable updataLibraries() {
         return Observable.create(new ObservableOnSubscribe<Object>() {
             @TargetApi(Build.VERSION_CODES.N)
             @Override
@@ -70,9 +71,24 @@ public class RxUtil {
                 SQLiteDatabase database = SqliteUtil.getDatabase();
                 database.beginTransaction();
                 try {
-                    database.beginTransaction();
+                    ContentValues contentValues = new ContentValues();
+                    contentValues.put("inUsed", 0);
+                    // 将以下Library置为未使用
+                    DataCache.getChangedLib().forEach(new Consumer<String>() {
+                        @Override
+                        public void accept(String s) {
+                            database.update(RxUtil.DB_LIBRARY, contentValues, "libName = '" + s + "'", null);
+                        }
+                    });
 
-
+                    contentValues.put("inUsed", 1);
+                    // 将以下Library置为正在使用
+                    DataCache.getChosenLibConfig().forEach(new Consumer<String>() {
+                        @Override
+                        public void accept(String s) {
+                            database.update(RxUtil.DB_LIBRARY, contentValues, "libName = '" + s + "'", null);
+                        }
+                    });
                     database.setTransactionSuccessful();
                     e.onComplete();
                 }finally {
@@ -381,4 +397,27 @@ public class RxUtil {
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 
+    /**
+     * 修改账户密码的方法
+     * @param account 含有新密码的账户
+     * @return Observable对象
+     */
+    public static Observable getModifyPassword(Account account) {
+        return Observable.create(new ObservableOnSubscribe<Object>() {
+            @Override
+            public void subscribe(ObservableEmitter<Object> e) {
+                SQLiteDatabase database = SqliteUtil.getDatabase();
+                database.beginTransaction();
+                try {
+                    database.update(RxUtil.DB_ACCOUNT, account.toContentValues(), "name = '" + account.name + "'", null);
+                    database.setTransactionSuccessful();
+                }finally {
+                    database.endTransaction();
+                }
+                e.onComplete();
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
+    }
 }
+
+

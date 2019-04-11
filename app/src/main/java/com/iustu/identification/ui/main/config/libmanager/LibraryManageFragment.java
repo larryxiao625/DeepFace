@@ -67,28 +67,24 @@ public class LibraryManageFragment extends BaseFragment implements LibManagerVie
             Library library = mLibraryList.get(index);
             if(library.inUsed == 1){
                 library.inUsed = 0;
+                DataCache.getChangedLib().add(library.libName);
                 mChooseList.remove(library.libName);
             }else {
                 library.inUsed = 1;
                 mChooseList.add(library.libName);
+                DataCache.getChangedLib().remove(library.libName);
             }
             mAdapter.notifyItemChanged(position);
         });
         recyclerView.setAdapter(mAdapter);
         pageSetHelper = new PageSetHelper(recyclerView, pageTv);
     }
-
-
+    
     @Override
     public void onShow() {
         mLibraryList.clear();
         initData();
-        if(mAdapter != null){
-            mAdapter.notifyDataChange();
-        }
-        if(pageSetHelper != null){
-            pageSetHelper.notifyChange();
-        }
+
     }
 
     @Override
