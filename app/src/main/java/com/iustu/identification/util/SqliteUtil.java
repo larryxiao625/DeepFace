@@ -115,4 +115,67 @@ public class SqliteUtil {
         });
     }
 
+    /**
+     * 系统管理界面中用来更改密码的方法
+     * @param accountName 账户名
+     * @param accountPassword 新密码
+     */
+    public static void modifyAccountPassword (String accountName, String accountPassword) {
+        Account account = new Account();
+        account.name = accountName;
+        account.password = accountPassword;
+        Observable observable = RxUtil.getModifyPassword(account);
+        observable.subscribe(new Observer() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(Object o) {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+                ToastUtil.show("错误：" + e.getMessage());
+            }
+
+            @Override
+            public void onComplete() {
+                ToastUtil.show("修改成功");
+                if (accountName.equals("admin"))
+                    DataCache.getAdmin().setPassword(accountPassword);
+            }
+        });
+    }
+
+    /**
+     * 用来提交所有人脸库使用状态
+     */
+    public static void updataLibrariedInUsed() {
+        Observable observable = RxUtil.updataLibraries();
+        observable.subscribe(new Observer() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(Object o) {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+    }
 }

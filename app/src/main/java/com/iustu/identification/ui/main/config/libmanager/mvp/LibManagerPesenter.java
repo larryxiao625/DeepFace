@@ -67,7 +67,7 @@ public class LibManagerPesenter {
     }
 
     public void onUpdateData(HashSet<String> mChooseList) {
-        Observable observable = RxUtil.updataLibraries(mChooseList);
+        Observable observable = RxUtil.updataLibraries();
         observable.subscribe(new Observer() {
             @Override
             public void onSubscribe(Disposable d) {

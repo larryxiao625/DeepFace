@@ -23,8 +23,10 @@ import com.iustu.identification.ui.main.library.LibraryFragment;
 import com.iustu.identification.ui.widget.BottomBar;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
+import com.iustu.identification.util.DataCache;
 import com.iustu.identification.util.ExceptionUtil;
 import com.iustu.identification.util.LibManager;
+import com.iustu.identification.util.SqliteUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -157,6 +159,18 @@ public class MainActivity extends BaseActivity implements BottomBar.BottomBarSel
     @Override
     public void onSelect(int id) {
         switchFragment(id);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        DataCache.saveCache();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        SqliteUtil.updataLibrariedInUsed();
     }
 
     @Override

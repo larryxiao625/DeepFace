@@ -1,5 +1,7 @@
 package com.iustu.identification.entity;
 
+import android.content.ContentValues;
+
 import com.google.gson.Gson;
 import com.iustu.identification.util.MSP;
 
@@ -18,6 +20,17 @@ public class Account {
     public Account(String name, String password) {
         this.name = name;
         this.password = password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public ContentValues toContentValues() {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("name", this.name);
+        contentValues.put("password", password);
+        return contentValues;
     }
     // 将对象转化为json字符串，存进SharePreference中
     private String toJsonString() {

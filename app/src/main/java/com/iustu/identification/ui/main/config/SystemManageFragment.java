@@ -14,6 +14,7 @@ import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.widget.dialog.EditDialog;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.util.DataCache;
+import com.iustu.identification.util.SqliteUtil;
 import com.tencent.bugly.beta.Beta;
 
 import org.litepal.crud.DataSupport;
@@ -90,7 +91,7 @@ public class SystemManageFragment extends BaseFragment{
                 .title("更改" + account.name + "的密码")
                 .hint("新密码")
                 .positive("确定", (v, content, layout) -> {
-
+                    SqliteUtil.modifyAccountPassword(account.name, content);
                     return true;
                 })
                 .negative("取消", null)

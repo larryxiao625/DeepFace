@@ -123,7 +123,7 @@ public class CompareItemAdapter extends RecyclerView.Adapter<CompareItemAdapter.
                 // TODO: 2019/4/9 根据人脸库获取中文名方法
                 Glide.with(itemView).asBitmap().load(new File(info.getUploadPhoto())).into(capturePhoto);
                 String[] photos = info.getPhotoPath().split(";");
-                String libPath = "/sdcard/DeepFace/" + info.getLibName()+"/" + photos[0];
+                String libPath = "/sdcard/DeepFace/" + info.getLibName()+ "/" + photos[0];
                 Glide.with(itemView).load(new File(libPath)).into(matchPhoto);
                 libNameTv.setText(TextUtil.format(String.valueOf(info.getLibName())));
                 nameTv.setText(TextUtil.format(info.getName()));
