@@ -61,4 +61,9 @@ public class CameraPrenster implements UVCCameraHelper.OnMyDevConnectListener,IP
     public void updateCompareResult(String imageId) {
 
     }
+
+    @Override
+    public IVew getView() {
+        return iVew;
+    }
 }

@@ -9,6 +9,7 @@ import com.iustu.identification.bean.FaceCollectItem;
 import com.iustu.identification.entity.Account;
 import com.iustu.identification.entity.CompareRecord;
 import com.iustu.identification.entity.Library;
+import com.iustu.identification.ui.main.camera.prenster.IPenster;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -80,7 +81,7 @@ public class SqliteUtil {
      * @param uploadPhoto 抓拍生成的图片的路径
      * @param
      */
-    public static void insertComparedItem(SearchResultItem resultItem, String time, String uploadPhoto) {
+    public static void insertComparedItem(SearchResultItem resultItem, String time, String uploadPhoto, IPenster comparePresenter) {
         CompareRecord compareRecord = new CompareRecord();
         compareRecord.setRate(resultItem.score);
         compareRecord.setTime(time);
@@ -108,6 +109,7 @@ public class SqliteUtil {
             @Override
             public void onComplete() {
                 Log.d("Camera","onComplete2");
+                comparePresenter.getView().updateSingleResult(compareRecord);
                 ToastUtil.show("成功");
             }
         });
