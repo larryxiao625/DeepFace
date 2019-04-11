@@ -191,7 +191,6 @@
         
         <ImageView
             android:id="@+id/fold_icon_iv"
-            android:scaleType="centerInside"
             android:layout_gravity="center_horizontal"
             android:src="@drawable/xiangs2"
             android:layout_width="@dimen/x44"

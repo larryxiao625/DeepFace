@@ -7,7 +7,10 @@ import android.renderscript.Sampler;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -25,11 +28,11 @@ public class ExpandableViewHoldersUtil {
      * @param to 结束角度
      */
     public static void rotateExpandIcon(ImageView imageView,float from,float to){
-        ValueAnimator animator=ValueAnimator.ofFloat(from,to);
-        animator.setDuration(500);
-        animator.setInterpolator(new DecelerateInterpolator());
-        animator.addUpdateListener(v-> imageView.setRotation((Float) v.getAnimatedValue()));
-        animator.start();
+        RotateAnimation rotateAnimation=new RotateAnimation(from,to, Animation.RELATIVE_TO_SELF,0.5F,Animation.RELATIVE_TO_SELF,0.5f);
+        rotateAnimation.setDuration(300);
+        rotateAnimation.setFillAfter(true);
+        rotateAnimation.setInterpolator(new LinearInterpolator());
+        imageView.startAnimation(rotateAnimation);
     }
 
     /**
