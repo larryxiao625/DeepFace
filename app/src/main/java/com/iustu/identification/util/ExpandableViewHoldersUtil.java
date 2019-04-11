@@ -1,13 +1,16 @@
 package com.iustu.identification.util;
 
+import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.renderscript.Sampler;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.iustu.identification.R;
 import com.iustu.identification.bean.ParameterConfig;
@@ -25,9 +28,7 @@ public class ExpandableViewHoldersUtil {
         ValueAnimator animator=ValueAnimator.ofFloat(from,to);
         animator.setDuration(500);
         animator.setInterpolator(new DecelerateInterpolator());
-        animator.addUpdateListener(v->{
-            imageView.setRotation((Float) v.getAnimatedValue());
-        });
+        animator.addUpdateListener(v-> imageView.setRotation((Float) v.getAnimatedValue()));
         animator.start();
     }
 
@@ -42,10 +43,6 @@ public class ExpandableViewHoldersUtil {
         LinearLayout moreInfo=holder.itemView.findViewById(R.id.more_info_ll);
         if(isAnimate) {
             updateHeight(holder.itemView,start,end);
-            moreInfo.setVisibility(View.VISIBLE);
-            ObjectAnimator objectAnimator=ObjectAnimator.ofFloat(moreInfo, View.ALPHA,1);
-            objectAnimator.setDuration(200);
-            objectAnimator.start();
         }else{
             moreInfo.setVisibility(View.VISIBLE);
             moreInfo.setAlpha(1);
@@ -59,10 +56,30 @@ public class ExpandableViewHoldersUtil {
         LinearLayout moreInfo=holder.itemView.findViewById(R.id.more_info_ll);
         if(isAnimate){
             ObjectAnimator objectAnimator=ObjectAnimator.ofFloat(moreInfo, View.ALPHA,0);
+            objectAnimator.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    moreInfo.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+
+                }
+            });
             objectAnimator.setDuration(200);
             objectAnimator.start();
             updateHeight(holder.itemView,start,end);
-            moreInfo.setVisibility(View.VISIBLE);
         }else {
             moreInfo.setVisibility(View.GONE);
             moreInfo.setAlpha(0);
@@ -73,10 +90,19 @@ public class ExpandableViewHoldersUtil {
      * 展开高度方法
      */
     public static void updateHeight(View itemView,int start,int end){
+        LinearLayout moreInfo=itemView.findViewById(R.id.more_info_ll);
         ValueAnimator valueAnimator=ValueAnimator.ofInt(start,end);
+        moreInfo.setVisibility(View.VISIBLE);
         valueAnimator.addUpdateListener(l->{
-            ViewGroup.LayoutParams lp=itemView.getLayoutParams();
+            ViewGroup.LayoutParams lp=moreInfo.getLayoutParams();
+            Log.d("CameraHeight", String.valueOf(itemView.getLayoutParams().height));
             lp.height= (int) l.getAnimatedValue();
+            if(start<end&&(int)l.getAnimatedValue()==end){
+                ObjectAnimator objectAnimator=ObjectAnimator.ofFloat(moreInfo, View.ALPHA,1);
+                objectAnimator.setDuration(200);
+                objectAnimator.start();
+            }
+            moreInfo.setLayoutParams(lp);
         });
         valueAnimator.start();
     }
