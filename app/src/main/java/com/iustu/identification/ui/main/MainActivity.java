@@ -10,14 +10,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 
-import com.donkingliang.imageselector.utils.ImageSelectorUtils;
 import com.iustu.identification.R;
-import com.iustu.identification.api.message.Message;
 import com.iustu.identification.ui.SplashActivity;
 import com.iustu.identification.ui.base.BaseActivity;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.login.view.LoginActivity;
-import com.iustu.identification.ui.main.camera.prenster.CapturePicService;
 import com.iustu.identification.ui.main.camera.view.CameraFragment;
 import com.iustu.identification.ui.main.config.ConfigFragment;
 import com.iustu.identification.ui.main.history.view.HistoryFragment;
@@ -26,21 +23,14 @@ import com.iustu.identification.ui.widget.BottomBar;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
 import com.iustu.identification.util.DataCache;
-import com.iustu.identification.util.ExceptionUtil;
 import com.iustu.identification.util.LibManager;
 import com.iustu.identification.util.SqliteUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
-
-import static com.iustu.identification.ui.main.library.librariesmanage.LibrariesManageFragment.MULITI_PICTURES;
 
 public class MainActivity extends BaseActivity implements BottomBar.BottomBarSelectListener{
 

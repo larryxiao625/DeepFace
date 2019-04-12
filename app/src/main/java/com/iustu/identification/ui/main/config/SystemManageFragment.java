@@ -1,8 +1,13 @@
 package com.iustu.identification.ui.main.config;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.iustu.identification.BuildConfig;
@@ -33,6 +38,12 @@ public class SystemManageFragment extends BaseFragment{
     TextView usernameTv;
     @BindView(R.id.tv_version)
     TextView versionTv;
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+    }
 
     @Override
     protected int postContentView() {

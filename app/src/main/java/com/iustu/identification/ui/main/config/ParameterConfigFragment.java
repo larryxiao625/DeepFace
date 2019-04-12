@@ -203,4 +203,14 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
 
         dpiPicker.show();
     }
+
+    /**
+     * 用来保存参数的配置
+     */
+    public void saveConfig() {
+        config.setMin_size(Integer.valueOf(minFace.getText().toString()));
+        config.setThreshold1(Float.valueOf(checkFactor1.getText().toString()));
+        config.setThreshold2(Float.valueOf(checkFactor2.getText().toString()));
+        config.setThreshold3(Float.valueOf(checkFactor3.getText().toString()));
+    }
 }

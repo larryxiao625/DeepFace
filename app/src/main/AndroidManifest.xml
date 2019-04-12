@@ -75,13 +75,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
-        <!--图片选择Activity-->
-        <activity android:name="com.donkingliang.imageselector.ImageSelectorActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:configChanges="orientation|keyboardHidden|screenSize"/>
-
-        <!--图片预览Activity-->
-        <activity android:name="com.donkingliang.imageselector.PreviewActivity"
+        <activity android:name=".ui.main.batch.folder.ChooseFolderActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:configChanges="orientation|keyboardHidden|screenSize"/>
 

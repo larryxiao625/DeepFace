@@ -81,7 +81,7 @@ class SQLString {
     public static final String CREATE_TABLE_ACCOUNT = "create table Account (name varchar(6) primary key, password varchar(11) not null)";
 
     public static final String CREATE_TABLE_COMPARERECORD = "create table CompareRecord (time varchar not null, uploadPhoto varchar primary key, image_id varchar not null, rate float not null, libName varchar, name varchar, gender varchar, home varchar, identity varchar, photoPath varchar, other varchar)";
-    public static final String CREATE_TABLE_PERSIONINFO = "create table PersonInfo (feature varchar, libName varchar, image_id varchar, name varchar primary key, gender varchar not null, photoPath varchar not null, identity varchar, home varchar, other varchar)";
+    public static final String CREATE_TABLE_PERSIONINFO = "create table PersonInfo (feature varchar, libName varchar, image_id varchar, name varchar, gender varchar not null, photoPath varchar not null, identity varchar, home varchar, other varchar, primary key(libName, name))";
     public static final String CREATE_TABLE_FACECOLLECTIOMITEM = "create table FaceCollectionItem (time varchar, id integer primary key autoincrement, imgUrl varchar not null, faceId varchar)";
 
 }

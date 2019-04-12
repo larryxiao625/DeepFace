@@ -11,12 +11,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.donkingliang.imageselector.utils.ImageSelector;
-import com.donkingliang.imageselector.utils.ImageSelectorUtils;
+
 import com.iustu.identification.R;
 import com.iustu.identification.entity.Library;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.base.PageRecyclerViewAdapter;
+import com.iustu.identification.ui.main.batch.BatchCompareFragment;
 import com.iustu.identification.ui.main.library.LibraryFragment;
 import com.iustu.identification.ui.main.library.addperson.AddPersonFragment;
 import com.iustu.identification.ui.main.library.librariesmanage.mvp.LibPresenter;
@@ -156,13 +156,11 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
 
     @Override
     public void onImportMany(View v, int index) {
-        ImageSelector.builder()
-                .useCamera(true)
-                .setSingle(false)
-                .setMaxSelectCount(0)
-                .setViewImage(true)
-                .start(this, MULITI_PICTURES);
-        libName = mLibraryList.get(index).libName;
+        BatchCompareFragment fragment = new BatchCompareFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("libName", mLibraryList.get(index).libName);
+        fragment.setArguments(bundle);
+        fragment.show(getActivity().getFragmentManager(), "show");
     }
 
     // 点击新增人员按钮时，直接跳转到对应的Fragment
@@ -288,14 +286,4 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
         }
     }
 
-    // 点击批量导入的时候的响应
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == MULITI_PICTURES && data != null) {
-            ArrayList<String> images = data.getStringArrayListExtra(ImageSelectorUtils.SELECT_RESULT);
-            Log.e("selectImages", "onActivityResult: " + images.toString());
-            presenter.importBatchPictures(images, libName);
-        }
-    }
 }

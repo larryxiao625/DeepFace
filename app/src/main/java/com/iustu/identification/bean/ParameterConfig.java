@@ -14,17 +14,14 @@ public class ParameterConfig {
     // "min_size 40\n pyramid_threshold 12\n factor 0.709\n thresholds 0.6 0.7 0.7\n"
     int min_size = 40;         // 为需要最小检测的人脸框大小，单位为像素，默认是40，小于min_rect太多的人脸将无法检测
     float factor = 0.709F;     // 为图像金字塔缩放的比率，用来检测出远大于min_rect大小的人脸，默认为0.709
-    float threshold1;
-    float threshold2;
-    float threshold3;
+    float threshold1 = 0.5f;
+    float threshold2 = 0.5f;
+    float threshold3 = 0.5f;
     int saveCount = 0;
     int savePosition;      // saveCount 选中的位置
     int displayCount = 10;
-<<<<<<< HEAD
     int diaplayPosition;    // displayCount 选中的位置
-=======
     int displayPosition;    // displayCount 选中的位置
->>>>>>> a3b2d3a9a5dab744f80f147b278f4359e2b71933
     int dpiWidth=1920;
     int dpiHeight=1080;
     int dpiCount=0;
@@ -57,6 +54,11 @@ public class ParameterConfig {
             return null;
         Gson gson = new Gson();
         return gson.fromJson(json, ParameterConfig.class);
+    }
+
+    // 生成人脸比对时setArgument需要的字符串
+    public String gengrateArguments() {
+        return String.format("min_size %d\\n pyramid_threshold 16\\n factor 0\\n thresholds %f %f %f\\n", this.min_size, this.threshold1, this.threshold2, this.threshold3);
     }
 
     // 将ParameterConfig对象转化为json字符串之后保存到SharePreference中

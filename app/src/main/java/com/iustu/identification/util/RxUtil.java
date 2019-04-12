@@ -235,10 +235,10 @@ public class RxUtil {
      * @param persionInfos 需要被导入的人员
      * @return Observable对象
      */
-    public static Observable<Integer> getImportBatchPersionObservable(ArrayList<PersionInfo> persionInfos) {
-        return Observable.create(new ObservableOnSubscribe<Integer>() {
+    public static Observable<Boolean> getImportBatchPersionObservable(ArrayList<PersionInfo> persionInfos) {
+        return Observable.create(new ObservableOnSubscribe<Boolean>() {
             @Override
-            public void subscribe(ObservableEmitter<Integer> e) {
+            public void subscribe(ObservableEmitter<Boolean> e) {
                 ArrayList<ContentValues> values = new ArrayList<>();
                 // 首先调用SDK生成feature
                 SDKUtil.sdkDoBatchPersion(persionInfos);
@@ -257,7 +257,17 @@ public class RxUtil {
                 database.beginTransaction();
                 try {
                     for (int i = 0; i < persionInfos.size(); i ++) {
-                        database.insert(RxUtil.DB_PERSIONINFO, null, values.get(i));
+                        long r = database.insertWithOnConflict(RxUtil.DB_PERSIONINFO, null, values.get(i), SQLiteDatabase.CONFLICT_IGNORE);
+                        // 说明插入失败,说明PersionInfo中已经含有该人员，那么直接将其照片添加到人脸库中
+                        if (r == -1) {
+                            PersionInfo persionInfo = persionInfos.get(i);
+                            Cursor cursor = database.query(false, RxUtil.DB_PERSIONINFO, RxUtil.PERSIONINFO_COLUMNS,"libName = ? and name = ?", new String[]{persionInfo.libName, persionInfo.name}, null, null, null, null);
+                            cursor.moveToNext();
+                            persionInfo.photoPath = cursor.getString(cursor.getColumnIndex("photoPath")) + ";" + persionInfo.photoPath;
+                            database.update(RxUtil.DB_PERSIONINFO, persionInfo.toContentValues(), "libName = ? and name = ?", new String[]{persionInfos.get(i).libName, persionInfos.get(i).name});
+                            e.onNext(false);
+                            continue;
+                        }
                         // 如果往PersionInfo中添加新数据，则需要修改Library的信息
                         Cursor cursor = database.query(false, RxUtil.DB_LIBRARY, RxUtil.LIBRARY_COLUMNS,"libName = '" + persionInfos.get(i).libName + "'", null, null, null, null, null);
                         cursor.moveToFirst();
@@ -265,10 +275,10 @@ public class RxUtil {
                         ContentValues values1 = new ContentValues();
                         values1.put("count", count + 1);
                         database.update(RxUtil.DB_LIBRARY, values1, "libName = '" + persionInfos.get(i).libName + "'", null);
-                        e.onNext(i);
+                        e.onNext(true);
                     }
                     database.setTransactionSuccessful();
-                } finally {
+                } finally{
                     database.endTransaction();
                 }
                 e.onComplete();
