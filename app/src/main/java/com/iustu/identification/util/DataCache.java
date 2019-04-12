@@ -29,7 +29,7 @@ public class DataCache {
     public static void saveCache() {
         parameterConfig.save();
         admin.save();
-        MSP.getInstance(MSP.SP_CHOSEN).edit().putStringSet(MSP.SP_CHOSEN, chosenLibConfig);
+        MSP.getInstance(MSP.SP_CHOSEN).edit().putStringSet(MSP.SP_CHOSEN, chosenLibConfig).apply();
     }
 
     public static ParameterConfig getParameterConfig() {

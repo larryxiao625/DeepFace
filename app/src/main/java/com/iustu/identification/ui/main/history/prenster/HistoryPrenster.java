@@ -245,6 +245,7 @@ public class HistoryPrenster implements IPrenster{
                 List<CompareRecord> data = new ArrayList<>();
                 while (cursor.moveToNext()) {
                     CompareRecord compareRecord = new CompareRecord();
+                    compareRecord.setName(cursor.getString(cursor.getColumnIndex("name")));
                     compareRecord.setImage_id(cursor.getString(cursor.getColumnIndex("image_id")));
                     compareRecord.setTime(cursor.getString(cursor.getColumnIndex("time")));
                     compareRecord.setRate(cursor.getFloat(cursor.getColumnIndex("rate")));
@@ -256,6 +257,9 @@ public class HistoryPrenster implements IPrenster{
                     compareRecord.setOther(cursor.getString(cursor.getColumnIndex("other")));
                     compareRecord.setPhotoPath(cursor.getString(cursor.getColumnIndex("photoPath")));
                     data.add(compareRecord);
+                    Log.d("History",cursor.getString(cursor.getColumnIndex("image_id")));
+                    Log.d("History",cursor.getString(cursor.getColumnIndex("libName")));
+                    Log.d("History",cursor.getString(cursor.getColumnIndex("name")));
                 }
                 compareHistoryIVew.bindData(data);
             }

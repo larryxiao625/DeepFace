@@ -1,5 +1,7 @@
 package com.iustu.identification.bean;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.iustu.identification.util.MSP;
 
@@ -10,18 +12,18 @@ import com.iustu.identification.util.MSP;
  */
 public class ParameterConfig {
     // "min_size 40\n pyramid_threshold 12\n factor 0.709\n thresholds 0.6 0.7 0.7\n"
-    static int min_size = 40;         // 为需要最小检测的人脸框大小，单位为像素，默认是40，小于min_rect太多的人脸将无法检测
-    static float factor = 0.709F;     // 为图像金字塔缩放的比率，用来检测出远大于min_rect大小的人脸，默认为0.709
-    static float threshold1;
-    static float threshold2;
-    static float threshold3;
-    static int saveCount = 0;
-    static int savePosition;      // saveCount 选中的位置
-    static int displayCount = 10;
-    static int diaplayPosition;    // displayCount 选中的位置
-    static int dpiWidth=1920;
-    static int dpiHeight=1080;
-    static int dpiCount=0;
+    int min_size = 40;         // 为需要最小检测的人脸框大小，单位为像素，默认是40，小于min_rect太多的人脸将无法检测
+    float factor = 0.709F;     // 为图像金字塔缩放的比率，用来检测出远大于min_rect大小的人脸，默认为0.709
+    float threshold1;
+    float threshold2;
+    float threshold3;
+    int saveCount = 0;
+    int savePosition;      // saveCount 选中的位置
+    int displayCount = 10;
+    int displayPosition;    // displayCount 选中的位置
+    int dpiWidth=1920;
+    int dpiHeight=1080;
+    int dpiCount=0;
 
     public ParameterConfig(){}
 
@@ -117,10 +119,10 @@ public class ParameterConfig {
     }
 
     public void setDiaplayPosition(int position) {
-        this.diaplayPosition = position;
+        this.displayPosition = position;
     }
     public int getDiaplayPosition() {
-        return diaplayPosition;
+        return displayPosition;
     }
 
     public void setSaveCount(int saveCount) {

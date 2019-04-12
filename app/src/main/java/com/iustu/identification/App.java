@@ -49,7 +49,7 @@ public class App extends LitePalApplication{
 
     // 应用保活
     public void keepAlive(){
-        ForegroundNotification foregroundNotification=new ForegroundNotification("DeepFace","应用1正在实时检测",R.mipmap.ic_launcher);
+        ForegroundNotification foregroundNotification=new ForegroundNotification("DeepFace","DeepFace正在实时检测",R.mipmap.ic_launcher);
         KeepLive.startWork(this, KeepLive.RunMode.ENERGY, foregroundNotification, new KeepLiveService() {
             @Override
             public void onWorking() {
