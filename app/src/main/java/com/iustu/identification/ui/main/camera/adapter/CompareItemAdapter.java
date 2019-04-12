@@ -2,6 +2,8 @@ package com.iustu.identification.ui.main.camera.adapter;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.iustu.identification.R;
 import com.iustu.identification.entity.CompareRecord;
 import com.iustu.identification.entity.PersonInfo;
@@ -49,72 +53,19 @@ public class CompareItemAdapter extends RecyclerView.Adapter<CompareItemAdapter.
     public void onBindViewHolder(Holder holder, int position) {
         CompareRecord item = searchCompareItemList.get(position);
         holder.setCompareRecord(item);
-        // TODO: 2019/4/9 设置图片加载方法
-//        if(item.getWidth() == 0) {
-//            Glide.with(holder.capturePhoto)
-//                    .asBitmap()
-//                    .load(Uri.fromFile(new File(item.getPhotoPath())))
-//                    .into(new SimpleTarget<Bitmap>() {
-//                        @Override
-//                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
-//                            if(resource.isRecycled()){
-//                                return;
-//                            }
-//                            item.setWidth(resource.getWidth());
-//                            item.setHeight(resource.getHeight());
-//                            Glide.with(holder.capturePhoto)
-//                                    .load(Uri.fromFile(new File(item.getPhotoPath())))
-//                                    .apply(new RequestOptions().transforms(new ImageUtils.CropFace(item.getWidth(), item.getHeight(), item.getRect())).placeholder(R.drawable.photo_holder).error(R.drawable.photo_holder))
-//                                    .into(holder.capturePhoto);
-//                        }
-//                    });
-//        }else {
-//            Glide.with(holder.capturePhoto)
-//                    .load(Uri.fromFile(new File(item.getPhotoPath())))
-//                    .apply(new RequestOptions().transforms(new ImageUtils.CropFace(item.getWidth(), item.getHeight(), item.getRect())).placeholder(R.drawable.photo_holder).error(R.drawable.photo_holder))
-//                    .into(holder.capturePhoto);
-//        }
-
-//        holder.compareScaleView.setScale((int) (item.getScore() * 100));
-//        if(!item.isInitInfo()){
-//            holder.setPersonInfo(null);
-//            loadInfo(position);
-//        }else {
-//            PersonInfo personInfo = item.getPersonInfo();
-//            holder.setPersonInfo(item.getPersonInfo());
-//            if(personInfo.isInitUrls()) {
-//                Glide.with(holder.matchPhoto)
-//                        .applyDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.photo_holder))
-//                        .load(personInfo.getUrlAt(0))
-//                        .into(holder.matchPhoto);
-//            }else {
-//                loadPicUrl(position);
-//            }
-
-//            holder.setPersonInfo(item.getPersonInfo());
-//        }
-//
-//        Glide.with(holder.matchPhoto)
-//                .applyDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.photo_holder).error(R.drawable.photo_holder))
-//                .load(item.getPhotoUrl())
-//                .into(holder.matchPhoto);
-
-
         if(item.isExtend()){
             holder.moreInfoLayout.setVisibility(View.VISIBLE);
-            holder.foldImage.setImageResource(R.drawable.xiangs1);
         }else {
             holder.moreInfoLayout.setVisibility(View.GONE);
-            holder.foldImage.setImageResource(R.drawable.xiangs2);
         }
         holder.foldButton.setOnClickListener(v -> {
             if(item.isExtend()){
                 item.setExtend(false);
-                ExpandableViewHoldersUtil.rotateExpandIcon(holder.foldImage,0,180);
+                ExpandableViewHoldersUtil.rotateExpandIcon(holder.foldImage,180,0);
                 ExpandableViewHoldersUtil.collapseHolder(holder, 300,0,true);
             }else {
                 item.setExtend(true);
-                ExpandableViewHoldersUtil.rotateExpandIcon(holder.foldImage,180,0);
+                ExpandableViewHoldersUtil.rotateExpandIcon(holder.foldImage,0,180);
                 ExpandableViewHoldersUtil.expandHolder(holder,0,300,true);
             }
         });
@@ -170,7 +121,7 @@ public class CompareItemAdapter extends RecyclerView.Adapter<CompareItemAdapter.
 
             }else {
                 // TODO: 2019/4/9 根据人脸库获取中文名方法
-                Glide.with(itemView).load(new File(info.getUploadPhoto())).into(capturePhoto);
+                Glide.with(itemView).asBitmap().load(new File(info.getUploadPhoto())).into(capturePhoto);
                 String[] photos = info.getPhotoPath().split(";");
                 String libPath = "/sdcard/DeepFace/" + info.getLibName()+ "/" + photos[0];
                 Glide.with(itemView).load(new File(libPath)).into(matchPhoto);

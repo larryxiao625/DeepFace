@@ -155,7 +155,7 @@ public class CapturePicService extends Service {
         ArrayList<SearchResultItem> searchResultItems=new ArrayList<>();
         SearchResultItem searchResultItem = null;
         for(SearchHandler searchHandler:searchHandlers){
-            searchHandler.searchFind(feat,1,searchResultItems, (float) 0.80);
+            searchHandler.searchFind(feat,1,searchResultItems, DataCache.getParameterConfig().getFactor());
         }
         if(!searchResultItems.isEmpty()) {
             for (SearchResultItem temp : searchResultItems) {
@@ -178,16 +178,9 @@ public class CapturePicService extends Service {
 //        BitmapFactory.Options options=new BitmapFactory.Options();
 //        options.inSampleSize=2;
         for(int i=0;i<num;i++) {
-            Log.d("Camera","detectResult:"+num);
             String cutPathName=cutPath+TextUtil.dateMessage(calendar.getTime())+"_"+i+".jpg";
             int height=(detectResult.getRects().get(i).bottom> ParameterConfig.getFromSP().getDpiHeight()? ParameterConfig.getFromSP().getDpiHeight():detectResult.getRects().get(i).bottom)-(detectResult.getRects().get(i).top<0? 0:detectResult.getRects().get(i).top);
             int width=(detectResult.getRects().get(i).right> ParameterConfig.getFromSP().getDpiWidth()? ParameterConfig.getFromSP().getDpiWidth():detectResult.getRects().get(i).right)-(detectResult.getRects().get(i).left<0? 0:detectResult.getRects().get(i).left);
-            Log.d("CameraRight", String.valueOf(detectResult.getRects().get(i).right));
-            Log.d("CameraTop", String.valueOf(detectResult.getRects().get(i).top));
-            Log.d("CameraLeft", String.valueOf(detectResult.getRects().get(i).left));
-            Log.d("CameraBottom", String.valueOf(detectResult.getRects().get(i).bottom));
-            Log.d("CameraBitMapHeight", String.valueOf(BitmapFactory.decodeFile(picPath).getHeight()));
-            Log.d("CameraBitMapWidth", String.valueOf(BitmapFactory.decodeFile(picPath).getWidth()));
             Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(picPath),detectResult.getRects().get(i).left<0? 0:detectResult.getRects().get(i).left,detectResult.getRects().get(i).top<0? 0:detectResult.getRects().get(i).top,width,height);
             SqliteUtil.insertFaceCollectionItem(cutPathName,TextUtil.getDateString2(calendar.getTime()));
             try {

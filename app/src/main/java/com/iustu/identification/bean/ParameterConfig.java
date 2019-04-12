@@ -1,5 +1,7 @@
 package com.iustu.identification.bean;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.iustu.identification.util.MSP;
 
@@ -18,7 +20,11 @@ public class ParameterConfig {
     int saveCount = 0;
     int savePosition;      // saveCount 选中的位置
     int displayCount = 10;
+<<<<<<< HEAD
     int diaplayPosition;    // displayCount 选中的位置
+=======
+    int displayPosition;    // displayCount 选中的位置
+>>>>>>> a3b2d3a9a5dab744f80f147b278f4359e2b71933
     int dpiWidth=1920;
     int dpiHeight=1080;
     int dpiCount=0;
@@ -117,10 +123,10 @@ public class ParameterConfig {
     }
 
     public void setDiaplayPosition(int position) {
-        this.diaplayPosition = position;
+        this.displayPosition = position;
     }
     public int getDiaplayPosition() {
-        return diaplayPosition;
+        return displayPosition;
     }
 
     public void setSaveCount(int saveCount) {

@@ -144,7 +144,7 @@ public class MainActivity extends BaseActivity implements BottomBar.BottomBarSel
         if(!tf.isAdded()){
             transaction.add(R.id.fragment_fm, tf, TAGS[to]);
         }
-        if(fragmentNow == 0) {
+        if(fragmentNow == 0 || fragmentNow==3) {
             transaction.remove(ff);
         }
         transaction.show(tf).commit();

@@ -53,15 +53,6 @@ public class CompareHistoryItemAdapter extends PageRecyclerViewAdapter<CompareHi
         holder.setCompareRecord(item);
     }
 
-    private void addDisposable(Disposable d){
-        if(compositeDisposable == null){
-            compositeDisposable = new CompositeDisposable();
-        }
-        if(d != null){
-            compositeDisposable.add(d);
-        }
-    }
-
     public void dispose(){
         if(compositeDisposable != null){
             compositeDisposable.clear();
@@ -107,13 +98,13 @@ public class CompareHistoryItemAdapter extends PageRecyclerViewAdapter<CompareHi
             }else {
                 name.setText(TextUtil.format("姓名:%s", compareRecord.getName()));
                 idCard.setText(TextUtil.format("身份证号:%s", compareRecord.getIdentity()));
-                nationality.setText(TextUtil.format("籍贯:", compareRecord.getName()));
-                libName.setText(TextUtil.format("目标库:%s", LibManager.getLibName(String.valueOf(compareRecord.getLibName()))));
+                nationality.setText(TextUtil.format("籍贯:%s", compareRecord.getName()));
+                libName.setText(TextUtil.format("目标库:%s", String.valueOf(compareRecord.getLibName())));
                 compareTime.setText(compareRecord.getTime());
                 scaleView.setScale((int) (compareRecord.getRate() * 100));
                 Glide.with(itemView).load(new File(compareRecord.getUploadPhoto())).into(targetPhoto);
                 String[] photos = compareRecord.getPhotoPath().split(";");
-                String libPath = "/sdcard/DeepFace/" + compareRecord.getLibName() + photos[0];
+                String libPath = "/sdcard/DeepFace/" + compareRecord.getLibName()+"/" + photos[0];
                 Glide.with(itemView).load(new File(libPath)).into(libPhoto);
             }
         }
