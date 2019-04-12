@@ -20,7 +20,6 @@ public class ParameterConfig {
     int saveCount = 0;
     int savePosition;      // saveCount 选中的位置
     int displayCount = 10;
-    int diaplayPosition;    // displayCount 选中的位置
     int displayPosition;    // displayCount 选中的位置
     int dpiWidth=1920;
     int dpiHeight=1080;

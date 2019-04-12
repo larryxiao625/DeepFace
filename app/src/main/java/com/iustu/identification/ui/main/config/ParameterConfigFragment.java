@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bigkoo.pickerview.OptionsPickerView;
 import com.iustu.identification.R;
@@ -126,13 +127,23 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
     @Override
     public void onPause() {
         if(config != null) {
-            config.setMin_size(Integer.valueOf(minFace.getText().toString()));
-            config.setThreshold1(Float.valueOf(checkFactor1.getText().toString()));
-            config.setThreshold2(Float.valueOf(checkFactor2.getText().toString()));
-            config.setThreshold3(Float.valueOf(checkFactor3.getText().toString()));
+            if(minFace.getText().toString().isEmpty()) {
+                config.setMin_size(40);
+            }else if(!(Float.valueOf(checkFactor1.getText().toString())>=0)&&!(Float.valueOf(checkFactor1.getText().toString())<=1)){
+                config.setThreshold3((float) 0.5);
+            }else if(!(Float.valueOf(checkFactor2.getText().toString())>=0)&&!(Float.valueOf(checkFactor2.getText().toString())<=1)){
+                config.setThreshold2((float) 0.5);
+            }else if(!(Float.valueOf(checkFactor3.getText().toString())>=0)&&!(Float.valueOf(checkFactor3.getText().toString())<=1)){
+                config.setThreshold1((float) 0.5);
+            } else {
+                config.setMin_size(Integer.valueOf(minFace.getText().toString()));
+                config.setThreshold1(Float.valueOf(checkFactor1.getText().toString()));
+                config.setThreshold2(Float.valueOf(checkFactor2.getText().toString()));
+                config.setThreshold3(Float.valueOf(checkFactor3.getText().toString()));
+            }
             config.save();
+            super.onPause();
         }
-        super.onPause();
     }
 
     @Override
