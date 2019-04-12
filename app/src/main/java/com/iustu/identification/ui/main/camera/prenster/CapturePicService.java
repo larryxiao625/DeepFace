@@ -155,7 +155,7 @@ public class CapturePicService extends Service {
         ArrayList<SearchResultItem> searchResultItems=new ArrayList<>();
         SearchResultItem searchResultItem = null;
         for(SearchHandler searchHandler:searchHandlers){
-            searchHandler.searchFind(feat,1,searchResultItems, (float) 0.80);
+            searchHandler.searchFind(feat,1,searchResultItems, DataCache.getParameterConfig().getFactor());
         }
         if(!searchResultItems.isEmpty()) {
             for (SearchResultItem temp : searchResultItems) {
