@@ -6,6 +6,8 @@ import android.database.Cursor;
 import com.iustu.identification.entity.PersionInfo;
 import com.iustu.identification.entity.PersonInfo;
 import com.iustu.identification.util.RxUtil;
+import com.iustu.identification.util.SDKUtil;
+import com.iustu.identification.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,6 +94,22 @@ public class PersionPresenter {
      */
     public void onAddPhoto(PersionInfo persionInfo, String path, int position) {
         mView.showWaitDialog("正在添加图片...");
+        int issame = SDKUtil.checkIsSamePersion(persionInfo, path);
+        if (issame == SDKUtil.NOFACE) {
+            mView.dissmissDialog();
+            ToastUtil.show("该图片不含人脸，添加失败");
+            return;
+        }
+        if (issame == SDKUtil.MORE_ONE_FACE) {
+            mView.dissmissDialog();
+            ToastUtil.show("该图片含有多张人脸，添加失败");
+            return;
+        }
+        if (issame == SDKUtil.NOTTHESAME) {
+            mView.dissmissDialog();
+            ToastUtil.show("该图片与目标人员相似度太低，添加失败");
+            return;
+        }
         ContentValues values = persionInfo.toContentValues();
         String fileName = persionInfo.name + System.currentTimeMillis() + ".jpg";
         values.put("photoPath", persionInfo.photoPath + ";" + fileName);
@@ -111,6 +129,7 @@ public class PersionPresenter {
             public void onError(Throwable e) {
                 e.printStackTrace();
                 mView.onFailed(e.getMessage());
+                mView.dissmissDialog();
             }
 
             @Override
@@ -161,6 +180,7 @@ public class PersionPresenter {
             public void onError(Throwable e) {
                 e.printStackTrace();
                 mView.onFailed(e.getMessage());
+                mView.dissmissDialog();
             }
 
             @Override
@@ -194,6 +214,7 @@ public class PersionPresenter {
             public void onError(Throwable e) {
                 e.printStackTrace();
                 mView.onFailed(e.getMessage());
+                mView.dissmissDialog();
             }
 
             @Override
@@ -228,6 +249,7 @@ public class PersionPresenter {
             public void onError(Throwable e) {
                 e.printStackTrace();
                 mView.onFailed(e.getMessage());
+                mView.dissmissDialog();
             }
 
             @Override

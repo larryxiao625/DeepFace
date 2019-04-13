@@ -244,14 +244,6 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
         }
     }
 
-    public void addPhoto(File file){
-        if(addPhotoIndex < 0 || addPhotoIndex > mPersonList.size()){
-            ToastUtil.show("无法找到添加对象!");
-            return;
-        }
-
-    }
-
     @Override
     public void onDestroyView() {
         if(mAdapter != null){

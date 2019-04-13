@@ -192,14 +192,14 @@ public class RxUtil {
      * @param persionInfo 添加的人员的信息
      * @return Observable对象
      */
-    public static Observable getAddPersionObservable(PersionInfo persionInfo) {
-        return Observable.create(new ObservableOnSubscribe<Object>() {
+    public static Observable<Integer> getAddPersionObservable(PersionInfo persionInfo) {
+        return Observable.create(new ObservableOnSubscribe<Integer>() {
             @Override
-            public void subscribe(ObservableEmitter<Object> e) {
+            public void subscribe(ObservableEmitter<Integer> e) {
                 // 首先调用SDK生成feature
                 String image_id = System.currentTimeMillis() + "";
                 persionInfo.image_id = image_id;
-                SDKUtil.sdkDoPerson(persionInfo);
+                int result = SDKUtil.sdkDoPerson(persionInfo);
 
                 // 其次将选中的图片复制到人脸库的路径中
                 String fileName = persionInfo.name + System.currentTimeMillis() + ".jpg";
@@ -212,19 +212,31 @@ public class RxUtil {
                 SQLiteDatabase database = SqliteUtil.getDatabase();
                 database.beginTransaction();
                 try {
-                    database.insert(RxUtil.DB_PERSIONINFO, null, values);
-                    // 如果往PersionInfo中添加新数据，则需要修改Library的信息
-                    Cursor cursor = database.query(false, RxUtil.DB_LIBRARY, RxUtil.LIBRARY_COLUMNS,"libName = '" + persionInfo.libName + "'", null, null, null, null, null);
-                    cursor.moveToFirst();
-                    int count = cursor.getInt(cursor.getColumnIndex("count"));
-                    ContentValues values1 = new ContentValues();
-                    values1.put("count", count + 1);
-                    database.update(RxUtil.DB_LIBRARY, values1, "libName = '" + persionInfo.libName + "'", null);
+
+                    if (result == SDKUtil.HASADDED) {
+                        // 说明该人脸库中已经含有该人脸特征，只需要更新其photoPath即可
+                        Cursor cursor = database.query(RxUtil.DB_PERSIONINFO, RxUtil.PERSIONINFO_COLUMNS, "libName = ? and name = ?", new String[]{persionInfo.libName, persionInfo.name}, null, null, null, null);
+                        if (cursor.getCount() != 0) {
+                            // 说明该人脸对应的姓名不同
+                            cursor.moveToNext();
+                            persionInfo.photoPath = cursor.getString(cursor.getColumnIndex("photoPath")) + ";" + fileName;
+                            database.update(RxUtil.DB_PERSIONINFO, persionInfo.toContentValues(), "libName = ? and name = ?", new String[]{persionInfo.libName, persionInfo.name});
+                        }
+                    } else {
+                        database.insert(RxUtil.DB_PERSIONINFO, null, values);
+                        // 如果往PersionInfo中添加新数据，则需要修改Library的信息
+                        Cursor cursor = database.query(false, RxUtil.DB_LIBRARY, RxUtil.LIBRARY_COLUMNS,"libName = '" + persionInfo.libName + "'", null, null, null, null, null);
+                        cursor.moveToFirst();
+                        int count = cursor.getInt(cursor.getColumnIndex("count"));
+                        ContentValues values1 = new ContentValues();
+                        values1.put("count", count + 1);
+                        database.update(RxUtil.DB_LIBRARY, values1, "libName = '" + persionInfo.libName + "'", null);
+                    }
+                    e.onNext(result);
                     database.setTransactionSuccessful();
                 } finally {
                     database.endTransaction();
                 }
-
                 e.onComplete();
             }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
@@ -383,7 +395,7 @@ public class RxUtil {
                     int count = cursor.getInt(cursor.getColumnIndex("count"));
                     ContentValues values1 = new ContentValues();
                     values1.put("count", count - 1);
-                    database.update(RxUtil.DB_LIBRARY, values1, "libName = " + persionInfo.libName, null);
+                    database.update(RxUtil.DB_LIBRARY, values1, "libName = '" + persionInfo.libName + "'", null);
                     database.setTransactionSuccessful();
                 } finally {
                     database.endTransaction();

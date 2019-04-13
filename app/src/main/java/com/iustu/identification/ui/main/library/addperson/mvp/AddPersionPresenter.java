@@ -47,8 +47,8 @@ public class AddPersionPresenter {
             view.dissmissDialog();
             return;
         }
-        Observable observable = RxUtil.getAddPersionObservable(persionInfo);
-        observable.subscribe(new Observer<Object>() {
+        Observable<Integer> observable = RxUtil.getAddPersionObservable(persionInfo);
+        observable.subscribe(new Observer<Integer>() {
 
             @Override
             public void onSubscribe(Disposable d) {
@@ -56,8 +56,10 @@ public class AddPersionPresenter {
             }
 
             @Override
-            public void onNext(Object o) {
-
+            public void onNext(Integer o) {
+                if (o == SDKUtil.HASADDED) {
+                    ToastUtil.show("检测到该人脸库其他人与此人相似度极高，请检查是否同一人");
+                }
             }
 
             @Override
@@ -73,7 +75,7 @@ public class AddPersionPresenter {
                 ((AddPersonFragment)view).clear();
                 disposable.dispose();
                 view.dissmissDialog();
-                view.onAddSuccess();
+                //view.onAddSuccess();
             }
         });
     }

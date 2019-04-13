@@ -30,7 +30,7 @@ public class WaitProgressDialog extends BaseDialogFragment{
 
     @Override
     protected void initView(View view) {
-//        getDialog().setCanceledOnTouchOutside(false);
+        getDialog().setCanceledOnTouchOutside(false);
         button = view.findViewById(R.id.dialog_single_tv);
         title = view.findViewById(R.id.dialog_title_tv);
         Bundle bundle = getArguments();
@@ -41,7 +41,7 @@ public class WaitProgressDialog extends BaseDialogFragment{
         button.setText(buttonText);
         title.setText(titleText);
         button.setOnClickListener(v->{
-            dismiss();
+            //dismiss();
             if(onClickListener != null){
                 onClickListener.onClick(v);
             }

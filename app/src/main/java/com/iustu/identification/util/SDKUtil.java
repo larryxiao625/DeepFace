@@ -30,6 +30,11 @@ import java.util.ArrayList;
  * 用来操作sdk的工具类
  */
 public class SDKUtil {
+    public static final int MORE_ONE_FACE = 224;        // 添加照片的时候判断含有多个人脸
+    public static final int NOFACE = 223;            // 添加照片的时候判断没有人脸
+    public static final int ISTHESAME = 222;          // 添加照片的时候判断为同一个人，允许添加
+    public static final int NOTTHESAME = 225;         // 添加照片的时候判断为不同人，不允许添加
+    public static final int HASADDED = 221;        // 在添加人脸的时候表示人脸库中已经含有该人脸
     private static Activity context;
     private static DetectHandler detectHandler;            // 人脸检测句柄
     private static VerifyHandler verifyHandler;            // 特征提取句柄
@@ -110,7 +115,7 @@ public class SDKUtil {
      * 获取图片的Feature的方法,在往人脸库添加新成员的时候调用{@link RxUtil}
      * @param persionInfo 需要添加的人
      */
-    public static void sdkDoPerson(PersionInfo persionInfo) {
+    public static int sdkDoPerson(PersionInfo persionInfo) {
         DetectResult detectResult=new DetectResult();
         SDKUtil.getDetectHandler().faceDetector(persionInfo.photoPath,detectResult);
         FeatureResult featureResult=new FeatureResult();
@@ -121,7 +126,22 @@ public class SDKUtil {
         searchDBItem.feat = floats;
         searchDBItem.image_id = persionInfo.image_id;
         SearchHandler searchHandler = (SearchHandler)HandlerFactory.createSearcher("/sdcard/DeepFace/" + persionInfo.libName, 0, 1);
-        searchHandler.searchAdd(searchDBItem);
+        ArrayList<SearchResultItem> searchResult = new ArrayList<>();
+        // 首先检测人脸库中是否已经含有该人脸特征
+        int searchRes = searchHandler.searchFind(floats, 1, searchResult, 0.8f);
+        Log.d("sdk", "searchRes " + searchRes);
+        Log.d("sdk", "serachResultLength" + searchResult.size());
+        Log.d("sdk", "serachResultScore" + searchResult.get(0).score);
+        // 说明该人脸库中已经含有了该人脸
+        if (searchResult.size() > 0) {
+            if (!searchHandler.isDestroy())
+                searchHandler.destroy();
+            return HASADDED;
+        }
+        int result = searchHandler.searchAdd(searchDBItem);
+        if (!searchHandler.isDestroy())
+            searchHandler.destroy();
+        return result;
     }
 
     /**
@@ -144,6 +164,31 @@ public class SDKUtil {
         }
         SearchHandler searchHandler = (SearchHandler)HandlerFactory.createSearcher("/sdcard/DeepFace/" + persionInfos.get(0).libName, 0, 1);
         searchHandler.searchBuildLib(searchDBItems);
+    }
+
+    /**
+     * 在添加照片的时候判断添加的照片是否与目标人员是否为同一人
+     */
+    public static int checkIsSamePersion(PersionInfo persionInfo, String photoPath) {
+        String[] photos = persionInfo.photoPath.split(";");
+        String photo = "/sdcard/DeepFace/" + persionInfo.libName + "/" + photos[0];
+        DetectResult detectResult2=new DetectResult();  // 新照片的
+        DetectResult detectResult1 = new DetectResult();  // 老照片的
+        SDKUtil.getDetectHandler().faceDetector(photoPath,detectResult2);
+        SDKUtil.getDetectHandler().faceDetector(photo,detectResult1);
+        if (detectResult2.points.size() == 0)
+            return NOFACE;
+        if (detectResult2.points.size() > 1)
+            return MORE_ONE_FACE;
+        FeatureResult featureResult2 = new FeatureResult();
+        FeatureResult featureResult1 = new FeatureResult();
+        verifyHandler.extractFeature(detectResult2, featureResult2);
+        verifyHandler.extractFeature(detectResult1, featureResult1);
+        float[] floats2 = featureResult2.getFeat(0).get(0);
+        float[] floats1 = featureResult1.getFeat(0).get(0);
+        float score = verifyHandler.verifyFeature(floats1, floats2);
+        Log.d("sdk", "checkIsSamePersion: " + score);
+        return score > 0.1 ? NOTTHESAME : ISTHESAME;
     }
 
 
