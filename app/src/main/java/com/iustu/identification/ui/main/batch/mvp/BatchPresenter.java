@@ -30,8 +30,10 @@ public class BatchPresenter {
         final int[] errCount = {0};
         final int[] successCount = {0};
         ArrayList<PersionInfo> persionInfos = StringUtil.clipPictures(pictures);
-        if (persionInfos == null)
+        if (persionInfos == null) {
+            view.changeSubmitable();
             return;
+        }
         for(PersionInfo persionInfo : persionInfos) {
             persionInfo.libName = libName;
             persionInfo.image_id = System.currentTimeMillis() + "";
@@ -56,11 +58,13 @@ public class BatchPresenter {
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
+                view.changeSubmitable();
             }
 
             @Override
             public void onComplete() {
                 disposable.dispose();
+                view.changeSubmitable();
             }
         });
     }

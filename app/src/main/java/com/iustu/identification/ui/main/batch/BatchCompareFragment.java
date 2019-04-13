@@ -138,6 +138,7 @@ public class BatchCompareFragment extends DialogFragment implements BatchView {
     }
 
     public void startCompare(){
+        getDialog().setCanceledOnTouchOutside(false);
         if(isInProgress){
             ToastUtil.show("请等待当前任务完成");
             return;
@@ -196,5 +197,6 @@ public class BatchCompareFragment extends DialogFragment implements BatchView {
     @Override
     public void changeSubmitable() {
         isInProgress = false;
+        getDialog().setCanceledOnTouchOutside(true);
     }
 }

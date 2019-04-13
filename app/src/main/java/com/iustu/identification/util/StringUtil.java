@@ -27,7 +27,7 @@ public class StringUtil {
             String info = s[s.length - 1];    // 获取图片中包含的信息
             s = info.split("_");
             if (s.length != 4) {
-                ToastUtil.show("请按照 姓名_证件号码_性别_备注 的格式命名图片");
+                ToastUtil.show("检测到非法命名格式，请按照 姓名_证件号码_性别_备注 的格式命名图片");
                 return null;
             }
             persionInfo.name = s[0];

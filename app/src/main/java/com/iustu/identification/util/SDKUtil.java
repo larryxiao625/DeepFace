@@ -46,7 +46,7 @@ public class SDKUtil {
     public static void init() {
         // 初始化人脸检测句柄
         detectHandler = (DetectHandler) HandlerFactory.createDetector("/sdcard/detect-Framework3-cpu-xxxx.model");
-        detectHandler.setArgument("min_size 100\n pyramid_threshold 12\n factor 0.709\n thresholds 0.6 0.7 0.7\n");
+        //detectHandler.setArgument("min_size 100\n pyramid_threshold 12\n factor 0.709\n thresholds 0.6 0.7 0.7\n");
         detectHandler.initial();
 
         //初始化特征提取句柄
@@ -95,6 +95,7 @@ public class SDKUtil {
     }
 
     public static DetectHandler getDetectHandler() {
+        detectHandler.setArgument(DataCache.getParameterConfig().gengrateArguments());
         return detectHandler;
     }
 
@@ -128,7 +129,7 @@ public class SDKUtil {
         SearchHandler searchHandler = (SearchHandler)HandlerFactory.createSearcher("/sdcard/DeepFace/" + persionInfo.libName, 0, 1);
         ArrayList<SearchResultItem> searchResult = new ArrayList<>();
         // 首先检测人脸库中是否已经含有该人脸特征
-        int searchRes = searchHandler.searchFind(floats, 1, searchResult, 0.8f);
+        int searchRes = searchHandler.searchFind(floats, 1, searchResult, DataCache.getParameterConfig().getFilterScore());
         Log.d("sdk", "searchRes " + searchRes);
         Log.d("sdk", "serachResultLength" + searchResult.size());
         // 说明该人脸库中已经含有了该人脸

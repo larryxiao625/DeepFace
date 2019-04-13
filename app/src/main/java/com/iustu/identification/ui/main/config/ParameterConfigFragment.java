@@ -13,6 +13,7 @@ import com.iustu.identification.bean.ParameterConfig;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.widget.seekbar.BubbleSeekBar;
 import com.iustu.identification.util.DataCache;
+import com.iustu.identification.util.MyTextWatcher;
 import com.iustu.identification.util.PickerViewFactor;
 
 import java.util.ArrayList;
@@ -114,6 +115,9 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
         checkFactor1.setText(config.getThreshold1() + "");
         checkFactor2.setText(config.getThreshold2() + "");
         checkFactor3.setText(config.getThreshold3() + "");
+        checkFactor1.addTextChangedListener(new MyTextWatcher());
+        checkFactor2.addTextChangedListener(new MyTextWatcher());
+        checkFactor3.addTextChangedListener(new MyTextWatcher());
         displayCountTv.setText(config.getDisplayCount() + "");
         saveCountTv.setText(config.getSaveCount() + "");
         dpiSetTv.setText(dpiStringList.get(config.getDpiCount()) + "");
@@ -157,7 +161,7 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
     @Override
     public void onProgressChange(View view, int progress) {
         if(view.getId() == R.id.face_bsb){
-            config.setFactor(progress/1000f);
+            config.setFilterScore(progress/1000f);
         }
     }
 
@@ -213,6 +217,12 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
         }
 
         dpiPicker.show();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        saveConfig();
     }
 
     /**
