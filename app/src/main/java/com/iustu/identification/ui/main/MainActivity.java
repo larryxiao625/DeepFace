@@ -158,12 +158,13 @@ public class MainActivity extends BaseActivity implements BottomBar.BottomBarSel
     @Override
     protected void onPause() {
         super.onPause();
-        DataCache.saveCache();
+
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        DataCache.saveCache();
         SqliteUtil.updataLibrariedInUsed();
     }
 

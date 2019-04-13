@@ -17,4 +17,5 @@ public interface IVew {
     void showArgumentsError(SingleButtonDialog singleButtonDialog);
     void bindData(List data);
     void showSuccess();
+    void onSuccess(int position);
 }

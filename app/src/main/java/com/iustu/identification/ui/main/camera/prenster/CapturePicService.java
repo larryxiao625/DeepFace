@@ -63,6 +63,7 @@ public class CapturePicService extends Service {
         super.onCreate();
         mBind=new CaptureBind();
         HashSet<String> libPat= DataCache.getChosenLibConfig();
+        Log.d("test", "onCreate: " + libPat.toString());
         for(String libPath:libPat){
             SearchHandler searchHandler= (SearchHandler) HandlerFactory.createSearcher(rootPath+"/"+libPath,0,1);
             searchHandlers.add(searchHandler);

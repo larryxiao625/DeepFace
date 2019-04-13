@@ -31,7 +31,7 @@ import butterknife.OnClick;
  * Created by Liu Yuchuan on 2017/11/22.
  */
 
-public class CompareHistoryFragment extends BaseFragment{
+public class CompareHistoryFragment extends BaseFragment implements CompareHistoryItemAdapter.DeleteListener {
 
     @BindView(R.id.compare_history_recycler_view)
     RecyclerView recyclerView;
@@ -68,14 +68,10 @@ public class CompareHistoryFragment extends BaseFragment{
         historyPrenster.attchCompareHistoryView(iVew);
         historyPrenster.initCalender(1);
         mAdapter = new CompareHistoryItemAdapter(compareItemList);
-        recyclerView.setLayoutManager(new GridLayoutManager(mActivity, 3, LinearLayoutManager.HORIZONTAL, false){
-            @Override
-            public boolean canScrollHorizontally() {
-                return false;
-            }
-        });
+        recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         recyclerView.setAdapter(mAdapter);
         pageSetHelper = new PageSetHelper(recyclerView, pageTv);
+        mAdapter.setListener(this::onDelete);
     }
 
     @Override
@@ -206,5 +202,16 @@ public class CompareHistoryFragment extends BaseFragment{
                 baseDialogFragments.remove(i);
             }
         }
+
+        @Override
+        public void onSuccess(int position) {
+            compareItemList.remove(position);
+            mAdapter.notifyDataChange();
+        }
     };
+
+    @Override
+    public void onDelete(CompareRecord compareRecord, int position) {
+        historyPrenster.deleteCompareItem(compareRecord, position);
+    }
 }

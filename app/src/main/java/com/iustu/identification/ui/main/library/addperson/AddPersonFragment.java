@@ -22,6 +22,7 @@ import com.iustu.identification.ui.widget.dialog.SingleButtonDialog;
 import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
 import com.iustu.identification.util.ExceptionUtil;
 import com.iustu.identification.util.FileCallBack;
+import com.iustu.identification.util.IdentityUtil;
 import com.iustu.identification.util.ImageUtils;
 import com.iustu.identification.util.TextUtil;
 import com.iustu.identification.util.ToastUtil;
@@ -109,12 +110,25 @@ public class AddPersonFragment extends BaseFragment implements AddPersionView {
         SingleButtonDialog.Builder builder = new SingleButtonDialog.Builder()
                 .button("确定", null)
                 .title("提示");
+        String birthday = "未填写";
         String name = nameEdit.getText().toString().trim();
         if(name.equals("")){
             builder.content("请填写姓名")
                     .show(mActivity.getFragmentManager());
             return;
         }
+        String idCardNumber = idCardEdit.getText().toString().trim();
+        if (!idCardNumber.equals("") && idCardNumber != null) {
+            if (!IdentityUtil.isValidatedIdentity(idCardNumber)) {
+                ToastUtil.show("身份证不合法");
+                return;
+            }
+            IdentityUtil.getInformation(idCardNumber);
+            sexEdit.setText(IdentityUtil.gender);
+            locationEdit.setText(IdentityUtil.location);
+            birthday = IdentityUtil.birthday;
+        }
+
         String sex = sexEdit.getText().toString().trim();
         if(!sex.equals("男")&&!sex.equals("女")&&!sex.equals("")){
             builder.content("性别请输入(男或女或空)")
@@ -125,7 +139,6 @@ public class AddPersonFragment extends BaseFragment implements AddPersionView {
             ToastUtil.show("请选择图片");
             return;
         }
-        String idCardNumber = idCardEdit.getText().toString().trim();
         String location = locationEdit.getText().toString().trim();
         String remark = remarkEdit.getText().toString().trim();
         PersionInfo persionInfo = new PersionInfo();
@@ -137,6 +150,7 @@ public class AddPersonFragment extends BaseFragment implements AddPersionView {
         persionInfo.other = remark;
         persionInfo.photoPath = photoPath;
         persionInfo.libName = libName;
+        persionInfo.birthday = birthday;
         presenter.onAddPersion(persionInfo);
     }
 

@@ -131,7 +131,6 @@ public class SDKUtil {
         int searchRes = searchHandler.searchFind(floats, 1, searchResult, 0.8f);
         Log.d("sdk", "searchRes " + searchRes);
         Log.d("sdk", "serachResultLength" + searchResult.size());
-        Log.d("sdk", "serachResultScore" + searchResult.get(0).score);
         // 说明该人脸库中已经含有了该人脸
         if (searchResult.size() > 0) {
             if (!searchHandler.isDestroy())

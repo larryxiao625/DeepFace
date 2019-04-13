@@ -2,25 +2,44 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_marginTop="@dimen/y20"
-    tools:layout_height="@dimen/y404"
+    android:layout_marginTop="@dimen/y4"
     android:background="@drawable/out_line_bg"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="@dimen/y400">
 
-    <TextView
-        android:layout_marginTop="@dimen/y2"
-        android:layout_marginLeft="@dimen/x2"
-        android:layout_marginRight="@dimen/x2"
-        android:background="#0d223d"
-        android:id="@+id/compare_time_tv"
-        android:padding="@dimen/x10"
-        android:gravity="center_vertical"
-        android:textColor="@color/white"
-        android:textSize="@dimen/y36"
-        tools:text="比对时间：10时13分08秒"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/y80" />
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_marginTop="@dimen/y2"
+            android:layout_marginLeft="@dimen/x2"
+            android:layout_marginRight="@dimen/x2"
+            android:background="#0d223d"
+            android:id="@+id/compare_time_tv"
+            android:padding="@dimen/x10"
+            android:gravity="center_vertical"
+            android:textColor="@color/white"
+            android:textSize="@dimen/y36"
+            tools:text="比对时间：10时13分08秒"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="@dimen/y80" />
+
+        <TextView
+            android:layout_marginTop="@dimen/y2"
+            android:layout_marginLeft="@dimen/x2"
+            android:layout_marginRight="@dimen/x2"
+            android:id="@+id/compare_delete"
+            android:background="#0d223d"
+            android:padding="@dimen/x10"
+            android:gravity="center_vertical"
+            android:textColor="@color/red"
+            android:textSize="@dimen/y56"
+            android:layout_width="@dimen/y80"
+            android:layout_height="@dimen/y80" />
+    </LinearLayout>
 
     <LinearLayout
         android:paddingTop="@dimen/y20"
@@ -46,11 +65,11 @@
         <com.iustu.identification.ui.widget.ScaleView
             android:id="@+id/scale_view_compare_history"
             android:layout_gravity="center_vertical"
-            app:outRadius="@dimen/x67"
+            app:outRadius="@dimen/x51"
             app:textEnable="true"
-            app:innerRadius="@dimen/x57"
-            app:numberTextSize="@dimen/x36"
-            app:similarityTextSize="@dimen/x30"
+            app:innerRadius="@dimen/x44"
+            app:numberTextSize="@dimen/x30"
+            app:similarityTextSize="@dimen/x21"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 

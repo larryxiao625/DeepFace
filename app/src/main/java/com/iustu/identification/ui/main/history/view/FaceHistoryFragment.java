@@ -83,12 +83,6 @@ public class FaceHistoryFragment extends BaseFragment {
         return R.layout.fragment_face_history;
     }
 
-    public void loadData(int page){
-        if(page >= totalPage && page > 0){
-            return;
-        }
-
-    }
 
     @OnClick(R.id.date_from_tv)
     public void fromDateChoose(){
@@ -179,6 +173,11 @@ public class FaceHistoryFragment extends BaseFragment {
                 dialogArrayList.get(i).dismiss();
                 dialogArrayList.remove(i);
             }
+        }
+
+        @Override
+        public void onSuccess(int position) {
+
         }
     };
 }

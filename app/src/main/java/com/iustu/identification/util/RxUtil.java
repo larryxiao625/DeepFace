@@ -487,6 +487,32 @@ public class RxUtil {
             }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
+
+    /**
+     * 删除比对记录信息时调用
+     * @param compareRecord 需要删除的记录
+     * @return Observable对象
+     */
+    public static Observable getDeleteCompareObservable(CompareRecord compareRecord) {
+        return Observable.create(new ObservableOnSubscribe<Object>() {
+            @Override
+            public void subscribe(ObservableEmitter<Object> e) {
+                // 首先执行数据库操作
+                SQLiteDatabase database = SqliteUtil.getDatabase();
+                database.beginTransaction();
+                try {
+                    Log.d("compare", "subscribe: " + compareRecord.getImage_id());
+                    Log.d("compare", "subscribe: " + compareRecord.getLibName());
+                    database.delete(RxUtil.DB_COMPARERECORD, "uploadPhoto = ?", new String[]{compareRecord.getUploadPhoto()});
+                    database.setTransactionSuccessful();
+                } finally {
+                    database.endTransaction();
+                }
+                e.onComplete();
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
 }
 
 

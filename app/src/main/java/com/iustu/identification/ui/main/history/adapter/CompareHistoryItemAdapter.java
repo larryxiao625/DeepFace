@@ -19,6 +19,7 @@ import com.iustu.identification.entity.PersonInfo;
 import com.iustu.identification.ui.base.PageRecyclerViewAdapter;
 import com.iustu.identification.ui.widget.ScaleView;
 import com.iustu.identification.util.ExceptionUtil;
+import com.iustu.identification.util.IconFontUtil;
 import com.iustu.identification.util.ImageUtils;
 import com.iustu.identification.util.LibManager;
 import com.iustu.identification.util.TextUtil;
@@ -28,6 +29,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -38,7 +40,15 @@ import io.reactivex.disposables.Disposable;
 
 public class CompareHistoryItemAdapter extends PageRecyclerViewAdapter<CompareHistoryItemAdapter.Holder, CompareRecord>{
 
+    public interface DeleteListener{
+        void onDelete(CompareRecord compareRecord, int position);
+    }
     private CompositeDisposable compositeDisposable;
+    private DeleteListener listener;
+
+    public void setListener(DeleteListener deleteListener) {
+        this.listener = deleteListener;
+    }
 
     private String targetPhotoUrl;
 
@@ -51,6 +61,11 @@ public class CompareHistoryItemAdapter extends PageRecyclerViewAdapter<CompareHi
     public void onBindHolder(Holder holder, int index, int position) {
         CompareRecord item = mDataLast.get(index);
         holder.setCompareRecord(item);
+        holder.delete.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onDelete(item, index);
+            }
+        });
     }
 
     public void dispose(){
@@ -83,6 +98,8 @@ public class CompareHistoryItemAdapter extends PageRecyclerViewAdapter<CompareHi
         TextView libName;
         @BindView(R.id.compare_time_tv)
         TextView compareTime;
+        @BindView(R.id.compare_delete)
+        TextView delete;
 
         Holder(View itemView) {
             super(itemView);
@@ -96,6 +113,7 @@ public class CompareHistoryItemAdapter extends PageRecyclerViewAdapter<CompareHi
                 nationality.setText("籍贯:");
                 libName.setText("目标库:");
             }else {
+                IconFontUtil.getDefault().setText(delete, IconFontUtil.DELETE);
                 name.setText(TextUtil.format("姓名:%s", compareRecord.getName()));
                 idCard.setText(TextUtil.format("身份证号:%s", compareRecord.getIdentity()));
                 nationality.setText(TextUtil.format("籍贯:%s", compareRecord.getName()));

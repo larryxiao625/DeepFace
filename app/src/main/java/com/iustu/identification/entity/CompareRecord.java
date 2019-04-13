@@ -21,6 +21,7 @@ public class CompareRecord {
     private String other;         // 备注
     private String identity;
     private String photoPath;
+    private String birthday;
 
 
     public String getUploadPhoto() {
@@ -118,6 +119,14 @@ public class CompareRecord {
     public String getPhotoPath() {
         return this.photoPath;
     }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+    }
+    public String getBirthday() {
+        return birthday;
+    }
+
     public ContentValues toContentValues() {
         ContentValues values = new ContentValues();
         values.put("time", this.time);
@@ -130,6 +139,7 @@ public class CompareRecord {
         values.put("gender", gender);
         values.put("home", home);
         values.put("photoPath", photoPath);
+        values.put("birthday", birthday);
         return values;
     }
 }

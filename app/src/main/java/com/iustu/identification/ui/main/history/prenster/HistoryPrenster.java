@@ -279,4 +279,31 @@ public class HistoryPrenster implements IPrenster{
             }
         });
     }
+
+    public void deleteCompareItem(CompareRecord compareRecord, int position) {
+        Observable<Cursor> observable = RxUtil.getDeleteCompareObservable(compareRecord);
+        observable.subscribe(new Observer<Cursor>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                disposable = d;
+            }
+
+            @Override
+            public void onNext(Cursor o) {
+                // 通过游标删除数据库关联的PersionInfo
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+                // 说明操作失败
+            }
+
+            @Override
+            public void onComplete() {
+                disposable.dispose();
+                compareHistoryIVew.onSuccess(position);
+            }
+        });
+    }
 }
