@@ -5,18 +5,29 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
+import android.widget.TextView;
 
 import com.iustu.identification.R;
 import com.iustu.identification.ui.base.BaseFragment;
+import com.iustu.identification.ui.main.library.addperson.AddPersonFragment;
+import com.iustu.identification.ui.main.library.addperson.mvp.AddPersionModel;
+import com.iustu.identification.ui.main.library.addperson.mvp.AddPersionPresenter;
 import com.iustu.identification.ui.main.library.librariesmanage.LibrariesManageFragment;
+import com.iustu.identification.ui.main.library.librariesmanage.mvp.LibModel;
+import com.iustu.identification.ui.main.library.librariesmanage.mvp.LibPresenter;
 import com.iustu.identification.ui.main.library.peoplemagnage.PeopleManageFragment;
+import com.iustu.identification.ui.main.library.peoplemagnage.mvp.PersionModel;
+import com.iustu.identification.ui.main.library.peoplemagnage.mvp.PersionPresenter;
 import com.iustu.identification.ui.widget.TitleBar;
+import com.iustu.identification.ui.widget.dialog.EditDialog;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
+import com.iustu.identification.util.DataCache;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * Created by Liu Yuchuan on 2017/11/5.
@@ -30,6 +41,14 @@ public class LibraryFragment extends BaseFragment implements TitleBar.TitleBarLi
 
     @BindView(R.id.title_bar_lib)
     TitleBar titleBar;
+    @BindView(R.id.tv_sure)
+    TextView confirm;
+
+    private boolean needConfirm = true;       // 用来标志是否需要输入管理员密码
+
+    private LibPresenter libPresenter;
+    private PersionPresenter persionPresenter;
+    private AddPersionPresenter addPersionPresenter;
 
     private List<BaseFragment> mFragmentList;
     private int fragmentNow;
@@ -44,9 +63,25 @@ public class LibraryFragment extends BaseFragment implements TitleBar.TitleBarLi
     protected void initView(@Nullable Bundle savedInstanceState, View view) {
         titleBar.setTitleBarListener(this);
         mFragmentList = new ArrayList<>();
-        mFragmentList.add(new LibrariesManageFragment());
-        mFragmentList.add(new AddPersonFragment());
-        mFragmentList.add(new PeopleManageFragment());
+
+        libPresenter = new LibPresenter(new LibModel());
+        LibrariesManageFragment libFragment = new LibrariesManageFragment();
+        libPresenter.setView(libFragment);
+        libFragment.setPresenter(libPresenter);
+
+        persionPresenter = new PersionPresenter(new PersionModel());
+        PeopleManageFragment peopleManageFragment = new PeopleManageFragment();
+        persionPresenter.setView(peopleManageFragment);
+        peopleManageFragment.setPresenter(persionPresenter);
+
+        addPersionPresenter = new AddPersionPresenter(new AddPersionModel());
+        AddPersonFragment addPersonFragment = new AddPersonFragment();
+        addPersionPresenter.setView(addPersonFragment);
+        addPersonFragment.setPresenter(addPersionPresenter);
+
+        mFragmentList.add(libFragment);
+        mFragmentList.add(addPersonFragment);
+        mFragmentList.add(peopleManageFragment);
         FragmentManager fragmentManager = getChildFragmentManager();
         for(int i = 0; i < 3; i++){
             BaseFragment fragment = (BaseFragment) fragmentManager.findFragmentByTag(TAGS[i]);
@@ -54,7 +89,54 @@ public class LibraryFragment extends BaseFragment implements TitleBar.TitleBarLi
                 mFragmentList.set(i, fragment);
             }
         }
-        switchFragment(fragmentNow);
+        if (DataCache.getAccount().name.equals("admin")) {
+            confirm.setVisibility(View.GONE);
+            needConfirm = false;
+            switchFragment(fragmentNow);
+            return;
+        }
+        confirm.setVisibility(View.INVISIBLE);
+        new EditDialog.Builder()
+                .title("获取管理员权限")
+                .hint("请输入管理员账户密码")
+                .positive("确定", (v, content, layout) -> {
+                    if (content.equals(DataCache.getAdmin().password)) {
+                        needConfirm = false;
+                        confirm.setVisibility(View.GONE);
+                        switchFragment(fragmentNow);
+                    } else
+                        confirm.setVisibility(View.VISIBLE);
+                    return true;
+                })
+                .negative("取消", (v, content, layout) -> {
+                    confirm.setVisibility(View.VISIBLE);
+                    return true;
+                })
+                .show(mActivity.getFragmentManager());
+
+    }
+
+    @OnClick(R.id.tv_sure)
+    public void showDialog () {
+        if (!needConfirm)
+            return;
+        new EditDialog.Builder()
+                .title("获取管理员权限")
+                .hint("请输入管理员账户密码")
+                .positive("确定", (v, content, layout) -> {
+                    if (content.equals("123456")) {
+                        needConfirm = false;
+                        confirm.setVisibility(View.GONE);
+                        switchFragment(fragmentNow);
+                    }else
+                        confirm.setVisibility(View.VISIBLE);
+                    return true;
+                })
+                .negative("取消", (v, content, layout) -> {
+                    confirm.setVisibility(View.VISIBLE);
+                    return true;
+                })
+                .show(mActivity.getFragmentManager());
     }
 
     public BaseFragment getFragment(int id){
@@ -95,6 +177,31 @@ public class LibraryFragment extends BaseFragment implements TitleBar.TitleBarLi
                     .commit();
         }
         fragmentNow = toId;
+    }
+
+    @Override
+    public void onShow() {
+        super.onShow();
+        if (!needConfirm)
+            return;
+        new EditDialog.Builder()
+                .title("获取管理员权限")
+                .hint("请输入管理员账户密码")
+                .positive("确定", (v, content, layout) -> {
+                    if (content.equals("123456")) {
+                        needConfirm = false;
+                        confirm.setVisibility(View.GONE);
+                        switchFragment(fragmentNow);
+                    } else
+                        confirm.setVisibility(View.VISIBLE);
+                    return true;
+                })
+                .negative("取消", (v, content, layout) -> {
+                    confirm.setVisibility(View.VISIBLE);
+                    return true;
+                })
+                .show(mActivity.getFragmentManager());
+
     }
 
     // 自定义TitleBar的点击事件

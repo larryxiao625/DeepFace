@@ -13,7 +13,10 @@
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_LOGS"
+        tools:ignore="ProtectedPermissions" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -72,6 +75,10 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
+        <activity android:name=".ui.main.batch.folder.ChooseFolderActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:configChanges="orientation|keyboardHidden|screenSize"/>
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.fileProvider"
@@ -81,7 +88,8 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths"/>
         </provider>
-
+        <service android:name=".ui.main.camera.prenster.CapturePicService"
+            android:label="CapturePicService"/>
     </application>
 
 </manifest>

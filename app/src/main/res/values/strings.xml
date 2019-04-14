@@ -23,7 +23,7 @@
     <string name="display_count">显示结果数量</string>
     <string name="save_count">保存记录数量</string>
     <string name="less_or_equals">小于等于</string>
-    <string name="min_faces">最小人脸数:</string>
+    <string name="min_faces">最小人脸:</string>
     <string name="min_faces_hint">范围是0.0-1.0</string>
     <string name="check_factor_hint">0-1</string>
     <string name="check_facotr1">检测参数1:</string>
@@ -82,4 +82,7 @@
     <string name="hint_username">用户名</string>
     <string name="hint_password">密码</string>
     <string name="login_face">刷脸登录</string>
+    <string name="camera_dpi">摄像头分辨率</string>
+    <string name="equal">等于</string>
+    <string name="modify_password">修改密码</string>
 </resources>

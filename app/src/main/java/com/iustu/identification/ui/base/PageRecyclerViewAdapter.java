@@ -3,6 +3,7 @@ package com.iustu.identification.ui.base;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 
+import com.iustu.identification.util.DataCache;
 import com.iustu.identification.util.PageSetHelper;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public abstract class PageRecyclerViewAdapter<VH extends RecyclerView.ViewHolder
     public PageRecyclerViewAdapter(List<T> dataLast) {
         this.mDataLast = dataLast;
         pageNow = 1;
-        //setDisplayCountPerPage(10);
+        setDisplayCountPerPage(DataCache.getParameterConfig().getDisplayCount());
     }
 
     @Override
@@ -55,10 +56,8 @@ public abstract class PageRecyclerViewAdapter<VH extends RecyclerView.ViewHolder
         if(pageNow >= pageMax){
             return;
         }
+//        loadMoreListener.loadMore();
         setPageNow(pageNow+1);
-        if(pageNow >= pageMax - 1 && loadMoreListener != null){
-            loadMoreListener.loadMore();
-        }
     }
 
     public void lastPage(){

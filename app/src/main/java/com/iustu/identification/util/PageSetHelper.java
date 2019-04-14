@@ -19,6 +19,7 @@ public class PageSetHelper {
     public PageSetHelper(RecyclerView recyclerView, TextView textView){
         mPageTv = textView;
         mAdapter = (PageRecyclerViewAdapter) recyclerView.getAdapter();
+        mAdapter.setPageSetHelper(this);
         mPageTv.setText(String.format(Locale.ENGLISH, FORMAT_PAGE, mAdapter.getPageNow(), mAdapter.getPageMax()));
     }
 

@@ -9,6 +9,8 @@ import android.view.View;
 
 import com.iustu.identification.R;
 import com.iustu.identification.ui.base.BaseFragment;
+import com.iustu.identification.util.DataCache;
+import com.iustu.identification.util.SqliteUtil;
 
 import butterknife.BindView;
 
@@ -56,5 +58,13 @@ public class ConfigFragment extends BaseFragment {
                 baseFragment.onHide();
             }
         }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d("fragment", "onStop: ");
+        DataCache.saveCache();
+        SqliteUtil.updataLibrariedInUsed();
     }
 }

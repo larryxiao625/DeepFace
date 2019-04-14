@@ -16,6 +16,7 @@
     <color name="gold">#d0a240</color>
     <color name="red">#e72929</color>
     <color name="tab_bg_color">#1d2b68</color>
+    <color name="colorBackground_trans">#68030919</color>
 
     <color name="out_line_color">#2650b2</color>
 </resources>

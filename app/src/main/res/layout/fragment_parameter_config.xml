@@ -15,33 +15,11 @@
         android:layout_height="wrap_content"
         tools:ignore="RtlHardcoded">
 
-        <LinearLayout
-            android:weightSum="15"
-            android:orientation="horizontal"
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <TextView
-                android:layout_weight="4"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/base_parameters"
-                style="@style/ConfigTitle"/>
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="9"
-                android:layout_height="wrap_content"
-                android:text=""
-                style="@style/ConfigTitle"/>
-            <TextView
-                android:text="保存"
-                android:textAlignment="textEnd"
-                android:layout_weight="2"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/save_tv"
-                style="@style/ConfigTitle"
-                android:gravity="end" />
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:text="@string/base_parameters"
+            style="@style/ConfigTitle"/>
 
         <LinearLayout
             android:layout_height="@dimen/y380"
@@ -87,7 +65,9 @@
                     android:layout_height="wrap_content" />
                 <EditText
                     android:id="@+id/min_face"
+                    android:textColor="@color/white"
                     android:textSize="@dimen/y38"
+                    android:inputType="numberDecimal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColorHint="@color/lite_gray"
@@ -112,8 +92,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                     <EditText
+                        android:textColor="@color/white"
                         android:id="@+id/check_factor1"
                         android:textSize="@dimen/y38"
+                        android:inputType="numberDecimal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColorHint="@color/lite_gray"
@@ -132,8 +114,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                     <EditText
+                        android:textColor="@color/white"
                         android:id="@+id/check_factor2"
                         android:textSize="@dimen/y38"
+                        android:inputType="numberDecimal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColorHint="@color/lite_gray"
@@ -152,7 +136,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
                     <EditText
+                        android:textColor="@color/white"
                         android:id="@+id/check_factor3"
+                        android:inputType="numberDecimal"
                         android:textSize="@dimen/y38"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -259,6 +245,43 @@
                 android:layout_height="match_parent" />
         </LinearLayout>
     </LinearLayout>
+        <LinearLayout
+            android:layout_height="@dimen/y292"
+            style="@style/ConfigLayout1">
+
+            <TextView
+                android:drawableLeft="@drawable/display_count"
+                android:text="@string/camera_dpi"
+                style="@style/ConfigItemTitle"/>
+
+            <include layout="@layout/divider_horizontal"/>
+
+            <LinearLayout
+                android:id="@+id/save_dpi_ll"
+                android:paddingLeft="@dimen/x40"
+                android:paddingRight="@dimen/x25"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y160">
+
+                <TextView
+                    android:gravity="center_vertical"
+                    android:text="@string/equal"
+                    android:textSize="@dimen/y36"
+                    android:textColor="@color/white"
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/save_dpi_tv"
+                    android:gravity="center_vertical"
+                    tools:text="0"
+                    android:textSize="@dimen/y36"
+                    android:textColor="@color/lite_blue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"  />
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 
 </ScrollView>

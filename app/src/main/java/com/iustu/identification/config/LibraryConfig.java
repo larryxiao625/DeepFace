@@ -18,15 +18,15 @@ public class LibraryConfig {
 
     private static final String name = "libraryConfig";
 
-    private final List<String> chosenLibs;
+    private static HashSet<Integer> mChooseList;
 
     private static LibraryConfig mInstance;
 
     private LibraryConfig(){
         SharedPreferences preferences = MSP.getInstance(name);
-        chosenLibs = new ArrayList<>(preferences.getStringSet(KEY_CHOSEN_LIBS, new HashSet<>()));
-        chosenLibs.remove(null);
-        Log.e("initial chosenLibs", String.valueOf(chosenLibs));
+        //mChooseList = preferences.getStringSet(KEY_CHOSEN_LIBS, new HashSet<>());
+        //mChooseList = preferences.getString()
+        //chosenLibs.remove(null);
     }
 
     public static LibraryConfig getInstance(){
@@ -40,14 +40,14 @@ public class LibraryConfig {
     }
 
     public void save(){
-        Log.e(getClass().getName(), "save " + chosenLibs);
         MSP.getInstance(name)
                 .edit()
-                .putStringSet(KEY_CHOSEN_LIBS, new HashSet<>(chosenLibs))
+                //.putStringSet(KEY_CHOSEN_LIBS, new HashSet<>(chosenLibs))
                 .apply();
     }
 
     public List<String> getChosenLibs() {
-        return chosenLibs;
+        return null;
+        //return chosenLibs;
     }
 }

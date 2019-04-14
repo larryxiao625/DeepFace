@@ -32,18 +32,19 @@
             tools:ignore="RtlHardcoded" />
         <LinearLayout
             android:id="@+id/switch_img_layout"
-            android:paddingLeft="@dimen/x40"
-            android:paddingRight="@dimen/x40"
             android:layout_gravity="bottom"
             android:layout_marginBottom="@dimen/x5"
             android:layout_width="match_parent"
+            android:weightSum="10"
             android:layout_height="@dimen/y72">
             <TextView
                 android:gravity="center"
+                android:paddingLeft="@dimen/x40"
                 android:textSize="@dimen/y51"
                 android:textColor="@color/lite_gray"
                 android:id="@+id/last_img_tv"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="2"
                 android:layout_height="match_parent"/>
 
             <TextView
@@ -52,16 +53,18 @@
                 android:id="@+id/img_page_tv"
                 android:textColor="@color/white"
                 android:textSize="@dimen/y36"
-                android:layout_weight="1"
+                android:layout_weight="6"
                 android:layout_width="0dp"
                 android:layout_height="match_parent" />
 
             <TextView
+                android:paddingRight="@dimen/x40"
                 android:gravity="center"
                 android:textSize="@dimen/y51"
                 android:textColor="@color/lite_gray"
                 android:id="@+id/next_img_tv"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="2"
                 android:layout_height="match_parent"/>
         </LinearLayout>
         

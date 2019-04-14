@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
 import com.iustu.identification.R;
+import com.iustu.identification.bean.ParameterConfig;
 import com.iustu.identification.config.SystemConfig;
 import com.iustu.identification.ui.base.BaseActivity;
 import com.iustu.identification.ui.base.BaseFragment;
@@ -17,7 +18,10 @@ import com.iustu.identification.ui.widget.dialog.EditDialog;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.ui.widget.dialog.SingleButtonDialog;
 import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
+import com.iustu.identification.util.DataCache;
 import com.iustu.identification.util.LibManager;
+import com.iustu.identification.util.MSP;
+import com.iustu.identification.util.SDKUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,10 +43,12 @@ public class LoginActivity extends BaseActivity implements LibManager.OnLibLoadL
 
     private WaitProgressDialog waitProgressDialog;
 
-    LoginPrenster loginPrenster=new LoginPrenster();
+    LoginPrenster loginPrenster;
     @Override
     protected void initView(@Nullable Bundle savedInstanceState) {
+        SDKUtil.initSdk(this);
         LibManager.setOnLoadListener(this);
+        loginPrenster=LoginPrenster.getInstance();
         loginPrenster.attchView(iVew);
         mFragmentList = new ArrayList<>();
         mFragmentManager = getSupportFragmentManager();
@@ -59,6 +65,7 @@ public class LoginActivity extends BaseActivity implements LibManager.OnLibLoadL
         return R.layout.activity_login;
     }
 
+    // 静态公共方法，供外部调用启动LoginActivity
     public static void start(Activity activity){
         Intent intent = new Intent(activity, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -153,6 +160,11 @@ public class LoginActivity extends BaseActivity implements LibManager.OnLibLoadL
         @Override
         public void disposeRxjava() {
             dispose();
+        }
+
+        @Override
+        public void loginSuccessfully() {
+
         }
     };
 }

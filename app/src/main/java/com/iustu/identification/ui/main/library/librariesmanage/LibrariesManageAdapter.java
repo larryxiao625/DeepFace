@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.iustu.identification.R;
-import com.iustu.identification.bean.Library;
+import com.iustu.identification.entity.Library;
 import com.iustu.identification.ui.base.OnPageItemClickListener;
 import com.iustu.identification.ui.base.PageRecyclerViewAdapter;
 import com.iustu.identification.util.IconFontUtil;
@@ -26,27 +26,18 @@ public class LibrariesManageAdapter extends PageRecyclerViewAdapter<LibrariesMan
 
     public LibrariesManageAdapter(List<Library> dataLast) {
         super(dataLast);
+
     }
 
+    // index 是以所有数据源中的当前数据的位置；而position代表单前页中该数据的位置
     @Override
     public void onBindHolder(Holder holder, int index, int position) {
         Library library = mDataLast.get(index);
-        holder.id.setText(String.valueOf(library.getId()));
-        holder.name.setText(library.getName());
-        holder.number.setText(String.valueOf(library.getCount()));
+        holder.id.setText(String.valueOf(index));
+        holder.name.setText(library.libName);
+        holder.number.setText(String.valueOf(library.count));
+
         IconFontUtil.getDefault().setText(holder.select, IconFontUtil.UNSELECT_SINGLE);
-        /*
-        if(isAdmin){
-            holder.lock.setVisibility(View.VISIBLE);
-            if(library.isLock()) {
-                IconFontUtil.getDefault().setText(holder.lock, IconFontUtil.LOCK);
-            }else {
-                IconFontUtil.getDefault().setText(holder.lock, IconFontUtil.UNLOCK);
-            }
-        }else {
-            holder.lock.setVisibility(View.INVISIBLE);
-        }
-        */
         IconFontUtil.getMyDefault().setText(holder.batch, IconFontUtil.PEOPLE_IMPORT);
         IconFontUtil.getDefault().setText(holder.edit, IconFontUtil.ALTER);
         IconFontUtil.getDefault().setText(holder.add, IconFontUtil.MEMBER_NEW);
@@ -59,7 +50,7 @@ public class LibrariesManageAdapter extends PageRecyclerViewAdapter<LibrariesMan
         });
 
         holder.batch.setOnClickListener(v -> {
-            if(isAdmin && onLibrariesItemButtonClickedListener != null){
+            if(onLibrariesItemButtonClickedListener != null){
                 onLibrariesItemButtonClickedListener.onImportMany(v, index);
             }
         });

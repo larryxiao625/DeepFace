@@ -7,51 +7,41 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 
 import com.iustu.identification.R;
-import com.iustu.identification.api.Api;
-import com.iustu.identification.api.message.Message;
 import com.iustu.identification.ui.SplashActivity;
 import com.iustu.identification.ui.base.BaseActivity;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.login.view.LoginActivity;
-import com.iustu.identification.ui.main.batch.BatchFragment;
-import com.iustu.identification.ui.main.camera.CameraFragment;
-import com.iustu.identification.ui.main.camera.CompareFragment;
+import com.iustu.identification.ui.main.camera.view.CameraFragment;
 import com.iustu.identification.ui.main.config.ConfigFragment;
-import com.iustu.identification.ui.main.history.HistoryFragment;
+import com.iustu.identification.ui.main.history.view.HistoryFragment;
 import com.iustu.identification.ui.main.library.LibraryFragment;
-import com.iustu.identification.ui.main.verify.VerifyFragment;
 import com.iustu.identification.ui.widget.BottomBar;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
-import com.iustu.identification.util.ExceptionUtil;
+import com.iustu.identification.util.DataCache;
 import com.iustu.identification.util.LibManager;
-import com.iustu.identification.util.UserCache;
+import com.iustu.identification.util.SqliteUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends BaseActivity implements BottomBar.BottomBarSelectListener{
 
     @BindView(R.id.bottom_bar)
     public BottomBar bottomBar;
 
-    private static final String [] TAGS = {"camera", "batch", "verify","history","library","config", "compare"};
+    private static final String [] TAGS = {"camera","history","library","config"};
 
     private List<BaseFragment> mFragmentList;
     private FragmentManager mFragmentManager;
     private int fragmentNow;
-
-    private boolean isInCompare;
 
     private WaitProgressDialog waitDialog;
 
@@ -83,13 +73,6 @@ public class MainActivity extends BaseActivity implements BottomBar.BottomBarSel
     @Override
     protected void onStart() {
         super.onStart();
-        if(UserCache.getUser().isVerify()){
-            dispose();
-            keepAlive();
-        }
-        if(isSessionOutOfDate){
-           onSessionOutOfDate();
-        }
     }
 
     public void dismissWaiDialog(){
@@ -103,29 +86,6 @@ public class MainActivity extends BaseActivity implements BottomBar.BottomBarSel
         return R.layout.activity_main;
     }
 
-    private void keepAlive(){
-        if(keepAliveDisposable != null){
-            keepAliveDisposable.dispose();
-        }
-        keepAliveDisposable = Observable.interval(90, TimeUnit.SECONDS)
-                .takeUntil(aLong -> isSessionOutOfDate)
-                .subscribeOn(Schedulers.computation())
-                .doOnSubscribe(this::addDisposable)
-                .flatMap(aLong -> Api.keepAlive())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(message -> {
-                    if(message.getCode() == Message.CODE_SUCCESS){
-                        isSessionOutOfDate = false;
-                    }else if(message.getCode() == Message.VERIFY_ERROR){
-                        dispose();
-                        isSessionOutOfDate = true;
-                        if(isActivityAlive) {
-                            onSessionOutOfDate();
-                        }
-                    }
-                }, t-> ExceptionUtil.getThrowableMessage(MainActivity.this.getClass().getSimpleName(), t));
-    }
-
 
 
     @Override
@@ -136,20 +96,14 @@ public class MainActivity extends BaseActivity implements BottomBar.BottomBarSel
             SplashActivity.start(this);
             return;
         }
-        if(UserCache.getUser().isVerify()) {
-            keepAlive();
-        }
-        isInCompare = false;
         bottomBar.post(() -> {
             mFragmentManager = getSupportFragmentManager();
             mFragmentList = new ArrayList<>();
-            mFragmentList.add(new BatchFragment());
-            mFragmentList.add(new VerifyFragment());
             mFragmentList.add(new HistoryFragment());
             mFragmentList.add(new LibraryFragment());
             mFragmentList.add(new ConfigFragment());
-            mFragmentList.add(new CompareFragment());
             Fragment fragment;
+            // 保证在内存重启的时候，使用已有的Fragment(通过构造器新建的会重新执行生命周期，从而导致资源占用)
             for(int i = 0; i < mFragmentList.size(); i++){
                 fragment = mFragmentManager.findFragmentByTag(TAGS[i + 1]);
                 if(fragment != null){
@@ -180,17 +134,10 @@ public class MainActivity extends BaseActivity implements BottomBar.BottomBarSel
         if(!tf.isAdded()){
             transaction.add(R.id.fragment_fm, tf, TAGS[to]);
         }
-        if(fragmentNow == 0){
-            transaction.remove(ff);
-        }else if(fragmentNow == 6 && to == 0){
+        if(fragmentNow == 0 || fragmentNow == 3) {
             transaction.remove(ff);
         }
         transaction.show(tf).commit();
-        if(to == 6){
-            isInCompare = true;
-        }else if(fragmentNow == 6 && to == 0){
-            isInCompare = false;
-        }
         fragmentNow = to;
     }
 
@@ -205,11 +152,20 @@ public class MainActivity extends BaseActivity implements BottomBar.BottomBarSel
 
     @Override
     public void onSelect(int id) {
-        if(id == 0 && isInCompare){
-            id = 6;
-        }
-
         switchFragment(id);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        DataCache.saveCache();
+        SqliteUtil.updataLibrariedInUsed();
     }
 
     @Override
@@ -217,5 +173,7 @@ public class MainActivity extends BaseActivity implements BottomBar.BottomBarSel
         isActivityAlive = false;
         LibManager.dispose();
         super.onDestroy();
+//        stopService(new Intent(MainActivity.this, CapturePicService.class));
     }
+
 }

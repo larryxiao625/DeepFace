@@ -13,16 +13,11 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
 import com.iustu.identification.R;
-import com.iustu.identification.api.Api;
-import com.iustu.identification.bean.User;
 import com.iustu.identification.ui.base.BaseActivity;
 import com.iustu.identification.ui.login.view.LoginActivity;
-import com.iustu.identification.ui.main.MainActivity;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.ui.widget.dialog.SingleButtonDialog;
-import com.iustu.identification.util.ExceptionUtil;
-import com.iustu.identification.util.LibManager;
-import com.iustu.identification.util.UserCache;
+import com.iustu.identification.util.CopyModelUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +31,9 @@ public class SplashActivity extends BaseActivity {
 
     private final String [] permissions = {
             Manifest.permission.CAMERA,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_PHONE_STATE,
+            Manifest.permission.BLUETOOTH
     };
 
     private List<String> permissionList = new ArrayList<>();
@@ -58,6 +55,7 @@ public class SplashActivity extends BaseActivity {
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> checkPermissions());
+        CopyModelUtil.copyAssetsToSD(this);
     }
 
     private void checkPermissions(){
@@ -76,45 +74,8 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void startApp() {
-        Api.preLogin()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(preLoginResponseMessage -> {
-                    if(preLoginResponseMessage.getBody().isNeedAuth()){
-                        LoginActivity.start(this);
-                        finish();
-                    }else {
-                        LibManager.setOnLoadListener(new LibManager.OnLibLoadListener() {
-                            @Override
-                            public void onStartLoad() {
-
-                            }
-
-                            @Override
-                            public void onSuccessLoad() {
-                                UserCache.setUser(User.makeUnVerifiedUser());
-                                MainActivity.start(SplashActivity.this);
-                                SplashActivity.this.finish();
-                            }
-
-                            @Override
-                            public void onFailLoad() {
-                                new SingleButtonDialog.Builder()
-                                        .content("自动登录失败，请检查网络重试")
-                                        .button("确定", v->{
-                                            LoginActivity.start(SplashActivity.this);
-                                            finish();
-                                        })
-                                        .title("错误")
-                                        .show(getFragmentManager());
-                            }
-                        });
-                        LibManager.loadData();
-                    }
-                }, t->{
-                    ExceptionUtil.getThrowableMessage("SplashActivity", t);
-                    LoginActivity.start(this);
-                    finish();
-                });
+        LoginActivity.start(this);
+        finish();
     }
 
     @Override
@@ -166,4 +127,5 @@ public class SplashActivity extends BaseActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
         activity.startActivity(intent);
     }
+
 }

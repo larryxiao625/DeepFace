@@ -3,38 +3,52 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     tools:ignore="RtlHardcoded,RtlSymmetry"
-    tools:background="@color/colorBackground"
+    tools:background="@drawable/out_line_bg"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
 
-    <com.iustu.identification.ui.widget.TitleBar
-        android:id="@+id/batch_title_bar"
-        app:title="@string/title_batch"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </com.iustu.identification.ui.widget.TitleBar>
-
-    <LinearLayout
-        android:layout_marginTop="@dimen/y85"
+    <TextView
+        android:layout_marginTop="@dimen/y16"
         android:layout_marginLeft="@dimen/x40"
         android:layout_marginRight="@dimen/x40"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/y110">
+        android:layout_height="wrap_content"
+        android:text="批量导入"
+        android:textColor="@color/DODGERBLUE"/>
+
+    <LinearLayout
+        android:layout_marginTop="@dimen/y35"
+        android:layout_marginLeft="@dimen/x40"
+        android:layout_marginRight="@dimen/x40"
+        android:layout_width="match_parent"
+        android:weightSum="15"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:textColor="@color/WHITE"
+            android:scaleType="centerInside"
+            android:paddingLeft="@dimen/x36"
+            android:text="导入文件路径:"
+            android:textSize="@dimen/x40"
+            android:layout_width="0dp"
+            android:layout_weight="6"
+            android:layout_height="wrap_content" />
+
         <TextView
             android:id="@+id/folder_path_tv"
             android:scrollHorizontally="true"
             android:ellipsize="start"
-            android:paddingLeft="@dimen/x20"
-            android:paddingRight="@dimen/x20"
-            android:textSize="@dimen/x48"
+            android:paddingLeft="@dimen/x10"
+            android:paddingRight="@dimen/x10"
+            android:textSize="@dimen/x36"
             android:textColor="@color/white"
             android:gravity="center_vertical"
             android:background="@drawable/folder_out_line"
-            android:layout_weight="1"
+            android:layout_weight="9"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:singleLine="true" />
         <TextView
             android:id="@+id/folder_tv"
@@ -42,81 +56,38 @@
             android:scaleType="centerInside"
             android:gravity="center"
             android:textSize="@dimen/x90"
-            android:layout_width="@dimen/x130"
+            android:layout_width="@dimen/x100"
             android:layout_height="@dimen/y110" />
     </LinearLayout>
 
     <TextView
         android:gravity="center_vertical"
-        android:text="@string/choose_folder_prompt"
-        android:textSize="@dimen/x27"
-        android:textColor="#8b8682"
-        android:layout_marginLeft="@dimen/x40"
+        android:text="导入进度"
+        android:textSize="@dimen/x40"
+        android:textColor="@color/white"
+        android:layout_marginLeft="@dimen/x76"
         android:paddingTop="@dimen/y30"
         android:paddingBottom="@dimen/y30"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <LinearLayout
-        android:paddingTop="@dimen/y20"
-        android:paddingBottom="@dimen/y20"
-        android:paddingLeft="@dimen/x40"
-        android:paddingRight="@dimen/x40"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:layout_margin="@dimen/y15"
-            android:id="@+id/img_choose_tv"
-            android:textColor="@color/white"
-            android:textSize="@dimen/x42"
-            android:text="@string/img_choose"
-            android:background="@drawable/batch_compare"
-            android:gravity="center"
-            android:layout_gravity="center_horizontal"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content" />
-
-        <View
-            android:layout_width="@dimen/x40"
-            android:layout_height="1dp"/>
-
-        <TextView
-            android:layout_margin="@dimen/y15"
-            android:id="@+id/start_batch_compare_tv"
-            android:textColor="@color/white"
-            android:textSize="@dimen/x42"
-            android:text="@string/batch_compare"
-            android:background="@drawable/batch_compare"
-            android:gravity="center"
-            android:layout_gravity="center_horizontal"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
 
     <LinearLayout
+        android:layout_marginTop="@dimen/y35"
+        android:layout_marginLeft="@dimen/x80"
+        android:layout_marginRight="@dimen/x40"
         android:id="@+id/progress_layout"
         android:layout_marginBottom="@dimen/y50"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <TextView
-            android:text="@string/compare_progress"
-            android:textColor="@color/white"
-            android:textSize="@dimen/x32"
-            android:gravity="center_vertical|right"
-            android:layout_width="0dp"
-            android:paddingRight="@dimen/x10"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"/>
 
         <ProgressBar
             android:id="@+id/compare_progress_bar"
             tools:progress="70"
             style="@style/Widget.AppCompat.ProgressBar.Horizontal"
             android:layout_gravity="center_vertical"
-            android:layout_width="@dimen/x650"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:progressDrawable="@drawable/progress_horizontal"
             android:layout_height="@dimen/y20" />
 
@@ -126,16 +97,31 @@
             android:textColor="@color/white"
             android:textSize="@dimen/x32"
             android:paddingLeft="@dimen/x10"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:ignore="HardcodedText" />
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/batch_recycler_view"
+    <TextView
+        android:gravity="center_vertical"
+        android:id="@+id/progress_tv"
+        android:text="导入成功：XX张，导入失败：XX张"
+        android:textSize="@dimen/x40"
+        android:textColor="@color/white"
+        android:layout_marginLeft="@dimen/x76"
+        android:paddingTop="@dimen/y30"
+        android:paddingBottom="@dimen/y30"
         android:layout_width="match_parent"
-        android:overScrollMode="never"
-        android:layout_weight="1"
-        android:layout_height="0dp"/>
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:background="@drawable/folder_out_line"
+        android:text="提交"
+        android:textColor="@color/white"
+        android:layout_marginTop="@dimen/y35"
+        android:layout_marginBottom="@dimen/y35"
+        android:layout_gravity="center"
+        android:id="@+id/start_batch_submmit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </LinearLayout>

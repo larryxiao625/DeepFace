@@ -1,7 +1,9 @@
 package com.iustu.identification.ui.main.library.peoplemagnage;
 
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,21 +13,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.iustu.identification.R;
-import com.iustu.identification.api.Api;
-import com.iustu.identification.api.message.Message;
-import com.iustu.identification.bean.PersonInfo;
+import com.iustu.identification.entity.PersionInfo;
+import com.iustu.identification.entity.PersonInfo;
 import com.iustu.identification.ui.base.PageRecyclerViewAdapter;
-import com.iustu.identification.util.ExceptionUtil;
+import com.iustu.identification.ui.main.library.peoplemagnage.mvp.PersionView;
 import com.iustu.identification.util.IconFontUtil;
 import com.iustu.identification.util.TextUtil;
+import com.iustu.identification.util.ToastUtil;
 
+import java.io.File;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
@@ -33,50 +34,29 @@ import io.reactivex.disposables.Disposable;
  * Created by Liu Yuchuan on 2017/11/21.
  */
 
-public class PersonInfoAdapter extends PageRecyclerViewAdapter<PersonInfoAdapter.Holder, PersonInfo> {
+public class PersonInfoAdapter extends PageRecyclerViewAdapter<PersonInfoAdapter.Holder, PersionInfo> {
 
     private CompositeDisposable compositeDisposable;
 
-    public PersonInfoAdapter(List<PersonInfo> dataLast) {
+    public PersonInfoAdapter(List<PersionInfo> dataLast) {
         super(dataLast);
         setDisplayCountPerPage(3);
     }
 
     @Override
     public void onBindHolder(Holder holder, int index, int position) {
-        PersonInfo p = mDataLast.get(index);
+        PersionInfo p = mDataLast.get(index);
 
-        holder.setPersonInfo(p);
+        holder.setPersionInfo(p);
         holder.setEditEnable(false);
 
-        int pos = p.getUrlPosition();
-        if(pos != -1){
-            holder.deletePhoto.setVisibility(View.VISIBLE);
-            Glide.with(holder.photo)
-                    .applyDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.photo_holder))
-                    .load(p.getUrlAt(pos))
-                    .into(holder.photo);
-        }else if(!p.isInitUrls()){
-            holder.deletePhoto.setVisibility(View.GONE);
-            loadPicUrls(index);
-        }else {
-            holder.deletePhoto.setVisibility(View.GONE);
-            Glide.with(holder.photo)
-                    .applyDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.photo_holder))
-                    .load(R.drawable.photo_holder)
-                    .into(holder.photo);
-        }
-
         holder.setSaveListener(v -> {
-            if(personOptInterface!= null){
-                holder.setEditEnable(false);
-                PersonInfo personInfo = new PersonInfo(p);
-                personInfo.setName(holder.name.getText().toString().trim());
-                personInfo.setCode(holder.idCard.getText().toString().trim());
-                personInfo.setGender(holder.sex.getText().toString().trim());
-                personInfo.setAddress(holder.location.getText().toString().trim());
-                personOptInterface.save(v, index, position, personInfo, holder);
-            }
+            PersionInfo personInfo = mDataLast.get(index);
+            personInfo.name = holder.name.getText().toString();
+            personInfo.home = holder.location.getText().toString();
+            personInfo.gender = holder.sex.getText().toString();
+            personInfo.identity = holder.idCard.getText().toString();
+            personView.onSaveChange(index, personInfo);
         });
 
         holder.setEditListener(v -> {
@@ -87,60 +67,45 @@ public class PersonInfoAdapter extends PageRecyclerViewAdapter<PersonInfoAdapter
         });
 
         holder.add.setOnClickListener(v->{
-            if(personOptInterface!= null){
-                personOptInterface.addPhoto(v, index, position);
+            if(personView != null){
+                personView.onAddPhoto(index);
             }
         });
         holder.addIcon.setOnClickListener(v->{
-            if(personOptInterface!= null){
-                personOptInterface.addPhoto(v, index, position);
+            if(personView != null){
+                personView.onAddPhoto(index);
             }
         });
         holder.delete.setOnClickListener(v->{
-            if(personOptInterface!= null){
-                personOptInterface.delete(v, index, position);
+            if(personView != null){
+                PersionInfo persionInfo = mDataLast.get(index);
+                personView.onDeletePer(index, persionInfo);
             }
         });
         holder.deleteIcon.setOnClickListener(v->{
-            if(personOptInterface!= null){
-                personOptInterface.delete(v, index, position);
+            if(personView != null){
+                PersionInfo persionInfo = mDataLast.get(index);
+                personView.onDeletePer(index, persionInfo);
             }
         });
         holder.deletePhoto.setOnClickListener(v->{
-            if(personOptInterface != null){
-                personOptInterface.deletePhoto(v, index, position);
-            }
-        });
-        holder.nextImg.setOnClickListener(v->{
-            if(p.nextPosition()){
-                Glide.with(holder.photo)
-                        .applyDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.photo_holder))
-                        .load(p.getUrlAt(p.getUrlPosition()))
-                        .into(holder.photo);
-            }
-        });
-        holder.lastImg.setOnClickListener(v->{
-            if(p.lastPosition()) {
-                Glide.with(holder.photo)
-                        .applyDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.photo_holder))
-                        .load(p.getUrlAt(p.getUrlPosition()))
-                        .into(holder.photo);
+            if(personView != null){
+                if (holder.maxPage == 1) {
+                    ToastUtil.show("已是最后一张，无法删除...");
+                    return;
+                }
+                PersionInfo persionInfo = mDataLast.get(index);
+                personView.onDeletePhoto(index, holder.currentPage, persionInfo);
             }
         });
     }
 
-    private PersonOptInterface personOptInterface;
+    private PersionView personView;
 
-    public void setPersonOptInterface(PersonOptInterface personOptInterface) {
-        this.personOptInterface = personOptInterface;
+    public void setItemListener(PersionView personOptInterface) {
+        this.personView = personOptInterface;
     }
 
-    public interface PersonOptInterface{
-        void save(View v, int index, int position, PersonInfo newInfo, Holder holder);
-        void deletePhoto(View v, int index, int position);
-        void delete(View v, int index, int position);
-        void addPhoto(View v, int index, int position);
-    }
 
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -150,22 +115,8 @@ public class PersonInfoAdapter extends PageRecyclerViewAdapter<PersonInfoAdapter
     }
 
     private void loadPicUrls(int index){
-        PersonInfo personInfo = mDataLast.get(index);
-        Api.getFaceList(personInfo.getFaceSetId(), personInfo.getId())
-                .doOnSubscribe(this::addDisposable)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(listMessage -> {
-                    if(listMessage.getCode() == Message.CODE_SUCCESS){
-                        personInfo.setInitUrls(true);
-                        personInfo.setFaceUrlList(listMessage.getBody());
-                    }
-                    if(inCurrentPage(index)) {
-                        notifyItemChanged(calculatePosition(index));
-                    }
-                }, throwable -> {
-                    personInfo.setInitUrls(false);
-                    ExceptionUtil.getThrowableMessage(getClass().getSimpleName(), throwable);
-                });
+        PersionInfo personInfo = mDataLast.get(index);
+
     }
 
     private void addDisposable(Disposable disposable){
@@ -185,6 +136,9 @@ public class PersonInfoAdapter extends PageRecyclerViewAdapter<PersonInfoAdapter
     }
 
     static class Holder extends RecyclerView.ViewHolder{
+        private String[] paths = null;   // 用来保存PersionInfo中所有的图片路径
+        private int currentPage;   // 表示图片的当前页
+        private int maxPage;     // 表示总共几张图片
         @BindView(R.id.last_img_tv) TextView lastImg;
         @BindView(R.id.next_img_tv) TextView nextImg;
         @BindView(R.id.img_page_tv) TextView imgPage;
@@ -217,11 +171,36 @@ public class PersonInfoAdapter extends PageRecyclerViewAdapter<PersonInfoAdapter
             switchPhotoLayout.setBackgroundColor(Color.argb(122, 24, 38, 67));
         }
 
-        void setPersonInfo(PersonInfo p){
-            name.setText(p.getName());
-            idCard.setText(p.getCode());
-            sex.setText(p.getGender());
-            location.setText(p.getAddress());
+        void setPersionInfo(PersionInfo p){
+            name.setText(p.name);
+            idCard.setText(p.identity);
+            sex.setText(p.gender);
+            location.setText(p.home);
+            paths = p.photoPath.split(";");
+            maxPage = paths.length;
+            currentPage = 0;
+            imgPage.setText(currentPage + 1 + "/" + maxPage);
+            String finalPath = "/sdcard/DeepFace/" + p.libName + "/" + paths[0];
+            File file = new File(finalPath);
+            Glide.with(itemView).load(Uri.fromFile(file)).into(photo);
+
+            lastImg.setEnabled(true);
+            lastImg.setOnClickListener(v -> {
+                currentPage = currentPage == 0 ? paths.length - 1 : currentPage - 1;
+                imgPage.setText(currentPage + 1 + "/" + maxPage);
+                String finalPath1 = "/sdcard/DeepFace/" + p.libName + "/" + paths[currentPage];
+                File f = new File(finalPath1);
+                Glide.with(itemView).load(Uri.fromFile(f)).into(photo);
+                f = null;
+            });
+            nextImg.setOnClickListener(v -> {
+                currentPage = currentPage == paths.length - 1 ? 0 : currentPage + 1;
+                imgPage.setText(currentPage + 1 + "/" + maxPage);
+                String finalPath1 = "/sdcard/DeepFace/" + p.libName + "/" + paths[currentPage];
+                File f = new File(finalPath1);
+                Glide.with(itemView).load(Uri.fromFile(f)).into(photo);
+                f = null;
+            });
         }
 
         private void setEditEnable(boolean enable){

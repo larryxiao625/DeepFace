@@ -1,5 +1,6 @@
 package com.iustu.identification.ui.main.batch.folder;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.Nullable;
@@ -11,8 +12,6 @@ import android.widget.TextView;
 
 import com.iustu.identification.R;
 import com.iustu.identification.ui.base.BaseFragment;
-import com.iustu.identification.ui.main.batch.BatchCompareFragment;
-import com.iustu.identification.ui.main.batch.BatchFragment;
 import com.iustu.identification.ui.widget.ItemDecoration;
 import com.iustu.identification.ui.widget.TitleBar;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
@@ -63,6 +62,8 @@ public class FolderChooseFragment extends BaseFragment implements TitleBar.Title
         recyclerView.addItemDecoration(new ItemDecoration(mActivity, RecyclerView.HORIZONTAL));
         recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+        initParentFile();
+        switchFolder(parentFile, true);
     }
 
 
@@ -169,13 +170,6 @@ public class FolderChooseFragment extends BaseFragment implements TitleBar.Title
             path = parentFile.getAbsolutePath();
             depth = this.depth;
         }
-        BatchCompareFragment batchCompareFragment = (BatchCompareFragment)
-                ((BatchFragment)getParentFragment()).getFragment(BatchFragment.ID_BATCH_COMPARE);
-        Bundle bundle = new Bundle();
-        bundle.putString(KEY_PATH, path);
-        bundle.putInt(KEY_DEPTH, depth);
-        bundle.putInt(BatchCompareFragment.KEY_REQUEST_TYPE, BatchCompareFragment.REQUEST_TYPE_FILE);
-        batchCompareFragment.setArguments(bundle);
         List<String> stringList = new ArrayList<>();
         for(File file: mFileList){
             if(FileUtil.isImg(file)){
@@ -187,7 +181,10 @@ public class FolderChooseFragment extends BaseFragment implements TitleBar.Title
                 .putInt(KEY_DEPTH, depth)
                 .putString(KEY_PATH, path)
                 .apply();
-        batchCompareFragment.setImgList(stringList);
-        ((BatchFragment)getParentFragment()).switchFragment(BatchFragment.ID_BATCH_COMPARE);
+        Log.d("test", "getBackToBatch: " + path);
+        Intent intent = new Intent();
+        intent.putExtra("path", path);
+        getActivity().setResult(200, intent);
+        getActivity().finish();
     }
 }
