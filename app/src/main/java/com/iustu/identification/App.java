@@ -2,7 +2,6 @@ package com.iustu.identification;
 
 import android.content.Context;
 
-import com.facebook.stetho.Stetho;
 import com.fanjun.keeplive.KeepLive;
 import com.fanjun.keeplive.config.ForegroundNotification;
 import com.fanjun.keeplive.config.KeepLiveService;
@@ -10,7 +9,6 @@ import com.iustu.identification.ui.main.camera.prenster.CapturePicService;
 import com.iustu.identification.util.SDKUtil;
 import com.iustu.identification.util.SqliteHelper;
 import com.iustu.identification.util.SqliteUtil;
-import com.tencent.bugly.Bugly;
 
 import org.litepal.LitePalApplication;
 
@@ -29,7 +27,7 @@ public class App extends LitePalApplication{
     @Override
     public void onCreate() {
         super.onCreate();
-        Stetho.initializeWithDefaults(this);
+        //Stetho.initializeWithDefaults(this);
 //        CrashReport.initCrashReport(getApplicationContext());
         //Bugly.init(getApplicationContext(), "9c3bdbe293", false );
         SqliteHelper.init(getApplicationContext());

@@ -85,10 +85,12 @@ public class BatchCompareFragment extends DialogFragment implements BatchView {
     public void onStart() {
         super.onStart();
         Window dialogWindow = getDialog().getWindow();
-        dialogWindow.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#68030919")));
+        //dialogWindow.setBackgroundDrawable(new ColorDrawable(Color.parseColor("#68030919")));
+        dialogWindow.setBackgroundDrawableResource(R.drawable.out_line);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         WindowManager.LayoutParams params = dialogWindow.getAttributes();
+        params.alpha = 0.5f;
         dialogWindow.setAttributes(params);
         DisplayMetrics dm = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
