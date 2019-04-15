@@ -219,4 +219,16 @@ public class SDKUtil {
             }
             return detectResults;
     }
+
+    /**
+     * 从人脸库删除人脸
+     * @param persionInfo 需要删除的人脸库
+     * @return 是否删除成功
+     */
+    public static int deletePerFromLibrary(PersionInfo persionInfo) {
+        SearchHandler searchHandler = (SearchHandler)HandlerFactory.createSearcher("/sdcard/DeepFace/" + persionInfo.libName, 0, 1);
+        int result = searchHandler.searchDelete(persionInfo.image_id);
+        searchHandler.destroy();
+        return result;
+    }
 }

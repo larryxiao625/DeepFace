@@ -119,8 +119,8 @@
 
 # litepal
 -keep class org.litepal.** {*;}
--keep class * extends org.litepal.crud.DataSupport {*;}
+-keep class * extends org.litepal.crud.DataSupport *;}
 
-
+-keep class com.iustu.identification.entity.**{*;}
 #屏蔽警告
 -ignorewarnings
