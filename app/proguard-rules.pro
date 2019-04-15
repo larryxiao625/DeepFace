@@ -19,12 +19,7 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
-<<<<<<< HEAD
 -ignorewarnings
-=======
-
-# 从这里开始
->>>>>>> 984c8fcc037324c34fba2ccc9d3cd9bae57d8450
 -optimizationpasses 5
 -dontusemixedcaseclassnames
 -dontskipnonpubliclibraryclasses
@@ -126,5 +121,3 @@
 -keep class * extends org.litepal.crud.DataSupport *;}
 
 -keep class com.iustu.identification.entity.**{*;}
-#屏蔽警告
--ignorewarnings
