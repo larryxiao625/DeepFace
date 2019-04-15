@@ -2,6 +2,7 @@ package com.iustu.identification.ui.main.library.addperson;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -132,7 +133,7 @@ public class AddPersonFragment extends BaseFragment implements AddPersionView {
 
         String sex = sexEdit.getText().toString().trim();
         if(!sex.equals("男")&&!sex.equals("女")){
-            builder.content("性别请输入(男或女或空)")
+            builder.content("性别请输入(男或女)")
                     .show(mActivity.getFragmentManager());
             return;
         }
@@ -246,5 +247,6 @@ public class AddPersonFragment extends BaseFragment implements AddPersionView {
         sexEdit.setText("");
         locationEdit.setText("");
         remarkEdit.setText("");
+        photoIv.setImageDrawable(null);
     }
 }
