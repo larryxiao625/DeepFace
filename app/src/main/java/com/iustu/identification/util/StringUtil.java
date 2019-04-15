@@ -26,14 +26,17 @@ public class StringUtil {
             String[] s = picture.split("/");
             String info = s[s.length - 1];    // 获取图片中包含的信息
             s = info.split("_");
-            if (s.length != 4) {
-                ToastUtil.show("检测到非法命名格式，请按照 姓名_证件号码_性别_备注 的格式命名图片");
+            if (s.length != 4 || !IdentityUtil.isValidatedIdentity(s[1].trim())) {
+                //ToastUtil.show("检测到非法命名格式，请按照 姓名_证件号码_性别_备注 的格式命名图片");
                 return null;
             }
-            persionInfo.name = s[0];
-            persionInfo.identity = s[1];
-            persionInfo.gender = s[2];
-            persionInfo.other = s[3];
+            IdentityUtil.getInformation(s[1].trim());
+            persionInfo.name = s[0].trim();
+            persionInfo.identity = s[1].trim();
+            persionInfo.gender = s[2].trim();
+            persionInfo.other = s[3].trim();
+            persionInfo.birthday = IdentityUtil.birthday;
+            persionInfo.home = NativePlace.getNativePlace(Integer.valueOf(s[1].substring(0,6)));
             Log.d("Stringutil", "clipPictures: " + persionInfo.photoPath);
             result.add(persionInfo);
         }

@@ -425,6 +425,12 @@ public class RxUtil {
         return Observable.create(new ObservableOnSubscribe<Object>() {
             @Override
             public void subscribe(ObservableEmitter<Object> e) {
+                int res = SDKUtil.deletePerFromLibrary(persionInfo);
+                if (res == -1) {
+                    e.onError(new Exception("人脸库删除人脸特征失败"));
+                    return;
+                }
+
                 // 首先执行数据库操作
                 SQLiteDatabase database = SqliteUtil.getDatabase();
                 database.beginTransaction();
@@ -462,6 +468,11 @@ public class RxUtil {
                 SQLiteDatabase database = SqliteUtil.getDatabase();
                 database.beginTransaction();
                 try {
+                    Cursor cursor = database.query(false, RxUtil.DB_FACECOLLECTIOMITEM, FACECOLLECTION_COLUMNS, null, null, null, null, null, null, null);
+                    if (cursor.getCount() == DataCache.getParameterConfig().getSaveCount()) {
+                        cursor.moveToNext();
+                        database.delete(RxUtil.DB_FACECOLLECTIOMITEM, "id = " + cursor.getInt(cursor.getColumnIndex("id")), null);
+                    }
                     database.insert(RxUtil.DB_FACECOLLECTIOMITEM, null, item.toContentValues());
                     database.setTransactionSuccessful();
                 }finally {
@@ -485,6 +496,11 @@ public class RxUtil {
                 SQLiteDatabase database = SqliteUtil.getDatabase();
                 database.beginTransaction();
                 try {
+                    Cursor cursor1 = database.query(false, RxUtil.DB_COMPARERECORD, COMPARE_COLUMNS, null, null, null, null, null, null, null);
+                    if (cursor1.getCount() == DataCache.getParameterConfig().getSaveCount()) {
+                        cursor1.moveToNext();
+                        database.delete(RxUtil.DB_COMPARERECORD, "uploadPhoto = ", new String[]{cursor1.getString(cursor1.getColumnIndex("uploadPhoto"))});
+                    }
                     Cursor cursor = database.query(RxUtil.DB_PERSIONINFO, RxUtil.PERSIONINFO_COLUMNS, "image_id = '" + compareRecord.getImage_id() + "'", null, null, null, null, null);
                     Log.d("CameraCursor", String.valueOf(cursor.getCount()));
                     while(cursor.moveToNext()) {

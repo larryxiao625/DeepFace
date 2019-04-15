@@ -8,3 +8,6 @@
 /captures
 .externalNativeBuild
 /.idea/modules.xml
+/app/release
+/app/build
+

@@ -19,7 +19,7 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
-
+-ignorewarnings
 -optimizationpasses 5
 -dontusemixedcaseclassnames
 -dontskipnonpubliclibraryclasses
@@ -30,8 +30,8 @@
 -keepattributes Signature
 -keepattributes SourceFile,LineNumberTable
 -optimizations !code/simplification/cast,!field/*,!class/merging/*
-
-# Android
+#
+## Android
 -keep public class * extends android.app.Activity
 -keep public class * extends android.app.Appliction
 -keep public class * extends android.app.Service
@@ -52,7 +52,7 @@
 -keep class * implements android.os.Parcelable {    public static final android.os.Parcelable$Creator *;}
 -keepclassmembers class * implements java.io.Serializable {    static final long serialVersionUID;    private static final java.io.ObjectStreamField[] serialPersistentFields;    !static !transient <fields>;    !private <fields>;    !private <methods>;    private void writeObject(java.io.ObjectOutputStream);    private void readObject(java.io.ObjectInputStream);    java.lang.Object writeReplace();    java.lang.Object readResolve();}
 -keepclassmembers class * {    void *(**On*Event);    void *(**On*Listener);}
-
+#
 -assumenosideeffects class android.util.Log {
     public static int v(...);
     public static int i(...);
@@ -63,17 +63,17 @@
 -keep public class com.tencent.bugly.**{*;}
 -dontwarn javax.annotation.**
 -dontwarn javax.inject.**
-# OkHttp
+## OkHttp
 -dontwarn okio.**
 -dontwarn okhttp3.**
 -dontwarn javax.annotation.Nullable
 -dontwarn javax.annotation.ParametersAreNonnullByDefault
-# Okio
+## Okio
 -dontwarn com.squareup.**
 -dontwarn okio.**
 -keep public class org.codehaus.* { *; }
 -keep public class java.nio.* { *; }
-# Retrofit
+## Retrofit
 -dontwarn retrofit2.**
 -keep class retrofit2.** { *; }
 -keepattributes Signature
@@ -93,18 +93,18 @@
     rx.internal.util.atomic.LinkedQueueNode consumerNode;
 }
 -dontnote rx.internal.util.PlatformDependent
-
-# Gson
+#
+## Gson
 -keepattributes Signature
 -keepattributes *Annotation*
 -keep class sun.misc.Unsafe { *; }
 -keep class com.google.gson.stream.** { *; }
-# 使用Gson时需要配置Gson的解析对象及变量都不混淆。不然Gson会找不到变量。
-# 将下面替换成自己的实体类
+## 使用Gson时需要配置Gson的解析对象及变量都不混淆。不然Gson会找不到变量。
+## 将下面替换成自己的实体类
 -keep public class com.iustu.identification.api.**{ *; }
 -keep public class com.iustu.identification.bean.**{ *; }
 
-# Glide
+## Glide
 -keep public class * implements com.bumptech.glide.module.GlideModule
 -keep public class * extends com.bumptech.glide.module.AppGlideModule
 -keep public enum com.bumptech.glide.load.ImageHeaderParser$** {
@@ -118,4 +118,6 @@
 
 # litepal
 -keep class org.litepal.** {*;}
--keep class * extends org.litepal.crud.DataSupport {*;}
+-keep class * extends org.litepal.crud.DataSupport *;}
+
+-keep class com.iustu.identification.entity.**{*;}

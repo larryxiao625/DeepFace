@@ -2,6 +2,7 @@ package com.iustu.identification.ui.main.library.addperson;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -24,6 +25,7 @@ import com.iustu.identification.util.ExceptionUtil;
 import com.iustu.identification.util.FileCallBack;
 import com.iustu.identification.util.IdentityUtil;
 import com.iustu.identification.util.ImageUtils;
+import com.iustu.identification.util.NativePlace;
 import com.iustu.identification.util.TextUtil;
 import com.iustu.identification.util.ToastUtil;
 
@@ -125,13 +127,13 @@ public class AddPersonFragment extends BaseFragment implements AddPersionView {
             }
             IdentityUtil.getInformation(idCardNumber);
             sexEdit.setText(IdentityUtil.gender);
-            locationEdit.setText(IdentityUtil.location);
+            locationEdit.setText(NativePlace.getNativePlace(Integer.valueOf(idCardNumber.substring(0, 6))));
             birthday = IdentityUtil.birthday;
         }
 
         String sex = sexEdit.getText().toString().trim();
-        if(!sex.equals("男")&&!sex.equals("女")&&!sex.equals("")){
-            builder.content("性别请输入(男或女或空)")
+        if(!sex.equals("男")&&!sex.equals("女")){
+            builder.content("性别请输入(男或女)")
                     .show(mActivity.getFragmentManager());
             return;
         }
@@ -177,6 +179,7 @@ public class AddPersonFragment extends BaseFragment implements AddPersionView {
                     }
                 });
                 if(observable == null){
+                    dissmissDialog();
                     ToastUtil.show("照片处理失败");
                     return;
                 }
@@ -244,5 +247,6 @@ public class AddPersonFragment extends BaseFragment implements AddPersionView {
         sexEdit.setText("");
         locationEdit.setText("");
         remarkEdit.setText("");
+        photoIv.setImageDrawable(null);
     }
 }

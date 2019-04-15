@@ -105,7 +105,7 @@
     <TextView
         android:gravity="center_vertical"
         android:id="@+id/progress_tv"
-        android:text="导入成功：XX张，导入失败：XX张"
+        android:text="导入成功： 张，导入失败： 张"
         android:textSize="@dimen/x40"
         android:textColor="@color/white"
         android:layout_marginLeft="@dimen/x76"

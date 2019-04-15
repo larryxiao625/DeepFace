@@ -5,6 +5,7 @@ import android.util.Log;
 import com.iustu.identification.entity.PersionInfo;
 import com.iustu.identification.util.RxUtil;
 import com.iustu.identification.util.StringUtil;
+import com.iustu.identification.util.ToastUtil;
 
 import java.util.ArrayList;
 
@@ -32,6 +33,7 @@ public class BatchPresenter {
         ArrayList<PersionInfo> persionInfos = StringUtil.clipPictures(pictures);
         if (persionInfos == null) {
             view.changeSubmitable();
+            ToastUtil.show("图片命名格式不合法或者证件号码不合法");
             return;
         }
         for(PersionInfo persionInfo : persionInfos) {
