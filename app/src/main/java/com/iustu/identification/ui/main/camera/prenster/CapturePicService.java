@@ -17,7 +17,6 @@ import com.example.agin.facerecsdk.HandlerFactory;
 import com.example.agin.facerecsdk.SearchDBItem;
 import com.example.agin.facerecsdk.SearchHandler;
 import com.example.agin.facerecsdk.SearchResultItem;
-import com.facebook.stetho.common.ListUtil;
 import com.iustu.identification.bean.ParameterConfig;
 import com.iustu.identification.util.DataCache;
 import com.iustu.identification.util.SDKUtil;

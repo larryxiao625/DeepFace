@@ -14,6 +14,7 @@ import com.iustu.identification.R;
 import com.iustu.identification.bean.FaceCollectItem;
 import com.iustu.identification.ui.base.OnPageItemClickListener;
 import com.iustu.identification.ui.base.PageRecyclerViewAdapter;
+import com.iustu.identification.util.DataCache;
 import com.iustu.identification.util.TextUtil;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class FaceCollectItemAdapter extends PageRecyclerViewAdapter<FaceCollectI
 
     public FaceCollectItemAdapter(List<FaceCollectItem> dataLast) {
         super(dataLast);
-        setDisplayCountPerPage(12);
+        setDisplayCountPerPage(DataCache.getParameterConfig().getDisplayCount());
     }
 
     @Override

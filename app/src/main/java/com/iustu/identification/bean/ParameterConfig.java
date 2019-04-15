@@ -17,10 +17,10 @@ public class ParameterConfig {
     float threshold1 = 0.7f;
     float threshold2 = 0.6f;
     float threshold3 = 0.6f;
-    int saveCount = 0;
-    int savePosition;      // saveCount 选中的位置
+    int saveCount = 1000;
+    int savePosition = 1;      // saveCount 选中的位置
     int displayCount = 10;
-    int displayPosition;    // displayCount 选中的位置
+    int displayPosition = 0;    // displayCount 选中的位置
     int dpiWidth=1920;
     int dpiHeight=1080;
     int dpiCount=0;

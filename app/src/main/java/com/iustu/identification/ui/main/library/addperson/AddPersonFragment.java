@@ -24,6 +24,7 @@ import com.iustu.identification.util.ExceptionUtil;
 import com.iustu.identification.util.FileCallBack;
 import com.iustu.identification.util.IdentityUtil;
 import com.iustu.identification.util.ImageUtils;
+import com.iustu.identification.util.NativePlace;
 import com.iustu.identification.util.TextUtil;
 import com.iustu.identification.util.ToastUtil;
 
@@ -125,7 +126,7 @@ public class AddPersonFragment extends BaseFragment implements AddPersionView {
             }
             IdentityUtil.getInformation(idCardNumber);
             sexEdit.setText(IdentityUtil.gender);
-            locationEdit.setText(IdentityUtil.location);
+            locationEdit.setText(NativePlace.getNativePlace(Integer.valueOf(idCardNumber.substring(0, 6))));
             birthday = IdentityUtil.birthday;
         }
 
