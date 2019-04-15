@@ -130,7 +130,7 @@ public class AddPersonFragment extends BaseFragment implements AddPersionView {
         }
 
         String sex = sexEdit.getText().toString().trim();
-        if(!sex.equals("男")&&!sex.equals("女")&&!sex.equals("")){
+        if(!sex.equals("男")&&!sex.equals("女")){
             builder.content("性别请输入(男或女或空)")
                     .show(mActivity.getFragmentManager());
             return;
@@ -177,6 +177,7 @@ public class AddPersonFragment extends BaseFragment implements AddPersionView {
                     }
                 });
                 if(observable == null){
+                    dissmissDialog();
                     ToastUtil.show("照片处理失败");
                     return;
                 }
