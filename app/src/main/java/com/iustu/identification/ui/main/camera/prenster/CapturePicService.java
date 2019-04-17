@@ -181,7 +181,9 @@ public class CapturePicService extends Service {
             String cutPathName=cutPath+TextUtil.dateMessage(calendar.getTime())+"_"+i+".jpg";
             int height=(detectResult.getRects().get(i).bottom> ParameterConfig.getFromSP().getDpiHeight()? ParameterConfig.getFromSP().getDpiHeight():detectResult.getRects().get(i).bottom)-(detectResult.getRects().get(i).top<0? 0:detectResult.getRects().get(i).top);
             int width=(detectResult.getRects().get(i).right> ParameterConfig.getFromSP().getDpiWidth()? ParameterConfig.getFromSP().getDpiWidth():detectResult.getRects().get(i).right)-(detectResult.getRects().get(i).left<0? 0:detectResult.getRects().get(i).left);
-            Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(picPath),detectResult.getRects().get(i).left<0? 0:detectResult.getRects().get(i).left,detectResult.getRects().get(i).top<0? 0:detectResult.getRects().get(i).top,width,height);
+            height= (int) (height*1.5);
+            width= (int) (width*1.5);
+            Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(picPath),detectResult.getRects().get(i).left<0? 0:detectResult.getRects().get(i).left,detectResult.getRects().get(i).top<0? 0:detectResult.getRects().get(i).top,width>(ParameterConfig.getFromSP().getDpiWidth()-detectResult.getRects().get(i).left)?(ParameterConfig.getFromSP().getDpiWidth()-detectResult.getRects().get(i).left):width,height>(ParameterConfig.getFromSP().getDpiHeight()-detectResult.getRects().get(i).top)?(ParameterConfig.getFromSP().getDpiHeight()-detectResult.getRects().get(i).top):height);
             SqliteUtil.insertFaceCollectionItem(cutPathName,TextUtil.getDateString2(calendar.getTime()));
             try {
                 File file=new File(cutPathName);

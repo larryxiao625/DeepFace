@@ -204,6 +204,10 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
             PreviewSizeConfig previewSizeConfig=PreviewSizeConfig.getFramSp();
             Toast.makeText(getActivity(),"选择分辨率无效,恢复到默认分辨率",Toast.LENGTH_LONG).show();
             cameraHelper.updateResolution(previewSizeConfig.getPreviewWidth().get(previewSizeConfig.getPreviewWidth().size()-1),previewSizeConfig.getPreviewHeight().get(previewSizeConfig.getPreviewWidth().size()-1));
+            ParameterConfig parameterConfig=ParameterConfig.getFromSP();
+            parameterConfig.setDpiHeight(previewSizeConfig.getPreviewHeight().get(previewSizeConfig.getPreviewWidth().size())-1);
+            parameterConfig.setDpiWidth(previewSizeConfig.getPreviewWidth().get(previewSizeConfig.getPreviewWidth().size())-1);
+            parameterConfig.save();
         }
     }
 
