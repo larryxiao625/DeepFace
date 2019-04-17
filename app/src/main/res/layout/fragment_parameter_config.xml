@@ -72,6 +72,23 @@
                     android:layout_height="wrap_content"
                     android:textColorHint="@color/lite_gray"
                     android:hint="@string/min_faces_hint"/>
+
+                <TextView
+                    android:gravity="center_vertical"
+                    android:text="@string/threshold_quantity"
+                    android:textSize="@dimen/y36"
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <EditText
+                    android:id="@+id/threshold_quantity"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/y38"
+                    android:inputType="numberDecimal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColorHint="@color/lite_gray"
+                    android:hint="@string/min_faces_hint"/>
                 
             </LinearLayout>
             <LinearLayout

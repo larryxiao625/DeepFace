@@ -62,6 +62,8 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
     EditText checkFactor3;
     @BindView(R.id.save_dpi_tv)
     TextView dpiSetTv;
+    @BindView(R.id.threshold_quantity)
+    EditText quantity;
 
     private OptionsPickerView displayCountPicker;
     private OptionsPickerView saveCountPicker;
@@ -109,9 +111,11 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
         checkFactor1.addTextChangedListener(new MyTextWatcher());
         checkFactor2.addTextChangedListener(new MyTextWatcher());
         checkFactor3.addTextChangedListener(new MyTextWatcher());
+        quantity.addTextChangedListener(new MyTextWatcher());
         displayCountTv.setText(config.getDisplayCount() + "");
         saveCountTv.setText(config.getSaveCount() + "");
         dpiSetTv.setText(dpiStringList.get(config.getDpiCount()) + "");
+        quantity.setText(config.getThresholdQuanity() + "");
     }
 
     public void getDpiStringList(){
@@ -123,18 +127,21 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
     public void onPause() {
         if(config != null) {
             if(minFace.getText().toString().isEmpty()) {
-                config.setMin_size(40);
+                config.setMin_size(80);
             }else if(!(Float.valueOf(checkFactor1.getText().toString())>=0)&&!(Float.valueOf(checkFactor1.getText().toString())<=1)){
-                config.setThreshold3((float) 0.5);
+                config.setThreshold3((float) 0.6);
             }else if(!(Float.valueOf(checkFactor2.getText().toString())>=0)&&!(Float.valueOf(checkFactor2.getText().toString())<=1)){
-                config.setThreshold2((float) 0.5);
+                config.setThreshold2((float) 0.8);
             }else if(!(Float.valueOf(checkFactor3.getText().toString())>=0)&&!(Float.valueOf(checkFactor3.getText().toString())<=1)){
-                config.setThreshold1((float) 0.5);
+                config.setThreshold1((float) 0.98);
+            } else if(!(Float.valueOf(quantity.getText().toString())>=0)&&!(Float.valueOf(quantity.getText().toString())<=1)){
+                config.setThreshold1((float) 0.71);
             } else {
                 config.setMin_size(Integer.valueOf(minFace.getText().toString()));
                 config.setThreshold1(Float.valueOf(checkFactor1.getText().toString()));
                 config.setThreshold2(Float.valueOf(checkFactor2.getText().toString()));
                 config.setThreshold3(Float.valueOf(checkFactor3.getText().toString()));
+                config.setThresholdQuanity(Float.valueOf(quantity.getText().toString()));
             }
             config.save();
             super.onPause();

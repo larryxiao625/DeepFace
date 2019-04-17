@@ -12,34 +12,22 @@ import com.iustu.identification.util.MSP;
  */
 public class ParameterConfig {
     // "min_size 40\n pyramid_threshold 12\n factor 0.709\n thresholds 0.6 0.7 0.7\n"
-    int min_size = 40;         // 为需要最小检测的人脸框大小，单位为像素，默认是40，小于min_rect太多的人脸将无法检测
-    float factor = 0.89F;     // 为图像金字塔缩放的比率，用来检测出远大于min_rect大小的人脸，默认为0.89
-    float threshold1 = 0.7f;
-    float threshold2 = 0.6f;
-    float threshold3 = 0.6f;
+    int min_size = 80;         // 为需要最小检测的人脸框大小，单位为像素，默认是40，小于min_rect太多的人脸将无法检测
+    float factor = 0.89F;     // 用来判断比对结果是否为同一个人
+    float threshold1 = 0.6f;
+    float threshold2 = 0.8f;
+    float threshold3 = 0.98f;
     int saveCount = 1000;
     int savePosition = 1;      // saveCount 选中的位置
-    int displayCount = 10;
+    int displayCount = 12;
     int displayPosition = 0;    // displayCount 选中的位置
     int dpiWidth=1920;
     int dpiHeight=1080;
     int dpiCount=0;
     float filterScore = 0.85f;       // 人脸比对的阈值
+    float thresholdQuanity = 0.71f;       // 临界值
 
     public ParameterConfig(){}
-
-    public ParameterConfig(int min_size, float factor, float threshold1, float threshold2, float threshold3, int saveCount, int displayCount, int dpiWidth, int dpiHeight, int dpiCount) {
-        this.min_size = min_size;
-        this.factor = factor;
-        this.threshold1 = threshold1;
-        this.threshold2 = threshold2;
-        this.threshold3 = threshold3;
-        this.saveCount = saveCount;
-        this.displayCount = displayCount;
-        this.dpiWidth = dpiWidth;
-        this.dpiHeight = dpiHeight;
-        this.dpiCount = dpiCount;
-    }
 
     // 将对象转化为json字符串，存进SharePreference中
     private String toJsonString() {
@@ -77,6 +65,14 @@ public class ParameterConfig {
     }
     public float getFilterScore() {
         return filterScore;
+    }
+
+    public void setThresholdQuanity(float factor) {
+        this.thresholdQuanity = factor;
+    }
+
+    public float getThresholdQuanity() {
+        return this.thresholdQuanity;
     }
     public int getMin_size() {
         return min_size;
