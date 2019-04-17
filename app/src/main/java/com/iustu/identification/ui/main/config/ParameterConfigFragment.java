@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.bigkoo.pickerview.OptionsPickerView;
 import com.iustu.identification.R;
 import com.iustu.identification.bean.ParameterConfig;
+import com.iustu.identification.bean.PreviewSizeConfig;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.widget.seekbar.BubbleSeekBar;
 import com.iustu.identification.util.DataCache;
@@ -65,6 +66,7 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
     private OptionsPickerView displayCountPicker;
     private OptionsPickerView saveCountPicker;
     private OptionsPickerView dpiPicker;
+    private PreviewSizeConfig previewSizeConfig;
 
     private List<Integer> displayCountList = new ArrayList<>();         // 设置显示结果数量的源
     private List<Integer> saveCountList = new ArrayList<>();          // 设置保存记录数的源
@@ -89,20 +91,9 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
         saveCountList.add(1000);
         saveCountList.add(5000);
         saveCountList.add(10000);
-        dpiWidth.add(1920);
-        dpiWidth.add(1280);
-        dpiWidth.add(2048);
-        dpiWidth.add(1600);
-        dpiWidth.add(1280);
-        dpiWidth.add(1280);
-        dpiWidth.add(1024);
-        dpiHeight.add(1080);
-        dpiHeight.add(720);
-        dpiHeight.add(1536);
-        dpiHeight.add(1200);
-        dpiHeight.add(1024);
-        dpiHeight.add(960);
-        dpiHeight.add(768);
+        previewSizeConfig=PreviewSizeConfig.getFramSp();
+        dpiWidth=previewSizeConfig.getPreviewWidth();
+        dpiHeight=previewSizeConfig.getPreviewHeight();
         getDpiStringList();
         initData();
     }

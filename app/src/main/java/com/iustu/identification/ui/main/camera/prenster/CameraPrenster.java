@@ -6,6 +6,7 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.Surface;
 
+import com.iustu.identification.bean.ParameterConfig;
 import com.iustu.identification.bean.PreviewSizeConfig;
 import com.iustu.identification.ui.main.camera.view.IVew;
 import com.iustu.identification.util.TextUtil;
@@ -48,6 +49,8 @@ public class CameraPrenster implements UVCCameraHelper.OnMyDevConnectListener,IP
     @Override
     public void onConnectDev(UsbDevice device, boolean isConnected) {
         Log.d("cameraPrenster","cameraConnect");
+        setSupportPreviewSize(cameraHelper.getSupportedPreviewSizes());
+        cameraHelper.updateResolution(ParameterConfig.getFromSP().getDpiWidth(),ParameterConfig.getFromSP().getDpiHeight());
         iVew.showShortMsg("摄像头已连接");
     }
 

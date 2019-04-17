@@ -41,6 +41,7 @@ import com.iustu.identification.util.FileCallBack;
 import com.iustu.identification.util.IconFontUtil;
 import com.iustu.identification.util.ImageUtils;
 import com.jiangdg.usbcamera.UVCCameraHelper;
+import com.serenegiant.usb.common.AbstractUVCCameraHandler;
 import com.serenegiant.usb.widget.CameraViewInterface;
 import com.serenegiant.usb.widget.UVCCameraTextureView;
 
@@ -60,7 +61,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by Liu Yuchuan on 2017/11/4.
  */
 
-public class CameraFragment extends BaseFragment implements CameraViewInterface.Callback {
+public class CameraFragment extends BaseFragment implements CameraViewInterface.Callback, AbstractUVCCameraHandler.OnPreViewResultListener {
     boolean isPreview=false;
     boolean isFirstTime=true;
     UVCCameraHelper cameraHelper=UVCCameraHelper.getInstance();
@@ -89,18 +90,17 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
         dataSource = new ArrayList<>();
         mAdapter = new CompareItemAdapter(dataSource);
         cameraPrenster.attchView(iVew);
+
         serviceIntent=new Intent(getActivity(), CapturePicService.class);
+        cameraHelper.setOnPreviewFrameListener(this);
         if(cameraHelper.getUSBMonitor()==null) {
             Log.d("CameraFragment","initMonitor");
-            cameraHelper.setDefaultPreviewSize(DataCache.getParameterConfig().getDpiWidth(), DataCache.getParameterConfig().getDpiHeight());
+            cameraHelper.setDefaultPreviewSize(1920, 1080);
             cameraHelper.initUSBMonitor(getActivity(),cameraTextureView,cameraPrenster);
-        }else {
-            Log.d("CameraFragment","updateDpi");
-            cameraHelper.updateResolution(DataCache.getParameterConfig().getDpiWidth(), DataCache.getParameterConfig().getDpiHeight());
         }
+        cameraHelper.updateResolution(ParameterConfig.getFromSP().getDpiWidth(),ParameterConfig.getFromSP().getDpiHeight());
         cameraTextureView.setCallback(this);
         cameraHelper.registerUSB();
-        cameraPrenster.setSupportPreviewSize(cameraHelper.getSupportedPreviewSizes());
         itemCompareRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         itemCompareRecyclerView.setAdapter(mAdapter);
 //        cameraPrenster.capturePic();
@@ -197,6 +197,15 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
             }
         }
     };
+
+    @Override
+    public void onPreviewResult(byte[] data) {
+        if(data==null){
+            PreviewSizeConfig previewSizeConfig=PreviewSizeConfig.getFramSp();
+            Toast.makeText(getActivity(),"选择分辨率无效,恢复到默认分辨率",Toast.LENGTH_LONG).show();
+            cameraHelper.updateResolution(previewSizeConfig.getPreviewWidth().get(previewSizeConfig.getPreviewWidth().size()-1),previewSizeConfig.getPreviewHeight().get(previewSizeConfig.getPreviewWidth().size()-1));
+        }
+    }
 
     @Override
     public void onStart() {
