@@ -14,13 +14,7 @@ public class FaceCollectItem extends DataSupport{
     private String time;
     private String faceId;
     private int id;
-
-    public FaceCollectItem(String imgUrl, String time, String faceId, int id) {
-        this.imgUrl = imgUrl;
-        this.time = time;
-        this.faceId = faceId;
-        this.id = id;
-    }
+    private String originalPhoto;        // 最初的照片
 
     public FaceCollectItem() {}
 
@@ -29,6 +23,7 @@ public class FaceCollectItem extends DataSupport{
         values.put("imgUrl", this.imgUrl);
         values.put("faceId", this.faceId);
         values.put("time", this.time);
+        values.put("originalPath", this.originalPhoto);
         return values;
     }
     public int getId() {
@@ -61,5 +56,13 @@ public class FaceCollectItem extends DataSupport{
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public void setOriginalPhoto(String originalPhoto) {
+        this.originalPhoto = originalPhoto;
+    }
+
+    public String getOriginalPhoto() {
+        return this.originalPhoto;
     }
 }
