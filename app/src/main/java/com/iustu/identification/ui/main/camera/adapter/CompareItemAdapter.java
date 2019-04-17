@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.iustu.identification.R;
@@ -121,10 +123,16 @@ public class CompareItemAdapter extends RecyclerView.Adapter<CompareItemAdapter.
 
             }else {
                 // TODO: 2019/4/9 根据人脸库获取中文名方法
-                Glide.with(itemView).asBitmap().load(new File(info.getUploadPhoto())).into(capturePhoto);
+                Log.d("uploadPhoto", "setCompareRecord: " + info.getUploadPhoto());
+                Glide.with(itemView).asBitmap()
+                        .load(new File(info.getUploadPhoto()))
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .into(capturePhoto);
                 String[] photos = info.getPhotoPath().split(";");
                 String libPath = "/sdcard/DeepFace/" + info.getLibName()+ "/" + photos[0];
-                Glide.with(itemView).load(new File(libPath)).into(matchPhoto);
+                Glide.with(itemView).load(new File(libPath))
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .into(matchPhoto);
                 libNameTv.setText(TextUtil.format(String.valueOf(info.getLibName())));
                 nameTv.setText(TextUtil.format(info.getName()));
                 birthTv.setText(TextUtil.format(info.getGender()));

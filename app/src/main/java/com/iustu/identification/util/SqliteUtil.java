@@ -41,7 +41,7 @@ public class SqliteUtil {
     /**
      * 抓拍记录的插入操作
      * @param imgPath 图片的路径
-     * @param time 时间戳
+     * @param time 时间戳，yyyy-mm-dd格式
      */
     public static void insertFaceCollectionItem(String imgPath, String time){
         FaceCollectItem item = new FaceCollectItem();

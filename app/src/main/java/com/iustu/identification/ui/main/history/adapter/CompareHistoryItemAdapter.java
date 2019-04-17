@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -120,10 +121,14 @@ public class CompareHistoryItemAdapter extends PageRecyclerViewAdapter<CompareHi
                 libName.setText(TextUtil.format("目标库:%s", String.valueOf(compareRecord.getLibName())));
                 compareTime.setText(compareRecord.getTime());
                 scaleView.setScale((int) (compareRecord.getRate() * 100));
-                Glide.with(itemView).load(new File(compareRecord.getUploadPhoto())).into(targetPhoto);
+                Glide.with(itemView).load(new File(compareRecord.getUploadPhoto()))
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .into(targetPhoto);
                 String[] photos = compareRecord.getPhotoPath().split(";");
                 String libPath = "/sdcard/DeepFace/" + compareRecord.getLibName()+"/" + photos[0];
-                Glide.with(itemView).load(new File(libPath)).into(libPhoto);
+                Glide.with(itemView).load(new File(libPath))
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .into(libPhoto);
             }
         }
     }
