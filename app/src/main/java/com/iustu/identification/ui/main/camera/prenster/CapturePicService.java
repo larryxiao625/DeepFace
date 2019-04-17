@@ -78,7 +78,7 @@ public class CapturePicService extends Service {
     @SuppressLint("CheckResult")
     public void capturePic() {
         createDir(rootPath);
-        Observable.interval(1000, TimeUnit.MILLISECONDS)
+        Observable.interval(1500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Long>() {
                     @Override
