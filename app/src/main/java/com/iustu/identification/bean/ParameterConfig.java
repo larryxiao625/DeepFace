@@ -13,7 +13,7 @@ import com.iustu.identification.util.MSP;
 public class ParameterConfig {
     // "min_size 40\n pyramid_threshold 12\n factor 0.709\n thresholds 0.6 0.7 0.7\n"
     int min_size = 40;         // 为需要最小检测的人脸框大小，单位为像素，默认是40，小于min_rect太多的人脸将无法检测
-    float factor = 0.709F;     // 为图像金字塔缩放的比率，用来检测出远大于min_rect大小的人脸，默认为0.709
+    float factor = 0.89F;     // 为图像金字塔缩放的比率，用来检测出远大于min_rect大小的人脸，默认为0.89
     float threshold1 = 0.7f;
     float threshold2 = 0.6f;
     float threshold3 = 0.6f;
