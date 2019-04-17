@@ -111,7 +111,7 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
         checkFactor3.addTextChangedListener(new MyTextWatcher());
         displayCountTv.setText(config.getDisplayCount() + "");
         saveCountTv.setText(config.getSaveCount() + "");
-        dpiSetTv.setText(dpiStringList.get(config.getDpiCount()) + "");
+//        dpiSetTv.setText(dpiStringList.get(config.getDpiCount()) + "");
     }
 
     public void getDpiStringList(){

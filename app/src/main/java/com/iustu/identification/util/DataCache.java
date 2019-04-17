@@ -25,6 +25,7 @@ public class DataCache {
         chosenLibConfig = (HashSet<String>) MSP.getInstance(MSP.SP_CHOSEN).getStringSet(MSP.SP_CHOSEN, new HashSet<String>());
         previewSizeConfig= PreviewSizeConfig.getFramSp();
         account = maccount;
+        previewSizeConfig.save();
     }
 
     // 该方法在App退出前调用，用来将内容写回

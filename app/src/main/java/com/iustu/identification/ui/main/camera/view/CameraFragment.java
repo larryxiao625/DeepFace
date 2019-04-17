@@ -98,6 +98,7 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
             cameraHelper.setDefaultPreviewSize(1920, 1080);
             cameraHelper.initUSBMonitor(getActivity(),cameraTextureView,cameraPrenster);
         }
+//        cameraPrenster.setSupportPreviewSize(cameraHelper.getSupportedPreviewSizes());
         cameraHelper.updateResolution(ParameterConfig.getFromSP().getDpiWidth(),ParameterConfig.getFromSP().getDpiHeight());
         cameraTextureView.setCallback(this);
         cameraHelper.registerUSB();
