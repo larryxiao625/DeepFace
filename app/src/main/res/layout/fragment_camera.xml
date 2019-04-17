@@ -14,11 +14,19 @@
             android:id="@+id/capture_uvc_camera"
             android:layout_width="match_parent"
             android:layout_height="200dp" />
+        <!--显示抓拍的照片-->
         <android.support.v7.widget.RecyclerView
             android:layout_marginTop="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/item_compare_recycler_view"></android.support.v7.widget.RecyclerView>
+            android:id="@+id/item_capture_recycler_view">
+        </android.support.v7.widget.RecyclerView>
+        <android.support.v7.widget.RecyclerView
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/item_compare_recycler_view">
+        </android.support.v7.widget.RecyclerView>
 
     </LinearLayout>
 </FrameLayout>

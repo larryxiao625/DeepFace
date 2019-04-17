@@ -262,7 +262,7 @@ public class RxUtil {
                 SQLiteDatabase database = SqliteUtil.getDatabase();
                 database.beginTransaction();
                 try {
-//                    long r = database.insertWithOnConflict(RxUtil.DB_PERSIONINFO, null, persionInfo.toContentValues(), SQLiteDatabase.CONFLICT_IGNORE);
+                    long r = database.insertWithOnConflict(RxUtil.DB_PERSIONINFO, null, persionInfo.toContentValues(), SQLiteDatabase.CONFLICT_IGNORE);
 //                    // 说明插入失败,说明PersionInfo中已经含有该人员，那么直接将其照片添加到人脸库中
 //                    if (r == -1) {
 //                        Cursor cursor = database.query(false, RxUtil.DB_PERSIONINFO, RxUtil.PERSIONINFO_COLUMNS,"libName = ? and name = ?", new String[]{persionInfo.libName, persionInfo.name}, null, null, null, null);

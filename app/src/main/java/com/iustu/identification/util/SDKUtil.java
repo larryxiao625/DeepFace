@@ -48,6 +48,7 @@ public class SDKUtil {
     public static void init() {
         // 初始化人脸检测句柄
         detectHandler = (DetectHandler) HandlerFactory.createDetector("/sdcard/detect-Framework3-cpu-xxxx.model");
+        detectHandler.setThreadNum(HandlerFactory.FrameWorkType.OPENCV, 16);
         detectHandler.initial();
 
         //初始化特征提取句柄
