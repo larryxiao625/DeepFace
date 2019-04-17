@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.iustu.identification.App;
 import com.iustu.identification.R;
 import com.iustu.identification.bean.ParameterConfig;
+import com.iustu.identification.bean.PreviewSizeConfig;
 import com.iustu.identification.entity.CompareRecord;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.main.MainActivity;
@@ -99,6 +100,7 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
         }
         cameraTextureView.setCallback(this);
         cameraHelper.registerUSB();
+        cameraPrenster.setSupportPreviewSize(cameraHelper.getSupportedPreviewSizes());
         itemCompareRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         itemCompareRecyclerView.setAdapter(mAdapter);
 //        cameraPrenster.capturePic();
