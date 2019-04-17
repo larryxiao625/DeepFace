@@ -185,9 +185,9 @@ public class CapturePicService extends Service {
             SqliteUtil.insertFaceCollectionItem(cutPathName,TextUtil.getDateString2(calendar.getTime()));
             try {
                 File file=new File(cutPathName);
-                getVerify(detectResult,calendar,cutPathName);
                 fos=new FileOutputStream(file);
                 bitmap.compress(Bitmap.CompressFormat.JPEG,100,fos);
+                getVerify(detectResult,calendar,cutPathName);
                 fos.flush();
                 fos.close();
             }catch (FileNotFoundException e){
