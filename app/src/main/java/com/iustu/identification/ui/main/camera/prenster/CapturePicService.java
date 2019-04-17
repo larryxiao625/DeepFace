@@ -39,6 +39,8 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
+import static java.lang.Math.sqrt;
+
 public class CapturePicService extends Service {
     UVCCameraHelper cameraHelper=UVCCameraHelper.getInstance();
     static String rootPath= Environment.getExternalStorageDirectory()+"/DeepFace";
@@ -165,6 +167,7 @@ public class CapturePicService extends Service {
                     searchResultItem = temp;
                 }
             }
+            searchResultItem.score= (float) (sqrt(searchResultItem.score - 0.71) /sqrt(1.0 - 0.71)* 0.15 + 0.85);
             Log.d("CameraSearch", String.valueOf(searchResultItems.get(0).score));
             Log.d("CameraSearch",searchResultItems.get(0).image_id);
             SqliteUtil.insertComparedItem(searchResultItem,TextUtil.getDateString2(calendar.getTime()),photoPath, cameraPrenster);
