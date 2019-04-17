@@ -1,6 +1,7 @@
 package com.iustu.identification.util;
 
 import android.os.Build;
+import android.provider.ContactsContract;
 import android.text.Html;
 import android.text.Spanned;
 import android.widget.EditText;
@@ -14,6 +15,7 @@ import static android.text.Html.FROM_HTML_MODE_LEGACY;
 
 public class TextUtil {
     private static final SimpleDateFormat format2=new SimpleDateFormat("yyyy-MM-dd",Locale.CHINA);
+    private static final SimpleDateFormat format3 = new SimpleDateFormat("HH-mm-ss", Locale.CHINA);
     private static final SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日", Locale.CHINESE);
     private static final SimpleDateFormat MESSAGE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINESE);
     private TextUtil(){}
@@ -58,5 +60,7 @@ public class TextUtil {
     public static String getDateString2(Date date){
         return format2.format(date);
     }
+
+    public static String getHourString(Date date) {return format3.format(date);}
 
 }

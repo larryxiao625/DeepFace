@@ -36,6 +36,16 @@ public class FaceCollectItemAdapter extends PageRecyclerViewAdapter<FaceCollectI
         setDisplayCountPerPage(DataCache.getParameterConfig().getDisplayCount());
     }
 
+    public interface FaceItemClickListener {
+        void lookOriginal(int position);
+    }
+
+    private FaceItemClickListener itemClickListener;
+
+    public void setItemClickListener(FaceItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
+    }
+
     @Override
     public void onBindHolder(Holder holder, int index, int position) {
         if(index >= mDataLast.size()){
@@ -43,10 +53,14 @@ public class FaceCollectItemAdapter extends PageRecyclerViewAdapter<FaceCollectI
         }
         FaceCollectItem item = mDataLast.get(index);
         holder.setFaceCollectionItem(item);
-        holder.itemView.setOnClickListener(v -> {
-            if(onPageItemClickListener != null){
-                onPageItemClickListener.onClick(v, position, index);
-            }
+//        holder.itemView.setOnClickListener(v -> {
+//            if(onPageItemClickListener != null){
+//                onPageItemClickListener.onClick(v, position, index);
+//            }
+//        });
+        holder.faceImg.setOnClickListener( v -> {
+            if (itemClickListener != null)
+                itemClickListener.lookOriginal(index);
         });
     }
 
@@ -72,7 +86,7 @@ public class FaceCollectItemAdapter extends PageRecyclerViewAdapter<FaceCollectI
         }
 
         public void setFaceCollectionItem(FaceCollectItem faceCollectionItem) {
-            timeTv.setText(faceCollectionItem.getTime());
+            timeTv.setText(faceCollectionItem.getTime() + "  " + faceCollectionItem.getHourTime());
             Glide.with(itemView.getContext())
                     .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.photo_holder).error(R.drawable.photo_holder).dontAnimate())
                     .asBitmap()

@@ -9,6 +9,7 @@ import android.support.design.widget.TabLayout;
  * 用来记录对比记录的数据表
  */
 public class CompareRecord {
+    private String hourTime;               // 时分秒
     private String originalPhoto;          // 原始图片
     private String uploadPhoto;          // 对比时上传的裁剪之后的图片
     private String time;             // 时间戳， 比对的时间
@@ -136,6 +137,14 @@ public class CompareRecord {
         return this.originalPhoto;
     }
 
+    public String getHourTime() {
+        return this.hourTime;
+    }
+
+    public void setHourTime(String hourTime) {
+        this.hourTime = hourTime;
+    }
+
     public ContentValues toContentValues() {
         ContentValues values = new ContentValues();
         values.put("time", this.time);
@@ -150,6 +159,7 @@ public class CompareRecord {
         values.put("photoPath", photoPath);
         values.put("birthday", birthday);
         values.put("originalPhoto", this.originalPhoto);
+        values.put("hourTime", this.hourTime);
         return values;
     }
 }
