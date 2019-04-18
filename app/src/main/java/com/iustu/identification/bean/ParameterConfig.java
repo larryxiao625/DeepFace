@@ -11,6 +11,9 @@ import com.iustu.identification.util.MSP;
  * 人脸库管理界面中参数设置界面对应的设置类
  */
 public class ParameterConfig {
+    public static final int ONLYMP3 = 0;
+    public static final int ONLYSHAKE = 1;
+    public static final int MP3ANDSHAKE = 2;
     // "min_size 40\n pyramid_threshold 12\n factor 0.709\n thresholds 0.6 0.7 0.7\n"
     int min_size = 80;         // 为需要最小检测的人脸框大小，单位为像素，默认是40，小于min_rect太多的人脸将无法检测
     float factor = 0.89F;     // 用来判断比对结果是否为同一个人
@@ -26,6 +29,7 @@ public class ParameterConfig {
     int dpiCount=0;
     float filterScore = 0.85f;       // 人脸比对的阈值
     float thresholdQuanity = 0.71f;       // 临界值
+    int alarmType = ONLYMP3;
 
     public ParameterConfig(){}
 
@@ -167,5 +171,13 @@ public class ParameterConfig {
 
     public void setDpiCount(int dpiCount) {
         this.dpiCount = dpiCount;
+    }
+
+    public void setAlarmType(int type) {
+        this.alarmType = type;
+    }
+
+    public int getAlarmType() {
+        return this.alarmType;
     }
 }
