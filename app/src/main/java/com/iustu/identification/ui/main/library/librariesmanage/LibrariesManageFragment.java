@@ -25,6 +25,7 @@ import com.iustu.identification.ui.main.library.peoplemagnage.PeopleManageFragme
 import com.iustu.identification.ui.widget.dialog.Edit2Dialog;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
+import com.iustu.identification.util.AlarmUtil;
 import com.iustu.identification.util.IconFontUtil;
 import com.iustu.identification.util.PageSetHelper;
 import com.iustu.identification.util.ToastUtil;
@@ -148,6 +149,7 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
     // 下一页 的点击事件
     @OnClick(R.id.next_page_iv)
     public void nextPage(){
+        AlarmUtil.alarm();
         if(pageSetHelper != null){
             pageSetHelper.nextPage();
         }

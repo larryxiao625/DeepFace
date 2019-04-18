@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,6 +66,9 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
     TextView dpiSetTv;
     @BindView(R.id.threshold_quantity)
     EditText quantity;
+    @BindView(R.id.alarm)
+    RadioGroup radioGroup;
+    RadioButton radioButton;
 
     private OptionsPickerView displayCountPicker;
     private OptionsPickerView saveCountPicker;
@@ -98,6 +103,31 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
         previewSizeConfig=PreviewSizeConfig.getFramSp();
         dpiWidth=previewSizeConfig.getPreviewWidth();
         dpiHeight=previewSizeConfig.getPreviewHeight();
+        switch (config.getAlarmType()) {
+            case ParameterConfig.ONLYMP3:
+                radioButton = (RadioButton)view.findViewById(R.id.alarm_only_mp3);
+                break;
+            case ParameterConfig.ONLYSHAKE:
+                radioButton = (RadioButton)view.findViewById(R.id.alarm_only_shake);
+                break;
+            case ParameterConfig.MP3ANDSHAKE:
+                radioButton = (RadioButton)view.findViewById(R.id.alarm_mp3_and_shake);
+                break;
+        }
+        radioButton.setChecked(true);
+        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+                switch (checkedId) {
+                    case R.id.alarm_only_mp3:
+                        config.setAlarmType(ParameterConfig.ONLYMP3);
+                        break;
+                    case R.id.alarm_only_shake:
+                        config.setAlarmType(ParameterConfig.ONLYSHAKE);
+                        break;
+                    case R.id.alarm_mp3_and_shake:
+                        config.setAlarmType(ParameterConfig.MP3ANDSHAKE);
+                        break;
+                }
+        });
         getDpiStringList();
         initData();
     }
