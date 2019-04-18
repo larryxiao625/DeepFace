@@ -141,19 +141,19 @@ public class CapturePicService extends Service {
         disposable.dispose();
         Log.d("Camera","onDestroy");
     }
-    public void getVerify(DetectResult detectResult,Calendar calendar,String photoPath){
+    public void getVerify(DetectResult detectResult,Calendar calendar,String photoPath,String originalPhoto){
         ArrayList<DetectResult> temp=new ArrayList<>();
         temp.add(detectResult);
             FeatureResult featureResult=SDKUtil.featureResult(temp);
             if(featureResult.getAllFeats().size()!=0){
                 for(ArrayList<float[]> arrayList:featureResult.getAllFeats()){
                     for(float[] floats:arrayList){
-                        searchFace(floats,calendar,photoPath);
+                        searchFace(floats,calendar,photoPath,originalPhoto);
                     }
                 }
             }
     }
-    public void searchFace(float[] feat,Calendar calendar,String photoPath){
+    public void searchFace(float[] feat,Calendar calendar,String photoPath,String originalPhoto){
         ArrayList<SearchResultItem> searchResultItems=new ArrayList<>();
         SearchResultItem searchResultItem = null;
         for(SearchHandler searchHandler:searchHandlers){
@@ -170,11 +170,11 @@ public class CapturePicService extends Service {
             searchResultItem.score= (float) (sqrt(searchResultItem.score - 0.71) /sqrt(1.0 - 0.71)* 0.15 + 0.85);
             Log.d("CameraSearch", String.valueOf(searchResultItems.get(0).score));
             Log.d("CameraSearch",searchResultItems.get(0).image_id);
-            SqliteUtil.insertComparedItem(searchResultItem,calendar.getTime(),photoPath, cameraPrenster, null);
+            SqliteUtil.insertComparedItem(searchResultItem,calendar.getTime(),photoPath, cameraPrenster, originalPhoto);
         }
     }
 
-    public void getCutPicture(String picPath, DetectResult detectResult,Calendar calendar,int num){
+    public void getCutPicture(String originalPhoto, DetectResult detectResult,Calendar calendar,int num){
         if(!cutFile.exists()){
             cutFile.mkdirs();
         }
@@ -186,13 +186,13 @@ public class CapturePicService extends Service {
             int width=(detectResult.getRects().get(i).right> ParameterConfig.getFromSP().getDpiWidth()? ParameterConfig.getFromSP().getDpiWidth():detectResult.getRects().get(i).right)-(detectResult.getRects().get(i).left<0? 0:detectResult.getRects().get(i).left);
             height= (int) (height*1.5);
             width= (int) (width*1.5);
-            Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(picPath),detectResult.getRects().get(i).left<0? 0:detectResult.getRects().get(i).left,detectResult.getRects().get(i).top<0? 0:detectResult.getRects().get(i).top,width>(ParameterConfig.getFromSP().getDpiWidth()-detectResult.getRects().get(i).left)?(ParameterConfig.getFromSP().getDpiWidth()-detectResult.getRects().get(i).left):width,height>(ParameterConfig.getFromSP().getDpiHeight()-detectResult.getRects().get(i).top)?(ParameterConfig.getFromSP().getDpiHeight()-detectResult.getRects().get(i).top):height);
-            SqliteUtil.insertFaceCollectionItem(cutPathName, null, calendar.getTime());
+            Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(originalPhoto),detectResult.getRects().get(i).left<0? 0:detectResult.getRects().get(i).left,detectResult.getRects().get(i).top<0? 0:detectResult.getRects().get(i).top,width>(ParameterConfig.getFromSP().getDpiWidth()-detectResult.getRects().get(i).left)?(ParameterConfig.getFromSP().getDpiWidth()-detectResult.getRects().get(i).left):width,height>(ParameterConfig.getFromSP().getDpiHeight()-detectResult.getRects().get(i).top)?(ParameterConfig.getFromSP().getDpiHeight()-detectResult.getRects().get(i).top):height);
+            SqliteUtil.insertFaceCollectionItem(cutPathName, originalPhoto, calendar.getTime());
             try {
                 File file=new File(cutPathName);
                 fos=new FileOutputStream(file);
                 bitmap.compress(Bitmap.CompressFormat.JPEG,100,fos);
-                getVerify(detectResult,calendar,cutPathName);
+                getVerify(detectResult,calendar,cutPathName,originalPhoto);
                 fos.flush();
                 fos.close();
             }catch (FileNotFoundException e){
