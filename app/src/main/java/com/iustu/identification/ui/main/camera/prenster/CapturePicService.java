@@ -145,6 +145,7 @@ public class CapturePicService extends Service {
         ArrayList<DetectResult> temp=new ArrayList<>();
         temp.add(detectResult);
             FeatureResult featureResult=SDKUtil.featureResult(temp);
+            Log.d("CameraVerify", String.valueOf(featureResult.getAllFeats().size()));
             if(featureResult.getAllFeats().size()!=0){
                 for(ArrayList<float[]> arrayList:featureResult.getAllFeats()){
                     for(float[] floats:arrayList){
@@ -157,10 +158,12 @@ public class CapturePicService extends Service {
         ArrayList<SearchResultItem> searchResultItems=new ArrayList<>();
         SearchResultItem searchResultItem = null;
         for(SearchHandler searchHandler:searchHandlers){
-            searchHandler.searchFind(feat,1,searchResultItems, DataCache.getParameterConfig().getFactor());
+            searchHandler.searchFind(feat,1,searchResultItems, DataCache.getParameterConfig().getThresholdQuanity());
         }
+        Log.d("CameraSearchResult", String.valueOf(searchResultItems.size()));
         if(!searchResultItems.isEmpty()) {
             for (SearchResultItem temp : searchResultItems) {
+                Log.d("CameraSearch", String.valueOf(temp.score));
                 if (searchResultItem == null) {
                     searchResultItem = temp;
                 } else if (temp.score > searchResultItem.score) {
@@ -187,12 +190,12 @@ public class CapturePicService extends Service {
             height= (int) (height*1.5);
             width= (int) (width*1.5);
             Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(originalPhoto),detectResult.getRects().get(i).left<0? 0:detectResult.getRects().get(i).left,detectResult.getRects().get(i).top<0? 0:detectResult.getRects().get(i).top,width>(ParameterConfig.getFromSP().getDpiWidth()-detectResult.getRects().get(i).left)?(ParameterConfig.getFromSP().getDpiWidth()-detectResult.getRects().get(i).left):width,height>(ParameterConfig.getFromSP().getDpiHeight()-detectResult.getRects().get(i).top)?(ParameterConfig.getFromSP().getDpiHeight()-detectResult.getRects().get(i).top):height);
-            SqliteUtil.insertFaceCollectionItem(cutPathName, originalPhoto, calendar.getTime(),cameraPrenster);
             try {
                 File file=new File(cutPathName);
                 fos=new FileOutputStream(file);
                 bitmap.compress(Bitmap.CompressFormat.JPEG,100,fos);
                 getVerify(detectResult,calendar,cutPathName,originalPhoto);
+                SqliteUtil.insertFaceCollectionItem(cutPathName, originalPhoto, calendar.getTime(),cameraPrenster);
                 fos.flush();
                 fos.close();
             }catch (FileNotFoundException e){
