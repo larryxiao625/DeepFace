@@ -11,6 +11,8 @@ import com.iustu.identification.entity.CompareRecord;
 import com.iustu.identification.entity.Library;
 import com.iustu.identification.ui.main.camera.prenster.IPenster;
 
+import java.util.Date;
+
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
@@ -41,11 +43,12 @@ public class SqliteUtil {
     /**
      * 抓拍记录的插入操作
      * @param imgPath 图片的路径
-     * @param time 时间戳，yyyy-mm-dd格式
+     * @param time 代表时间
      */
-    public static void insertFaceCollectionItem(String imgPath, String time){
+    public static void insertFaceCollectionItem(String imgPath, Date time){
         FaceCollectItem item = new FaceCollectItem();
-        item.setTime(time);
+        item.setTime(TextUtil.getDateString2(time));
+        item.setHourTime(TextUtil.getHourString(time));
         item.setImgUrl(imgPath);
         Observable observable = RxUtil.getInsertFaceCollectionItem(item);
         observable.subscribe(new Observer() {
@@ -77,14 +80,15 @@ public class SqliteUtil {
     /**
      * 插入比对结果的方法
      * @param resultItem 对比结果,由SDK生成
-     * @param time 时间戳
+     * @param time 日期
      * @param uploadPhoto 抓拍生成的图片的路径
      * @param
      */
-    public static void insertComparedItem(SearchResultItem resultItem, String time, String uploadPhoto, IPenster comparePresenter) {
+    public static void insertComparedItem(SearchResultItem resultItem, Date time, String uploadPhoto, IPenster comparePresenter) {
         CompareRecord compareRecord = new CompareRecord();
         compareRecord.setRate(resultItem.score);
-        compareRecord.setTime(time);
+        compareRecord.setTime(TextUtil.getDateString2(time));
+        compareRecord.setHourTime(TextUtil.getHourString(time));
         compareRecord.setUploadPhoto(uploadPhoto);
         compareRecord.setImage_id(resultItem.image_id);
         Observable observable = RxUtil.getInsertCompareRecordObservable(compareRecord);

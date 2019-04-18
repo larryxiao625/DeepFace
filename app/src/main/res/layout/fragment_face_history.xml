@@ -92,4 +92,9 @@
         android:layout_height="match_parent"/>
 
     <include layout="@layout/layout_page_switch"/>
+
+    <ImageView
+        android:id="@+id/face_history_original_iv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </FrameLayout>

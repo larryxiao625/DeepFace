@@ -161,7 +161,7 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
     @Override
     public void onProgressChange(View view, int progress) {
         if(view.getId() == R.id.face_bsb){
-            config.setFilterScore(progress/1000f);
+            config.setFactor(progress/1000f);
         }
     }
 

@@ -43,11 +43,11 @@ public class RxUtil {
     public static final String DB_FACECOLLECTIOMITEM = "FaceCollectionItem"; // 对应FaceCollectionItem数据表
 
     public static final String[] ACCOUNT_COLUMNS = new String[]{"name", "password"};    // Account的所有列
-    public static final String[] FACECOLLECTION_COLUMNS = new String[]{"faceId", "imgUrl", "time", "id"};  //FaceCollectionItem的所有列
+    public static final String[] FACECOLLECTION_COLUMNS = new String[]{"hourTime", "originalPhoto", "faceId", "imgUrl", "time", "id"};  //FaceCollectionItem的所有列
 
     public static final String[] LIBRARY_COLUMNS = new String[]{"libName", "description", "count", "inUsed"}; // Library的所有列
     public static final String[] PERSIONINFO_COLUMNS = new String[]{"feature", "name", "gender", "photoPath", "identity", "home", "other", "image_id", "libName"};
-    public static final String[] COMPARE_COLUMNS = new String[]{"time", "uploadPhoto", "image_id", "rate", "libName", "name", "gender", "home", "identity", "photoPath", "other"};
+    public static final String[] COMPARE_COLUMNS = new String[]{"hourTime", "originalPhoto", "time", "uploadPhoto", "image_id", "rate", "libName", "name", "gender", "home", "identity", "photoPath", "other"};
 
     // 获取查询数据库时的游标
     public static Observable<Cursor> getQuaryObservalbe(boolean distinct, String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit) {
@@ -252,11 +252,7 @@ public class RxUtil {
             @Override
             public Boolean apply(PersionInfo persionInfo) throws Exception {
                 // 首先调用SDK生成feature
-                int result = SDKUtil.sdkDoPerson(persionInfo);
-                if (result == SDKUtil.HASADDED) {
-                    //ToastUtil.show(persionInfo.name + "在人脸库中发现相似人脸,导入失败");
-                    return false;
-                }
+                SDKUtil.sdkDoBatchPersion(persionInfo);
                 // 其次将选中的图片复制到人脸库的路径中
                 String fileName = persionInfo.name + System.currentTimeMillis() + ".jpg";
                 String finalPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DeepFace/" + persionInfo.libName + "/" + fileName;
@@ -267,14 +263,14 @@ public class RxUtil {
                 database.beginTransaction();
                 try {
                     long r = database.insertWithOnConflict(RxUtil.DB_PERSIONINFO, null, persionInfo.toContentValues(), SQLiteDatabase.CONFLICT_IGNORE);
-                    // 说明插入失败,说明PersionInfo中已经含有该人员，那么直接将其照片添加到人脸库中
-                    if (r == -1) {
-                        Cursor cursor = database.query(false, RxUtil.DB_PERSIONINFO, RxUtil.PERSIONINFO_COLUMNS,"libName = ? and name = ?", new String[]{persionInfo.libName, persionInfo.name}, null, null, null, null);
-                        cursor.moveToNext();
-                        persionInfo.photoPath = cursor.getString(cursor.getColumnIndex("photoPath")) + ";" + persionInfo.photoPath;
-                        database.update(RxUtil.DB_PERSIONINFO, persionInfo.toContentValues(), "libName = ? and name = ?", new String[]{persionInfo.libName, persionInfo.name});
-                        return true;
-                    }
+//                    // 说明插入失败,说明PersionInfo中已经含有该人员，那么直接将其照片添加到人脸库中
+//                    if (r == -1) {
+//                        Cursor cursor = database.query(false, RxUtil.DB_PERSIONINFO, RxUtil.PERSIONINFO_COLUMNS,"libName = ? and name = ?", new String[]{persionInfo.libName, persionInfo.name}, null, null, null, null);
+//                        cursor.moveToNext();
+//                        persionInfo.photoPath = cursor.getString(cursor.getColumnIndex("photoPath")) + ";" + persionInfo.photoPath;
+//                        database.update(RxUtil.DB_PERSIONINFO, persionInfo.toContentValues(), "libName = ? and name = ?", new String[]{persionInfo.libName, persionInfo.name});
+//                        return true;
+//                    }
                     // 如果往PersionInfo中添加新数据，则需要修改Library的信息
                     Cursor cursor = database.query(false, RxUtil.DB_LIBRARY, RxUtil.LIBRARY_COLUMNS,"libName = '" + persionInfo.libName + "'", null, null, null, null, null);
                     cursor.moveToFirst();

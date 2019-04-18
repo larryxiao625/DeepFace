@@ -1,14 +1,19 @@
 package com.iustu.identification.ui.main.history.view;
 
+import android.graphics.BitmapFactory;
+import android.location.GnssMeasurementsEvent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bigkoo.pickerview.TimePickerView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.iustu.identification.R;
 import com.iustu.identification.entity.CompareRecord;
 import com.iustu.identification.ui.base.BaseDialogFragment;
@@ -31,7 +36,7 @@ import butterknife.OnClick;
  * Created by Liu Yuchuan on 2017/11/22.
  */
 
-public class CompareHistoryFragment extends BaseFragment implements CompareHistoryItemAdapter.DeleteListener {
+public class CompareHistoryFragment extends BaseFragment implements CompareHistoryItemAdapter.CompareListener {
 
     @BindView(R.id.compare_history_recycler_view)
     RecyclerView recyclerView;
@@ -41,6 +46,8 @@ public class CompareHistoryFragment extends BaseFragment implements CompareHisto
     TextView fromDateTv;
     @BindView(R.id.compare_date_to_tv)
     TextView toDateTv;
+    @BindView(R.id.compare_original_iv)
+    ImageView originalPhoto;
 
     private static final String KEY_FACE_ID = "face_id";
 
@@ -71,7 +78,7 @@ public class CompareHistoryFragment extends BaseFragment implements CompareHisto
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         recyclerView.setAdapter(mAdapter);
         pageSetHelper = new PageSetHelper(recyclerView, pageTv);
-        mAdapter.setListener(this::onDelete);
+        mAdapter.setListener(this);
     }
 
     @Override
@@ -213,5 +220,18 @@ public class CompareHistoryFragment extends BaseFragment implements CompareHisto
     @Override
     public void onDelete(CompareRecord compareRecord, int position) {
         historyPrenster.deleteCompareItem(compareRecord, position);
+    }
+
+    @Override
+    public void lookOriginPhoto(int position) {
+        if (originalPhoto.getVisibility() == View.GONE) {
+            Glide.with(this)
+                    .load(BitmapFactory.decodeFile(compareItemList.get(position).getOriginalPhoto()))
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .into(originalPhoto);
+            originalPhoto.setVisibility(View.VISIBLE);
+        } else {
+            originalPhoto.setVisibility(View.GONE);
+        }
     }
 }

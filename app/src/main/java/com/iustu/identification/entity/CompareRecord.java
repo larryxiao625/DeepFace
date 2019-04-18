@@ -9,11 +9,13 @@ import android.support.design.widget.TabLayout;
  * 用来记录对比记录的数据表
  */
 public class CompareRecord {
-    private String uploadPhoto;          // 对比时上传的图片的uri
+    private String hourTime;               // 时分秒
+    private String originalPhoto;          // 原始图片
+    private String uploadPhoto;          // 对比时上传的裁剪之后的图片
     private String time;             // 时间戳， 比对的时间
     private String image_id;           // 对比结果对应的人脸库中的人脸
     private float rate;              // 比对的相似度
-    private boolean isExtend = false;    //是否展开
+    private boolean isExtend = false;    //是否展开,不作为数据表中的属性
     private String libName;            // 该属性并不绑定于一个Library，只是用来在创建
     private String name;
     private String gender;        // 性别
@@ -127,6 +129,22 @@ public class CompareRecord {
         return birthday;
     }
 
+    public void setOriginalPhoto(String originalPhoto) {
+        this.originalPhoto = originalPhoto;
+    }
+
+    public String getOriginalPhoto() {
+        return this.originalPhoto;
+    }
+
+    public String getHourTime() {
+        return this.hourTime;
+    }
+
+    public void setHourTime(String hourTime) {
+        this.hourTime = hourTime;
+    }
+
     public ContentValues toContentValues() {
         ContentValues values = new ContentValues();
         values.put("time", this.time);
@@ -140,6 +158,8 @@ public class CompareRecord {
         values.put("home", home);
         values.put("photoPath", photoPath);
         values.put("birthday", birthday);
+        values.put("originalPhoto", this.originalPhoto);
+        values.put("hourTime", this.hourTime);
         return values;
     }
 }

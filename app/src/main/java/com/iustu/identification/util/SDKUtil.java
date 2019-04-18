@@ -22,6 +22,8 @@ import com.iustu.identification.entity.PersionInfo;
 import java.io.File;
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 
 /**
@@ -38,15 +40,15 @@ public class SDKUtil {
     private static Activity context;
     private static DetectHandler detectHandler;            // 人脸检测句柄
     private static VerifyHandler verifyHandler;            // 特征提取句柄
-    private static SearchHandler searchHandler;           // 人脸搜索句柄
     private static AttributeHandler attributeHandler;     // 属性检测句柄
-//    public static String path=Environment.getExternalStorageDirectory()+"/DeepFace/faceLib";
+
+    private static HashMap<String, SearchHandler> searchHandlerCache = new HashMap<>();  // 用来记录被创建过的搜索句柄，key为libName
 
     // 初始化方法
     public static void init() {
         // 初始化人脸检测句柄
         detectHandler = (DetectHandler) HandlerFactory.createDetector("/sdcard/detect-Framework3-cpu-xxxx.model");
-        //detectHandler.setArgument("min_size 100\n pyramid_threshold 12\n factor 0.709\n thresholds 0.6 0.7 0.7\n");
+        detectHandler.setThreadNum(HandlerFactory.FrameWorkType.OPENCV, 16);
         detectHandler.initial();
 
         //初始化特征提取句柄
@@ -57,11 +59,6 @@ public class SDKUtil {
         attributeHandler = (AttributeHandler) HandlerFactory.createAttribute("/sdcard/attr-Framework1-cpu-0a15-bc0a.model");
         attributeHandler.initial();
 
-//        File file=new File(path);
-//        if(!file.exists()){
-//            file.mkdirs();
-//        }
-//        searchHandler= (SearchHandler) HandlerFactory.createSearcher(path,0,1);
     }
 
     public static void initSdk(Context context) {
@@ -87,6 +84,10 @@ public class SDKUtil {
         detectHandler.destroy();
         verifyHandler.destroy();
         attributeHandler.destroy();
+        ArrayList<SearchHandler> searchHandlers = (ArrayList<SearchHandler>) searchHandlerCache.values();
+        for (SearchHandler handler : searchHandlers) {
+            handler.destroy();
+        }
     }
     private static void updateFile(String filePath) {
         Intent scanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
@@ -103,15 +104,6 @@ public class SDKUtil {
         return verifyHandler;
     }
 
-//    public static SearchHandler getSearchHandler() {
-//        return searchHandler;
-//    }
-
-    public static AttributeHandler getAttributeHandler() {
-        return attributeHandler;
-    }
-
-
     /**
      * 获取图片的Feature的方法,在往人脸库添加新成员的时候调用{@link RxUtil}
      * @param persionInfo 需要添加的人
@@ -126,7 +118,13 @@ public class SDKUtil {
         SearchDBItem searchDBItem = new SearchDBItem();
         searchDBItem.feat = floats;
         searchDBItem.image_id = persionInfo.image_id;
-        SearchHandler searchHandler = (SearchHandler)HandlerFactory.createSearcher("/sdcard/DeepFace/" + persionInfo.libName, 0, 1);
+        SearchHandler searchHandler = null;
+        if (searchHandlerCache.get(persionInfo.libName) == null) {
+            searchHandler = (SearchHandler)HandlerFactory.createSearcher("/sdcard/DeepFace/" + persionInfo.libName, 0, 1);
+            searchHandlerCache.put(persionInfo.libName, searchHandler);
+        } else {
+            searchHandler = searchHandlerCache.get(persionInfo.libName);
+        }
         ArrayList<SearchResultItem> searchResult = new ArrayList<>();
         // 首先检测人脸库中是否已经含有该人脸特征
         int searchRes = searchHandler.searchFind(floats, 1, searchResult, DataCache.getParameterConfig().getFilterScore());
@@ -139,31 +137,31 @@ public class SDKUtil {
             return HASADDED;
         }
         int result = searchHandler.searchAdd(searchDBItem);
-        if (!searchHandler.isDestroy())
-            searchHandler.destroy();
         return result;
     }
 
     /**
      * 在往人脸库批量导入的时候调用{@link RxUtil}
-     * @param persionInfos 需要添加的人
+     * @param persionInfo 需要添加的人
      */
-    public static void sdkDoBatchPersion(ArrayList<PersionInfo> persionInfos) {
-        ArrayList<SearchDBItem> searchDBItems = new ArrayList<>();
-        for (PersionInfo persionInfo : persionInfos) {
-            DetectResult detectResult=new DetectResult();
-            SDKUtil.getDetectHandler().faceDetector(persionInfo.photoPath,detectResult);
-            FeatureResult featureResult=new FeatureResult();
-            verifyHandler.extractFeature(detectResult,featureResult);
-            float[] floats = featureResult.getFeat(0).get(0);
-            persionInfo.feature = Arrays.asList(floats).toString();
-            SearchDBItem searchDBItem = new SearchDBItem();
-            searchDBItem.feat = floats;
-            searchDBItem.image_id = persionInfo.image_id;
-            searchDBItems.add(searchDBItem);
+    public static void sdkDoBatchPersion(PersionInfo persionInfo) {
+        DetectResult detectResult=new DetectResult();
+        SDKUtil.getDetectHandler().faceDetector(persionInfo.photoPath,detectResult);
+        FeatureResult featureResult=new FeatureResult();
+        verifyHandler.extractFeature(detectResult,featureResult);
+        float[] floats = featureResult.getFeat(0).get(0);
+        persionInfo.feature = Arrays.asList(floats).toString();
+        SearchDBItem searchDBItem = new SearchDBItem();
+        searchDBItem.feat = floats;
+        searchDBItem.image_id = persionInfo.image_id;
+        SearchHandler searchHandler = null;
+        if (searchHandlerCache.get(persionInfo.libName) == null) {
+            searchHandler = (SearchHandler)HandlerFactory.createSearcher("/sdcard/DeepFace/" + persionInfo.libName, 0, 1);
+            searchHandlerCache.put(persionInfo.libName, searchHandler);
+        } else {
+            searchHandler = searchHandlerCache.get(persionInfo.libName);
         }
-        SearchHandler searchHandler = (SearchHandler)HandlerFactory.createSearcher("/sdcard/DeepFace/" + persionInfos.get(0).libName, 0, 1);
-        searchHandler.searchBuildLib(searchDBItems);
+        searchHandler.searchAdd(searchDBItem);
     }
 
     /**
@@ -231,4 +229,5 @@ public class SDKUtil {
         searchHandler.destroy();
         return result;
     }
+
 }
