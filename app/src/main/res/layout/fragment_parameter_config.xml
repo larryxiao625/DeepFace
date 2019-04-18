@@ -318,28 +318,35 @@
 
                 <RadioGroup
                     android:id="@+id/alarm"
+                    android:weightSum="3"
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <RadioButton
                         android:checked="true"
+                        android:textSize="@dimen/y36"
                         android:drawableLeft="@color/white"
                         android:textColor="@color/white"
                         android:text="@string/alarm_only_mp3"
-                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:id="@+id/alarm_only_mp3"/>
                     <RadioButton
+                        android:textSize="@dimen/y36"
                         android:textColor="@color/white"
                         android:text="@string/alarm_only_shake"
-                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:id="@+id/alarm_only_shake"/>
                     <RadioButton
+                        android:textSize="@dimen/y36"
                         android:textColor="@color/white"
                         android:text="@string/alarm_mp3_and_shake"
-                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:id="@+id/alarm_mp3_and_shake"/>
 
