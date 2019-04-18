@@ -170,7 +170,7 @@ public class CapturePicService extends Service {
             searchResultItem.score= (float) (sqrt(searchResultItem.score - 0.71) /sqrt(1.0 - 0.71)* 0.15 + 0.85);
             Log.d("CameraSearch", String.valueOf(searchResultItems.get(0).score));
             Log.d("CameraSearch",searchResultItems.get(0).image_id);
-            SqliteUtil.insertComparedItem(searchResultItem,TextUtil.getDateString2(calendar.getTime()),photoPath, cameraPrenster);
+            SqliteUtil.insertComparedItem(searchResultItem,calendar.getTime(),photoPath, cameraPrenster, null);
         }
     }
 
@@ -187,7 +187,7 @@ public class CapturePicService extends Service {
             height= (int) (height*1.5);
             width= (int) (width*1.5);
             Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(picPath),detectResult.getRects().get(i).left<0? 0:detectResult.getRects().get(i).left,detectResult.getRects().get(i).top<0? 0:detectResult.getRects().get(i).top,width>(ParameterConfig.getFromSP().getDpiWidth()-detectResult.getRects().get(i).left)?(ParameterConfig.getFromSP().getDpiWidth()-detectResult.getRects().get(i).left):width,height>(ParameterConfig.getFromSP().getDpiHeight()-detectResult.getRects().get(i).top)?(ParameterConfig.getFromSP().getDpiHeight()-detectResult.getRects().get(i).top):height);
-            SqliteUtil.insertFaceCollectionItem(cutPathName,TextUtil.getDateString2(calendar.getTime()));
+            SqliteUtil.insertFaceCollectionItem(cutPathName, null, calendar.getTime());
             try {
                 File file=new File(cutPathName);
                 fos=new FileOutputStream(file);

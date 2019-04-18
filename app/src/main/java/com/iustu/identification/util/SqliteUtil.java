@@ -43,13 +43,15 @@ public class SqliteUtil {
     /**
      * 抓拍记录的插入操作
      * @param imgPath 图片的路径
+     * @param originalPhoto 未裁剪的图片的路径
      * @param time 代表时间
      */
-    public static void insertFaceCollectionItem(String imgPath, Date time){
+    public static void insertFaceCollectionItem(String imgPath, String originalPhoto, Date time){
         FaceCollectItem item = new FaceCollectItem();
         item.setTime(TextUtil.getDateString2(time));
         item.setHourTime(TextUtil.getHourString(time));
         item.setImgUrl(imgPath);
+        item.setOriginalPhoto(originalPhoto);
         Observable observable = RxUtil.getInsertFaceCollectionItem(item);
         observable.subscribe(new Observer() {
             @Override
@@ -81,16 +83,18 @@ public class SqliteUtil {
      * 插入比对结果的方法
      * @param resultItem 对比结果,由SDK生成
      * @param time 日期
-     * @param uploadPhoto 抓拍生成的图片的路径
-     * @param
+     * @param uploadPhoto 抓拍生成的图片的路径（裁剪后的）
+     * @param comparePresenter
+     * @param originalPhoto 抓拍生成的原图
      */
-    public static void insertComparedItem(SearchResultItem resultItem, Date time, String uploadPhoto, IPenster comparePresenter) {
+    public static void insertComparedItem(SearchResultItem resultItem, Date time, String uploadPhoto, IPenster comparePresenter, String originalPhoto) {
         CompareRecord compareRecord = new CompareRecord();
         compareRecord.setRate(resultItem.score);
         compareRecord.setTime(TextUtil.getDateString2(time));
         compareRecord.setHourTime(TextUtil.getHourString(time));
         compareRecord.setUploadPhoto(uploadPhoto);
         compareRecord.setImage_id(resultItem.image_id);
+        compareRecord.setOriginalPhoto(originalPhoto);
         Observable observable = RxUtil.getInsertCompareRecordObservable(compareRecord);
         observable.subscribe(new Observer() {
             @Override

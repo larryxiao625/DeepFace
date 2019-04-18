@@ -48,7 +48,7 @@ public class SDKUtil {
     public static void init() {
         // 初始化人脸检测句柄
         detectHandler = (DetectHandler) HandlerFactory.createDetector("/sdcard/detect-Framework3-cpu-xxxx.model");
-        detectHandler.setThreadNum(HandlerFactory.FrameWorkType.OPENCV, 16);
+        detectHandler.setThreadNum(HandlerFactory.FrameWorkType.OPENCV, 4);
         detectHandler.initial();
 
         //初始化特征提取句柄
@@ -145,10 +145,18 @@ public class SDKUtil {
      * @param persionInfo 需要添加的人
      */
     public static void sdkDoBatchPersion(PersionInfo persionInfo) {
+        long startTime;
+        long endTime;
         DetectResult detectResult=new DetectResult();
+        startTime = System.currentTimeMillis();
         SDKUtil.getDetectHandler().faceDetector(persionInfo.photoPath,detectResult);
+        endTime = System.currentTimeMillis();
+        Log.d("timeTest", "人脸检测时间：" + (endTime - startTime));
         FeatureResult featureResult=new FeatureResult();
+        startTime = System.currentTimeMillis();
         verifyHandler.extractFeature(detectResult,featureResult);
+        endTime = System.currentTimeMillis();
+        Log.d("timeTest", "人脸特征提取时间：" + (endTime - startTime));
         float[] floats = featureResult.getFeat(0).get(0);
         persionInfo.feature = Arrays.asList(floats).toString();
         SearchDBItem searchDBItem = new SearchDBItem();
@@ -161,7 +169,10 @@ public class SDKUtil {
         } else {
             searchHandler = searchHandlerCache.get(persionInfo.libName);
         }
+        startTime = System.currentTimeMillis();
         searchHandler.searchAdd(searchDBItem);
+        endTime = System.currentTimeMillis();
+        Log.d("timeTest", "人脸搜索时间：" + (endTime - startTime));
     }
 
     /**
