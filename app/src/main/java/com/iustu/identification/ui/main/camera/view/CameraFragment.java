@@ -83,8 +83,9 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
             Log.d("CameraFragment","initMonitor");
             cameraHelper.setDefaultPreviewSize(ParameterConfig.getFromSP().getDpiWidth(), ParameterConfig.getFromSP().getDpiHeight());
             cameraHelper.initUSBMonitor(getActivity(),cameraTextureView,cameraPrenster);
+        }else {
+            cameraHelper.updateResolution(ParameterConfig.getFromSP().getDpiWidth(), ParameterConfig.getFromSP().getDpiHeight());
         }
-        cameraHelper.updateResolution(ParameterConfig.getFromSP().getDpiWidth(), ParameterConfig.getFromSP().getDpiHeight());
         cameraTextureView.setCallback(this);
         cameraHelper.registerUSB();
         itemCompareRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -190,7 +191,11 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
         public void updateCapture(String capturePic) {
             capturePathString.add(0,capturePic);
             catchFaceAdapter.notifyItemInserted(0);
-            itemCaptureRecyclerView.smoothScrollToPosition(0);
+            if(itemCaptureRecyclerView==null){
+                return;
+            }else {
+                itemCaptureRecyclerView.smoothScrollToPosition(0);
+            }
         }
     };
 
