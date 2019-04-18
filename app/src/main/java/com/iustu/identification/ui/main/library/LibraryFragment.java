@@ -50,8 +50,36 @@ public class LibraryFragment extends BaseFragment implements TitleBar.TitleBarLi
     private PersionPresenter persionPresenter;
     private AddPersionPresenter addPersionPresenter;
 
+    LibrariesManageFragment libFragment;
+    PeopleManageFragment peopleManageFragment;
+    AddPersonFragment addPersonFragment;
+
+
     private List<BaseFragment> mFragmentList;
     private int fragmentNow;
+
+    public LibraryFragment() {
+        mFragmentList = new ArrayList<>();
+
+        libPresenter = new LibPresenter(new LibModel());
+        libFragment = new LibrariesManageFragment();
+        libPresenter.setView(libFragment);
+        libFragment.setPresenter(libPresenter);
+
+        persionPresenter = new PersionPresenter(new PersionModel());
+        peopleManageFragment = new PeopleManageFragment();
+        persionPresenter.setView(peopleManageFragment);
+        peopleManageFragment.setPresenter(persionPresenter);
+
+        addPersionPresenter = new AddPersionPresenter(new AddPersionModel());
+        addPersonFragment = new AddPersonFragment();
+        addPersionPresenter.setView(addPersonFragment);
+        addPersonFragment.setPresenter(addPersionPresenter);
+
+        mFragmentList.add(libFragment);
+        mFragmentList.add(addPersonFragment);
+        mFragmentList.add(peopleManageFragment);
+    }
     private static final String [] TAGS = {"librariesManage", "peopleManage", "addPerson"};
 
     @Override
@@ -62,26 +90,6 @@ public class LibraryFragment extends BaseFragment implements TitleBar.TitleBarLi
     @Override
     protected void initView(@Nullable Bundle savedInstanceState, View view) {
         titleBar.setTitleBarListener(this);
-        mFragmentList = new ArrayList<>();
-
-        libPresenter = new LibPresenter(new LibModel());
-        LibrariesManageFragment libFragment = new LibrariesManageFragment();
-        libPresenter.setView(libFragment);
-        libFragment.setPresenter(libPresenter);
-
-        persionPresenter = new PersionPresenter(new PersionModel());
-        PeopleManageFragment peopleManageFragment = new PeopleManageFragment();
-        persionPresenter.setView(peopleManageFragment);
-        peopleManageFragment.setPresenter(persionPresenter);
-
-        addPersionPresenter = new AddPersionPresenter(new AddPersionModel());
-        AddPersonFragment addPersonFragment = new AddPersonFragment();
-        addPersionPresenter.setView(addPersonFragment);
-        addPersonFragment.setPresenter(addPersionPresenter);
-
-        mFragmentList.add(libFragment);
-        mFragmentList.add(addPersonFragment);
-        mFragmentList.add(peopleManageFragment);
         FragmentManager fragmentManager = getChildFragmentManager();
         for(int i = 0; i < 3; i++){
             BaseFragment fragment = (BaseFragment) fragmentManager.findFragmentByTag(TAGS[i]);
