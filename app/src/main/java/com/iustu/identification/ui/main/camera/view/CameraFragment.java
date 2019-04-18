@@ -95,11 +95,10 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
         cameraHelper.setOnPreviewFrameListener(this);
         if(cameraHelper.getUSBMonitor()==null) {
             Log.d("CameraFragment","initMonitor");
-            cameraHelper.setDefaultPreviewSize(1920, 1080);
+            cameraHelper.setDefaultPreviewSize(ParameterConfig.getFromSP().getDpiWidth(), ParameterConfig.getFromSP().getDpiHeight());
             cameraHelper.initUSBMonitor(getActivity(),cameraTextureView,cameraPrenster);
         }
-//        cameraPrenster.setSupportPreviewSize(cameraHelper.getSupportedPreviewSizes());
-        cameraHelper.updateResolution(ParameterConfig.getFromSP().getDpiWidth(),ParameterConfig.getFromSP().getDpiHeight());
+        cameraHelper.updateResolution(ParameterConfig.getFromSP().getDpiWidth(), ParameterConfig.getFromSP().getDpiHeight());
         cameraTextureView.setCallback(this);
         cameraHelper.registerUSB();
         itemCompareRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -197,6 +196,11 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
                 itemCompareRecyclerView.smoothScrollToPosition(0);
             }
         }
+
+        @Override
+        public void startPreview() {
+            cameraHelper.startPreview(cameraTextureView);
+        }
     };
 
     @Override
@@ -210,6 +214,7 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
             parameterConfig.setDpiWidth(previewSizeConfig.getPreviewWidth().get(previewSizeConfig.getPreviewWidth().size())-1);
             parameterConfig.save();
         }
+
     }
 
     @Override

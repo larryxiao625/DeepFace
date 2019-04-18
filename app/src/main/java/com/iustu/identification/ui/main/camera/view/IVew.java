@@ -6,4 +6,5 @@ public interface IVew {
 
     void showShortMsg(String rea);
     void updateSingleResult(CompareRecord compareRecord);
+    void startPreview();
 }
