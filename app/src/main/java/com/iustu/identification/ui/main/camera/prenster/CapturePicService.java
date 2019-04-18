@@ -193,7 +193,7 @@ public class CapturePicService extends Service {
                     width>(ParameterConfig.getFromSP().getDpiWidth()-detectResult.getRects().get(i).left)?(ParameterConfig.getFromSP().getDpiWidth()-detectResult.getRects().get(i).left):width,
                     height>(ParameterConfig.getFromSP().getDpiHeight()-detectResult.getRects().get(i).top)?(ParameterConfig.getFromSP().getDpiHeight()-detectResult.getRects().get(i).top):height);
 
-            SqliteUtil.insertFaceCollectionItem(cutPathName, originalPhoto, calendar.getTime());
+            SqliteUtil.insertFaceCollectionItem(cutPathName, originalPhoto, calendar.getTime(), cameraPrenster);
             try {
                 File file=new File(cutPathName);
                 fos=new FileOutputStream(file);

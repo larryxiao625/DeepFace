@@ -124,7 +124,6 @@ public class CompareItemAdapter extends RecyclerView.Adapter<CompareItemAdapter.
             if(info == null){
 
             }else {
-                Log.d("uploadPhoto", "setCompareRecord: " + info.getUploadPhoto());
                 Glide.with(itemView).asBitmap()
                         .load(new File(info.getUploadPhoto()))
                         .diskCacheStrategy(DiskCacheStrategy.NONE)

@@ -46,7 +46,7 @@ public class SqliteUtil {
      * @param originalPhoto 未裁剪的图片的路径
      * @param time 代表时间
      */
-    public static void insertFaceCollectionItem(String imgPath, String originalPhoto, Date time){
+    public static void insertFaceCollectionItem(String imgPath, String originalPhoto, Date time,IPenster comparePrenster){
         FaceCollectItem item = new FaceCollectItem();
         item.setTime(TextUtil.getDateString2(time));
         item.setHourTime(TextUtil.getHourString(time));
@@ -74,6 +74,7 @@ public class SqliteUtil {
             @Override
             public void onComplete() {
                 Log.d("Camera","onComplete1");
+                comparePrenster.getView().updateCapture(imgPath);
                 ToastUtil.show("成功");
             }
         });
@@ -109,14 +110,12 @@ public class SqliteUtil {
 
             @Override
             public void onError(Throwable e) {
-                Log.d("Camera","onError");
                 e.printStackTrace();
                 ToastUtil.show(e.getMessage());
             }
 
             @Override
             public void onComplete() {
-                Log.d("Camera","onComplete2");
                 comparePresenter.getView().updateSingleResult(compareRecord);
                 ToastUtil.show("成功");
             }
