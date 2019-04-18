@@ -75,6 +75,7 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
     private List<Integer> dpiWidth=new ArrayList<>();     // 设置分辨率宽度的源
     private List<Integer> dpiHeight=new ArrayList<>();       // 设置分辨率高度的源
     private List<String> dpiStringList=new ArrayList<>();       // 设置分辨率的源
+    ParameterConfig parameterConfig;
 
     @Override
     protected int postContentView() {
@@ -93,6 +94,7 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
         saveCountList.add(1000);
         saveCountList.add(5000);
         saveCountList.add(10000);
+        parameterConfig=ParameterConfig.getFromSP();
         previewSizeConfig=PreviewSizeConfig.getFramSp();
         dpiWidth=previewSizeConfig.getPreviewWidth();
         dpiHeight=previewSizeConfig.getPreviewHeight();
@@ -114,7 +116,7 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
         quantity.addTextChangedListener(new MyTextWatcher());
         displayCountTv.setText(config.getDisplayCount() + "");
         saveCountTv.setText(config.getSaveCount() + "");
-        //        dpiSetTv.setText(dpiStringList.get(config.getDpiCount()) + "");
+        dpiSetTv.setText(parameterConfig.getDpiWidth()+"*"+parameterConfig.getDpiHeight());
         quantity.setText(config.getThresholdQuanity() + "");
     }
 
@@ -207,13 +209,12 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
                 config.setDpiCount(options1);
                 dpiSetTv.setText(dpiStringList.get(options1));
             } )
-                    .setSelectOptions(config.getDpiCount())
+                    .setSelectOptions(0)
                     .setTitleText("摄像头分辨率")
                     .build();
 
             dpiPicker.setPicker(dpiStringList);
         }
-
         dpiPicker.show();
     }
 
