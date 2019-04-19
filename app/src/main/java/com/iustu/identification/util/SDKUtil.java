@@ -8,6 +8,7 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.example.agin.facerecsdk.AttributeHandler;
+import com.example.agin.facerecsdk.BlurHandler;
 import com.example.agin.facerecsdk.DetectHandler;
 import com.example.agin.facerecsdk.DetectResult;
 import com.example.agin.facerecsdk.FacerecUtil;
@@ -16,6 +17,7 @@ import com.example.agin.facerecsdk.HandlerFactory;
 import com.example.agin.facerecsdk.SearchDBItem;
 import com.example.agin.facerecsdk.SearchHandler;
 import com.example.agin.facerecsdk.SearchResultItem;
+import com.example.agin.facerecsdk.TrackerHandler;
 import com.example.agin.facerecsdk.VerifyHandler;
 import com.iustu.identification.entity.PersionInfo;
 
@@ -44,6 +46,9 @@ public class SDKUtil {
 
     private static HashMap<String, SearchHandler> searchHandlerCache = new HashMap<>();  // 用来记录被创建过的搜索句柄，key为libName
 
+    private static TrackerHandler trackerHandler;   //人脸跟踪句柄
+    private static BlurHandler blurHandler;     //模糊图片检测句柄
+
     // 初始化方法
     public static void init() {
         // 初始化人脸检测句柄
@@ -59,6 +64,11 @@ public class SDKUtil {
         attributeHandler = (AttributeHandler) HandlerFactory.createAttribute("/sdcard/attr-Framework1-cpu-0a15-bc0a.model");
         attributeHandler.initial();
 
+        // 初始化人脸跟踪检测句柄
+        trackerHandler= (TrackerHandler) HandlerFactory.createTracker(2000000);
+
+        //  初始化人脸模糊检测句柄
+        blurHandler= (BlurHandler) HandlerFactory.createBlur("/sdcard/blur-M1_8289-Framework1-cpu-60ae.model");
     }
 
     public static void initSdk(Context context) {

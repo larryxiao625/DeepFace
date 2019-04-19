@@ -45,10 +45,16 @@ public class CapturePicService extends Service {
     UVCCameraHelper cameraHelper=UVCCameraHelper.getInstance();
     static String rootPath= Environment.getExternalStorageDirectory()+"/DeepFace";
     static String cutPath=Environment.getExternalStorageDirectory()+"/DeepFace/Cut/";
+    static String tempPath=Environment.getExternalStorageDirectory()+"/DeepFace/temp/";
     private CameraPrenster cameraPrenster;
+    int captureNum=0;
+    int picQuality=0;
+    Calendar tempBestCalender;
     CaptureBind mBind;
     Disposable disposable;
+    ArrayList<DetectResult> tempDetectResults=new ArrayList<>();
     ArrayList<SearchHandler> searchHandlers=new ArrayList<>();
+    String tempBestPicPath;
     public class CaptureBind extends Binder{
         public CapturePicService getService(){
             return CapturePicService.this;
@@ -80,7 +86,8 @@ public class CapturePicService extends Service {
     @SuppressLint("CheckResult")
     public void capturePic() {
         createDir(rootPath);
-        Observable.interval(1500, TimeUnit.MILLISECONDS)
+        createDir(tempPath);
+        Observable.interval(200, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Long>() {
                     @Override
@@ -94,12 +101,31 @@ public class CapturePicService extends Service {
                         Calendar calendar=Calendar.getInstance();
                         String picPath=rootPath+"/"+TextUtil.dateMessage(calendar.getTime())+".jpg";
                         cameraHelper.capturePicture(picPath, picPath1 -> {
+                            captureNum++;
+                            Bitmap bitmap=Bitmap.createBitmap(BitmapFactory.decodeFile(picPath1));
+                            try {
+                                bitmap.compress(Bitmap.CompressFormat.JPEG,50,new FileOutputStream(tempPath+TextUtil.dateMessage(calendar.getTime())+".jpg"));
+                            } catch (FileNotFoundException e) {
+                                e.printStackTrace();
+                            }
                             ArrayList<String> picPaths=new ArrayList<>();
-                            picPaths.add(picPath);
+                            picPaths.add(tempPath+TextUtil.dateMessage(calendar.getTime())+".jpg");
                             ArrayList<DetectResult> detectResults=SDKUtil.detectFace(picPaths);
-                            if(detectResults.size()!=0) {
-                                Log.d("Camera","人脸数量"+detectResults.get(0).size());
-                                getCutPicture(picPath,detectResults.get(0),calendar,detectResults.get(0).points.size());
+                            if(detectResults.get(0).points.size()!=0) {
+                                if (((detectResults.get(0).getPoints().get(0).x)[1] - (detectResults.get(0).getPoints().get(0).x)[0]) > picQuality) {
+                                    picQuality = (int) ((detectResults.get(0).getPoints().get(0).x)[1] - (detectResults.get(0).getPoints().get(0).x)[0]);
+                                    tempDetectResults.clear();
+                                    tempDetectResults = detectResults;
+                                    tempBestCalender = calendar;
+                                    tempBestPicPath=tempPath+TextUtil.dateMessage(calendar.getTime())+".jpg";
+                                }
+                            }
+                            if(captureNum==5){
+                                getTheBestPic(tempBestPicPath,tempDetectResults,tempBestCalender,tempDetectResults.get(0).points.size());
+                                captureNum=0;
+                                picQuality=0;
+                                tempBestCalender=null;
+                                tempDetectResults.clear();
                             }
                         });
                     }
@@ -116,6 +142,12 @@ public class CapturePicService extends Service {
                 });
     }
 
+    public void getTheBestPic(String picPath,ArrayList<DetectResult> detectResults,Calendar calendar,int faceNum){
+        if(faceNum!=0){
+            Log.d("Camera","人脸数量"+detectResults.get(0).size());
+            getCutPicture(picPath,detectResults.get(0),calendar,detectResults.get(0).points.size());
+        }
+    }
     public void createDir(String dirPath) {
         File file=new File(dirPath);
         if(!file.exists()){
@@ -185,27 +217,15 @@ public class CapturePicService extends Service {
             String cutPathName=cutPath+TextUtil.dateMessage(calendar.getTime())+"_"+i+".jpg";
             int height=(detectResult.getRects().get(i).bottom> ParameterConfig.getFromSP().getDpiHeight()? ParameterConfig.getFromSP().getDpiHeight():detectResult.getRects().get(i).bottom)-(detectResult.getRects().get(i).top<0? 0:detectResult.getRects().get(i).top);
             int width=(detectResult.getRects().get(i).right> ParameterConfig.getFromSP().getDpiWidth()? ParameterConfig.getFromSP().getDpiWidth():detectResult.getRects().get(i).right)-(detectResult.getRects().get(i).left<0? 0:detectResult.getRects().get(i).left);
-            height= (int) (height*1.5);
-            width= (int) (width*1.5);
-
-            BitmapFactory.Options options = new BitmapFactory.Options();
-
-            Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(originalPhoto),
-                    detectResult.getRects().get(i).left<0? 0:detectResult.getRects().get(i).left,
-                    detectResult.getRects().get(i).top<0? 0:detectResult.getRects().get(i).top,
-                    width>(ParameterConfig.getFromSP().getDpiWidth()-detectResult.getRects().get(i).left)?(ParameterConfig.getFromSP().getDpiWidth()-detectResult.getRects().get(i).left):width,
-                    height>(ParameterConfig.getFromSP().getDpiHeight()-detectResult.getRects().get(i).top)?(ParameterConfig.getFromSP().getDpiHeight()-detectResult.getRects().get(i).top):height);
-
-            SqliteUtil.insertFaceCollectionItem(cutPathName, originalPhoto, calendar.getTime(), cameraPrenster);
-            height= (int) (height*1.3);
-            width= (int) (width*1.3);
+            height= (int) (height*1.4);
+            width= (int) (width*1.4);
             Log.d("CameraLeft", String.valueOf(detectResult.getRects().get(i).left));
             Log.d("CameraRight", String.valueOf(detectResult.getRects().get(i).right));
             Log.d("CameraTop", String.valueOf(detectResult.getRects().get(i).top));
             Log.d("CameraBottom", String.valueOf(detectResult.getRects().get(i).bottom));
             Log.d("CameraHeight", String.valueOf(height));
             Log.d("CameraWidth", String.valueOf(width));
-            Bitmap bitmap2 = Bitmap.createBitmap(BitmapFactory.decodeFile(originalPhoto), (detectResult.getRects().get(i).left/1.2)<0? 0: (int) (detectResult.getRects().get(i).left /1.2), (detectResult.getRects().get(i).top/1.2<0)? 0: (int) (detectResult.getRects().get(i).top/1.2),width>(ParameterConfig.getFromSP().getDpiWidth()-detectResult.getRects().get(i).left)?(ParameterConfig.getFromSP().getDpiWidth()-detectResult.getRects().get(i).left):width,height>(ParameterConfig.getFromSP().getDpiHeight()-detectResult.getRects().get(i).top)?(ParameterConfig.getFromSP().getDpiHeight()-detectResult.getRects().get(i).top):height);
+            Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(originalPhoto), (detectResult.getRects().get(i).left/1.2)<0? 0: (int) (detectResult.getRects().get(i).left /1.2), (detectResult.getRects().get(i).top/1.2<0)? 0: (int) (detectResult.getRects().get(i).top/1.2),width>(ParameterConfig.getFromSP().getDpiWidth()-detectResult.getRects().get(i).left)?(ParameterConfig.getFromSP().getDpiWidth()-detectResult.getRects().get(i).left):width,height>(ParameterConfig.getFromSP().getDpiHeight()-detectResult.getRects().get(i).top)?(ParameterConfig.getFromSP().getDpiHeight()-detectResult.getRects().get(i).top):height);
             try {
                 File file=new File(cutPathName);
                 fos=new FileOutputStream(file);
