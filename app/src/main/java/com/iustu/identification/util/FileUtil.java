@@ -5,6 +5,8 @@ import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.util.Log;
 
+import com.iustu.identification.entity.PersionInfo;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -74,7 +76,9 @@ public class FileUtil {
         return PATTERN.matcher(file.getName()).matches();
     }
 
-    // 用来在SD卡根路径下建立文件夹
+    /**
+     * 用来在SD卡根路径下建立文件夹
+     */
     public static void createAppDirectory() {
         String sdcard = Environment.getExternalStorageDirectory().getAbsolutePath();
         File file = new File(sdcard + "/DeepFace");
@@ -85,6 +89,11 @@ public class FileUtil {
             temp.mkdir();
     }
 
+    /**
+     * 用来在添加人员、批量导入的时候将图片导入到人脸库的路径下
+     * @param from 原图路径
+     * @param to 目标路径
+     */
     public static void copy(String from, String to) {
         new Thread(new Runnable() {
             @Override
@@ -107,6 +116,11 @@ public class FileUtil {
         }).start();
     }
 
+    /**
+     * 用来在检测人脸前生成压缩后的图片供检测
+     * @param from 原图片路径
+     * @param to 压缩图片路径，为temp文件夹下
+     */
     public static void copyCompressedBitmap(String from, String to){
         try {
             FileInputStream fs = new FileInputStream(new File(from));
@@ -145,6 +159,10 @@ public class FileUtil {
     }
 
 
+    /**
+     * 删除文件夹及其里面的文件，在删除人脸库的时候调用
+     * @param finalPath 人脸库的路径
+     */
     public static void delete(String finalPath) {
         new Thread(() -> {
             File file = new File(finalPath);
@@ -157,15 +175,39 @@ public class FileUtil {
             }
             file.delete();
         }).start();
+
     }
 
+    /**
+     * 从人脸库删除成员的时候将其所有的照片删除
+     * @param p
+     */
+    public static void deletePersionPhotos(PersionInfo p) {
+        new Thread(() -> {
+            String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DeepFace/" + p.libName;
+            String[] photos = p.photoPath.split(";");
+            for (int i = 0; i < photos.length; i ++) {
+                String photoPath = path + photos[i];
+                File file = new File(photoPath);
+                file.deleteOnExit();
+            }
+        }).start();
+    }
+
+    /**
+     * 修改文件夹或者文件的名字，在修改人脸库的时候调用
+     * @param s 旧名字
+     * @param newName 新名字
+     */
     public static void modify(String s, String newName) {
         File file = new File(s);
         File n = new File(newName);
         file.renameTo(n);
     }
 
-    // 清空所有压缩图片
+    /**
+     * 清空temp文件夹下的所有图片
+     */
     public static void deleteTemp() {
         new Thread(() -> {
             File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/DeepFace/temp/");

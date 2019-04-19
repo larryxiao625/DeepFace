@@ -394,7 +394,7 @@ public class RxUtil {
                 }
 
                 // 执行删除图片
-                // (等待补全)
+                FileUtil.deletePersionPhotos(persionInfo);
                 e.onComplete();
             }
         }).subscribeOn(Schedulers.io())
@@ -416,6 +416,9 @@ public class RxUtil {
                     Cursor cursor = database.query(false, RxUtil.DB_FACECOLLECTIOMITEM, FACECOLLECTION_COLUMNS, null, null, null, null, null, null, null);
                     if (cursor.getCount() == DataCache.getParameterConfig().getSaveCount()) {
                         cursor.moveToNext();
+                        // 删除照片
+                        FileUtil.delete(cursor.getString(cursor.getColumnIndex("imgUrl")));
+                        FileUtil.delete(cursor.getString(cursor.getColumnIndex("originalPhoto")));
                         database.delete(RxUtil.DB_FACECOLLECTIOMITEM, "id = " + cursor.getInt(cursor.getColumnIndex("id")), null);
                     }
                     database.insert(RxUtil.DB_FACECOLLECTIOMITEM, null, item.toContentValues());

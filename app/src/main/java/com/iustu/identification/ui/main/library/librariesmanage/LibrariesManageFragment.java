@@ -149,7 +149,6 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
     // 下一页 的点击事件
     @OnClick(R.id.next_page_iv)
     public void nextPage(){
-        AlarmUtil.alarm();
         if(pageSetHelper != null){
             pageSetHelper.nextPage();
         }
