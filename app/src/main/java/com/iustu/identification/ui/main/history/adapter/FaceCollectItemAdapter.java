@@ -86,7 +86,7 @@ public class FaceCollectItemAdapter extends PageRecyclerViewAdapter<FaceCollectI
         }
 
         public void setFaceCollectionItem(FaceCollectItem faceCollectionItem) {
-            timeTv.setText(faceCollectionItem.getTime() + "  " + faceCollectionItem.getHourTime());
+            timeTv.setText(faceCollectionItem.getTime() + "/n" + faceCollectionItem.getHourTime());
             Glide.with(itemView.getContext())
                     .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.photo_holder).error(R.drawable.photo_holder).dontAnimate())
                     .asBitmap()

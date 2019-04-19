@@ -124,7 +124,7 @@ public class CompareHistoryItemAdapter extends PageRecyclerViewAdapter<CompareHi
                 idCard.setText(TextUtil.format("身份证号:%s", compareRecord.getIdentity()));
                 nationality.setText(TextUtil.format("籍贯:%s", compareRecord.getHome()));
                 libName.setText(TextUtil.format("目标库:%s", String.valueOf(compareRecord.getLibName())));
-                compareTime.setText(compareRecord.getTime() + "  " + compareRecord.getHourTime());
+                compareTime.setText(compareRecord.getTime() + " " + compareRecord.getHourTime());
                 scaleView.setScale((int) (compareRecord.getRate() * 100));
                 Glide.with(itemView).load(new File(compareRecord.getUploadPhoto()))
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
