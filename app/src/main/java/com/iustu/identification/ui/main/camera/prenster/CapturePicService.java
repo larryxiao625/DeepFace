@@ -47,9 +47,14 @@ public class CapturePicService extends Service {
     static String cutPath=Environment.getExternalStorageDirectory()+"/DeepFace/Cut/";
     static String tempPath=Environment.getExternalStorageDirectory()+"/DeepFace/temp/";
     private CameraPrenster cameraPrenster;
+    int captureNum=0;
+    int picQuality=0;
+    Calendar tempBestCalender;
     CaptureBind mBind;
     Disposable disposable;
+    ArrayList<DetectResult> tempDetectResults=new ArrayList<>();
     ArrayList<SearchHandler> searchHandlers=new ArrayList<>();
+    String tempBestPicPath;
     public class CaptureBind extends Binder{
         public CapturePicService getService(){
             return CapturePicService.this;
@@ -82,7 +87,7 @@ public class CapturePicService extends Service {
     public void capturePic() {
         createDir(rootPath);
         createDir(tempPath);
-        Observable.interval(500, TimeUnit.MILLISECONDS)
+        Observable.interval(200, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Long>() {
                     @Override
@@ -96,6 +101,7 @@ public class CapturePicService extends Service {
                         Calendar calendar=Calendar.getInstance();
                         String picPath=rootPath+"/"+TextUtil.dateMessage(calendar.getTime())+".jpg";
                         cameraHelper.capturePicture(picPath, picPath1 -> {
+                            captureNum++;
                             Bitmap bitmap=Bitmap.createBitmap(BitmapFactory.decodeFile(picPath1));
                             try {
                                 bitmap.compress(Bitmap.CompressFormat.JPEG,50,new FileOutputStream(tempPath+TextUtil.dateMessage(calendar.getTime())+".jpg"));
@@ -105,9 +111,21 @@ public class CapturePicService extends Service {
                             ArrayList<String> picPaths=new ArrayList<>();
                             picPaths.add(tempPath+TextUtil.dateMessage(calendar.getTime())+".jpg");
                             ArrayList<DetectResult> detectResults=SDKUtil.detectFace(picPaths);
-                            if(detectResults.size()!=0) {
-                                Log.d("Camera","人脸数量"+detectResults.get(0).size());
-                                getCutPicture(picPath1,detectResults.get(0),calendar,detectResults.get(0).points.size());
+                            if(detectResults.get(0).points.size()!=0) {
+                                if (((detectResults.get(0).getPoints().get(0).x)[1] - (detectResults.get(0).getPoints().get(0).x)[0]) > picQuality) {
+                                    picQuality = (int) ((detectResults.get(0).getPoints().get(0).x)[1] - (detectResults.get(0).getPoints().get(0).x)[0]);
+                                    tempDetectResults.clear();
+                                    tempDetectResults = detectResults;
+                                    tempBestCalender = calendar;
+                                    tempBestPicPath=tempPath+TextUtil.dateMessage(calendar.getTime())+".jpg";
+                                }
+                            }
+                            if(captureNum==5){
+                                getTheBestPic(tempBestPicPath,tempDetectResults,tempBestCalender,tempDetectResults.get(0).points.size());
+                                captureNum=0;
+                                picQuality=0;
+                                tempBestCalender=null;
+                                tempDetectResults.clear();
                             }
                         });
                     }
@@ -124,6 +142,12 @@ public class CapturePicService extends Service {
                 });
     }
 
+    public void getTheBestPic(String picPath,ArrayList<DetectResult> detectResults,Calendar calendar,int faceNum){
+        if(faceNum!=0){
+            Log.d("Camera","人脸数量"+detectResults.get(0).size());
+            getCutPicture(picPath,detectResults.get(0),calendar,detectResults.get(0).points.size());
+        }
+    }
     public void createDir(String dirPath) {
         File file=new File(dirPath);
         if(!file.exists()){

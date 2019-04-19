@@ -16,6 +16,7 @@ import com.example.agin.facerecsdk.HandlerFactory;
 import com.example.agin.facerecsdk.SearchDBItem;
 import com.example.agin.facerecsdk.SearchHandler;
 import com.example.agin.facerecsdk.SearchResultItem;
+import com.example.agin.facerecsdk.TrackerHandler;
 import com.example.agin.facerecsdk.VerifyHandler;
 import com.iustu.identification.entity.PersionInfo;
 
@@ -44,6 +45,8 @@ public class SDKUtil {
 
     private static HashMap<String, SearchHandler> searchHandlerCache = new HashMap<>();  // 用来记录被创建过的搜索句柄，key为libName
 
+    private static TrackerHandler trackerHandler;   //人脸跟踪句柄
+
     // 初始化方法
     public static void init() {
         // 初始化人脸检测句柄
@@ -59,6 +62,8 @@ public class SDKUtil {
         attributeHandler = (AttributeHandler) HandlerFactory.createAttribute("/sdcard/attr-Framework1-cpu-0a15-bc0a.model");
         attributeHandler.initial();
 
+        // 初始化人脸跟踪检测句柄
+        trackerHandler= (TrackerHandler) HandlerFactory.createTracker(2000000);
     }
 
     public static void initSdk(Context context) {
