@@ -1,10 +1,13 @@
 package com.iustu.identification.util;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -72,11 +75,14 @@ public class FileUtil {
     }
 
     // 用来在SD卡根路径下建立文件夹
-    public static void createAppDirectory(String path) {
+    public static void createAppDirectory() {
         String sdcard = Environment.getExternalStorageDirectory().getAbsolutePath();
         File file = new File(sdcard + "/DeepFace");
         if (!file.exists())
             file.mkdir();
+        File temp = new File(sdcard + "/DeepFace/temp");
+        if (!temp.exists())
+            temp.mkdir();
     }
 
     public static void copy(String from, String to) {
@@ -101,6 +107,43 @@ public class FileUtil {
         }).start();
     }
 
+    public static void copyCompressedBitmap(String from, String to){
+        try {
+            FileInputStream fs = new FileInputStream(new File(from));
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            options.inPreferredConfig = Bitmap.Config.RGB_565;
+            BitmapFactory.decodeStream(fs, null, options);
+            fs.close();
+            options.inSampleSize = cauculateInSampleSize(options);
+            options.inJustDecodeBounds = false;
+            FileInputStream fss = new FileInputStream(new File(from));
+            Bitmap bitmap = BitmapFactory.decodeStream(fss, null, options);
+            File file = new File(to);
+            FileOutputStream outputStream = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 60, outputStream);
+            outputStream.flush();
+            outputStream.close();
+            fss.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // 计算将图片压缩为240 x 160的压缩比例
+    private static int cauculateInSampleSize(BitmapFactory.Options options) {
+        int targetHeight = 160;
+        int targetWidget = 240;
+        int inSampleSize = 1;
+        if (options.outHeight > targetHeight || options.outWidth > targetWidget) {
+            int heightRatio = Math.round((float) options.outHeight / (float) targetHeight);
+            int widthRatio = Math.round((float) options.outWidth / (float) targetWidget);
+            inSampleSize = Math.min(heightRatio, widthRatio);
+        }
+        Log.d("bitmap", "cauculateInSampleSize: " + inSampleSize);
+        return inSampleSize;
+    }
+
 
     public static void delete(String finalPath) {
         new Thread(() -> {
@@ -120,5 +163,17 @@ public class FileUtil {
         File file = new File(s);
         File n = new File(newName);
         file.renameTo(n);
+    }
+
+    // 清空所有压缩图片
+    public static void deleteTemp() {
+        new Thread(() -> {
+            File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/DeepFace/temp/");
+            File[] files = file.listFiles();
+            for (int i = 0; i < files.length; i++) {
+                File f = files[i];
+                f.delete();
+            }
+        }).start();
     }
 }

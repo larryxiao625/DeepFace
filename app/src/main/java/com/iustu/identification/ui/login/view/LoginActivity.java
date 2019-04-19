@@ -20,6 +20,7 @@ import com.iustu.identification.ui.widget.dialog.SingleButtonDialog;
 import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
 import com.iustu.identification.util.AlarmUtil;
 import com.iustu.identification.util.DataCache;
+import com.iustu.identification.util.FileUtil;
 import com.iustu.identification.util.LibManager;
 import com.iustu.identification.util.MSP;
 import com.iustu.identification.util.SDKUtil;
@@ -49,6 +50,7 @@ public class LoginActivity extends BaseActivity implements LibManager.OnLibLoadL
     protected void initView(@Nullable Bundle savedInstanceState) {
         SDKUtil.initSdk(this);
         AlarmUtil.init(this);
+        FileUtil.createAppDirectory();
         LibManager.setOnLoadListener(this);
         loginPrenster=LoginPrenster.getInstance();
         loginPrenster.attchView(iVew);

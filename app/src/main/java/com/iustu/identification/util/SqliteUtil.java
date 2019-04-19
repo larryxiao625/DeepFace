@@ -110,14 +110,12 @@ public class SqliteUtil {
 
             @Override
             public void onError(Throwable e) {
-                Log.d("Camera","onError");
                 e.printStackTrace();
                 ToastUtil.show(e.getMessage());
             }
 
             @Override
             public void onComplete() {
-                Log.d("Camera","onComplete2");
                 comparePresenter.getView().updateSingleResult(compareRecord);
                 ToastUtil.show("成功");
             }
