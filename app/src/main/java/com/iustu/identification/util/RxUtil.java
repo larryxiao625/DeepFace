@@ -251,26 +251,22 @@ public class RxUtil {
         return Observable.fromIterable(persionInfos).map(new Function<PersionInfo, Boolean>() {
             @Override
             public Boolean apply(PersionInfo persionInfo) throws Exception {
-                // 首先调用SDK生成feature
-                SDKUtil.sdkDoBatchPersion(persionInfo);
+
                 // 其次将选中的图片复制到人脸库的路径中
                 String fileName = persionInfo.name + System.currentTimeMillis() + ".jpg";
                 String finalPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DeepFace/" + persionInfo.libName + "/" + fileName;
                 FileUtil.copy(persionInfo.photoPath, finalPath);
+                String compressPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DeepFace/temp/" + fileName;
+                FileUtil.copyCompressedBitmap(persionInfo.photoPath, compressPath);
                 persionInfo.photoPath = fileName;
+
+                // 首先调用SDK生成feature
+                SDKUtil.sdkDoBatchPersion(persionInfo);
 
                 SQLiteDatabase database = SqliteUtil.getDatabase();
                 database.beginTransaction();
                 try {
                     long r = database.insertWithOnConflict(RxUtil.DB_PERSIONINFO, null, persionInfo.toContentValues(), SQLiteDatabase.CONFLICT_IGNORE);
-//                    // 说明插入失败,说明PersionInfo中已经含有该人员，那么直接将其照片添加到人脸库中
-//                    if (r == -1) {
-//                        Cursor cursor = database.query(false, RxUtil.DB_PERSIONINFO, RxUtil.PERSIONINFO_COLUMNS,"libName = ? and name = ?", new String[]{persionInfo.libName, persionInfo.name}, null, null, null, null);
-//                        cursor.moveToNext();
-//                        persionInfo.photoPath = cursor.getString(cursor.getColumnIndex("photoPath")) + ";" + persionInfo.photoPath;
-//                        database.update(RxUtil.DB_PERSIONINFO, persionInfo.toContentValues(), "libName = ? and name = ?", new String[]{persionInfo.libName, persionInfo.name});
-//                        return true;
-//                    }
                     // 如果往PersionInfo中添加新数据，则需要修改Library的信息
                     Cursor cursor = database.query(false, RxUtil.DB_LIBRARY, RxUtil.LIBRARY_COLUMNS,"libName = '" + persionInfo.libName + "'", null, null, null, null, null);
                     cursor.moveToFirst();
@@ -286,53 +282,6 @@ public class RxUtil {
             }
 
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
-            /*
-        return Observable.create(new ObservableOnSubscribe<Boolean>() {
-            @Override
-            public void subscribe(ObservableEmitter<Boolean> e) {
-                ArrayList<ContentValues> values = new ArrayList<>();
-                // 首先调用SDK生成feature
-                SDKUtil.sdkDoBatchPersion(persionInfos);
-                for(PersionInfo persionInfo : persionInfos) {
-                    // 其次将选中的图片复制到人脸库的路径中
-                    String fileName = persionInfo.name + System.currentTimeMillis() + ".jpg";
-                    String finalPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DeepFace/" + persionInfo.libName + "/" + fileName;
-                    FileUtil.copy(persionInfo.photoPath, finalPath);
-                    persionInfo.photoPath = fileName;
-                    values.add(persionInfo.toContentValues());
-                }
-
-                SQLiteDatabase database = SqliteUtil.getDatabase();
-                database.beginTransaction();
-                try {
-                    for (int i = 0; i < persionInfos.size(); i ++) {
-                        long r = database.insertWithOnConflict(RxUtil.DB_PERSIONINFO, null, values.get(i), SQLiteDatabase.CONFLICT_IGNORE);
-                        // 说明插入失败,说明PersionInfo中已经含有该人员，那么直接将其照片添加到人脸库中
-                        if (r == -1) {
-                            PersionInfo persionInfo = persionInfos.get(i);
-                            Cursor cursor = database.query(false, RxUtil.DB_PERSIONINFO, RxUtil.PERSIONINFO_COLUMNS,"libName = ? and name = ?", new String[]{persionInfo.libName, persionInfo.name}, null, null, null, null);
-                            cursor.moveToNext();
-                            persionInfo.photoPath = cursor.getString(cursor.getColumnIndex("photoPath")) + ";" + persionInfo.photoPath;
-                            database.update(RxUtil.DB_PERSIONINFO, persionInfo.toContentValues(), "libName = ? and name = ?", new String[]{persionInfos.get(i).libName, persionInfos.get(i).name});
-                            e.onNext(false);
-                            continue;
-                        }
-                        // 如果往PersionInfo中添加新数据，则需要修改Library的信息
-                        Cursor cursor = database.query(false, RxUtil.DB_LIBRARY, RxUtil.LIBRARY_COLUMNS,"libName = '" + persionInfos.get(i).libName + "'", null, null, null, null, null);
-                        cursor.moveToFirst();
-                        int count = cursor.getInt(cursor.getColumnIndex("count"));
-                        ContentValues values1 = new ContentValues();
-                        values1.put("count", count + 1);
-                        database.update(RxUtil.DB_LIBRARY, values1, "libName = '" + persionInfos.get(i).libName + "'", null);
-                        e.onNext(true);
-                    }
-                    database.setTransactionSuccessful();
-                } finally{
-                    database.endTransaction();
-                }
-                e.onComplete();
-            }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());*/
     }
 
     /**

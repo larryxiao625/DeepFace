@@ -48,7 +48,7 @@ public class SDKUtil {
     public static void init() {
         // 初始化人脸检测句柄
         detectHandler = (DetectHandler) HandlerFactory.createDetector("/sdcard/detect-Framework3-cpu-xxxx.model");
-        detectHandler.setThreadNum(HandlerFactory.FrameWorkType.OPENCV, 4);
+        detectHandler.setThreadNum(HandlerFactory.FrameWorkType.NCNN, 4);
         detectHandler.initial();
 
         //初始化特征提取句柄
@@ -127,7 +127,7 @@ public class SDKUtil {
         }
         ArrayList<SearchResultItem> searchResult = new ArrayList<>();
         // 首先检测人脸库中是否已经含有该人脸特征
-        int searchRes = searchHandler.searchFind(floats, 1, searchResult, DataCache.getParameterConfig().getFilterScore());
+        int searchRes = searchHandler.searchFind(floats, 1, searchResult, DataCache.getParameterConfig().getThresholdQuanity());
         Log.d("sdk", "searchRes " + searchRes);
         Log.d("sdk", "serachResultLength" + searchResult.size());
         // 说明该人脸库中已经含有了该人脸
@@ -147,9 +147,10 @@ public class SDKUtil {
     public static void sdkDoBatchPersion(PersionInfo persionInfo) {
         long startTime;
         long endTime;
+        String compressPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DeepFace/temp/" + persionInfo.photoPath;
         DetectResult detectResult=new DetectResult();
         startTime = System.currentTimeMillis();
-        SDKUtil.getDetectHandler().faceDetector(persionInfo.photoPath,detectResult);
+        SDKUtil.getDetectHandler().faceDetector(compressPath,detectResult);
         endTime = System.currentTimeMillis();
         Log.d("timeTest", "人脸检测时间：" + (endTime - startTime));
         FeatureResult featureResult=new FeatureResult();

@@ -3,6 +3,7 @@ package com.iustu.identification.ui.main.batch.mvp;
 import android.util.Log;
 
 import com.iustu.identification.entity.PersionInfo;
+import com.iustu.identification.util.FileUtil;
 import com.iustu.identification.util.RxUtil;
 import com.iustu.identification.util.StringUtil;
 import com.iustu.identification.util.ToastUtil;
@@ -70,6 +71,7 @@ public class BatchPresenter {
                 disposable.dispose();
                 view.changeSubmitable();
                 endTime[0] = System.currentTimeMillis();
+                FileUtil.deleteTemp();
                 Log.d("timeTest", "onComplete: " + (endTime[0] - startTime));
             }
         });

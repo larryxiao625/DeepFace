@@ -173,7 +173,6 @@ public class BatchCompareFragment extends DialogFragment implements BatchView {
         if (requestCode == 100 && resultCode == 200) {
             String path = data.getStringExtra("path");
             pathTv.setText(path);
-            Log.d("onActivityResult", "onActivityResult: "+path);
             mFolder = new File(path);
             for (File file : mFolder.listFiles()) {
                 if(FileUtil.isImg(file)){

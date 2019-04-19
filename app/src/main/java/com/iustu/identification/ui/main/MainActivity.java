@@ -22,6 +22,7 @@ import com.iustu.identification.ui.main.library.LibraryFragment;
 import com.iustu.identification.ui.widget.BottomBar;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
+import com.iustu.identification.util.AlarmUtil;
 import com.iustu.identification.util.DataCache;
 import com.iustu.identification.util.LibManager;
 import com.iustu.identification.util.SqliteUtil;
@@ -172,6 +173,7 @@ public class MainActivity extends BaseActivity implements BottomBar.BottomBarSel
     protected void onDestroy() {
         isActivityAlive = false;
         LibManager.dispose();
+        AlarmUtil.destory();
         super.onDestroy();
 //        stopService(new Intent(MainActivity.this, CapturePicService.class));
     }
