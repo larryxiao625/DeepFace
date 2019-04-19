@@ -1,10 +1,6 @@
 package com.iustu.identification.ui.main.camera.adapter;
 
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,11 +14,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.iustu.identification.R;
 import com.iustu.identification.entity.CompareRecord;
-import com.iustu.identification.entity.PersonInfo;
 import com.iustu.identification.ui.widget.ScaleView;
 import com.iustu.identification.util.ExpandableViewHoldersUtil;
 import com.iustu.identification.util.ImageUtils;
@@ -129,6 +122,7 @@ public class CompareItemAdapter extends RecyclerView.Adapter<CompareItemAdapter.
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .format(DecodeFormat.PREFER_RGB_565)
                         .into(capturePhoto);
+                Log.d("CameraPhotoPath",info.getPhotoPath());
                 String[] photos = info.getPhotoPath().split(";");
                 String libPath = "/sdcard/DeepFace/" + info.getLibName()+ "/" + photos[0];
                 Glide.with(itemView).load(BitmapFactory.decodeFile(libPath))

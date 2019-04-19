@@ -26,6 +26,7 @@ import com.iustu.identification.ui.main.camera.adapter.CatchFaceAdapter;
 import com.iustu.identification.ui.main.camera.adapter.CompareItemAdapter;
 import com.iustu.identification.ui.main.camera.prenster.CameraPrenster;
 import com.iustu.identification.ui.main.camera.prenster.CapturePicService;
+import com.iustu.identification.util.AlarmUtil;
 import com.iustu.identification.util.IconFontUtil;
 import com.jiangdg.usbcamera.UVCCameraHelper;
 import com.serenegiant.usb.common.AbstractUVCCameraHandler;
@@ -185,6 +186,7 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
             if(!itemCompareRecyclerView.canScrollVertically(-1)) {
                 itemCompareRecyclerView.smoothScrollToPosition(0);
             }
+            AlarmUtil.alarm();
         }
 
         @Override
