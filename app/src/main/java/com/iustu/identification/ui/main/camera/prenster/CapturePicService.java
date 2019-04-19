@@ -213,20 +213,12 @@ public class CapturePicService extends Service {
         if(!cutFile.exists()){
             cutFile.mkdirs();
         }
-//        BitmapFactory.Options options=new BitmapFactory.Options();
-//        options.inSampleSize=2;
         for(int i=0;i<num;i++) {
             String cutPathName=cutPath+TextUtil.dateMessage(calendar.getTime())+"_"+i+".jpg";
             int height=(detectResult.getRects().get(i).bottom> ParameterConfig.getFromSP().getDpiHeight()? ParameterConfig.getFromSP().getDpiHeight():detectResult.getRects().get(i).bottom)-(detectResult.getRects().get(i).top<0? 0:detectResult.getRects().get(i).top);
             int width=(detectResult.getRects().get(i).right> ParameterConfig.getFromSP().getDpiWidth()? ParameterConfig.getFromSP().getDpiWidth():detectResult.getRects().get(i).right)-(detectResult.getRects().get(i).left<0? 0:detectResult.getRects().get(i).left);
             height= (int) (height*1.4);
             width= (int) (width*1.4);
-            Log.d("CameraLeft", String.valueOf(detectResult.getRects().get(i).left));
-            Log.d("CameraRight", String.valueOf(detectResult.getRects().get(i).right));
-            Log.d("CameraTop", String.valueOf(detectResult.getRects().get(i).top));
-            Log.d("CameraBottom", String.valueOf(detectResult.getRects().get(i).bottom));
-            Log.d("CameraHeight", String.valueOf(height));
-            Log.d("CameraWidth", String.valueOf(width));
             Log.d("CameraPath",originalPhoto);
             Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(originalPhoto), (detectResult.getRects().get(i).left/1.2)<0? 0: (int) (detectResult.getRects().get(i).left /1.2), (detectResult.getRects().get(i).top/1.2<0)? 0: (int) (detectResult.getRects().get(i).top/1.2), width>(ParameterConfig.getFromSP().getDpiWidth()-detectResult.getRects().get(i).left)?(ParameterConfig.getFromSP().getDpiWidth()-detectResult.getRects().get(i).left): (int) (width * 1.1), height>(ParameterConfig.getFromSP().getDpiHeight()-detectResult.getRects().get(i).top)?(ParameterConfig.getFromSP().getDpiHeight()-detectResult.getRects().get(i).top): (int) (height * 1.1));
             try {
