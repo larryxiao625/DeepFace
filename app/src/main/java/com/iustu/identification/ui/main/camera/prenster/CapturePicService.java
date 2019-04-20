@@ -71,7 +71,6 @@ public class CapturePicService extends Service {
     }
     File cutFile=new File(cutPath);
     FileOutputStream fos;
-    FileOutputStream tempFos;
     ThreadCanshu threadCanshu;
     @Override
     public void onCreate() {
@@ -101,7 +100,7 @@ public class CapturePicService extends Service {
     public void capturePic() {
         createDir(rootPath);
         createDir(tempPath);
-        Observable.interval(300, TimeUnit.MILLISECONDS)
+        Observable.interval(200, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Long>() {
@@ -117,18 +116,16 @@ public class CapturePicService extends Service {
                         String fileName=TextUtil.dateMessage(calendar.getTime())+"_"+captureNum+".jpg";
                         String picPath=rootPath+"/"+fileName;
                         cameraHelper.capturePicture(picPath, picPath1 -> {
-                            Log.d("CameraPicPathOutPut",picPath1);
-                            Log.d("CameraPicPathInput",picPath);
                             calendars.add(calendar);
                             capturePicPaths.add(picPath1);
                         });
                         if(captureNum==5){
-                            Log.d("CameraCapturePaths",String.valueOf(capturePicPaths.size()));
-                            threadCanshu=new ThreadCanshu(calendars,capturePicPaths);
-                            Log.d("CameraCapture", String.valueOf(5));
-                            Log.d("EventBus1", String.valueOf(threadCanshu));
+                            List<String> tempCapturePicPath=new ArrayList<>();
+                            tempCapturePicPath.addAll(capturePicPaths);
+                            List<Calendar> tempCalender=new ArrayList<>();
+                            tempCalender.addAll(calendars);
+                            threadCanshu=new ThreadCanshu(tempCalender,tempCapturePicPath);
                             EventBus.getDefault().post(threadCanshu);
-                            Log.d("CameraEventBus","CameraEventBus");
                             capturePicPaths.clear();
                             calendars.clear();
                             captureNum=0;
@@ -244,24 +241,19 @@ public class CapturePicService extends Service {
     @Subscribe(threadMode = ThreadMode.ASYNC)
     public void Event(ThreadCanshu threadCanshu){
         Log.d("EventBus2", String.valueOf(threadCanshu));
-        Log.d("CameraEventBus","CameraEventBus2");
         String tempBestPicPath = null;
         ArrayList<DetectResult> tempDetectResults = new ArrayList<>();
         Calendar tempBestCalender = null;
-        List<Calendar> threadCalenders = threadCanshu.threadCalenders;
-        List<String> picPaths = threadCanshu.picPaths;
+        List<Calendar> threadCalenders = threadCanshu.getThreadCalenders();
+        List<String> picPaths = threadCanshu.getPicPaths();
         if (threadCalenders != null) {
-            Log.d("CameraRun", "CameraRun");
-            Log.d("CameraCalender", String.valueOf(threadCalenders.size()));
-            Log.d("Camera", String.valueOf(picPaths.size()));
             for (int i = 0; i < picPaths.size(); i++) {
                 try {
-                    Log.d("CameraCapture", "run");
                     Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(picPaths.get(i)));
-                    tempFos = new FileOutputStream(tempPath + picPaths.get(i));
+                    FileOutputStream tempFos = new FileOutputStream(tempPath + TextUtil.dateMessage(threadCalenders.get(i).getTime())+"_"+i+".jpg");
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 50, tempFos);
                     ArrayList<String> inputPicPaths = new ArrayList<>();
-                    picPaths.add(tempPath + TextUtil.dateMessage(threadCalenders.get(i).getTime()) + "_" + captureNum + ".jpg");
+                    inputPicPaths.add(tempPath + TextUtil.dateMessage(threadCalenders.get(i).getTime()) + "_" + i + ".jpg");
                     tempFos.flush();
                     tempFos.close();
                     ArrayList<DetectResult> detectResults = SDKUtil.detectFace(inputPicPaths);
@@ -274,7 +266,7 @@ public class CapturePicService extends Service {
                             tempBestPicPath = picPaths.get(i);
                         }
                     }
-                    Log.d("CameraCapture", String.valueOf(captureNum));
+                    Log.d("CameraCapture", String.valueOf(i));
                     if (i == 4) {
                         getCutPicture(tempBestPicPath, tempDetectResults.get(0), tempBestCalender, tempDetectResults.get(0).points.size());
                     }
