@@ -14,7 +14,6 @@ import android.util.Log;
 import com.example.agin.facerecsdk.DetectResult;
 import com.example.agin.facerecsdk.FeatureResult;
 import com.example.agin.facerecsdk.HandlerFactory;
-import com.example.agin.facerecsdk.SearchDBItem;
 import com.example.agin.facerecsdk.SearchHandler;
 import com.example.agin.facerecsdk.SearchResultItem;
 import com.iustu.identification.bean.ParameterConfig;
@@ -24,20 +23,27 @@ import com.iustu.identification.util.SqliteUtil;
 import com.iustu.identification.util.TextUtil;
 import com.jiangdg.usbcamera.UVCCameraHelper;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 import static java.lang.Math.sqrt;
 
@@ -49,12 +55,12 @@ public class CapturePicService extends Service {
     private CameraPrenster cameraPrenster;
     int captureNum=0;
     int picQuality=0;
-    Calendar tempBestCalender;
     CaptureBind mBind;
     Disposable disposable;
-    ArrayList<DetectResult> tempDetectResults=new ArrayList<>();
     ArrayList<SearchHandler> searchHandlers=new ArrayList<>();
-    String tempBestPicPath;
+    volatile List<Calendar> calendars=new ArrayList<>();
+    volatile List<String> capturePicPaths=new ArrayList<>();
+
     public class CaptureBind extends Binder{
         public CapturePicService getService(){
             return CapturePicService.this;
@@ -65,6 +71,8 @@ public class CapturePicService extends Service {
     }
     File cutFile=new File(cutPath);
     FileOutputStream fos;
+    FileOutputStream tempFos;
+    ThreadCanshu threadCanshu;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -74,6 +82,12 @@ public class CapturePicService extends Service {
         for(String libPath:libPat){
             SearchHandler searchHandler= (SearchHandler) HandlerFactory.createSearcher(rootPath+"/"+libPath,0,1);
             searchHandlers.add(searchHandler);
+        }
+        EventBus.getDefault().register(this);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
         capturePic();
     }
@@ -87,8 +101,9 @@ public class CapturePicService extends Service {
     public void capturePic() {
         createDir(rootPath);
         createDir(tempPath);
-        Observable.interval(200, TimeUnit.MILLISECONDS)
+        Observable.interval(300, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Long>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -97,39 +112,28 @@ public class CapturePicService extends Service {
 
                     @Override
                     public void onNext(Long aLong) {
-                        Log.d("Camera", TextUtil.getDateString2(Calendar.getInstance().getTime()));
+                        captureNum++;
                         Calendar calendar=Calendar.getInstance();
-                        String picPath=rootPath+"/"+TextUtil.dateMessage(calendar.getTime())+".jpg";
+                        String fileName=TextUtil.dateMessage(calendar.getTime())+"_"+captureNum+".jpg";
+                        String picPath=rootPath+"/"+fileName;
                         cameraHelper.capturePicture(picPath, picPath1 -> {
-                            captureNum++;
-                            Bitmap bitmap=Bitmap.createBitmap(BitmapFactory.decodeFile(picPath1));
-                            try {
-                                bitmap.compress(Bitmap.CompressFormat.JPEG,50,new FileOutputStream(tempPath+TextUtil.dateMessage(calendar.getTime())+".jpg"));
-                            } catch (FileNotFoundException e) {
-                                e.printStackTrace();
-                            }
-                            ArrayList<String> picPaths=new ArrayList<>();
-                            picPaths.add(tempPath+TextUtil.dateMessage(calendar.getTime())+".jpg");
-                            ArrayList<DetectResult> detectResults=SDKUtil.detectFace(picPaths);
-                            if(detectResults.get(0).points.size()!=0) {
-                                if (((detectResults.get(0).getPoints().get(0).x)[1] - (detectResults.get(0).getPoints().get(0).x)[0]) > picQuality) {
-                                    picQuality = (int) ((detectResults.get(0).getPoints().get(0).x)[1] - (detectResults.get(0).getPoints().get(0).x)[0]);
-                                    tempDetectResults.clear();
-                                    tempDetectResults = detectResults;
-                                    tempBestCalender = calendar;
-                                    tempBestPicPath=tempPath+TextUtil.dateMessage(calendar.getTime())+".jpg";
-                                }
-                            }
-                            if(captureNum==5){
-                                getTheBestPic(tempBestPicPath,tempDetectResults,tempBestCalender,tempDetectResults.get(0).points.size());
-                                captureNum=0;
-                                picQuality=0;
-                                tempBestCalender=null;
-                                tempDetectResults.clear();
-                            }
+                            Log.d("CameraPicPathOutPut",picPath1);
+                            Log.d("CameraPicPathInput",picPath);
+                            calendars.add(calendar);
+                            capturePicPaths.add(picPath1);
                         });
+                        if(captureNum==5){
+                            Log.d("CameraCapturePaths",String.valueOf(capturePicPaths.size()));
+                            threadCanshu=new ThreadCanshu(calendars,capturePicPaths);
+                            Log.d("CameraCapture", String.valueOf(5));
+                            Log.d("EventBus1", String.valueOf(threadCanshu));
+                            EventBus.getDefault().post(threadCanshu);
+                            Log.d("CameraEventBus","CameraEventBus");
+                            capturePicPaths.clear();
+                            calendars.clear();
+                            captureNum=0;
+                        }
                     }
-
                     @Override
                     public void onError(Throwable e) {
                         e.printStackTrace();
@@ -137,7 +141,6 @@ public class CapturePicService extends Service {
 
                     @Override
                     public void onComplete() {
-
                     }
                 });
     }
@@ -219,12 +222,7 @@ public class CapturePicService extends Service {
             int width=(detectResult.getRects().get(i).right> ParameterConfig.getFromSP().getDpiWidth()? ParameterConfig.getFromSP().getDpiWidth():detectResult.getRects().get(i).right)-(detectResult.getRects().get(i).left<0? 0:detectResult.getRects().get(i).left);
             height= (int) (height*1.4);
             width= (int) (width*1.4);
-            Log.d("CameraLeft", String.valueOf(detectResult.getRects().get(i).left));
-            Log.d("CameraRight", String.valueOf(detectResult.getRects().get(i).right));
-            Log.d("CameraTop", String.valueOf(detectResult.getRects().get(i).top));
-            Log.d("CameraBottom", String.valueOf(detectResult.getRects().get(i).bottom));
-            Log.d("CameraHeight", String.valueOf(height));
-            Log.d("CameraWidth", String.valueOf(width));
+            Log.d("CameraOriginalPhoto",originalPhoto);
             Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(originalPhoto), (detectResult.getRects().get(i).left/1.2)<0? 0: (int) (detectResult.getRects().get(i).left /1.2), (detectResult.getRects().get(i).top/1.2<0)? 0: (int) (detectResult.getRects().get(i).top/1.2),width>(ParameterConfig.getFromSP().getDpiWidth()-detectResult.getRects().get(i).left)?(ParameterConfig.getFromSP().getDpiWidth()-detectResult.getRects().get(i).left):width,height>(ParameterConfig.getFromSP().getDpiHeight()-detectResult.getRects().get(i).top)?(ParameterConfig.getFromSP().getDpiHeight()-detectResult.getRects().get(i).top):height);
             try {
                 File file=new File(cutPathName);
@@ -243,4 +241,77 @@ public class CapturePicService extends Service {
 
     }
 
+    @Subscribe(threadMode = ThreadMode.ASYNC)
+    public void Event(ThreadCanshu threadCanshu){
+        Log.d("EventBus2", String.valueOf(threadCanshu));
+        Log.d("CameraEventBus","CameraEventBus2");
+        String tempBestPicPath = null;
+        ArrayList<DetectResult> tempDetectResults = new ArrayList<>();
+        Calendar tempBestCalender = null;
+        List<Calendar> threadCalenders = threadCanshu.threadCalenders;
+        List<String> picPaths = threadCanshu.picPaths;
+        if (threadCalenders != null) {
+            Log.d("CameraRun", "CameraRun");
+            Log.d("CameraCalender", String.valueOf(threadCalenders.size()));
+            Log.d("Camera", String.valueOf(picPaths.size()));
+            for (int i = 0; i < picPaths.size(); i++) {
+                try {
+                    Log.d("CameraCapture", "run");
+                    Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(picPaths.get(i)));
+                    tempFos = new FileOutputStream(tempPath + picPaths.get(i));
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 50, tempFos);
+                    ArrayList<String> inputPicPaths = new ArrayList<>();
+                    picPaths.add(tempPath + TextUtil.dateMessage(threadCalenders.get(i).getTime()) + "_" + captureNum + ".jpg");
+                    tempFos.flush();
+                    tempFos.close();
+                    ArrayList<DetectResult> detectResults = SDKUtil.detectFace(inputPicPaths);
+                    if (!detectResults.isEmpty()) {
+                        if (((detectResults.get(0).getPoints().get(0).x)[1] - (detectResults.get(0).getPoints().get(0).x)[0]) > picQuality) {
+                            picQuality = (int) ((detectResults.get(0).getPoints().get(0).x)[1] - (detectResults.get(0).getPoints().get(0).x)[0]);
+                            tempDetectResults.clear();
+                            tempDetectResults = detectResults;
+                            tempBestCalender = threadCalenders.get(i);
+                            tempBestPicPath = picPaths.get(i);
+                        }
+                    }
+                    Log.d("CameraCapture", String.valueOf(captureNum));
+                    if (i == 4) {
+                        getCutPicture(tempBestPicPath, tempDetectResults.get(0), tempBestCalender, tempDetectResults.get(0).points.size());
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public class ThreadCanshu{
+        public List<Calendar> threadCalenders;
+        public List<String> picPaths ;
+
+        public ThreadCanshu(List<Calendar> threadCalenders, List<String> picPaths) {
+            this.threadCalenders = threadCalenders;
+            this.picPaths = picPaths;
+        }
+
+        public List<Calendar> getThreadCalenders() {
+            return threadCalenders;
+        }
+
+        public void setThreadCalenders(List<Calendar> threadCalenders) {
+            this.threadCalenders = threadCalenders;
+        }
+
+        public List<String> getPicPaths() {
+            return picPaths;
+        }
+
+        public void setPicPaths(List<String> picPaths) {
+            this.picPaths = picPaths;
+        }
+    }
 }
