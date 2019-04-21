@@ -45,7 +45,6 @@ import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 import static java.lang.Math.sqrt;
 
@@ -55,10 +54,14 @@ public class CapturePicService extends Service {
     static String cutPath=Environment.getExternalStorageDirectory()+"/DeepFace/Cut/";
     static String tempPath=Environment.getExternalStorageDirectory()+"/DeepFace/temp/";
     private CameraPrenster cameraPrenster;
-    int captureNum=0;
+    volatile int captureNum=0;
+    int picQuality=0;
+    Calendar tempBestCalender;
     CaptureBind mBind;
     Disposable disposable;
     ArrayList<SearchHandler> searchHandlers=new ArrayList<>();
+
+    String tempBestPicPath;
     volatile List<Calendar> calendars=new ArrayList<>();
     volatile List<String> capturePicPaths=new ArrayList<>();
 
@@ -85,6 +88,91 @@ public class CapturePicService extends Service {
         }
         EventBus.getDefault().register(this);
         capturePic();
+//        ArrayList<String> capturesPic = new ArrayList<>();       // 保存抓拍到的图片
+//        Observable.interval(200, TimeUnit.MILLISECONDS)
+//                .map(new Function<Long, Object>() {
+//                    @Override
+//                    public Object apply(Long aLong) {
+//                        Calendar calendar=Calendar.getInstance();
+//                        String picPath=rootPath+"/"+System.currentTimeMillis()+".jpg";
+//                        cameraHelper.capturePicture(picPath, picPath1 -> {
+//                            captureNum ++;
+//                            capturesPic.add(picPath);
+//                        });
+//                        if (captureNum == 5) {
+//                            captureNum = 0;
+//                            ArrayList<String> f = new ArrayList<>();
+//                            for (int i = 0; i < capturesPic.size(); i ++) {
+//                                f.add(capturesPic.get(i));
+//                            }
+//                            capturesPic.clear();
+//                            return f;
+//                        } else {
+//                            return picPath;
+//                        }
+//                    }
+//                }).subscribeOn(AndroidSchedulers.mainThread())
+//                  .observeOn(Schedulers.io())
+//                  .subscribe(new Observer<Object>() {
+//
+//                      @Override
+//                      public void onSubscribe(Disposable d) {
+//                          disposable = d;
+//                      }
+//
+//                      @Override
+//                      public void onNext(Object o) {
+//                          if (o.getClass().equals(String.class)) {
+//                              return;
+//                          }
+//                          ArrayList<String> compressedPictures = new ArrayList<>();
+//                          Log.d("bestPic", "五张图片是 " + ((ArrayList<String>)o).toString());
+//                          // 压缩五张图片
+//                          for (int i = 0; i < ((ArrayList<String>)o).size(); i ++) {
+//                              File file = new File(((ArrayList<String>)o).get(i));
+//                              String fileName = file.getName();
+//                              String finalpath = tempPath + "/" + fileName;
+//                              Log.d("capturePic", "图片名称是" + fileName);
+//                              FileUtil.copyCompressedBitmap(file.getAbsolutePath(), finalpath);
+//                              compressedPictures.add(finalpath);
+//                          }
+//
+//                          Log.d("capturePic", "压缩后的数量是" + compressedPictures.size());
+//                          // 提取特征
+//                          ArrayList<DetectResult> results;
+//                          results = SDKUtil.detectFace(compressedPictures);
+//                          Log.d("capturePic", "人脸检测结果是" + results.size());
+//                          // 选取最优
+//                          float max = -1.0f;
+//                          int bestIndex = -1;
+//                          if (results.size() == 0)
+//                              return;
+//                          for (int i = 0; i < results.size(); i ++) {
+//                              DetectResult detectResult = results.get(i);
+//                              float m = detectResult.points.get(0).x[1] - detectResult.points.get(0).x[0];
+//                              Log.d("capturePic", "两眼距离是" + m);
+//                              if (max <= m) {
+//                                  bestIndex = i;
+//                                  max = m;
+//                              }
+//                          }
+//
+//                          // 选出的最优图片的路径
+//                          String bestPicture = ((ArrayList<String>)o).get(bestIndex);
+//                          Log.d("bestPic", "最优图片是 " + bestPicture);
+//
+//                      }
+//
+//                      @Override
+//                      public void onError(Throwable e) {
+//
+//                      }
+//
+//                      @Override
+//                      public void onComplete() {
+//
+//                      }
+//                  });
     }
 
     @Override
@@ -94,8 +182,6 @@ public class CapturePicService extends Service {
 
     @SuppressLint("CheckResult")
     public void capturePic() {
-        createDir(rootPath);
-        createDir(tempPath);
         Observable.interval(200, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -142,12 +228,6 @@ public class CapturePicService extends Service {
         if(faceNum!=0){
             Log.d("Camera","人脸数量"+detectResults.get(0).size());
             getCutPicture(picPath,detectResults.get(0),calendar,detectResults.get(0).points.size());
-        }
-    }
-    public void createDir(String dirPath) {
-        File file=new File(dirPath);
-        if(!file.exists()){
-            Log.d("Camera", String.valueOf(file.mkdirs()));
         }
     }
 

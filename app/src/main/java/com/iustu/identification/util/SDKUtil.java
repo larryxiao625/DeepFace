@@ -233,6 +233,7 @@ public class SDKUtil {
             for(int i=0;i<picPaths.size();i++){
                 DetectResult detectResult=new DetectResult();
                 int faceNum=SDKUtil.getDetectHandler().faceDetector(picPaths.get(0),detectResult);
+                Log.d("capturePic", "人脸检测结果是" + faceNum);
                 if(faceNum!=0){
                     detectResults.add(detectResult);
                 }
