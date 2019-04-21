@@ -318,13 +318,12 @@ public class CapturePicService extends Service {
     @Subscribe(threadMode = ThreadMode.ASYNC)
     public void Event(ThreadCanshu threadCanshu){
         int picQuality=0;
-        Log.d("EventBus2", String.valueOf(threadCanshu));
         String tempBestPicPath = null;
         ArrayList<DetectResult> tempDetectResults = new ArrayList<>();
         Calendar tempBestCalender = null;
+        List<String> deletePath=new ArrayList<>();
         List<Calendar> threadCalenders = threadCanshu.getThreadCalenders();
         List<String> picPaths = threadCanshu.getPicPaths();
-        Log.d("CameraPicPath", String.valueOf(picPaths.size()));
         if (threadCalenders != null) {
             for (int i = 0; i < picPaths.size(); i++) {
                 try {
@@ -336,22 +335,25 @@ public class CapturePicService extends Service {
                     inputPicPaths.add(tempPath + TextUtil.dateMessage(threadCalenders.get(i).getTime()) + "_" + i + ".jpg");
                     tempFos.flush();
                     tempFos.close();
-                    Log.d("CameraInputPath",inputPicPaths.get(0));
                     ArrayList<DetectResult> detectResults = SDKUtil.detectFace(inputPicPaths);
                     if (detectResults!=null) {
                         if (((detectResults.get(0).getPoints().get(0).x)[1] - (detectResults.get(0).getPoints().get(0).x)[0]) > picQuality) {
+                            deletePath.add(picPaths.get(i-1));
                             picQuality = (int) ((detectResults.get(0).getPoints().get(0).x)[1] - (detectResults.get(0).getPoints().get(0).x)[0]);
                             tempDetectResults.clear();
                             tempDetectResults = detectResults;
-                            Log.d("CameraAdd",":"+Thread.currentThread().getName()+tempDetectResults.size());
                             tempBestCalender = threadCalenders.get(i);
                             tempBestPicPath = picPaths.get(i);
+                        }else {
+                            deletePath.add(picPaths.get(i));
                         }
                     }
-                    Log.d("CameraCapture", ":"+Thread.currentThread().getName()+String.valueOf(i));
                     if (i == (picPaths.size()-1)&&!tempDetectResults.isEmpty()) {
-                        Log.d("CameraDetectResult", ":"+Thread.currentThread().getName()+String.valueOf(tempDetectResults.size()));
                         getCutPicture(tempBestPicPath, tempDetectResults.get(0), tempBestCalender, tempDetectResults.get(0).points.size());
+                        for(int delete=0;delete<deletePath.size();delete++){
+                            FileUtil.delete(deletePath.get(delete));
+                        }
+                        deletePath.clear();
                     }
                 } catch (NullPointerException e) {
                     e.printStackTrace();

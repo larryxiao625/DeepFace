@@ -24,9 +24,11 @@ import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
 import com.iustu.identification.util.AlarmUtil;
 import com.iustu.identification.util.DataCache;
+import com.iustu.identification.util.FileUtil;
 import com.iustu.identification.util.LibManager;
 import com.iustu.identification.util.SqliteUtil;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -166,6 +168,7 @@ public class MainActivity extends BaseActivity implements BottomBar.BottomBarSel
     protected void onStop() {
         super.onStop();
         DataCache.saveCache();
+        FileUtil.deleteTemp();
         SqliteUtil.updataLibrariedInUsed();
     }
 
