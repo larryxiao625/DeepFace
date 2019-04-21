@@ -79,6 +79,9 @@ public class CompareHistoryFragment extends BaseFragment implements CompareHisto
         recyclerView.setAdapter(mAdapter);
         pageSetHelper = new PageSetHelper(recyclerView, pageTv);
         mAdapter.setListener(this);
+        originalPhoto.setOnClickListener(v -> {
+            v.setVisibility(View.GONE);
+        });
     }
 
     @Override
@@ -230,8 +233,6 @@ public class CompareHistoryFragment extends BaseFragment implements CompareHisto
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .into(originalPhoto);
             originalPhoto.setVisibility(View.VISIBLE);
-        } else {
-            originalPhoto.setVisibility(View.GONE);
         }
     }
 }
