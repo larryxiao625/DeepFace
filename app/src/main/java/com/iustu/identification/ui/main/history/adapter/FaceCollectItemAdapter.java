@@ -59,6 +59,7 @@ public class FaceCollectItemAdapter extends PageRecyclerViewAdapter<FaceCollectI
 //            }
 //        });
         holder.faceImg.setOnClickListener( v -> {
+            Log.d("FaceCollectClick", String.valueOf(itemClickListener));
             if (itemClickListener != null)
                 itemClickListener.lookOriginal(index);
         });

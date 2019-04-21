@@ -83,6 +83,7 @@ public class FaceHistoryFragment extends BaseFragment implements FaceCollectItem
         recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(new GridLayoutManager(mActivity, 3));
         pageSetHelper = new PageSetHelper(recyclerView, pageTv);
+        mAdapter.setItemClickListener(this);
     }
 
     @Override
@@ -191,6 +192,7 @@ public class FaceHistoryFragment extends BaseFragment implements FaceCollectItem
     @Override
     public void lookOriginal(int position) {
         Log.d("PreviewImage", String.valueOf(originalPhoto.getVisibility()));
+        Log.d("PreviewImage",itemList.get(position).getOriginalPhoto());
         if (originalPhoto.getVisibility() == View.GONE) {
             originalPhoto.setVisibility(View.VISIBLE);
             Glide.with(this)
