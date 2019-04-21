@@ -18,10 +18,12 @@ import com.example.agin.facerecsdk.SearchHandler;
 import com.example.agin.facerecsdk.SearchResultItem;
 import com.iustu.identification.bean.ParameterConfig;
 import com.iustu.identification.util.DataCache;
+import com.iustu.identification.util.FileUtil;
 import com.iustu.identification.util.SDKUtil;
 import com.iustu.identification.util.SqliteUtil;
 import com.iustu.identification.util.TextUtil;
 import com.jiangdg.usbcamera.UVCCameraHelper;
+import com.serenegiant.utils.ThreadPool;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -54,7 +56,6 @@ public class CapturePicService extends Service {
     static String tempPath=Environment.getExternalStorageDirectory()+"/DeepFace/temp/";
     private CameraPrenster cameraPrenster;
     int captureNum=0;
-    int picQuality=0;
     CaptureBind mBind;
     Disposable disposable;
     ArrayList<SearchHandler> searchHandlers=new ArrayList<>();
@@ -111,7 +112,6 @@ public class CapturePicService extends Service {
 
                     @Override
                     public void onNext(Long aLong) {
-                        captureNum++;
                         Calendar calendar=Calendar.getInstance();
                         String fileName=TextUtil.dateMessage(calendar.getTime())+"_"+captureNum+".jpg";
                         String picPath=rootPath+"/"+fileName;
@@ -119,6 +119,7 @@ public class CapturePicService extends Service {
                             calendars.add(calendar);
                             capturePicPaths.add(picPath1);
                         });
+                        captureNum++;
                         if(captureNum==5){
                             List<String> tempCapturePicPath=new ArrayList<>();
                             tempCapturePicPath.addAll(capturePicPaths);
@@ -164,6 +165,7 @@ public class CapturePicService extends Service {
 
     @Override
     public boolean onUnbind(Intent intent) {
+        EventBus.getDefault().unregister(this);
         return super.onUnbind(intent);
     }
 
@@ -240,39 +242,45 @@ public class CapturePicService extends Service {
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
     public void Event(ThreadCanshu threadCanshu){
+        int picQuality=0;
         Log.d("EventBus2", String.valueOf(threadCanshu));
         String tempBestPicPath = null;
         ArrayList<DetectResult> tempDetectResults = new ArrayList<>();
         Calendar tempBestCalender = null;
         List<Calendar> threadCalenders = threadCanshu.getThreadCalenders();
         List<String> picPaths = threadCanshu.getPicPaths();
+        Log.d("CameraPicPath", String.valueOf(picPaths.size()));
         if (threadCalenders != null) {
             for (int i = 0; i < picPaths.size(); i++) {
                 try {
                     Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(picPaths.get(i)));
                     FileOutputStream tempFos = new FileOutputStream(tempPath + TextUtil.dateMessage(threadCalenders.get(i).getTime())+"_"+i+".jpg");
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 50, tempFos);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 10, tempFos);
+//                    FileUtil.copyCompressedBitmap(picPaths.get(i),tempPath + TextUtil.dateMessage(threadCalenders.get(i).getTime())+"_"+i+".jpg");
                     ArrayList<String> inputPicPaths = new ArrayList<>();
                     inputPicPaths.add(tempPath + TextUtil.dateMessage(threadCalenders.get(i).getTime()) + "_" + i + ".jpg");
                     tempFos.flush();
                     tempFos.close();
+                    Log.d("CameraInputPath",inputPicPaths.get(0));
                     ArrayList<DetectResult> detectResults = SDKUtil.detectFace(inputPicPaths);
-                    if (!detectResults.isEmpty()) {
+                    if (detectResults!=null) {
                         if (((detectResults.get(0).getPoints().get(0).x)[1] - (detectResults.get(0).getPoints().get(0).x)[0]) > picQuality) {
                             picQuality = (int) ((detectResults.get(0).getPoints().get(0).x)[1] - (detectResults.get(0).getPoints().get(0).x)[0]);
                             tempDetectResults.clear();
                             tempDetectResults = detectResults;
+                            Log.d("CameraAdd",":"+Thread.currentThread().getName()+tempDetectResults.size());
                             tempBestCalender = threadCalenders.get(i);
                             tempBestPicPath = picPaths.get(i);
                         }
                     }
-                    Log.d("CameraCapture", String.valueOf(i));
-                    if (i == 4) {
+                    Log.d("CameraCapture", ":"+Thread.currentThread().getName()+String.valueOf(i));
+                    if (i == (picPaths.size()-1)) {
+                        Log.d("CameraDetectResult", ":"+Thread.currentThread().getName()+String.valueOf(tempDetectResults.size()));
                         getCutPicture(tempBestPicPath, tempDetectResults.get(0), tempBestCalender, tempDetectResults.get(0).points.size());
                     }
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
                 } catch (NullPointerException e) {
+                    e.printStackTrace();
+                } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
                     e.printStackTrace();

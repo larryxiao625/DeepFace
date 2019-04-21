@@ -53,7 +53,7 @@ public class SDKUtil {
     public static void init() {
         // 初始化人脸检测句柄
         detectHandler = (DetectHandler) HandlerFactory.createDetector("/sdcard/detect-Framework3-cpu-xxxx.model");
-        detectHandler.setThreadNum(HandlerFactory.FrameWorkType.NCNN, 8);
+        detectHandler.setThreadNum(HandlerFactory.FrameWorkType.NCNN, 4);
         detectHandler.initial();
 
         //初始化特征提取句柄
@@ -229,7 +229,7 @@ public class SDKUtil {
      * @return
      */
     public static ArrayList<DetectResult> detectFace(ArrayList<String> picPaths){
-            ArrayList<DetectResult> detectResults=new ArrayList<>();
+        ArrayList<DetectResult> detectResults=new ArrayList<>();
             for(int i=0;i<picPaths.size();i++){
                 DetectResult detectResult=new DetectResult();
                 int faceNum=SDKUtil.getDetectHandler().faceDetector(picPaths.get(0),detectResult);
@@ -237,7 +237,11 @@ public class SDKUtil {
                     detectResults.add(detectResult);
                 }
             }
-            return detectResults;
+            if(detectResults.isEmpty()){
+                return null;
+            }else {
+                return detectResults;
+            }
     }
 
     /**
