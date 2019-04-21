@@ -1,19 +1,25 @@
 package com.iustu.identification.ui.main.history.view;
 
 import android.app.Dialog;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bigkoo.pickerview.TimePickerView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.iustu.identification.R;
 import com.iustu.identification.bean.FaceCollectItem;
 import com.iustu.identification.ui.base.BaseDialogFragment;
 import com.iustu.identification.ui.base.BaseFragment;
+import com.iustu.identification.ui.base.OnItemClickListener;
 import com.iustu.identification.ui.main.history.adapter.FaceCollectItemAdapter;
 import com.iustu.identification.ui.main.history.prenster.HistoryPrenster;
 import com.iustu.identification.ui.main.history.view.HistoryFragment;
@@ -35,7 +41,7 @@ import butterknife.OnClick;
  * Created by Liu Yuchuan on 2017/11/21.
  */
 
-public class FaceHistoryFragment extends BaseFragment {
+public class FaceHistoryFragment extends BaseFragment implements FaceCollectItemAdapter.FaceItemClickListener {
     @BindView(R.id.date_from_tv)
     TextView fromDateTv;
     @BindView(R.id.date_to_tv)
@@ -44,6 +50,10 @@ public class FaceHistoryFragment extends BaseFragment {
     RecyclerView recyclerView;
     @BindView(R.id.page_tv)
     TextView pageTv;
+    @BindView(R.id.face_history_original_iv)
+    ImageView originalPhoto;
+    @BindView(R.id.face_history_original_fl)
+    FrameLayout frameLayout;
 
     private Calendar startCalendar = Calendar.getInstance();
     private Calendar endCalendar = Calendar.getInstance();
@@ -73,9 +83,18 @@ public class FaceHistoryFragment extends BaseFragment {
             compareHistoryFragment.setArguments(item.getFaceId());
             historyFragment.switchFragment(HistoryFragment.ID_COMPARE);
         });
+        mAdapter.setItemClickListener(this::lookOriginal);
         recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(new GridLayoutManager(mActivity, 3));
         pageSetHelper = new PageSetHelper(recyclerView, pageTv);
+        originalPhoto.setOnClickListener( v -> {
+            v.setVisibility(View.GONE);
+            frameLayout.setVisibility(View.GONE);
+        });
+        frameLayout.setOnClickListener( v -> {
+            v.setVisibility(View.GONE);
+            originalPhoto.setVisibility(View.GONE);
+        });
     }
 
     @Override
@@ -180,4 +199,16 @@ public class FaceHistoryFragment extends BaseFragment {
 
         }
     };
+
+    @Override
+    public void lookOriginal(int position) {
+        if (frameLayout.getVisibility() == View.GONE) {
+            originalPhoto.setVisibility(View.VISIBLE);
+            frameLayout.setVisibility(View.VISIBLE);
+            Glide.with(this)
+                    .load(BitmapFactory.decodeFile(itemList.get(position).getOriginalPhoto()))
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .into(originalPhoto);
+        }
+    }
 }

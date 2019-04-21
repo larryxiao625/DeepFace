@@ -75,6 +75,8 @@ dependencies {
     implementation 'com.github.jiangdongguo:AndroidUSBCamera:2.2.8'
 
     implementation 'com.fanjun:keeplive:1.1.8'
+    implementation 'com.facebook.stetho:stetho:1.5.0'
+    implementation 'org.greenrobot:eventbus:3.1.1'
 
 
 }

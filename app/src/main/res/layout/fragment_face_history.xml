@@ -92,4 +92,19 @@
         android:layout_height="match_parent"/>
 
     <include layout="@layout/layout_page_switch"/>
+
+    <FrameLayout
+        android:visibility="gone"
+        android:id="@+id/face_history_original_fl"
+        android:background="@color/BLACK"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/face_history_original_iv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter"/>
+    </FrameLayout>
 </FrameLayout>

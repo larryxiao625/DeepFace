@@ -25,6 +25,7 @@ import com.iustu.identification.ui.main.library.peoplemagnage.PeopleManageFragme
 import com.iustu.identification.ui.widget.dialog.Edit2Dialog;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
+import com.iustu.identification.util.AlarmUtil;
 import com.iustu.identification.util.IconFontUtil;
 import com.iustu.identification.util.PageSetHelper;
 import com.iustu.identification.util.ToastUtil;

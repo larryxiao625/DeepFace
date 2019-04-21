@@ -41,13 +41,6 @@ public class FaceLoginFragment extends BaseFragment{
         return R.layout.fragment_face_login;
     }
 
-    @OnClick(R.id.set_server_tv)
-    public void setServer(){
-        cameraDecor.stopScan();
-        dispose();
-        loginPrenster.setServer();
-    }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -64,14 +57,6 @@ public class FaceLoginFragment extends BaseFragment{
         cameraLayout.removeView(cameraPreview);
         dispose();
         cameraPreview = null;
-    }
-
-    @OnClick(R.id.login_normal_switch)
-    public void switchToNormal(){
-        dispose();
-        isInLogin = false;
-        loginTv.setText(buttonText[0]);
-        ((LoginActivity)mActivity).switchFragment(0);
     }
 
     @OnClick(R.id.login_face_btn)

@@ -33,7 +33,7 @@ public class LibrariesManageAdapter extends PageRecyclerViewAdapter<LibrariesMan
     @Override
     public void onBindHolder(Holder holder, int index, int position) {
         Library library = mDataLast.get(index);
-        holder.id.setText(String.valueOf(index));
+        holder.id.setText(String.valueOf(index+1));
         holder.name.setText(library.libName);
         holder.number.setText(String.valueOf(library.count));
 

@@ -1,10 +1,8 @@
 package com.iustu.identification.ui.main.camera.adapter;
 
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,11 +12,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
+import com.bumptech.glide.load.DecodeFormat;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.iustu.identification.R;
 import com.iustu.identification.entity.CompareRecord;
-import com.iustu.identification.entity.PersonInfo;
 import com.iustu.identification.ui.widget.ScaleView;
 import com.iustu.identification.util.ExpandableViewHoldersUtil;
 import com.iustu.identification.util.ImageUtils;
@@ -120,11 +117,16 @@ public class CompareItemAdapter extends RecyclerView.Adapter<CompareItemAdapter.
             if(info == null){
 
             }else {
-                // TODO: 2019/4/9 根据人脸库获取中文名方法
-                Glide.with(itemView).asBitmap().load(new File(info.getUploadPhoto())).into(capturePhoto);
+                Glide.with(itemView).asBitmap()
+                        .load(new File(info.getUploadPhoto()))
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .format(DecodeFormat.PREFER_RGB_565)
+                        .into(capturePhoto);
                 String[] photos = info.getPhotoPath().split(";");
                 String libPath = "/sdcard/DeepFace/" + info.getLibName()+ "/" + photos[0];
-                Glide.with(itemView).load(new File(libPath)).into(matchPhoto);
+                Glide.with(itemView).load(BitmapFactory.decodeFile(libPath))
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .into(matchPhoto);
                 libNameTv.setText(TextUtil.format(String.valueOf(info.getLibName())));
                 nameTv.setText(TextUtil.format(info.getName()));
                 birthTv.setText(TextUtil.format(info.getGender()));

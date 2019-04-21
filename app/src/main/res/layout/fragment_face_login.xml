@@ -51,26 +51,6 @@
         android:textColor="@color/lite_blue"
         android:text="@string/start_check_face"/>
 
-    <TextView
-        android:padding="8dp"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:id="@+id/login_normal_switch"
-        android:textColor="@color/white"
-        android:textSize="@dimen/font_normal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:text="@string/switch_to_normal_login"/>
 
-    <TextView
-        android:padding="8dp"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:id="@+id/set_server_tv"
-        android:textColor="@color/white"
-        android:textSize="@dimen/font_normal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:text="@string/server_set"/>
 
 </android.support.constraint.ConstraintLayout>

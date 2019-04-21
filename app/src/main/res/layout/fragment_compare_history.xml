@@ -86,4 +86,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
     <include layout="@layout/layout_page_switch"/>
+
+    <FrameLayout
+        android:id="@+id/compare_original_fl"
+        android:visibility="gone"
+        android:background="@color/BLACK"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/compare_original_iv"
+            android:scaleType="fitCenter"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
 </FrameLayout>

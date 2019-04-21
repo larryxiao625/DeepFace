@@ -2,6 +2,7 @@ package com.iustu.identification;
 
 import android.content.Context;
 
+import com.facebook.stetho.Stetho;
 import com.fanjun.keeplive.KeepLive;
 import com.fanjun.keeplive.config.ForegroundNotification;
 import com.fanjun.keeplive.config.KeepLiveService;
@@ -36,6 +37,7 @@ public class App extends LitePalApplication{
         } catch (Exception e) {
             e.printStackTrace();
         }
+        Stetho.initializeWithDefaults(this);
         context = this;
         keepAlive();
 

@@ -104,7 +104,9 @@ public class LibraryManageFragment extends BaseFragment implements LibManagerVie
     public void bindData(List<com.iustu.identification.entity.Library> data) {
         this.mLibraryList.addAll(data);
         for (Library library : mLibraryList) {
+            Log.d("ChosenLibOriginal2", String.valueOf(mChooseList));
             if (library.inUsed == 1)
+                Log.d("ChosenLibAdd","ChosenLibAdd");
                 mChooseList.add(library.libName);
         }
         mAdapter.notifyDataChange();

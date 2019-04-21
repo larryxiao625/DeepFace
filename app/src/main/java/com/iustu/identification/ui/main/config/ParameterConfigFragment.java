@@ -4,12 +4,15 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bigkoo.pickerview.OptionsPickerView;
 import com.iustu.identification.R;
 import com.iustu.identification.bean.ParameterConfig;
+import com.iustu.identification.bean.PreviewSizeConfig;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.widget.seekbar.BubbleSeekBar;
 import com.iustu.identification.util.DataCache;
@@ -61,16 +64,23 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
     EditText checkFactor3;
     @BindView(R.id.save_dpi_tv)
     TextView dpiSetTv;
+    @BindView(R.id.threshold_quantity)
+    EditText quantity;
+    @BindView(R.id.alarm)
+    RadioGroup radioGroup;
+    RadioButton radioButton;
 
     private OptionsPickerView displayCountPicker;
     private OptionsPickerView saveCountPicker;
     private OptionsPickerView dpiPicker;
+    private PreviewSizeConfig previewSizeConfig;
 
     private List<Integer> displayCountList = new ArrayList<>();         // 设置显示结果数量的源
     private List<Integer> saveCountList = new ArrayList<>();          // 设置保存记录数的源
     private List<Integer> dpiWidth=new ArrayList<>();     // 设置分辨率宽度的源
     private List<Integer> dpiHeight=new ArrayList<>();       // 设置分辨率高度的源
     private List<String> dpiStringList=new ArrayList<>();       // 设置分辨率的源
+    ParameterConfig parameterConfig;
 
     @Override
     protected int postContentView() {
@@ -89,20 +99,35 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
         saveCountList.add(1000);
         saveCountList.add(5000);
         saveCountList.add(10000);
-        dpiWidth.add(1920);
-        dpiWidth.add(1280);
-        dpiWidth.add(2048);
-        dpiWidth.add(1600);
-        dpiWidth.add(1280);
-        dpiWidth.add(1280);
-        dpiWidth.add(1024);
-        dpiHeight.add(1080);
-        dpiHeight.add(720);
-        dpiHeight.add(1536);
-        dpiHeight.add(1200);
-        dpiHeight.add(1024);
-        dpiHeight.add(960);
-        dpiHeight.add(768);
+        parameterConfig=ParameterConfig.getFromSP();
+        previewSizeConfig=PreviewSizeConfig.getFramSp();
+        dpiWidth=previewSizeConfig.getPreviewWidth();
+        dpiHeight=previewSizeConfig.getPreviewHeight();
+        switch (config.getAlarmType()) {
+            case ParameterConfig.ONLYMP3:
+                radioButton = (RadioButton)view.findViewById(R.id.alarm_only_mp3);
+                break;
+            case ParameterConfig.ONLYSHAKE:
+                radioButton = (RadioButton)view.findViewById(R.id.alarm_only_shake);
+                break;
+            case ParameterConfig.MP3ANDSHAKE:
+                radioButton = (RadioButton)view.findViewById(R.id.alarm_mp3_and_shake);
+                break;
+        }
+        radioButton.setChecked(true);
+        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+                switch (checkedId) {
+                    case R.id.alarm_only_mp3:
+                        config.setAlarmType(ParameterConfig.ONLYMP3);
+                        break;
+                    case R.id.alarm_only_shake:
+                        config.setAlarmType(ParameterConfig.ONLYSHAKE);
+                        break;
+                    case R.id.alarm_mp3_and_shake:
+                        config.setAlarmType(ParameterConfig.MP3ANDSHAKE);
+                        break;
+                }
+        });
         getDpiStringList();
         initData();
     }
@@ -118,9 +143,11 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
         checkFactor1.addTextChangedListener(new MyTextWatcher());
         checkFactor2.addTextChangedListener(new MyTextWatcher());
         checkFactor3.addTextChangedListener(new MyTextWatcher());
+        quantity.addTextChangedListener(new MyTextWatcher());
         displayCountTv.setText(config.getDisplayCount() + "");
         saveCountTv.setText(config.getSaveCount() + "");
-        dpiSetTv.setText(dpiStringList.get(config.getDpiCount()) + "");
+        dpiSetTv.setText(parameterConfig.getDpiWidth()+"*"+parameterConfig.getDpiHeight());
+        quantity.setText(config.getThresholdQuanity() + "");
     }
 
     public void getDpiStringList(){
@@ -132,18 +159,21 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
     public void onPause() {
         if(config != null) {
             if(minFace.getText().toString().isEmpty()) {
-                config.setMin_size(40);
+                config.setMin_size(80);
             }else if(!(Float.valueOf(checkFactor1.getText().toString())>=0)&&!(Float.valueOf(checkFactor1.getText().toString())<=1)){
-                config.setThreshold3((float) 0.5);
+                config.setThreshold3((float) 0.6);
             }else if(!(Float.valueOf(checkFactor2.getText().toString())>=0)&&!(Float.valueOf(checkFactor2.getText().toString())<=1)){
-                config.setThreshold2((float) 0.5);
+                config.setThreshold2((float) 0.8);
             }else if(!(Float.valueOf(checkFactor3.getText().toString())>=0)&&!(Float.valueOf(checkFactor3.getText().toString())<=1)){
-                config.setThreshold1((float) 0.5);
+                config.setThreshold1((float) 0.98);
+            } else if(!(Float.valueOf(quantity.getText().toString())>=0)&&!(Float.valueOf(quantity.getText().toString())<=1)){
+                config.setThreshold1((float) 0.71);
             } else {
                 config.setMin_size(Integer.valueOf(minFace.getText().toString()));
                 config.setThreshold1(Float.valueOf(checkFactor1.getText().toString()));
                 config.setThreshold2(Float.valueOf(checkFactor2.getText().toString()));
                 config.setThreshold3(Float.valueOf(checkFactor3.getText().toString()));
+                config.setThresholdQuanity(Float.valueOf(quantity.getText().toString()));
             }
             config.save();
             super.onPause();
@@ -161,7 +191,7 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
     @Override
     public void onProgressChange(View view, int progress) {
         if(view.getId() == R.id.face_bsb){
-            config.setFilterScore(progress/1000f);
+            config.setFactor(progress/1000f);
         }
     }
 
@@ -209,13 +239,12 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
                 config.setDpiCount(options1);
                 dpiSetTv.setText(dpiStringList.get(options1));
             } )
-                    .setSelectOptions(config.getDpiCount())
+                    .setSelectOptions(0)
                     .setTitleText("摄像头分辨率")
                     .build();
 
             dpiPicker.setPicker(dpiStringList);
         }
-
         dpiPicker.show();
     }
 

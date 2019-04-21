@@ -200,6 +200,8 @@ public class HistoryPrenster implements IPrenster{
                     faceCollectItem.setId(cursor.getInt(cursor.getColumnIndex("id")));
                     faceCollectItem.setImgUrl(cursor.getString(cursor.getColumnIndex("imgUrl")));
                     faceCollectItem.setTime(cursor.getString(cursor.getColumnIndex("time")));
+                    faceCollectItem.setHourTime(cursor.getString(cursor.getColumnIndex("hourTime")));
+                    faceCollectItem.setOriginalPhoto(cursor.getString(cursor.getColumnIndex("originalPath")));
                     data.add(faceCollectItem);
                 }
                 faceHistoryIVew.bindData(data);
@@ -256,6 +258,8 @@ public class HistoryPrenster implements IPrenster{
                     compareRecord.setIdentity(cursor.getString(cursor.getColumnIndex("identity")));
                     compareRecord.setOther(cursor.getString(cursor.getColumnIndex("other")));
                     compareRecord.setPhotoPath(cursor.getString(cursor.getColumnIndex("photoPath")));
+                    compareRecord.setHourTime(cursor.getString(cursor.getColumnIndex("hourTime")));
+                    compareRecord.setOriginalPhoto(cursor.getString(cursor.getColumnIndex("originalPhoto")));
                     data.add(compareRecord);
                     Log.d("History",cursor.getString(cursor.getColumnIndex("image_id")));
                     Log.d("History",cursor.getString(cursor.getColumnIndex("libName")));

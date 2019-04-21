@@ -36,7 +36,7 @@ public class LibraryManagerAdapter extends PageRecyclerViewAdapter<LibraryManage
     @Override
     public void onBindHolder(Holder holder, int index, int position) {
         Library library = mDataLast.get(index);
-        holder.id.setText(String.valueOf(index));
+        holder.id.setText(String.valueOf(index + 1));
         if(library.inUsed == 0) {
             IconFontUtil.getDefault().setText(holder.select, IconFontUtil.UNSELECT_SQUAD);
             holder.state.setText("未使用");

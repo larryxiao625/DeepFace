@@ -11,16 +11,11 @@ import org.litepal.crud.DataSupport;
 
 public class FaceCollectItem extends DataSupport{
     private String imgUrl;
+    private String hourTime;
     private String time;
     private String faceId;
     private int id;
-
-    public FaceCollectItem(String imgUrl, String time, String faceId, int id) {
-        this.imgUrl = imgUrl;
-        this.time = time;
-        this.faceId = faceId;
-        this.id = id;
-    }
+    private String originalPhoto;        // 最初的照片
 
     public FaceCollectItem() {}
 
@@ -29,6 +24,8 @@ public class FaceCollectItem extends DataSupport{
         values.put("imgUrl", this.imgUrl);
         values.put("faceId", this.faceId);
         values.put("time", this.time);
+        values.put("originalPath", this.originalPhoto);
+        values.put("hourTime",this.hourTime);
         return values;
     }
     public int getId() {
@@ -61,5 +58,21 @@ public class FaceCollectItem extends DataSupport{
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public void setOriginalPhoto(String originalPhoto) {
+        this.originalPhoto = originalPhoto;
+    }
+
+    public String getOriginalPhoto() {
+        return this.originalPhoto;
+    }
+
+    public void setHourTime(String hourTime) {
+        this.hourTime = hourTime;
+    }
+
+    public String getHourTime() {
+        return this.hourTime;
     }
 }

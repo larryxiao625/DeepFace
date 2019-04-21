@@ -1,16 +1,12 @@
 package com.iustu.identification.ui.main.camera.view;
 
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.hardware.Camera;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,48 +14,36 @@ import android.util.Log;
 import android.view.Surface;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.iustu.identification.App;
 import com.iustu.identification.R;
 import com.iustu.identification.bean.ParameterConfig;
+import com.iustu.identification.bean.PreviewSizeConfig;
 import com.iustu.identification.entity.CompareRecord;
 import com.iustu.identification.ui.base.BaseFragment;
-import com.iustu.identification.ui.main.MainActivity;
+import com.iustu.identification.ui.main.camera.adapter.CatchFaceAdapter;
 import com.iustu.identification.ui.main.camera.adapter.CompareItemAdapter;
 import com.iustu.identification.ui.main.camera.prenster.CameraPrenster;
 import com.iustu.identification.ui.main.camera.prenster.CapturePicService;
-import com.iustu.identification.ui.widget.camera.CameraPreview;
-import com.iustu.identification.ui.widget.dialog.SingleButtonDialog;
-import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
-import com.iustu.identification.util.DataCache;
-import com.iustu.identification.util.ExceptionUtil;
-import com.iustu.identification.util.FileCallBack;
+import com.iustu.identification.util.AlarmUtil;
 import com.iustu.identification.util.IconFontUtil;
-import com.iustu.identification.util.ImageUtils;
 import com.jiangdg.usbcamera.UVCCameraHelper;
+import com.serenegiant.usb.common.AbstractUVCCameraHandler;
 import com.serenegiant.usb.widget.CameraViewInterface;
 import com.serenegiant.usb.widget.UVCCameraTextureView;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
 import butterknife.BindView;
-import butterknife.OnClick;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by Liu Yuchuan on 2017/11/4.
  */
 
-public class CameraFragment extends BaseFragment implements CameraViewInterface.Callback {
+public class CameraFragment extends BaseFragment implements CameraViewInterface.Callback, AbstractUVCCameraHandler.OnPreViewResultListener {
     boolean isPreview=false;
     boolean isFirstTime=true;
     UVCCameraHelper cameraHelper=UVCCameraHelper.getInstance();
@@ -69,13 +53,16 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
     UVCCameraTextureView cameraTextureView;
     @BindView(R.id.item_compare_recycler_view)
     RecyclerView itemCompareRecyclerView;
-    PowerManager.WakeLock mWakeLock;
+    @BindView(R.id.item_capture_recycler_view)
+    RecyclerView itemCaptureRecyclerView;
     CameraPrenster cameraPrenster=new CameraPrenster();
     Intent serviceIntent;
     CapturePicService.CaptureBind captureBind;
 
     private List<CompareRecord> dataSource;
-    private CompareItemAdapter mAdapter;
+    private CompareItemAdapter compareItemAdapter;
+    private CatchFaceAdapter catchFaceAdapter;
+    List<String> capturePathString;
     @Override
     protected int postContentView() {
         return R.layout.fragment_camera;
@@ -86,24 +73,29 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
         Log.d("CameraFragment","initView");
         IconFontUtil util = IconFontUtil.getDefault();
         dataSource = new ArrayList<>();
-        mAdapter = new CompareItemAdapter(dataSource);
+        capturePathString=new ArrayList<>();
+        compareItemAdapter = new CompareItemAdapter(dataSource);
         cameraPrenster.attchView(iVew);
+        catchFaceAdapter=new CatchFaceAdapter(capturePathString);
         serviceIntent=new Intent(getActivity(), CapturePicService.class);
+        cameraHelper.setOnPreviewFrameListener(this);
         if(cameraHelper.getUSBMonitor()==null) {
             Log.d("CameraFragment","initMonitor");
-            cameraHelper.setDefaultPreviewSize(DataCache.getParameterConfig().getDpiWidth(), DataCache.getParameterConfig().getDpiHeight());
+            cameraHelper.setDefaultPreviewSize(ParameterConfig.getFromSP().getDpiWidth(), ParameterConfig.getFromSP().getDpiHeight());
             cameraHelper.initUSBMonitor(getActivity(),cameraTextureView,cameraPrenster);
         }else {
-            Log.d("CameraFragment","updateDpi");
-            cameraHelper.updateResolution(DataCache.getParameterConfig().getDpiWidth(), DataCache.getParameterConfig().getDpiHeight());
+            cameraHelper.updateResolution(ParameterConfig.getFromSP().getDpiWidth(), ParameterConfig.getFromSP().getDpiHeight());
         }
         cameraTextureView.setCallback(this);
         cameraHelper.registerUSB();
         itemCompareRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        itemCompareRecyclerView.setAdapter(mAdapter);
+        itemCompareRecyclerView.setAdapter(compareItemAdapter);
 //        cameraPrenster.capturePic();
         getActivity().bindService(serviceIntent,myServiceConnection,Context.BIND_AUTO_CREATE);
-
+        RecyclerView.LayoutManager captureManager=new LinearLayoutManager(getActivity());
+        ((LinearLayoutManager) captureManager).setOrientation(LinearLayoutManager.HORIZONTAL);
+        itemCaptureRecyclerView.setLayoutManager(captureManager);
+        itemCaptureRecyclerView.setAdapter(catchFaceAdapter);
     }
 
     @Override
@@ -133,10 +125,6 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
 
     @Override
     public void onSurfaceCreated(CameraViewInterface view, Surface surface) {
-        Log.d("CameraFragment","onSurfaceCreated");
-        Log.d("CameraFragment",String.valueOf(cameraHelper.isCameraOpened()));
-        Log.d("CameraFragment","IsPreview:"+isPreview);
-        Log.d("CameraFragment","IsFirstTime:"+isFirstTime);
         if(!isPreview&&cameraHelper.isCameraOpened()){
             Log.d("CameraFragment","startPreview");
             cameraHelper.startPreview(cameraTextureView);
@@ -150,31 +138,13 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
 
     @Override
     public void onSurfaceDestroy(CameraViewInterface view, Surface surface) {
-        Log.d("CameraFragment","surfaceDestroy");
         if(isPreview&&cameraHelper.isCameraOpened()){
-            Log.d("CameraFragment","stopPreview");
             cameraHelper.stopPreview();
             isPreview=false;
         }else if(isFirstTime && !cameraHelper.isCameraOpened()){
-            Log.d("CameraFragment","stopPreview");
             cameraHelper.stopPreview();
             isPreview=false;
             isFirstTime=false;
-        }
-    }
-
-
-      /**
-      * 同步方法   得到休眠锁
-      * @param context
-      * @return
-      */
-    synchronized private void getLock(Context context){
-        if(mWakeLock==null){
-        PowerManager mgr=(PowerManager)context.getSystemService(Context.POWER_SERVICE);
-        mWakeLock=mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,CapturePicService.class.getName());
-        mWakeLock.setReferenceCounted(true);
-        mWakeLock.acquire(5000);
         }
     }
 
@@ -187,14 +157,40 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
         @Override
         public void updateSingleResult(CompareRecord compareRecord) {
             dataSource.add(0,compareRecord);
-            mAdapter.notifyItemInserted(0);
+            compareItemAdapter.notifyItemInserted(0);
             if(itemCompareRecyclerView == null)
                 return;
             if(!itemCompareRecyclerView.canScrollVertically(-1)) {
                 itemCompareRecyclerView.smoothScrollToPosition(0);
             }
+            AlarmUtil.alarm();
+        }
+
+        @Override
+        public void updateCapture(String capturePic) {
+            capturePathString.add(0,capturePic);
+            catchFaceAdapter.notifyItemInserted(0);
+            if(itemCaptureRecyclerView==null){
+                return;
+            }else {
+                itemCaptureRecyclerView.smoothScrollToPosition(0);
+            }
         }
     };
+
+    @Override
+    public void onPreviewResult(byte[] data) {
+        if(data==null){
+            PreviewSizeConfig previewSizeConfig=PreviewSizeConfig.getFramSp();
+            Toast.makeText(getActivity(),"选择分辨率无效,恢复到默认分辨率",Toast.LENGTH_LONG).show();
+            cameraHelper.updateResolution(previewSizeConfig.getPreviewWidth().get(previewSizeConfig.getPreviewWidth().size()-1),previewSizeConfig.getPreviewHeight().get(previewSizeConfig.getPreviewWidth().size()-1));
+            ParameterConfig parameterConfig=ParameterConfig.getFromSP();
+            parameterConfig.setDpiHeight(previewSizeConfig.getPreviewHeight().get(previewSizeConfig.getPreviewWidth().size())-1);
+            parameterConfig.setDpiWidth(previewSizeConfig.getPreviewWidth().get(previewSizeConfig.getPreviewWidth().size())-1);
+            parameterConfig.save();
+        }
+
+    }
 
     @Override
     public void onStart() {
@@ -233,7 +229,6 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
             Log.d("CameraFragment","onConnected");
             CameraFragment.this.captureBind= (CapturePicService.CaptureBind) service;
             ((CapturePicService.CaptureBind) service).setOnMyDevConnectListener(cameraPrenster);
-            getLock(getActivity());
         }
 
         @Override

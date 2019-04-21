@@ -6,11 +6,17 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.Surface;
 
+import com.iustu.identification.bean.ParameterConfig;
+import com.iustu.identification.bean.PreviewSizeConfig;
 import com.iustu.identification.ui.main.camera.view.IVew;
 import com.iustu.identification.util.TextUtil;
 import com.jiangdg.usbcamera.UVCCameraHelper;
+import com.serenegiant.usb.Size;
 import com.serenegiant.usb.USBMonitor;
 import com.serenegiant.usb.common.AbstractUVCCameraHandler;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CameraPrenster implements UVCCameraHelper.OnMyDevConnectListener,IPenster {
     boolean isRequest=false;
@@ -43,7 +49,32 @@ public class CameraPrenster implements UVCCameraHelper.OnMyDevConnectListener,IP
     @Override
     public void onConnectDev(UsbDevice device, boolean isConnected) {
         Log.d("cameraPrenster","cameraConnect");
+        try {
+            Thread.sleep(700);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        if(cameraHelper.getSupportedPreviewSizes()!=null) {
+            setSupportPreviewSize(cameraHelper.getSupportedPreviewSizes());
+        }
         iVew.showShortMsg("摄像头已连接");
+    }
+
+    @Override
+    public void setSupportPreviewSize(List<Size> supportPreviewSize) {
+        List<Integer> previewHeight=new ArrayList<>();
+        List<Integer> previewWidth=new ArrayList<>();
+        if(!supportPreviewSize.isEmpty()) {
+            for (Size size : supportPreviewSize) {
+                previewHeight.add(size.height);
+                previewWidth.add(size.width);
+                Log.d("Camera", String.valueOf(size.width));
+            }
+        }
+        PreviewSizeConfig previewSizeConfig=PreviewSizeConfig.getFramSp();
+        previewSizeConfig.setPreviewHeight(previewHeight);
+        previewSizeConfig.setPreviewWidth(previewWidth);
+        previewSizeConfig.save();
     }
 
     @Override
