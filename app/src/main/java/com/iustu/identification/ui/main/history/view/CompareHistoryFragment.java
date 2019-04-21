@@ -8,6 +8,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -48,6 +49,8 @@ public class CompareHistoryFragment extends BaseFragment implements CompareHisto
     TextView toDateTv;
     @BindView(R.id.compare_original_iv)
     ImageView originalPhoto;
+    @BindView(R.id.compare_original_fl)
+    FrameLayout frameLayout;
 
     private static final String KEY_FACE_ID = "face_id";
 
@@ -80,6 +83,9 @@ public class CompareHistoryFragment extends BaseFragment implements CompareHisto
         pageSetHelper = new PageSetHelper(recyclerView, pageTv);
         mAdapter.setListener(this);
         originalPhoto.setOnClickListener(v -> {
+            v.setVisibility(View.GONE);
+        });
+        frameLayout.setOnClickListener( v -> {
             v.setVisibility(View.GONE);
         });
     }
@@ -227,12 +233,14 @@ public class CompareHistoryFragment extends BaseFragment implements CompareHisto
 
     @Override
     public void lookOriginPhoto(int position) {
-        if (originalPhoto.getVisibility() == View.GONE) {
+        if (frameLayout.getVisibility() == View.GONE) {
+            frameLayout.setVisibility(View.VISIBLE);
+            originalPhoto.setVisibility(View.VISIBLE);
             Glide.with(this)
                     .load(BitmapFactory.decodeFile(compareItemList.get(position).getOriginalPhoto()))
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .into(originalPhoto);
-            originalPhoto.setVisibility(View.VISIBLE);
+
         }
     }
 }

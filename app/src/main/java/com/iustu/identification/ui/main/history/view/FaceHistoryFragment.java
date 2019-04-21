@@ -8,6 +8,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -51,6 +52,8 @@ public class FaceHistoryFragment extends BaseFragment implements FaceCollectItem
     TextView pageTv;
     @BindView(R.id.face_history_original_iv)
     ImageView originalPhoto;
+    @BindView(R.id.face_history_original_fl)
+    FrameLayout frameLayout;
 
     private Calendar startCalendar = Calendar.getInstance();
     private Calendar endCalendar = Calendar.getInstance();
@@ -85,6 +88,9 @@ public class FaceHistoryFragment extends BaseFragment implements FaceCollectItem
         recyclerView.setLayoutManager(new GridLayoutManager(mActivity, 3));
         pageSetHelper = new PageSetHelper(recyclerView, pageTv);
         originalPhoto.setOnClickListener( v -> {
+            v.setVisibility(View.GONE);
+        });
+        frameLayout.setOnClickListener( v -> {
             v.setVisibility(View.GONE);
         });
     }
@@ -194,14 +200,13 @@ public class FaceHistoryFragment extends BaseFragment implements FaceCollectItem
 
     @Override
     public void lookOriginal(int position) {
-        if (originalPhoto.getVisibility() == View.GONE) {
+        if (frameLayout.getVisibility() == View.GONE) {
+            originalPhoto.setVisibility(View.VISIBLE);
+            frameLayout.setVisibility(View.VISIBLE);
             Glide.with(this)
                     .load(BitmapFactory.decodeFile(itemList.get(position).getOriginalPhoto()))
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .into(originalPhoto);
-            originalPhoto.setVisibility(View.VISIBLE);
-        } else {
-            originalPhoto.setVisibility(View.GONE);
         }
     }
 }
