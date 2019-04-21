@@ -1,5 +1,7 @@
 package com.iustu.identification.util;
 
+import android.util.Log;
+
 import com.iustu.identification.bean.ParameterConfig;
 import com.iustu.identification.bean.PreviewSizeConfig;
 import com.iustu.identification.entity.Account;
@@ -22,7 +24,9 @@ public class DataCache {
     public static void initCache(Account maccount) {
         admin = Account.getFromSP();
         parameterConfig = ParameterConfig.getFromSP();
-        chosenLibConfig = (HashSet<String>) MSP.getInstance(MSP.SP_CHOSEN).getStringSet(MSP.SP_CHOSEN, new HashSet<String>());
+        HashSet<String> tempChosenHashSet= (HashSet<String>) MSP.getInstance(MSP.SP_CHOSEN).getStringSet(MSP.SP_CHOSEN, new HashSet<String>());
+        chosenLibConfig=new HashSet<>();
+        chosenLibConfig.addAll(tempChosenHashSet);
         previewSizeConfig= PreviewSizeConfig.getFramSp();
         account = maccount;
         previewSizeConfig.save();
@@ -30,6 +34,7 @@ public class DataCache {
 
     // 该方法在App退出前调用，用来将内容写回
     public static void saveCache() {
+        Log.d("ChosenLibOriginalSize", String.valueOf(chosenLibConfig.size()));
         previewSizeConfig.save();
         parameterConfig.save();
         admin.save();
@@ -47,6 +52,7 @@ public class DataCache {
 
 
     public static HashSet<String> getChosenLibConfig() {
+        Log.d("ChosenLibOriginal1", String.valueOf(chosenLibConfig));
         return chosenLibConfig;
     }
 
