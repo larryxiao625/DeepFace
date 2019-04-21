@@ -229,7 +229,7 @@ public class SDKUtil {
      * @return
      */
     public static ArrayList<DetectResult> detectFace(ArrayList<String> picPaths){
-            ArrayList<DetectResult> detectResults=new ArrayList<>();
+        ArrayList<DetectResult> detectResults=new ArrayList<>();
             for(int i=0;i<picPaths.size();i++){
                 DetectResult detectResult=new DetectResult();
                 int faceNum=SDKUtil.getDetectHandler().faceDetector(picPaths.get(0),detectResult);
@@ -238,7 +238,11 @@ public class SDKUtil {
                     detectResults.add(detectResult);
                 }
             }
-            return detectResults;
+            if(detectResults.isEmpty()){
+                return null;
+            }else {
+                return detectResults;
+            }
     }
 
     /**

@@ -149,7 +149,11 @@ public class FileUtil {
 
     // 计算将图片压缩为240 x 160的压缩比例
     private static int cauculateInSampleSize(BitmapFactory.Options options) {
+<<<<<<< HEAD
         int targetHeight = 320;
+=======
+        int targetHeight = 240;
+>>>>>>> 3bca5a289d83b76c3cc653548552a8966edfee95
         int targetWidget = 480;
         int inSampleSize = 1;
         if (options.outHeight > targetHeight || options.outWidth > targetWidget) {
