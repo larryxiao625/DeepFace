@@ -25,6 +25,7 @@ public class FaceCollectItem extends DataSupport{
         values.put("faceId", this.faceId);
         values.put("time", this.time);
         values.put("originalPath", this.originalPhoto);
+        values.put("hourTime",this.hourTime);
         return values;
     }
     public int getId() {

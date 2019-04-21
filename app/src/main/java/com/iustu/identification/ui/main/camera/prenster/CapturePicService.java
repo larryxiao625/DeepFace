@@ -84,11 +84,6 @@ public class CapturePicService extends Service {
             searchHandlers.add(searchHandler);
         }
         EventBus.getDefault().register(this);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         capturePic();
     }
 
@@ -274,7 +269,7 @@ public class CapturePicService extends Service {
                         }
                     }
                     Log.d("CameraCapture", ":"+Thread.currentThread().getName()+String.valueOf(i));
-                    if (i == (picPaths.size()-1)) {
+                    if (i == (picPaths.size()-1)&&!tempDetectResults.isEmpty()) {
                         Log.d("CameraDetectResult", ":"+Thread.currentThread().getName()+String.valueOf(tempDetectResults.size()));
                         getCutPicture(tempBestPicPath, tempDetectResults.get(0), tempBestCalender, tempDetectResults.get(0).points.size());
                     }

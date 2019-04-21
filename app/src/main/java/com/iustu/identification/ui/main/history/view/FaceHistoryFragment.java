@@ -190,12 +190,13 @@ public class FaceHistoryFragment extends BaseFragment implements FaceCollectItem
 
     @Override
     public void lookOriginal(int position) {
+        Log.d("PreviewImage", String.valueOf(originalPhoto.getVisibility()));
         if (originalPhoto.getVisibility() == View.GONE) {
+            originalPhoto.setVisibility(View.VISIBLE);
             Glide.with(this)
                     .load(BitmapFactory.decodeFile(itemList.get(position).getOriginalPhoto()))
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .into(originalPhoto);
-            originalPhoto.setVisibility(View.VISIBLE);
         } else {
             originalPhoto.setVisibility(View.GONE);
         }
