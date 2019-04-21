@@ -46,7 +46,7 @@ public class RxUtil {
     public static final String[] FACECOLLECTION_COLUMNS = new String[]{"hourTime", "originalPath", "faceId", "imgUrl", "time", "id"};  //FaceCollectionItem的所有列
 
     public static final String[] LIBRARY_COLUMNS = new String[]{"libName", "description", "count", "inUsed"}; // Library的所有列
-    public static final String[] PERSIONINFO_COLUMNS = new String[]{"feature", "name", "gender", "photoPath", "identity", "home", "other", "image_id", "libName"};
+    public static final String[] PERSIONINFO_COLUMNS = new String[]{"feature", "name", "gender", "photoPath", "identity", "home", "other", "image_id", "libName","birthday"};
     public static final String[] COMPARE_COLUMNS = new String[]{"hourTime", "originalPhoto", "time", "uploadPhoto", "image_id", "rate", "libName", "name", "gender", "home", "identity", "photoPath", "other"};
 
     // 获取查询数据库时的游标

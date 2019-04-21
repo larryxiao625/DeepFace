@@ -92,18 +92,50 @@
             <TextView
                 android:id="@+id/name_tv"
                 style="@style/CompareHistoryItemText" />
-            <TextView
-                android:singleLine="true"
-                android:ellipsize="marquee"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:id="@+id/id_card_tv"
-                style="@style/CompareHistoryItemText" />
-            <TextView
-                android:singleLine="true"
-                android:ellipsize="marquee"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:id="@+id/nationality_tv"
-                style="@style/CompareHistoryItemText" />
+            <LinearLayout
+                android:orientation="horizontal"
+                style="@style/CompareHistoryItemText">
+                <TextView
+                    android:layout_gravity="center_vertical"
+                    android:textSize="@dimen/y36"
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="身份证号:"/>
+                <TextView
+                    android:layout_gravity="center_vertical"
+                    android:textSize="@dimen/y36"
+                    android:textColor="@color/white"
+                    android:singleLine="true"
+                    android:ellipsize="marquee"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:id="@+id/id_card_tv"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content" />
+            </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                style="@style/CompareHistoryItemText">
+                <TextView
+                    android:layout_gravity="center_vertical"
+                    android:textSize="@dimen/y36"
+                    android:textColor="@color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="籍贯:"/>
+                <TextView
+                    android:layout_gravity="center_vertical"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:textSize="@dimen/y36"
+                    android:textColor="@color/white"
+                    android:singleLine="true"
+                    android:ellipsize="marquee"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:id="@+id/nationality_tv"
+                    style="@style/CompareHistoryItemText" />
+            </LinearLayout>
+
             <TextView
                 android:id="@+id/lib_tv"
                 style="@style/CompareHistoryItemText" />
