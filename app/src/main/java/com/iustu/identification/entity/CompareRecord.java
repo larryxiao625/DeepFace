@@ -160,6 +160,7 @@ public class CompareRecord {
         values.put("birthday", birthday);
         values.put("originalPhoto", this.originalPhoto);
         values.put("hourTime", this.hourTime);
+        values.put("identity",this.identity);
         return values;
     }
 }

@@ -458,6 +458,7 @@ public class RxUtil {
                         compareRecord.setOther(cursor.getString(cursor.getColumnIndex("other")));
                         compareRecord.setPhotoPath(cursor.getString(cursor.getColumnIndex("photoPath")));
                         compareRecord.setName(cursor.getString(cursor.getColumnIndex("name")));
+                        compareRecord.setBirthday(cursor.getString(cursor.getColumnIndex("birthday")));
                         database.insert(RxUtil.DB_COMPARERECORD, null, compareRecord.toContentValues());
                     }
                     database.setTransactionSuccessful();

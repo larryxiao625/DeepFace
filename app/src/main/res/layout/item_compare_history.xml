@@ -93,9 +93,15 @@
                 android:id="@+id/name_tv"
                 style="@style/CompareHistoryItemText" />
             <TextView
+                android:singleLine="true"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
                 android:id="@+id/id_card_tv"
                 style="@style/CompareHistoryItemText" />
             <TextView
+                android:singleLine="true"
+                android:ellipsize="marquee"
+                android:marqueeRepeatLimit="marquee_forever"
                 android:id="@+id/nationality_tv"
                 style="@style/CompareHistoryItemText" />
             <TextView
