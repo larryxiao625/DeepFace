@@ -84,9 +84,11 @@ public class CompareHistoryFragment extends BaseFragment implements CompareHisto
         mAdapter.setListener(this);
         originalPhoto.setOnClickListener(v -> {
             v.setVisibility(View.GONE);
+            frameLayout.setVisibility(View.GONE);
         });
         frameLayout.setOnClickListener( v -> {
             v.setVisibility(View.GONE);
+            originalPhoto.setVisibility(View.GONE);
         });
     }
 

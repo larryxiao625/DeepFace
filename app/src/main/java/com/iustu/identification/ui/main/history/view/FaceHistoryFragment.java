@@ -89,9 +89,11 @@ public class FaceHistoryFragment extends BaseFragment implements FaceCollectItem
         pageSetHelper = new PageSetHelper(recyclerView, pageTv);
         originalPhoto.setOnClickListener( v -> {
             v.setVisibility(View.GONE);
+            frameLayout.setVisibility(View.GONE);
         });
         frameLayout.setOnClickListener( v -> {
             v.setVisibility(View.GONE);
+            originalPhoto.setVisibility(View.GONE);
         });
     }
 
