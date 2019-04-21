@@ -87,6 +87,9 @@ public class FileUtil {
         File temp = new File(sdcard + "/DeepFace/temp");
         if (!temp.exists())
             temp.mkdir();
+        File cut = new File(sdcard + "/Cut");
+        if (!cut.exists())
+            cut.mkdir();
     }
 
     /**
@@ -146,8 +149,8 @@ public class FileUtil {
 
     // 计算将图片压缩为240 x 160的压缩比例
     private static int cauculateInSampleSize(BitmapFactory.Options options) {
-        int targetHeight = 160;
-        int targetWidget = 240;
+        int targetHeight = 320;
+        int targetWidget = 480;
         int inSampleSize = 1;
         if (options.outHeight > targetHeight || options.outWidth > targetWidget) {
             int heightRatio = Math.round((float) options.outHeight / (float) targetHeight);

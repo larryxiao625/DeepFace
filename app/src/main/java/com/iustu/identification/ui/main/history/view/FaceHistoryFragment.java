@@ -80,9 +80,13 @@ public class FaceHistoryFragment extends BaseFragment implements FaceCollectItem
             compareHistoryFragment.setArguments(item.getFaceId());
             historyFragment.switchFragment(HistoryFragment.ID_COMPARE);
         });
+        mAdapter.setItemClickListener(this::lookOriginal);
         recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(new GridLayoutManager(mActivity, 3));
         pageSetHelper = new PageSetHelper(recyclerView, pageTv);
+        originalPhoto.setOnClickListener( v -> {
+            v.setVisibility(View.GONE);
+        });
     }
 
     @Override
@@ -191,13 +195,11 @@ public class FaceHistoryFragment extends BaseFragment implements FaceCollectItem
     @Override
     public void lookOriginal(int position) {
         if (originalPhoto.getVisibility() == View.GONE) {
+            originalPhoto.setVisibility(View.VISIBLE);
             Glide.with(this)
                     .load(BitmapFactory.decodeFile(itemList.get(position).getOriginalPhoto()))
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .into(originalPhoto);
-            originalPhoto.setVisibility(View.VISIBLE);
-        } else {
-            originalPhoto.setVisibility(View.GONE);
         }
     }
 }
