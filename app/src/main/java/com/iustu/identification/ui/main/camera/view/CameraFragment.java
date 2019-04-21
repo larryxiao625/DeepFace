@@ -55,7 +55,6 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
     RecyclerView itemCompareRecyclerView;
     @BindView(R.id.item_capture_recycler_view)
     RecyclerView itemCaptureRecyclerView;
-    PowerManager.WakeLock mWakeLock;
     CameraPrenster cameraPrenster=new CameraPrenster();
     Intent serviceIntent;
     CapturePicService.CaptureBind captureBind;
@@ -126,10 +125,6 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
 
     @Override
     public void onSurfaceCreated(CameraViewInterface view, Surface surface) {
-        Log.d("CameraFragment","onSurfaceCreated");
-        Log.d("CameraFragment",String.valueOf(cameraHelper.isCameraOpened()));
-        Log.d("CameraFragment","IsPreview:"+isPreview);
-        Log.d("CameraFragment","IsFirstTime:"+isFirstTime);
         if(!isPreview&&cameraHelper.isCameraOpened()){
             Log.d("CameraFragment","startPreview");
             cameraHelper.startPreview(cameraTextureView);
@@ -143,31 +138,13 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
 
     @Override
     public void onSurfaceDestroy(CameraViewInterface view, Surface surface) {
-        Log.d("CameraFragment","surfaceDestroy");
         if(isPreview&&cameraHelper.isCameraOpened()){
-            Log.d("CameraFragment","stopPreview");
             cameraHelper.stopPreview();
             isPreview=false;
         }else if(isFirstTime && !cameraHelper.isCameraOpened()){
-            Log.d("CameraFragment","stopPreview");
             cameraHelper.stopPreview();
             isPreview=false;
             isFirstTime=false;
-        }
-    }
-
-
-      /**
-      * 同步方法   得到休眠锁
-      * @param context
-      * @return
-      */
-    synchronized private void getLock(Context context){
-        if(mWakeLock==null){
-        PowerManager mgr=(PowerManager)context.getSystemService(Context.POWER_SERVICE);
-        mWakeLock=mgr.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,CapturePicService.class.getName());
-        mWakeLock.setReferenceCounted(true);
-        mWakeLock.acquire(5000);
         }
     }
 
@@ -252,7 +229,6 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
             Log.d("CameraFragment","onConnected");
             CameraFragment.this.captureBind= (CapturePicService.CaptureBind) service;
             ((CapturePicService.CaptureBind) service).setOnMyDevConnectListener(cameraPrenster);
-            getLock(getActivity());
         }
 
         @Override
