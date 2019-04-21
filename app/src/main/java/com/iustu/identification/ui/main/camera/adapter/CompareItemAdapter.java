@@ -122,7 +122,6 @@ public class CompareItemAdapter extends RecyclerView.Adapter<CompareItemAdapter.
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .format(DecodeFormat.PREFER_RGB_565)
                         .into(capturePhoto);
-                Log.d("CameraPhotoPath",info.getPhotoPath());
                 String[] photos = info.getPhotoPath().split(";");
                 String libPath = "/sdcard/DeepFace/" + info.getLibName()+ "/" + photos[0];
                 Glide.with(itemView).load(BitmapFactory.decodeFile(libPath))

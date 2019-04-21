@@ -87,7 +87,7 @@ public class FileUtil {
         File temp = new File(sdcard + "/DeepFace/temp");
         if (!temp.exists())
             temp.mkdir();
-        File cut = new File(sdcard + "/Cut");
+        File cut = new File(sdcard + "/DeepFace/Cut");
         if (!cut.exists())
             cut.mkdir();
     }

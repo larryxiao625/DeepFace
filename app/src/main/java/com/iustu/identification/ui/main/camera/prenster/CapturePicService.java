@@ -73,7 +73,6 @@ public class CapturePicService extends Service {
             CapturePicService.this.cameraPrenster=cameraPrenster;
         }
     }
-    File cutFile=new File(cutPath);
     FileOutputStream fos;
     ThreadCanshu threadCanshu;
     @Override
@@ -287,9 +286,7 @@ public class CapturePicService extends Service {
     }
 
     public void getCutPicture(String originalPhoto, DetectResult detectResult,Calendar calendar,int num){
-        if(!cutFile.exists()){
-            cutFile.mkdirs();
-        }
+
         for(int i=0;i<num;i++) {
             String cutPathName=cutPath+TextUtil.dateMessage(calendar.getTime())+"_"+i+".jpg";
             int height=(detectResult.getRects().get(i).bottom> ParameterConfig.getFromSP().getDpiHeight()? ParameterConfig.getFromSP().getDpiHeight():detectResult.getRects().get(i).bottom)-(detectResult.getRects().get(i).top<0? 0:detectResult.getRects().get(i).top);
@@ -338,7 +335,9 @@ public class CapturePicService extends Service {
                     ArrayList<DetectResult> detectResults = SDKUtil.detectFace(inputPicPaths);
                     if (detectResults!=null) {
                         if (((detectResults.get(0).getPoints().get(0).x)[1] - (detectResults.get(0).getPoints().get(0).x)[0]) > picQuality) {
-                            deletePath.add(picPaths.get(i-1));
+                            if(i!=0) {
+                                deletePath.add(picPaths.get(i - 1));
+                            }
                             picQuality = (int) ((detectResults.get(0).getPoints().get(0).x)[1] - (detectResults.get(0).getPoints().get(0).x)[0]);
                             tempDetectResults.clear();
                             tempDetectResults = detectResults;

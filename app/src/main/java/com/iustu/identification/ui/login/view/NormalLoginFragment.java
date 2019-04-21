@@ -29,15 +29,6 @@ public class NormalLoginFragment extends BaseFragment {
         return R.layout.fragment_normal_login;
     }
 
-    @OnClick(R.id.login_normal_switch)
-    public void switchToFace(){
-        ((LoginActivity)mActivity).switchFragment(1);
-    }
-
-    @OnClick(R.id.set_server_tv)
-    public void setServer(){
-        loginPrenster.setServer();
-    }
 
     @OnClick(R.id.login_normal_tv)
     public void login(){
