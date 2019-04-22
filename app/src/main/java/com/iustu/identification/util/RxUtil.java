@@ -212,16 +212,7 @@ public class RxUtil {
                 SQLiteDatabase database = SqliteUtil.getDatabase();
                 database.beginTransaction();
                 try {
-
-                    if (result == SDKUtil.HASADDED) {
-                        // 说明该人脸库中已经含有该人脸特征，只需要更新其photoPath即可
-                        Cursor cursor = database.query(RxUtil.DB_PERSIONINFO, RxUtil.PERSIONINFO_COLUMNS, "libName = ? and name = ?", new String[]{persionInfo.libName, persionInfo.name}, null, null, null, null);
-                        if (cursor.getCount() != 0) {
-                            cursor.moveToNext();
-                            persionInfo.photoPath = cursor.getString(cursor.getColumnIndex("photoPath")) + ";" + fileName;
-                            database.update(RxUtil.DB_PERSIONINFO, persionInfo.toContentValues(), "libName = ? and name = ?", new String[]{persionInfo.libName, persionInfo.name});
-                        }
-                    } else {
+                    if(result != -1) {
                         database.insert(RxUtil.DB_PERSIONINFO, null, values);
                         // 如果往PersionInfo中添加新数据，则需要修改Library的信息
                         Cursor cursor = database.query(false, RxUtil.DB_LIBRARY, RxUtil.LIBRARY_COLUMNS,"libName = '" + persionInfo.libName + "'", null, null, null, null, null);
@@ -246,11 +237,12 @@ public class RxUtil {
      * @param persionInfos 需要被导入的人员
      * @return Observable对象
      */
-    public static Observable<Boolean> getImportBatchPersionObservable(ArrayList<PersionInfo> persionInfos) {
-        return Observable.fromIterable(persionInfos).map(new Function<PersionInfo, Boolean>() {
+    public static Observable<BatchReturn> getImportBatchPersionObservable(ArrayList<PersionInfo> persionInfos) {
+        final int[] index = {0};
+        return Observable.fromIterable(persionInfos).map(new Function<PersionInfo, BatchReturn>() {
             @Override
-            public Boolean apply(PersionInfo persionInfo) throws Exception {
-
+            public BatchReturn apply(PersionInfo persionInfo) throws Exception {
+                index[0]++;
                 // 其次将选中的图片复制到人脸库的路径中
                 String fileName = persionInfo.name + System.currentTimeMillis() + ".jpg";
                 String finalPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DeepFace/" + persionInfo.libName + "/" + fileName;
@@ -260,8 +252,10 @@ public class RxUtil {
                 persionInfo.photoPath = fileName;
 
                 // 首先调用SDK生成feature
-                SDKUtil.sdkDoBatchPersion(persionInfo);
-
+                boolean result = SDKUtil.sdkDoBatchPersion(persionInfo);
+                // 说明添加失败，多半是图片有点糊
+                if (!result)
+                    return new BatchReturn(index[0], false);
                 SQLiteDatabase database = SqliteUtil.getDatabase();
                 database.beginTransaction();
                 try {
@@ -277,7 +271,7 @@ public class RxUtil {
                 } finally{
                     database.endTransaction();
                 }
-                return true;
+                return new BatchReturn(index[0], true);
             }
 
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
@@ -516,6 +510,18 @@ public class RxUtil {
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
+
+    public static class BatchReturn {
+        public int index;
+        public boolean isSuccessed;
+
+        BatchReturn(int index, boolean isSuccessed) {
+            this.index = index;
+            this.isSuccessed = isSuccessed;
+        }
+    }
 }
+
+
 
 

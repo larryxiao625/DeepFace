@@ -29,8 +29,7 @@ public class BatchPresenter {
      * @param libName 导入的目标人脸库
      */
     public void importBatchPictures(ArrayList<String> pictures, String libName) {
-        long startTime = System.currentTimeMillis();
-        final long[] endTime = new long[1];
+        ArrayList<RxUtil.BatchReturn> returns = new ArrayList<>();
         final int[] errCount = {0};
         final int[] successCount = {0};
         ArrayList<PersionInfo> persionInfos = StringUtil.clipPictures(pictures);
@@ -38,19 +37,21 @@ public class BatchPresenter {
             persionInfo.libName = libName;
             persionInfo.image_id = System.currentTimeMillis() + "";
         }
-        Observable<Boolean> observable = RxUtil.getImportBatchPersionObservable(persionInfos);
-        observable.subscribe(new Observer<Boolean>() {
+        Observable<RxUtil.BatchReturn> observable = RxUtil.getImportBatchPersionObservable(persionInfos);
+        observable.subscribe(new Observer<RxUtil.BatchReturn>() {
             @Override
             public void onSubscribe(Disposable d) {
                 disposable = d;
             }
 
             @Override
-            public void onNext(Boolean o) {
-                if (o)
+            public void onNext(RxUtil.BatchReturn o) {
+                if (o.isSuccessed)
                     successCount[0] = successCount[0] +1;
-                else
+                else{
+                    returns.add(o);
                     errCount[0] = errCount[0] + 1;
+                }
                 view.setProgress(successCount[0] + errCount[0]);
                 view.setProgressTV(successCount[0], errCount[0]);
             }
@@ -65,9 +66,16 @@ public class BatchPresenter {
             public void onComplete() {
                 disposable.dispose();
                 view.changeSubmitable();
-                endTime[0] = System.currentTimeMillis();
                 FileUtil.deleteTemp();
-                Log.d("timeTest", "onComplete: " + (endTime[0] - startTime));
+                if (returns.size() > 0) {
+                    String s = "第";
+                    for (RxUtil.BatchReturn batchReturn : returns) {
+                        s += batchReturn.index + "、";
+                    }
+                    s += "张图片添加失败，请单独添加";
+                    ToastUtil.showLong(s);
+                }
+
             }
         });
     }

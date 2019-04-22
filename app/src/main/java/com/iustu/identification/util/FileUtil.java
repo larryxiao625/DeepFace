@@ -138,7 +138,7 @@ public class FileUtil {
             Bitmap bitmap = BitmapFactory.decodeStream(fss, null, options);
             File file = new File(to);
             FileOutputStream outputStream = new FileOutputStream(file);
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 60, outputStream);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
             outputStream.flush();
             outputStream.close();
             fss.close();
@@ -149,8 +149,8 @@ public class FileUtil {
 
     // 计算将图片压缩为240 x 160的压缩比例
     private static int cauculateInSampleSize(BitmapFactory.Options options) {
-        int targetHeight = 320;
-        int targetWidget = 480;
+        int targetHeight = 160;
+        int targetWidget = 240;
         int inSampleSize = 1;
         if (options.outHeight > targetHeight || options.outWidth > targetWidget) {
             int heightRatio = Math.round((float) options.outHeight / (float) targetHeight);
