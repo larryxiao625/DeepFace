@@ -1,5 +1,6 @@
 package com.iustu.identification.ui.main.camera.adapter;
 
+import android.annotation.SuppressLint;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -95,8 +96,8 @@ public class CompareItemAdapter extends RecyclerView.Adapter<CompareItemAdapter.
         TextView libNameTv;
         @BindView(R.id.name_tv)
         TextView nameTv;
-        @BindView(R.id.nationality_tv)
-        TextView nationalityTv;
+        @BindView(R.id.gender_tv)
+        TextView genderTv;
         @BindView(R.id.birthday_tv)
         TextView birthTv;
         @BindView(R.id.id_card_tv)
@@ -107,12 +108,14 @@ public class CompareItemAdapter extends RecyclerView.Adapter<CompareItemAdapter.
         FrameLayout foldButton;
         @BindView(R.id.fold_icon_iv)
         ImageView foldImage;
-
+        @BindView(R.id.compare_time_tv)
+        TextView compareTimeTv;
         public Holder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
 
+        @SuppressLint("SetTextI18n")
         private void setCompareRecord(CompareRecord info){
             if(info == null){
 
@@ -129,11 +132,12 @@ public class CompareItemAdapter extends RecyclerView.Adapter<CompareItemAdapter.
                         .into(matchPhoto);
                 libNameTv.setText(TextUtil.format(String.valueOf(info.getLibName())));
                 nameTv.setText(TextUtil.format(info.getName()));
-                birthTv.setText(TextUtil.format(info.getGender()));
+                birthTv.setText(TextUtil.format(info.getBirthday()));
                 idCardTv.setText(TextUtil.format(info.getIdentity()));
                 locationTv.setText(TextUtil.format(info.getHome()));
-                nationalityTv.setText(TextUtil.format(info.getHome()));
+                genderTv.setText(TextUtil.format(info.getGender()));
                 compareScaleView.setScale((int) (info.getRate()*100));
+                compareTimeTv.setText(info.getTime()+"\n"+info.getHourTime());
             }
         }
     }
