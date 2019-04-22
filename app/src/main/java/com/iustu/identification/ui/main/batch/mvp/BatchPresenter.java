@@ -29,8 +29,6 @@ public class BatchPresenter {
      * @param libName 导入的目标人脸库
      */
     public void importBatchPictures(ArrayList<String> pictures, String libName) {
-        long startTime = System.currentTimeMillis();
-        final long[] endTime = new long[1];
         final int[] errCount = {0};
         final int[] successCount = {0};
         ArrayList<PersionInfo> persionInfos = StringUtil.clipPictures(pictures);
@@ -65,9 +63,7 @@ public class BatchPresenter {
             public void onComplete() {
                 disposable.dispose();
                 view.changeSubmitable();
-                endTime[0] = System.currentTimeMillis();
                 FileUtil.deleteTemp();
-                Log.d("timeTest", "onComplete: " + (endTime[0] - startTime));
             }
         });
     }

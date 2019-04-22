@@ -212,16 +212,7 @@ public class RxUtil {
                 SQLiteDatabase database = SqliteUtil.getDatabase();
                 database.beginTransaction();
                 try {
-
-                    if (result == SDKUtil.HASADDED) {
-                        // 说明该人脸库中已经含有该人脸特征，只需要更新其photoPath即可
-                        Cursor cursor = database.query(RxUtil.DB_PERSIONINFO, RxUtil.PERSIONINFO_COLUMNS, "libName = ? and name = ?", new String[]{persionInfo.libName, persionInfo.name}, null, null, null, null);
-                        if (cursor.getCount() != 0) {
-                            cursor.moveToNext();
-                            persionInfo.photoPath = cursor.getString(cursor.getColumnIndex("photoPath")) + ";" + fileName;
-                            database.update(RxUtil.DB_PERSIONINFO, persionInfo.toContentValues(), "libName = ? and name = ?", new String[]{persionInfo.libName, persionInfo.name});
-                        }
-                    } else {
+                    if(result != -1) {
                         database.insert(RxUtil.DB_PERSIONINFO, null, values);
                         // 如果往PersionInfo中添加新数据，则需要修改Library的信息
                         Cursor cursor = database.query(false, RxUtil.DB_LIBRARY, RxUtil.LIBRARY_COLUMNS,"libName = '" + persionInfo.libName + "'", null, null, null, null, null);

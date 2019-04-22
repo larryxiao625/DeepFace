@@ -326,7 +326,7 @@ public class CapturePicService extends Service {
                 try {
                     Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(picPaths.get(i)));
                     FileOutputStream tempFos = new FileOutputStream(tempPath + TextUtil.dateMessage(threadCalenders.get(i).getTime())+"_"+i+".jpg");
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 10, tempFos);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 80, tempFos);
 //                    FileUtil.copyCompressedBitmap(picPaths.get(i),tempPath + TextUtil.dateMessage(threadCalenders.get(i).getTime())+"_"+i+".jpg");
                     ArrayList<String> inputPicPaths = new ArrayList<>();
                     inputPicPaths.add(tempPath + TextUtil.dateMessage(threadCalenders.get(i).getTime()) + "_" + i + ".jpg");

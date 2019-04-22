@@ -135,17 +135,6 @@ public class SDKUtil {
         } else {
             searchHandler = searchHandlerCache.get(persionInfo.libName);
         }
-        ArrayList<SearchResultItem> searchResult = new ArrayList<>();
-        // 首先检测人脸库中是否已经含有该人脸特征
-        int searchRes = searchHandler.searchFind(floats, 1, searchResult, DataCache.getParameterConfig().getThresholdQuanity());
-        Log.d("sdk", "searchRes " + searchRes);
-        Log.d("sdk", "serachResultLength" + searchResult.size());
-        // 说明该人脸库中已经含有了该人脸
-        if (searchResult.size() > 0) {
-            if (!searchHandler.isDestroy())
-                searchHandler.destroy();
-            return HASADDED;
-        }
         int result = searchHandler.searchAdd(searchDBItem);
         return result;
     }
@@ -159,6 +148,7 @@ public class SDKUtil {
         DetectResult detectResult=new DetectResult();
         SDKUtil.getDetectHandler().faceDetector(compressPath,detectResult);
         FeatureResult featureResult=new FeatureResult();
+        Log.d("finalTest", "sdkDoBatchPersion: " + detectResult.rects.size());
         verifyHandler.extractFeature(detectResult,featureResult);
         float[] floats = featureResult.getFeat(0).get(0);
         persionInfo.feature = Arrays.asList(floats).toString();

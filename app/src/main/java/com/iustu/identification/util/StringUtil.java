@@ -37,8 +37,8 @@ public class StringUtil {
             }
             persionInfo.name = ss[0].trim();
             persionInfo.identity = ss[1].trim();
-            persionInfo.gender = s[2].trim();
-            persionInfo.other = s[3].trim();
+            persionInfo.gender = ss[2].trim();
+            persionInfo.other = ss[3].trim();
             if (IdentityUtil.isValidatedIdentity(ss[1])) {
                 IdentityUtil.getInformation(ss[1].trim());
                 persionInfo.birthday = IdentityUtil.birthday;
