@@ -122,7 +122,12 @@ public class SDKUtil {
         DetectResult detectResult=new DetectResult();
         SDKUtil.getDetectHandler().faceDetector(persionInfo.photoPath,detectResult);
         FeatureResult featureResult=new FeatureResult();
-        verifyHandler.extractFeature(detectResult,featureResult);
+        int result = verifyHandler.extractFeature(detectResult,featureResult);
+        if (result == -1)
+            return result;
+        if (featureResult.getFeat(0).size() < 0) {
+            return -1;
+        }
         float[] floats = featureResult.getFeat(0).get(0);
         persionInfo.feature = Arrays.asList(floats).toString();
         SearchDBItem searchDBItem = new SearchDBItem();
@@ -135,7 +140,9 @@ public class SDKUtil {
         } else {
             searchHandler = searchHandlerCache.get(persionInfo.libName);
         }
-        int result = searchHandler.searchAdd(searchDBItem);
+        result = searchHandler.searchAdd(searchDBItem);
+        if (result == -1)
+            return result;
         return result;
     }
 
@@ -143,13 +150,21 @@ public class SDKUtil {
      * 在往人脸库批量导入的时候调用{@link RxUtil}
      * @param persionInfo 需要添加的人
      */
-    public static void sdkDoBatchPersion(PersionInfo persionInfo) {
+    public static boolean sdkDoBatchPersion(PersionInfo persionInfo) {
         String compressPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DeepFace/temp/" + persionInfo.photoPath;
+        //String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DeepFace/" + persionInfo.libName + "/" + persionInfo.photoPath;
         DetectResult detectResult=new DetectResult();
-        SDKUtil.getDetectHandler().faceDetector(compressPath,detectResult);
+        int result = SDKUtil.getDetectHandler().faceDetector(compressPath,detectResult);
+        //int result = SDKUtil.getDetectHandler().faceDetector(path,detectResult);
+        if (result <= 0)
+            return false;
         FeatureResult featureResult=new FeatureResult();
-        Log.d("finalTest", "sdkDoBatchPersion: " + detectResult.rects.size());
-        verifyHandler.extractFeature(detectResult,featureResult);
+        result = verifyHandler.extractFeature(detectResult,featureResult);
+        if (result == -1)
+            return false;
+        if (featureResult.getFeat(0).size() < 0) {
+            return false;
+        }
         float[] floats = featureResult.getFeat(0).get(0);
         persionInfo.feature = Arrays.asList(floats).toString();
         SearchDBItem searchDBItem = new SearchDBItem();
@@ -162,7 +177,10 @@ public class SDKUtil {
         } else {
             searchHandler = searchHandlerCache.get(persionInfo.libName);
         }
-        searchHandler.searchAdd(searchDBItem);
+        result = searchHandler.searchAdd(searchDBItem);
+        if (result == -1)
+            return false;
+        return true;
     }
 
     /**

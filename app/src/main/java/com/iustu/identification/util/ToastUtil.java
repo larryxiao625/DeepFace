@@ -23,6 +23,14 @@ public class ToastUtil {
         }
         mToast.show();
     }
+    public static void showLong(String text){
+        if(mToast == null){
+            mToast = Toast.makeText(App.getContext(), text, Toast.LENGTH_LONG);
+        }else {
+            mToast.setText(text);
+        }
+        mToast.show();
+    }
 
     public static void show(@StringRes int resId){
         show(App.getContext().getString(resId));
