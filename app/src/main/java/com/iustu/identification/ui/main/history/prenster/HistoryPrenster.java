@@ -23,6 +23,8 @@ import com.iustu.identification.util.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -204,6 +206,7 @@ public class HistoryPrenster implements IPrenster{
                     faceCollectItem.setOriginalPhoto(cursor.getString(cursor.getColumnIndex("originalPath")));
                     data.add(faceCollectItem);
                 }
+                Collections.reverse(data);
                 faceHistoryIVew.bindData(data);
             }
 
@@ -265,6 +268,7 @@ public class HistoryPrenster implements IPrenster{
                     Log.d("History",cursor.getString(cursor.getColumnIndex("libName")));
                     Log.d("History",cursor.getString(cursor.getColumnIndex("name")));
                 }
+                Collections.reverse(data);
                 compareHistoryIVew.bindData(data);
             }
 
