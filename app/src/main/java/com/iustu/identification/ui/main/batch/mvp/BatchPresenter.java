@@ -67,12 +67,15 @@ public class BatchPresenter {
                 disposable.dispose();
                 view.changeSubmitable();
                 FileUtil.deleteTemp();
-                String s = "第";
-                for (RxUtil.BatchReturn batchReturn : returns) {
-                    s += batchReturn.index + "、";
+                if (returns.size() > 0) {
+                    String s = "第";
+                    for (RxUtil.BatchReturn batchReturn : returns) {
+                        s += batchReturn.index + "、";
+                    }
+                    s += "张图片添加失败，请单独添加";
+                    ToastUtil.showLong(s);
                 }
-                s += "张图片添加失败，请单独添加";
-                ToastUtil.showLong(s);
+
             }
         });
     }

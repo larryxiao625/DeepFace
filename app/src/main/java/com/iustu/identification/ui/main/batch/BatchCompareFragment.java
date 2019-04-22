@@ -1,6 +1,7 @@
 package com.iustu.identification.ui.main.batch;
 
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -21,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.iustu.identification.R;
+import com.iustu.identification.entity.BatchSuccess;
 import com.iustu.identification.ui.main.batch.folder.ChooseFolderActivity;
 import com.iustu.identification.ui.main.batch.folder.FolderChooseFragment;
 import com.iustu.identification.ui.main.batch.mvp.BatchPresenter;
@@ -31,6 +33,8 @@ import com.iustu.identification.util.FileUtil;
 import com.iustu.identification.util.IconFontUtil;
 import com.iustu.identification.util.MSP;
 import com.iustu.identification.util.ToastUtil;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -73,12 +77,15 @@ public class BatchCompareFragment extends DialogFragment implements BatchView {
 
     private BatchPresenter presenter;
     private String libName;
+    private int index;
+    private int success;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         libName = getArguments().getString("libName");
+        index = getArguments().getInt("index");
     }
 
     @Override
@@ -166,6 +173,11 @@ public class BatchCompareFragment extends DialogFragment implements BatchView {
         }
     }
 
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        EventBus.getDefault().post(new BatchSuccess(success, index, libName));
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -192,6 +204,7 @@ public class BatchCompareFragment extends DialogFragment implements BatchView {
 
     @Override
     public void setProgressTV(int successCount, int errCount) {
+        success = successCount;
         progressTip.setText(String.format("导入成功：%d张，导入失败：%d张", successCount, errCount));
     }
 
