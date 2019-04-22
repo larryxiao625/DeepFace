@@ -57,8 +57,8 @@ public class AddPersionPresenter {
 
             @Override
             public void onNext(Integer o) {
-                if (o == SDKUtil.HASADDED) {
-                    ToastUtil.show("检测到该人脸库其他人与此人相似度极高，请检查是否同一人");
+                if (o == -1) {
+                    ToastUtil.show("sdkError: " + o.intValue());
                 }
             }
 
@@ -75,7 +75,7 @@ public class AddPersionPresenter {
                 ((AddPersonFragment)view).clear();
                 disposable.dispose();
                 view.dissmissDialog();
-                //view.onAddSuccess();
+                view.onAddSuccess();
             }
         });
     }

@@ -1,6 +1,7 @@
 package com.iustu.identification.ui.main.history.adapter;
 
 import android.graphics.Bitmap;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,7 @@ import com.iustu.identification.util.LibManager;
 import com.iustu.identification.util.TextUtil;
 
 import java.io.File;
+import java.util.Comparator;
 import java.util.List;
 
 import butterknife.BindView;
@@ -140,4 +142,5 @@ public class CompareHistoryItemAdapter extends PageRecyclerViewAdapter<CompareHi
             }
         }
     }
+
 }

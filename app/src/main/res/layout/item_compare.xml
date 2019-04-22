@@ -58,7 +58,16 @@
                 android:layout_height="match_parent"/>
         </FrameLayout>
 
-
+        <TextView
+            android:textSize="12sp"
+            android:gravity="center_horizontal"
+            android:textColor="@color/white"
+            android:text="比中时间"
+            android:id="@+id/compare_time_tv"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/y10" />
         <com.iustu.identification.ui.widget.ScaleView
             android:id="@+id/compare_scv"
             android:layout_gravity="center_horizontal"
@@ -114,14 +123,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
-                android:text="    民族:"
+                android:text="    性别:"
                 android:textSize="@dimen/y42"
                 android:textColor="@color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <TextView
                 tools:text="1"
-                android:id="@+id/nationality_tv"
+                android:id="@+id/gender_tv"
                 android:textSize="@dimen/y42"
                 android:textColor="@color/white"
                 android:layout_width="wrap_content"

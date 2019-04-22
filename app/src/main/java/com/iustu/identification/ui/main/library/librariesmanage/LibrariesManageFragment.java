@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 
 import com.iustu.identification.R;
+import com.iustu.identification.entity.BatchSuccess;
 import com.iustu.identification.entity.Library;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.base.PageRecyclerViewAdapter;
@@ -29,6 +30,10 @@ import com.iustu.identification.util.AlarmUtil;
 import com.iustu.identification.util.IconFontUtil;
 import com.iustu.identification.util.PageSetHelper;
 import com.iustu.identification.util.ToastUtil;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -160,6 +165,7 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
         BatchCompareFragment fragment = new BatchCompareFragment();
         Bundle bundle = new Bundle();
         bundle.putString("libName", mLibraryList.get(index).libName);
+        bundle.putInt("index", index);
         fragment.setArguments(bundle);
         fragment.show(getActivity().getFragmentManager(), "show");
     }
@@ -285,6 +291,25 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
                 library.description = values.getAsString("description");
                 mAdapter.notifyDataChange();
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void changeNumber(BatchSuccess success) {
+        int count = mLibraryList.get(success.index).getCount();
+        mLibraryList.get(success.index).setCount(success.success + count);
+        mAdapter.notifyItemChanged(success.index);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
 }
