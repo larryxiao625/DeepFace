@@ -34,11 +34,6 @@ public class BatchPresenter {
         final int[] errCount = {0};
         final int[] successCount = {0};
         ArrayList<PersionInfo> persionInfos = StringUtil.clipPictures(pictures);
-        if (persionInfos == null) {
-            view.changeSubmitable();
-            ToastUtil.show("图片命名格式不合法或者证件号码不合法");
-            return;
-        }
         for(PersionInfo persionInfo : persionInfos) {
             persionInfo.libName = libName;
             persionInfo.image_id = System.currentTimeMillis() + "";

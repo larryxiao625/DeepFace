@@ -121,18 +121,16 @@ public class AddPersonFragment extends BaseFragment implements AddPersionView {
         }
         String idCardNumber = idCardEdit.getText().toString().trim();
         if (!idCardNumber.equals("") && idCardNumber != null) {
-            if (!IdentityUtil.isValidatedIdentity(idCardNumber)) {
-                ToastUtil.show("身份证不合法");
-                return;
+            if (IdentityUtil.isValidatedIdentity(idCardNumber)) {
+                IdentityUtil.getInformation(idCardNumber);
+                sexEdit.setText(IdentityUtil.gender);
+                locationEdit.setText(NativePlace.getNativePlace(Integer.valueOf(idCardNumber.substring(0, 6))));
+                birthday = IdentityUtil.birthday;
             }
-            IdentityUtil.getInformation(idCardNumber);
-            sexEdit.setText(IdentityUtil.gender);
-            locationEdit.setText(NativePlace.getNativePlace(Integer.valueOf(idCardNumber.substring(0, 6))));
-            birthday = IdentityUtil.birthday;
         }
 
         String sex = sexEdit.getText().toString().trim();
-        if(!sex.equals("男")&&!sex.equals("女")){
+        if(sex != null && !sex.equals("男") && !sex.equals("女")){
             builder.content("性别请输入(男或女)")
                     .show(mActivity.getFragmentManager());
             return;

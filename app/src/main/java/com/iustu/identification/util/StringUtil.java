@@ -26,18 +26,24 @@ public class StringUtil {
             String[] s = picture.split("/");
             String info = s[s.length - 1];    // 获取图片中包含的信息
             s = info.split("_");
-            if (s.length != 4 || !IdentityUtil.isValidatedIdentity(s[1].trim())) {
-                //ToastUtil.show("检测到非法命名格式，请按照 姓名_证件号码_性别_备注 的格式命名图片");
-                return null;
+            String[] ss = new String[4];
+            if (s.length < 4) {
+                for (int i = 0; i < 4; i ++) {
+                    if (i < s.length)
+                        ss[i] = s[i];
+                    else
+                        ss[i] = "未填写";
+                }
             }
-            IdentityUtil.getInformation(s[1].trim());
-            persionInfo.name = s[0].trim();
-            persionInfo.identity = s[1].trim();
+            persionInfo.name = ss[0].trim();
+            persionInfo.identity = ss[1].trim();
             persionInfo.gender = s[2].trim();
             persionInfo.other = s[3].trim();
-            persionInfo.birthday = IdentityUtil.birthday;
-            persionInfo.home = NativePlace.getNativePlace(Integer.valueOf(s[1].substring(0,6)));
-            Log.d("Stringutil", "clipPictures: " + persionInfo.photoPath);
+            if (IdentityUtil.isValidatedIdentity(ss[1])) {
+                IdentityUtil.getInformation(ss[1].trim());
+                persionInfo.birthday = IdentityUtil.birthday;
+                persionInfo.home = NativePlace.getNativePlace(Integer.valueOf(s[1].substring(0,6)));
+            }
             result.add(persionInfo);
         }
 

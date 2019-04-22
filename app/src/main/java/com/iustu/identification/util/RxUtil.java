@@ -217,7 +217,6 @@ public class RxUtil {
                         // 说明该人脸库中已经含有该人脸特征，只需要更新其photoPath即可
                         Cursor cursor = database.query(RxUtil.DB_PERSIONINFO, RxUtil.PERSIONINFO_COLUMNS, "libName = ? and name = ?", new String[]{persionInfo.libName, persionInfo.name}, null, null, null, null);
                         if (cursor.getCount() != 0) {
-                            // 说明该人脸对应的姓名不同
                             cursor.moveToNext();
                             persionInfo.photoPath = cursor.getString(cursor.getColumnIndex("photoPath")) + ";" + fileName;
                             database.update(RxUtil.DB_PERSIONINFO, persionInfo.toContentValues(), "libName = ? and name = ?", new String[]{persionInfo.libName, persionInfo.name});

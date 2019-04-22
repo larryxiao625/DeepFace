@@ -155,19 +155,11 @@ public class SDKUtil {
      * @param persionInfo 需要添加的人
      */
     public static void sdkDoBatchPersion(PersionInfo persionInfo) {
-        long startTime;
-        long endTime;
         String compressPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DeepFace/temp/" + persionInfo.photoPath;
         DetectResult detectResult=new DetectResult();
-        startTime = System.currentTimeMillis();
         SDKUtil.getDetectHandler().faceDetector(compressPath,detectResult);
-        endTime = System.currentTimeMillis();
-        Log.d("timeTest", "人脸检测时间：" + (endTime - startTime));
         FeatureResult featureResult=new FeatureResult();
-        startTime = System.currentTimeMillis();
         verifyHandler.extractFeature(detectResult,featureResult);
-        endTime = System.currentTimeMillis();
-        Log.d("timeTest", "人脸特征提取时间：" + (endTime - startTime));
         float[] floats = featureResult.getFeat(0).get(0);
         persionInfo.feature = Arrays.asList(floats).toString();
         SearchDBItem searchDBItem = new SearchDBItem();
@@ -180,10 +172,7 @@ public class SDKUtil {
         } else {
             searchHandler = searchHandlerCache.get(persionInfo.libName);
         }
-        startTime = System.currentTimeMillis();
         searchHandler.searchAdd(searchDBItem);
-        endTime = System.currentTimeMillis();
-        Log.d("timeTest", "人脸搜索时间：" + (endTime - startTime));
     }
 
     /**
@@ -207,7 +196,6 @@ public class SDKUtil {
         float[] floats2 = featureResult2.getFeat(0).get(0);
         float[] floats1 = featureResult1.getFeat(0).get(0);
         float score = verifyHandler.verifyFeature(floats1, floats2);
-        Log.d("sdk", "checkIsSamePersion: " + score);
         return score > 0.1 ? NOTTHESAME : ISTHESAME;
     }
 
