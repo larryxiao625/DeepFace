@@ -161,28 +161,34 @@ public class BatchCompareFragment extends DialogFragment implements BatchView {
     }
 
     public void onBackPressed() {
-        if(isInProgress) {
-            new NormalDialog.Builder()
-                    .title("提示")
-                    .content("停止当前任务?")
-                    .negative("取消", null)
-                    .positive("确定", v -> dismiss())
-                    .show(getActivity().getFragmentManager());
-        }else {
-            this.dismiss();
+        try {
+            if(isInProgress) {
+                new NormalDialog.Builder()
+                        .title("提示")
+                        .content("停止当前任务?")
+                        .negative("取消", null)
+                        .positive("确定", v -> dismiss())
+                        .show(getActivity().getFragmentManager());
+            }else {
+                this.dismiss();
+            }
+        }catch (NullPointerException e){
+            e.printStackTrace();
         }
     }
 
     @Override
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
-        EventBus.getDefault().post(new BatchSuccess(success, index, libName));
+        if(success!=0) {
+            EventBus.getDefault().post(new BatchSuccess(success, index, libName));
+        }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 100 && resultCode == 200) {
+        if (requestCode == 100 && resultCode == 200&&data.getStringExtra("path")!=null) {
             String path = data.getStringExtra("path");
             pathTv.setText(path);
             mFolder = new File(path);
