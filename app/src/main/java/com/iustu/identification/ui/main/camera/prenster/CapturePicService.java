@@ -83,11 +83,11 @@ public class CapturePicService extends Service {
         mBind=new CaptureBind();
         HashSet<String> libPat= DataCache.getChosenLibConfig();
         Log.d("test", "onCreate: " + libPat.toString());
-        for(String libPath:libPat){
-            SearchHandler searchHandler= (SearchHandler) HandlerFactory.createSearcher(rootPath+"/"+libPath,0,1);
-            searchHandlers.add(searchHandler);
-            libNames.add(libPath);
-        }
+//        for(String libPath:libPat){
+//            SearchHandler searchHandler= (SearchHandler) HandlerFactory.createSearcher(rootPath+"/"+libPath,0,1);
+//            searchHandlers.add(searchHandler);
+//            libNames.add(libPath);
+//        }
         EventBus.getDefault().register(this);
         capturePic();
 //        ArrayList<String> capturesPic = new ArrayList<>();       // 保存抓拍到的图片
@@ -277,8 +277,7 @@ public class CapturePicService extends Service {
             for(int i = 0; i < handlers.size(); i ++){
                 SearchResultItem searchResultItem = null;
                 ArrayList<SearchResultItem> searchResultItems=new ArrayList<>();
-                SearchHandler searchHandler = handlers.get(i);
-                searchHandler.searchFind(feat,1,searchResultItems, DataCache.getParameterConfig().getThresholdQuanity());
+                handlers.get(i).searchFind(feat,1,searchResultItems, DataCache.getParameterConfig().getThresholdQuanity());
                 if(!searchResultItems.isEmpty()) {
                     for (SearchResultItem temp : searchResultItems) {
                         if (searchResultItem == null) {
@@ -290,7 +289,7 @@ public class CapturePicService extends Service {
                     searchResultItem.score= (float) (sqrt(searchResultItem.score - 0.71) /sqrt(1.0 - 0.71)* 0.15 + 0.85);
                     SqliteUtil.insertComparedItem(libs.get(i), searchResultItem,calendar.getTime(),photoPath, cameraPrenster, originalPhoto);
                 }
-                searchHandler.destroy();
+                handlers.get(i).destroy();
             }
         }).start();
 
@@ -311,6 +310,7 @@ public class CapturePicService extends Service {
                 File file=new File(cutPathName);
                 fos=new FileOutputStream(file);
                 bitmap.compress(Bitmap.CompressFormat.JPEG,100,fos);
+                Log.d("CameraCut",cutPathName);
                 getVerify(detectResult,calendar,cutPathName,originalPhoto);
                 SqliteUtil.insertFaceCollectionItem(cutPathName, originalPhoto, calendar.getTime(),cameraPrenster);
                 fos.flush();

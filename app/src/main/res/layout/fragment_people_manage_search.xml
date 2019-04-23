@@ -40,7 +40,6 @@
             android:id="@+id/search_identity_et"
             android:textColor="@color/WHITE"
             android:scaleType="centerInside"
-            android:paddingLeft="@dimen/x36"
             android:hint="身份证号"
             android:textColorHint="@color/white"
             android:textSize="@dimen/x40"
