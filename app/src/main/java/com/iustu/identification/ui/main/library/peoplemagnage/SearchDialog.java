@@ -73,13 +73,17 @@ public class SearchDialog extends DialogFragment {
             ToastUtil.show("姓名和身份证号码至少填写一个");
             return;
         }
-        String searchString = "libName = '" + libName + "'";
+        String searchString = "";
         if (!name.equals("") && name != null)
-            searchString += " and name = '" + name + "'";
-        if (!identity.equals("") && identity != null)
-            searchString += "and identity = '" + identity + "'";
+            searchString += "name = '" + name + "'";
+        if (!identity.equals("") && identity != null) {
+            if (searchString.equals(""))
+                searchString += "identity = '" + identity +"'";
+            else
+                searchString += "and identity = '" + identity + "'";
+        }
         Log.d("search", "startSearch: " + searchString);
-        PersionPresenter.searchPerson(searchString, this);
+        PersionPresenter.searchPerson(libName, searchString, this);
     }
 
     // 将查询结果返回给Fragment

@@ -39,7 +39,7 @@ public class PersionPresenter {
      */
     public void onInitData(String libName) {
         mView.showWaitDialog("正在加载数据...");
-        Observable observable = RxUtil.getQuaryObservalbe(false, RxUtil.DB_PERSIONINFO, RxUtil.PERSIONINFO_COLUMNS, "libName = '" + libName + "'", null, null, null, "id", null);
+        Observable observable = RxUtil.getQuaryObservalbe(false, libName, RxUtil.PERSIONINFO_COLUMNS, null, null, null, null, "id", null);
         observable.subscribe(new Observer<Cursor>() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -263,9 +263,9 @@ public class PersionPresenter {
         });
     }
 
-    public static void searchPerson(String where, SearchDialog searchDialog) {
+    public static void searchPerson(String libName, String where, SearchDialog searchDialog) {
         final Disposable[] disposable = new Disposable[1];
-        Observable<Cursor> observable = RxUtil.getQuaryObservalbe(false, RxUtil.DB_PERSIONINFO, new String[]{"id"}, where, null, null, null, null, null);
+        Observable<Cursor> observable = RxUtil.getQuaryObservalbe(false, libName, new String[]{"id"}, where, null, null, null, null, null);
         observable.subscribe(new Observer<Cursor>() {
             @Override
             public void onSubscribe(Disposable d) {

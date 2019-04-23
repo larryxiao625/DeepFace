@@ -155,8 +155,13 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
     @Override
     public void onStart() {
         super.onStart();
-        Log.d("search", "onStart: ");
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
     private void onArgsError() {
@@ -261,7 +266,6 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
         if(mAdapter != null){
             mAdapter.dispose();
         }
-        EventBus.getDefault().unregister(this);
         super.onDestroyView();
     }
 

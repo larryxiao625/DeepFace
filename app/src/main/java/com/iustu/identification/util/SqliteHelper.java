@@ -1,5 +1,6 @@
 package com.iustu.identification.util;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -41,7 +42,7 @@ public class SqliteHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(SQLString.CREATE_TABLE_ACCOUNT);
         sqLiteDatabase.execSQL(SQLString.CREATE_TABLE_LIBRARY);
         sqLiteDatabase.execSQL(SQLString.CREATE_TABLE_COMPARERECORD);
-        sqLiteDatabase.execSQL(SQLString.CREATE_TABLE_PERSIONINFO);
+        //sqLiteDatabase.execSQL(SQLString.CREATE_TABLE_PERSIONINFO);
         sqLiteDatabase.execSQL(SQLString.CREATE_TABLE_FACECOLLECTIOMITEM);
         String insertUserAccount = "insert into " + SQLString.TABLE_ACCOUNT + " values(\"user\", \"123456\")";
         String insertAdminAccount = "insert into " + SQLString.TABLE_ACCOUNT + " values(\"admin\", \"123456\")";

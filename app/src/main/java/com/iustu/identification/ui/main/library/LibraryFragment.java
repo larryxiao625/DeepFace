@@ -81,7 +81,7 @@ public class LibraryFragment extends BaseFragment implements TitleBar.TitleBarLi
         mFragmentList.add(addPersonFragment);
         mFragmentList.add(peopleManageFragment);
     }
-    private static final String [] TAGS = {"librariesManage", "peopleManage", "addPerson"};
+    private static final String [] TAGS = {"librariesManage", "addPerson", "peopleManage"};
 
     @Override
     protected int postContentView() {
@@ -172,9 +172,11 @@ public class LibraryFragment extends BaseFragment implements TitleBar.TitleBarLi
         if(toId == ID_LIBRARIES_MANAGE){
             titleBar.setTitle("人脸库管理");
             titleBar.setBackEnable(false);
+            titleBar.setSearchEnable(false);
         }else if(toId == ID_ADD_PERSON){
             titleBar.setTitle("人脸信息登记");
             titleBar.setBackEnable(true);
+            titleBar.setSearchEnable(false);
         }else if(toId == ID_PEOPLE_MANAGE){
             titleBar.setTitle("人脸信息管理");
             titleBar.setBackEnable(true);
