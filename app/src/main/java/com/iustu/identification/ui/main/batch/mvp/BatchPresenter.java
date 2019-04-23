@@ -35,7 +35,7 @@ public class BatchPresenter {
         ArrayList<PersionInfo> persionInfos = StringUtil.clipPictures(pictures);
         for(PersionInfo persionInfo : persionInfos) {
             persionInfo.libName = libName;
-            persionInfo.image_id = System.currentTimeMillis() + "";
+            Log.d("search", "importBatchPictures: " + persionInfo.image_id);
         }
         Observable<RxUtil.BatchReturn> observable = RxUtil.getImportBatchPersionObservable(persionInfos);
         observable.subscribe(new Observer<RxUtil.BatchReturn>() {

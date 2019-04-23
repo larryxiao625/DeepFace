@@ -9,6 +9,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -31,6 +32,10 @@ import com.iustu.identification.util.FileCallBack;
 import com.iustu.identification.util.ImageUtils;
 import com.iustu.identification.util.PageSetHelper;
 import com.iustu.identification.util.ToastUtil;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -147,6 +152,13 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
         loadData(0);
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.d("search", "onStart: ");
+        EventBus.getDefault().register(this);
+    }
+
     private void onArgsError() {
         new SingleButtonDialog.Builder()
                 .title("提示")
@@ -249,6 +261,7 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
         if(mAdapter != null){
             mAdapter.dispose();
         }
+        EventBus.getDefault().unregister(this);
         super.onDestroyView();
     }
 
@@ -338,5 +351,21 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
                 mAdapter.notifyDataChange();
                 break;
         }
+    }
+
+    // 搜索人员
+    public void searchPerson() {
+        SearchDialog fragment = new SearchDialog();
+        Bundle bundle = new Bundle();
+        bundle.putString("libName", libName);
+        fragment.setArguments(bundle);
+        fragment.show(getActivity().getFragmentManager(), "show");
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void Event(Integer page) {
+        Log.d("search", "setTargetPage: " + page);
+        mAdapter.setPageNow(page);
+        pageSetHelper.notifyChange();
     }
 }

@@ -167,6 +167,8 @@ public class SDKUtil {
         }
         float[] floats = featureResult.getFeat(0).get(0);
         persionInfo.feature = Arrays.asList(floats).toString();
+        String image_id = System.currentTimeMillis() + "";
+        persionInfo.image_id = image_id;
         SearchDBItem searchDBItem = new SearchDBItem();
         searchDBItem.feat = floats;
         searchDBItem.image_id = persionInfo.image_id;

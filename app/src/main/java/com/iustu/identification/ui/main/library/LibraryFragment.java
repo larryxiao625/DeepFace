@@ -178,6 +178,7 @@ public class LibraryFragment extends BaseFragment implements TitleBar.TitleBarLi
         }else if(toId == ID_PEOPLE_MANAGE){
             titleBar.setTitle("人脸信息管理");
             titleBar.setBackEnable(true);
+            titleBar.setSearchEnable(true);
         }
         if(fragmentNow != ID_LIBRARIES_MANAGE){
             getChildFragmentManager()
@@ -216,7 +217,10 @@ public class LibraryFragment extends BaseFragment implements TitleBar.TitleBarLi
     // 自定义TitleBar的点击事件
     @Override
     public void onTitleButtonClick(int id) {
-        onBackPressed();
+        if (id == TitleBar.ID_BACK)
+            onBackPressed();
+        else if(id == TitleBar.ID_SEARCH)
+            peopleManageFragment.searchPerson();
     }
 
     @Override

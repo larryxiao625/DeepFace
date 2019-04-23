@@ -297,7 +297,7 @@ public class RxUtil {
                 SQLiteDatabase database = SqliteUtil.getDatabase();
                 database.beginTransaction();
                 try {
-                    database.update(RxUtil.DB_PERSIONINFO, persionInfo.toContentValues(), "libName = '" + persionInfo.libName+ "' and image_id = '" + persionInfo.image_id + "'", null);
+                    database.update(RxUtil.DB_PERSIONINFO, persionInfo.toContentValues(), "image_id = '" + persionInfo.image_id + "'", null);
                     database.setTransactionSuccessful();
                 } finally {
                     database.endTransaction();
@@ -319,7 +319,7 @@ public class RxUtil {
                 SQLiteDatabase database = SqliteUtil.getDatabase();
                 database.beginTransaction();
                 try {
-                    database.update(RxUtil.DB_PERSIONINFO, persionInfo.toContentValues(), "libName = '" + persionInfo.libName + "' and image_id = '" + persionInfo.image_id + "'", null);
+                    database.update(RxUtil.DB_PERSIONINFO, persionInfo.toContentValues(), "image_id = '" + persionInfo.image_id + "'", null);
                     database.setTransactionSuccessful();
                 } finally {
                     database.endTransaction();
@@ -342,7 +342,7 @@ public class RxUtil {
                 SQLiteDatabase database = SqliteUtil.getDatabase();
                 database.beginTransaction();
                 try {
-                    database.update(RxUtil.DB_PERSIONINFO, persionInfo.toContentValues(), "libName = '" + persionInfo.libName + "' and image_id = '" + persionInfo.image_id + "'", null);
+                    database.update(RxUtil.DB_PERSIONINFO, persionInfo.toContentValues(), "image_id = '" + persionInfo.image_id + "'", null);
                     database.setTransactionSuccessful();
                 } finally {
                     database.endTransaction();
@@ -374,13 +374,27 @@ public class RxUtil {
                 database.beginTransaction();
                 try {
                     String name = persionInfo.name;
-                    database.delete(RxUtil.DB_PERSIONINFO, "libName = '"+persionInfo.libName + "' and name = '"+name+"'", null);
+                    Cursor c = database.query(false, DB_PERSIONINFO, new String[]{"id"},"image_id = '" + persionInfo.image_id + "'", null, null, null, null, null);
+                    c.moveToNext();
+                    // 被删除的PersionInfo的id
+                    int index = c.getInt(c.getColumnIndex("id"));
+
+                    database.delete(RxUtil.DB_PERSIONINFO, "image_id = '" + persionInfo.image_id + "'", null);
                     Cursor cursor = database.query(false, RxUtil.DB_LIBRARY, LIBRARY_COLUMNS,"libName = '"+persionInfo.libName +"'", null, null, null, null, null);
                     cursor.moveToNext();
                     int count = cursor.getInt(cursor.getColumnIndex("count"));
                     ContentValues values1 = new ContentValues();
                     values1.put("count", count - 1);
                     database.update(RxUtil.DB_LIBRARY, values1, "libName = '" + persionInfo.libName + "'", null);
+
+                    // 维护自增的id字段
+                    Cursor cc = database.query(false, DB_PERSIONINFO, new String[]{"id"},"id > " + index, null, null, null, "id", null);
+                    while(cc.moveToNext()) {
+                        ContentValues v = new ContentValues();
+                        v.put("id", index);
+                        database.update(DB_PERSIONINFO, v, "id = " + (index + 1), null);
+                        index++;
+                    }
                     database.setTransactionSuccessful();
                 } finally {
                     database.endTransaction();

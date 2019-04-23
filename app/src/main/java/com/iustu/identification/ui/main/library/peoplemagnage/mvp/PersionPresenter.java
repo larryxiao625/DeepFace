@@ -5,6 +5,7 @@ import android.database.Cursor;
 
 import com.iustu.identification.entity.PersionInfo;
 import com.iustu.identification.entity.PersonInfo;
+import com.iustu.identification.ui.main.library.peoplemagnage.SearchDialog;
 import com.iustu.identification.util.RxUtil;
 import com.iustu.identification.util.SDKUtil;
 import com.iustu.identification.util.ToastUtil;
@@ -38,7 +39,7 @@ public class PersionPresenter {
      */
     public void onInitData(String libName) {
         mView.showWaitDialog("正在加载数据...");
-        Observable observable = RxUtil.getQuaryObservalbe(false, RxUtil.DB_PERSIONINFO, RxUtil.PERSIONINFO_COLUMNS, "libName = '" + libName + "'", null, null, null, null, null);
+        Observable observable = RxUtil.getQuaryObservalbe(false, RxUtil.DB_PERSIONINFO, RxUtil.PERSIONINFO_COLUMNS, "libName = '" + libName + "'", null, null, null, "id", null);
         observable.subscribe(new Observer<Cursor>() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -258,6 +259,37 @@ public class PersionPresenter {
                 mView.dissmissDialog();
                 disposable = null;
                 mView.onSuccess(PersionView.TYPE_SAVE_CHANGE, position, values);
+            }
+        });
+    }
+
+    public static void searchPerson(String where, SearchDialog searchDialog) {
+        final Disposable[] disposable = new Disposable[1];
+        Observable<Cursor> observable = RxUtil.getQuaryObservalbe(false, RxUtil.DB_PERSIONINFO, new String[]{"id"}, where, null, null, null, null, null);
+        observable.subscribe(new Observer<Cursor>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                disposable[0] = d;
+            }
+
+            @Override
+            public void onNext(Cursor cursor) {
+                if(cursor.moveToNext()) {
+                    int id = cursor.getInt(cursor.getColumnIndex("id"));
+                    searchDialog.postBack(id);
+                } else {
+                    searchDialog.postBack(-1);
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+                disposable[0].dispose();
             }
         });
     }

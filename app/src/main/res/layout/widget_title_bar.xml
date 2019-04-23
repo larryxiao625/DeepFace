@@ -27,17 +27,30 @@
         android:paddingBottom="@dimen/y15"
         android:layout_width="@dimen/y100"
         android:layout_height="match_parent" />
-    
-    <ImageView
-        android:id="@+id/title_bar_sure_iv"
-        android:visibility="gone"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:src="@drawable/sure_btn"
+
+    <FrameLayout
         android:layout_width="@dimen/x200"
         android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
         android:paddingTop="@dimen/y12"
         android:paddingBottom="@dimen/y12"
         android:paddingLeft="@dimen/x25"
-        android:paddingRight="@dimen/x25" />
+        android:paddingRight="@dimen/x25">
+
+        <ImageView
+            android:id="@+id/title_bar_sure_iv"
+            android:visibility="gone"
+            android:src="@drawable/sure_btn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+        <TextView
+            android:id="@+id/title_bar_search"
+            android:visibility="gone"
+            android:textColor="@color/GOLD"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
 </RelativeLayout>
