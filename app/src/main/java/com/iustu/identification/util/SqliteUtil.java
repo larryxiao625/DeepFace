@@ -41,6 +41,34 @@ public class SqliteUtil {
     }
 
     /**
+     * 根据人脸库名称生成创建人脸库的语句
+     * @param libName 需要创建的人脸库
+     * @return sqlitedatabase用来执行的sql语句
+     */
+    public static String generateCreateTableString(String libName) {
+        return String.format("create table %s (id integer primary key autoincrement, feature varchar, libName varchar, image_id varchar, name varchar, gender varchar not null, photoPath varchar not null, identity varchar, home varchar, other varchar, birthday varchar)", libName);
+    }
+
+    /**
+     * 修改人脸库的名字
+     * @param libName 人脸库的名字
+     * @param newName 新的名字
+     * @return sqlitedatabase用来执行的sql语句
+     */
+    public static String generateAlterTableString(String libName, String newName) {
+        return String.format("alter table %s rename to %s", libName, newName);
+    }
+
+    /**
+     * 根据人脸库名称删除数据表
+     * @param libName 需要删除的人脸库
+     * @return sqlitedatabase用来执行的sql语句
+     */
+    public static String generateDropTableString(String libName) {
+        return String.format("drop table %s", libName);
+    }
+
+    /**
      * 抓拍记录的插入操作
      * @param imgPath 图片的路径
      * @param originalPhoto 未裁剪的图片的路径
@@ -82,13 +110,14 @@ public class SqliteUtil {
 
     /**
      * 插入比对结果的方法
+     * @param libName 目标库
      * @param resultItem 对比结果,由SDK生成
      * @param time 日期
      * @param uploadPhoto 抓拍生成的图片的路径（裁剪后的）
      * @param comparePresenter
      * @param originalPhoto 抓拍生成的原图
      */
-    public static void insertComparedItem(SearchResultItem resultItem, Date time, String uploadPhoto, IPenster comparePresenter, String originalPhoto) {
+    public static void insertComparedItem(String libName, SearchResultItem resultItem, Date time, String uploadPhoto, IPenster comparePresenter, String originalPhoto) {
         CompareRecord compareRecord = new CompareRecord();
         compareRecord.setRate(resultItem.score);
         compareRecord.setTime(TextUtil.getDateString2(time));
@@ -96,7 +125,7 @@ public class SqliteUtil {
         compareRecord.setUploadPhoto(uploadPhoto);
         compareRecord.setImage_id(resultItem.image_id);
         compareRecord.setOriginalPhoto(originalPhoto);
-        Observable observable = RxUtil.getInsertCompareRecordObservable(compareRecord);
+        Observable observable = RxUtil.getInsertCompareRecordObservable(libName, compareRecord);
         observable.subscribe(new Observer() {
             @Override
             public void onSubscribe(Disposable d) {

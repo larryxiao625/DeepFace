@@ -3,9 +3,11 @@ package com.iustu.identification.util;
 import android.annotation.TargetApi;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Environment;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import com.iustu.identification.bean.FaceCollectItem;
@@ -112,12 +114,24 @@ public class RxUtil {
                 SQLiteDatabase database = SqliteUtil.getDatabase();
                 ContentValues values = library.toContentValues();
                 database.beginTransaction();
+
+                String createTable = SqliteUtil.generateCreateTableString(library.libName);
+                    // 执行建表语句
                 try {
-                    database.insert(RxUtil.DB_LIBRARY, null, values);
-                    database.setTransactionSuccessful();
-                } finally {
-                    database.endTransaction();
+                    database.execSQL(createTable);
+                } catch (SQLException e3) {
+                    e3.printStackTrace();
+                    Log.d("sql", "subscribe: " + e3.getMessage());
                 }
+                database.insert(RxUtil.DB_LIBRARY, null, values);
+
+//                Cursor cursor = database.rawQuery("select name from sqlite_master where type='table' order by name", null);
+//                while (cursor.moveToNext()) {
+//                    String  name = cursor.getString(0);
+//                    Log.d("tables", "subscribe: " + name);
+//                }
+                database.setTransactionSuccessful();
+                database.endTransaction();
                 // 然后执行的是创建人脸库的路径
                 String libName = library.libName;
                 String finalPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DeepFace/" + library.libName;
@@ -142,13 +156,13 @@ public class RxUtil {
                 // 首先要删掉数据库中的
                 SQLiteDatabase database = SqliteUtil.getDatabase();
                 database.beginTransaction();
-                try {
-                    database.delete(RxUtil.DB_LIBRARY, "libName = '" + library.libName + "'", null);
-                    database.delete(RxUtil.DB_PERSIONINFO, "libName = '" + library.libName + "'", null);
-                    database.setTransactionSuccessful();
-                } finally {
-                    database.endTransaction();
-                }
+
+                String dropTable = SqliteUtil.generateDropTableString(library.libName);
+                database.execSQL(dropTable);
+                database.delete(RxUtil.DB_LIBRARY, "libName = '" + library.libName + "'", null);
+                    //database.delete(RxUtil.DB_PERSIONINFO, "libName = '" + library.libName + "'", null);
+                database.setTransactionSuccessful();
+                database.endTransaction();
                 // 删掉对相应的文件夹
                 String finalPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DeepFace/" + library.libName;
                 FileUtil.delete(finalPath);
@@ -168,16 +182,21 @@ public class RxUtil {
             @Override
             public void subscribe(ObservableEmitter<Object> e) {
                 // 首先删除数据库中的
+                String alterTable = SqliteUtil.generateAlterTableString(old.libName, newLib.libName);
                 ContentValues values = newLib.toContentValues();
                 SQLiteDatabase database = SqliteUtil.getDatabase();
                 database.beginTransaction();
-                try {
-                    database.update(RxUtil.DB_LIBRARY, values, "libName = '" + newLib.libName + "'", null);
-                    e.onComplete();
-                    database.setTransactionSuccessful();
-                } finally {
-                    database.endTransaction();
-                }
+                // 首先修改表名称
+                database.execSQL(alterTable);
+
+                database.update(RxUtil.DB_LIBRARY, values, "libName = '" + old.libName + "'", null);
+                // 将old对应的人脸库中所有数据的libName字段改成newLib的libName
+                ContentValues v = new ContentValues();
+                v.put("libName", newLib.libName);
+                database.update(newLib.libName, v, null, null);
+                e.onComplete();
+                database.setTransactionSuccessful();
+                database.endTransaction();
 
                 // 修改文件夹的名称
                 String finalPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DeepFace/" + old.libName;
@@ -213,7 +232,7 @@ public class RxUtil {
                 database.beginTransaction();
                 try {
                     if(result != -1) {
-                        database.insert(RxUtil.DB_PERSIONINFO, null, values);
+                        database.insert(persionInfo.libName, null, values);
                         // 如果往PersionInfo中添加新数据，则需要修改Library的信息
                         Cursor cursor = database.query(false, RxUtil.DB_LIBRARY, RxUtil.LIBRARY_COLUMNS,"libName = '" + persionInfo.libName + "'", null, null, null, null, null);
                         cursor.moveToFirst();
@@ -259,7 +278,7 @@ public class RxUtil {
                 SQLiteDatabase database = SqliteUtil.getDatabase();
                 database.beginTransaction();
                 try {
-                    long r = database.insertWithOnConflict(RxUtil.DB_PERSIONINFO, null, persionInfo.toContentValues(), SQLiteDatabase.CONFLICT_IGNORE);
+                    long r = database.insertWithOnConflict(persionInfo.libName, null, persionInfo.toContentValues(), SQLiteDatabase.CONFLICT_IGNORE);
                     // 如果往PersionInfo中添加新数据，则需要修改Library的信息
                     Cursor cursor = database.query(false, RxUtil.DB_LIBRARY, RxUtil.LIBRARY_COLUMNS,"libName = '" + persionInfo.libName + "'", null, null, null, null, null);
                     cursor.moveToFirst();
@@ -297,7 +316,7 @@ public class RxUtil {
                 SQLiteDatabase database = SqliteUtil.getDatabase();
                 database.beginTransaction();
                 try {
-                    database.update(RxUtil.DB_PERSIONINFO, persionInfo.toContentValues(), "libName = '" + persionInfo.libName+ "' and image_id = '" + persionInfo.image_id + "'", null);
+                    database.update(persionInfo.libName, persionInfo.toContentValues(), "image_id = '" + persionInfo.image_id + "'", null);
                     database.setTransactionSuccessful();
                 } finally {
                     database.endTransaction();
@@ -319,7 +338,7 @@ public class RxUtil {
                 SQLiteDatabase database = SqliteUtil.getDatabase();
                 database.beginTransaction();
                 try {
-                    database.update(RxUtil.DB_PERSIONINFO, persionInfo.toContentValues(), "libName = '" + persionInfo.libName + "' and image_id = '" + persionInfo.image_id + "'", null);
+                    database.update(persionInfo.libName, persionInfo.toContentValues(), "image_id = '" + persionInfo.image_id + "'", null);
                     database.setTransactionSuccessful();
                 } finally {
                     database.endTransaction();
@@ -342,7 +361,7 @@ public class RxUtil {
                 SQLiteDatabase database = SqliteUtil.getDatabase();
                 database.beginTransaction();
                 try {
-                    database.update(RxUtil.DB_PERSIONINFO, persionInfo.toContentValues(), "libName = '" + persionInfo.libName + "' and image_id = '" + persionInfo.image_id + "'", null);
+                    database.update(persionInfo.libName, persionInfo.toContentValues(), "image_id = '" + persionInfo.image_id + "'", null);
                     database.setTransactionSuccessful();
                 } finally {
                     database.endTransaction();
@@ -374,13 +393,27 @@ public class RxUtil {
                 database.beginTransaction();
                 try {
                     String name = persionInfo.name;
-                    database.delete(RxUtil.DB_PERSIONINFO, "libName = '"+persionInfo.libName + "' and name = '"+name+"'", null);
+                    Cursor c = database.query(false, persionInfo.libName, new String[]{"id"},"image_id = '" + persionInfo.image_id + "'", null, null, null, null, null);
+                    c.moveToNext();
+                    // 被删除的PersionInfo的id
+                    int index = c.getInt(c.getColumnIndex("id"));
+
+                    database.delete(persionInfo.libName, "image_id = '" + persionInfo.image_id + "'", null);
                     Cursor cursor = database.query(false, RxUtil.DB_LIBRARY, LIBRARY_COLUMNS,"libName = '"+persionInfo.libName +"'", null, null, null, null, null);
                     cursor.moveToNext();
                     int count = cursor.getInt(cursor.getColumnIndex("count"));
                     ContentValues values1 = new ContentValues();
                     values1.put("count", count - 1);
                     database.update(RxUtil.DB_LIBRARY, values1, "libName = '" + persionInfo.libName + "'", null);
+
+                    // 维护自增的id字段
+                    Cursor cc = database.query(false, persionInfo.libName, new String[]{"id"},"id > " + index, null, null, null, "id", null);
+                    while(cc.moveToNext()) {
+                        ContentValues v = new ContentValues();
+                        v.put("id", index);
+                        database.update(persionInfo.libName, v, "id = " + (index + 1), null);
+                        index++;
+                    }
                     database.setTransactionSuccessful();
                 } finally {
                     database.endTransaction();
@@ -426,11 +459,13 @@ public class RxUtil {
 
     /**
      * 插入比对记录的时候调用
+     * @param libName 目标人脸库
      * @param compareRecord 需要插入的比对记录的对象
      * @return Observable对象
      */
-    public static Observable getInsertCompareRecordObservable(CompareRecord compareRecord) {
+    public static Observable getInsertCompareRecordObservable(String libName, CompareRecord compareRecord) {
         return Observable.create(new ObservableOnSubscribe<Object>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void subscribe(ObservableEmitter<Object> e) {
                 SQLiteDatabase database = SqliteUtil.getDatabase();
@@ -441,15 +476,15 @@ public class RxUtil {
                         cursor1.moveToNext();
                         database.delete(RxUtil.DB_COMPARERECORD, "uploadPhoto = ", new String[]{cursor1.getString(cursor1.getColumnIndex("uploadPhoto"))});
                     }
-                    Cursor cursor = database.query(RxUtil.DB_PERSIONINFO, RxUtil.PERSIONINFO_COLUMNS, "image_id = '" + compareRecord.getImage_id() + "'", null, null, null, null, null);
+                    Cursor cursor = database.query(libName, RxUtil.PERSIONINFO_COLUMNS, "image_id = '" + compareRecord.getImage_id() + "'", null, null, null, null, null);
                     while(cursor.moveToNext()) {
-                        Log.d("Camera","moveToNext");
                         compareRecord.setGender(cursor.getString(cursor.getColumnIndex("gender")));
                         compareRecord.setHome(cursor.getString(cursor.getColumnIndex("home")));
                         compareRecord.setLibName(cursor.getString(cursor.getColumnIndex("libName")));
                         compareRecord.setIdentity(cursor.getString(cursor.getColumnIndex("identity")));
                         compareRecord.setOther(cursor.getString(cursor.getColumnIndex("other")));
                         compareRecord.setPhotoPath(cursor.getString(cursor.getColumnIndex("photoPath")));
+                        Log.d("compareinsert", "subscribe: " + compareRecord.getPhotoPath());
                         compareRecord.setName(cursor.getString(cursor.getColumnIndex("name")));
                         compareRecord.setBirthday(cursor.getString(cursor.getColumnIndex("birthday")));
                         database.insert(RxUtil.DB_COMPARERECORD, null, compareRecord.toContentValues());

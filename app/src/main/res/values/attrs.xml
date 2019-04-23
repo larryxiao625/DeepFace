@@ -4,6 +4,7 @@
         <attr name="title" format="string"/>
         <attr name="backEnable" format="boolean"/>
         <attr name="sureEnable" format="boolean"/>
+        <attr name="searchEnable" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="ScaleView">

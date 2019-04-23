@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.iustu.identification.R;
+import com.iustu.identification.util.IconFontUtil;
 
 /**
  * Created by Liu Yuchuan on 2017/11/4.
@@ -19,15 +20,18 @@ import com.iustu.identification.R;
 public class TitleBar extends FrameLayout {
     private boolean backEnable;
     private boolean sureEnable;
+    private boolean searchEnable;
 
     private TitleBarListener titleBarListener;
 
     private TextView titleTv;
     private ImageView backIv;
     private ImageView sureIv;
+    private TextView searchTv;
 
     public static final int ID_BACK = 0;
     public static final int ID_SURE = 1;
+    public static final int ID_SEARCH = 2;
 
     public TitleBar(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -36,6 +40,7 @@ public class TitleBar extends FrameLayout {
         String title = ta.getString(R.styleable.TitleBar_title);
         backEnable = ta.getBoolean(R.styleable.TitleBar_backEnable, false);
         sureEnable = ta.getBoolean(R.styleable.TitleBar_sureEnable, false);
+        searchEnable = ta.getBoolean(R.styleable.TitleBar_searchEnable, false);
         ta.recycle();
         titleTv = findViewById(R.id.title_bar_title_tv);
         backIv = findViewById(R.id.title_bar_back_iv);
@@ -51,6 +56,13 @@ public class TitleBar extends FrameLayout {
         }else {
             sureIv.setVisibility(GONE);
         }
+        searchTv = findViewById(R.id.title_bar_search);
+        searchTv.setText("搜索");
+        if(searchEnable){
+            searchTv.setVisibility(VISIBLE);
+        }else {
+            searchTv.setVisibility(GONE);
+        }
         backIv.setOnClickListener(v -> {
             if(backEnable && titleBarListener != null){
                 titleBarListener.onTitleButtonClick(ID_BACK);
@@ -59,6 +71,11 @@ public class TitleBar extends FrameLayout {
         sureIv.setOnClickListener(v -> {
             if(sureEnable && titleBarListener != null){
                 titleBarListener.onTitleButtonClick(ID_SURE);
+            }
+        });
+        searchTv.setOnClickListener(v -> {
+            if (searchEnable && titleBarListener != null) {
+                titleBarListener.onTitleButtonClick(ID_SEARCH);
             }
         });
     }
@@ -90,6 +107,15 @@ public class TitleBar extends FrameLayout {
             sureIv.setVisibility(VISIBLE);
         }else {
             sureIv.setVisibility(GONE);
+        }
+    }
+
+    public void setSearchEnable(boolean searchEnable) {
+        this.searchEnable = searchEnable;
+        if (searchEnable) {
+            searchTv.setVisibility(VISIBLE);
+        } else {
+            searchTv.setVisibility(GONE);
         }
     }
 }
