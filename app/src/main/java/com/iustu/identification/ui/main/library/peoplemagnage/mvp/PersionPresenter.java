@@ -69,6 +69,7 @@ public class PersionPresenter {
             public void onError(Throwable e) {
                 e.printStackTrace();
                 mView.onFailed(e.getMessage());
+                mView.dissmissDialog();
             }
 
             @Override
@@ -284,7 +285,8 @@ public class PersionPresenter {
 
             @Override
             public void onError(Throwable e) {
-
+                searchDialog.showErrorMessage(e.getMessage());
+                e.printStackTrace();
             }
 
             @Override

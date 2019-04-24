@@ -82,7 +82,6 @@ public class CapturePicService extends Service {
         super.onCreate();
         mBind=new CaptureBind();
         HashSet<String> libPat= DataCache.getChosenLibConfig();
-        Log.d("test", "onCreate: " + libPat.toString());
 //        for(String libPath:libPat){
 //            SearchHandler searchHandler= (SearchHandler) HandlerFactory.createSearcher(rootPath+"/"+libPath,0,1);
 //            searchHandlers.add(searchHandler);
@@ -287,7 +286,8 @@ public class CapturePicService extends Service {
                         }
                     }
                     searchResultItem.score= (float) (sqrt(searchResultItem.score - 0.71) /sqrt(1.0 - 0.71)* 0.15 + 0.85);
-                    SqliteUtil.insertComparedItem(libs.get(i), searchResultItem,calendar.getTime(),photoPath, cameraPrenster, originalPhoto);
+                    if(searchResultItem.score > DataCache.getParameterConfig().getFactor())
+                        SqliteUtil.insertComparedItem(libs.get(i), searchResultItem,calendar.getTime(),photoPath, cameraPrenster, originalPhoto);
                 }
                 handlers.get(i).destroy();
             }

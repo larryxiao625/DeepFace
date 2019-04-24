@@ -102,4 +102,8 @@ public class SearchDialog extends DialogFragment {
             getDialog().dismiss();
         }
     }
+
+    public void showErrorMessage(String message) {
+        ToastUtil.showLong(message);
+    }
 }
