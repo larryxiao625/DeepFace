@@ -83,11 +83,11 @@ public class CapturePicService extends Service {
         mBind=new CaptureBind();
         HashSet<String> libPat= DataCache.getChosenLibConfig();
         Log.d("test", "onCreate: " + libPat.toString());
-        for(String libPath:libPat){
-            SearchHandler searchHandler= (SearchHandler) HandlerFactory.createSearcher(rootPath+"/"+libPath,0,1);
-            searchHandlers.add(searchHandler);
-            libNames.add(libPath);
-        }
+//        for(String libPath:libPat){
+//            SearchHandler searchHandler= (SearchHandler) HandlerFactory.createSearcher(rootPath+"/"+libPath,0,1);
+//            searchHandlers.add(searchHandler);
+//            libNames.add(libPath);
+//        }
         EventBus.getDefault().register(this);
         capturePic();
 //        ArrayList<String> capturesPic = new ArrayList<>();       // 保存抓拍到的图片
