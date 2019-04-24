@@ -4,6 +4,8 @@ import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -13,6 +15,9 @@ import android.widget.TextView;
 
 import com.iustu.identification.R;
 import com.iustu.identification.ui.base.BaseDialogFragment;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Liu Yuchuan on 2017/11/15.
@@ -65,6 +70,17 @@ public class Edit2Dialog extends BaseDialogFragment{
         contentEdit2 = view.findViewById(R.id.dialog_edit_et_2);
         editLayout1 = view.findViewById(R.id.dialog_til_1);
         editLayout2 = view.findViewById(R.id.dialog_til_2);
+        // 限制只能输入中英文
+        InputFilter inputFilter = new InputFilter() {
+            @Override
+            public CharSequence filter(CharSequence charSequence, int i, int i1, Spanned spanned, int i2, int i3) {
+                Pattern p = Pattern.compile("[a-zA-Z|\u4e00-\u9fa5]+");
+                Matcher m = p.matcher(charSequence.toString());
+                if (!m.matches()) return "";
+                return null;
+            }
+        };
+        contentEdit1.setFilters(new InputFilter[]{inputFilter});
         Bundle bundle = getArguments();
         if(bundle != null){
             title = bundle.getString(KEY_TITLE, "");
@@ -211,3 +227,4 @@ public class Edit2Dialog extends BaseDialogFragment{
         }
     }
 }
+

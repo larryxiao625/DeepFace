@@ -92,7 +92,7 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
             library1.count = library.count;
             new Edit2Dialog.Builder()
                     .title("修改人脸库")
-                    .hint1("库名称")
+                    .hint1("库名称(只能输入中英文字符)")
                     .hint2("备注")
                     .content1(library.libName)
                     .content2(library.description)
@@ -209,7 +209,7 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
     public void onNewLib(){
         new Edit2Dialog.Builder()
                 .title("新增人脸库")
-                .hint1("库名称")
+                .hint1("库名称(只能输入中英文字符)")
                 .hint2("备注")
                 .positive("提交", (v1, layout1, layout2) -> {
                     String name = layout1.getEditText().getText().toString();
