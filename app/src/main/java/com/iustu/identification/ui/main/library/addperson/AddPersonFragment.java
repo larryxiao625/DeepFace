@@ -235,7 +235,6 @@ public class AddPersonFragment extends BaseFragment implements AddPersionView {
 
     @Override
     public void onAddSuccess() {
-        ToastUtil.show("添加成功");
     }
 
     // 将所有EditText清空

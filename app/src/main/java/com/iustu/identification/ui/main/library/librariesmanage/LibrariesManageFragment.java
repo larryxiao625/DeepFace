@@ -279,7 +279,6 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
     public void onSuccess(int type, int position, ContentValues values) {
         switch (type) {
             case TYPE_ADD_LIB:
-                ToastUtil.show("添加成功");
                 break;
             case TYPE_DELETE_LIB:
                 mLibraryList.remove(position);

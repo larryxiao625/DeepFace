@@ -280,7 +280,10 @@ public class CapturePicService extends Service {
             SearchResultItem searchResultItem = null;
             ArrayList<SearchResultItem> searchResultItems=new ArrayList<>();
             searchHandlers.get(libNames.get(i)).searchFind(feat,1,searchResultItems, DataCache.getParameterConfig().getThresholdQuanity());
+<<<<<<< HEAD
             //searchHandlers.get(libNames.get(i)).destroy();
+=======
+>>>>>>> 988c35e450ae160a609b02bb28d27e48cceb765f
             if(!searchResultItems.isEmpty()) {
                 for (SearchResultItem temp : searchResultItems) {
                     if (searchResultItem == null) {

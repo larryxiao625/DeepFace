@@ -444,7 +444,7 @@ public class RxUtil {
                         cursor.moveToNext();
                         // 删除照片
                         FileUtil.delete(cursor.getString(cursor.getColumnIndex("imgUrl")));
-                        FileUtil.delete(cursor.getString(cursor.getColumnIndex("originalPhoto")));
+                        FileUtil.delete(cursor.getString(cursor.getColumnIndex("originalPath")));
                         database.delete(RxUtil.DB_FACECOLLECTIOMITEM, "id = " + cursor.getInt(cursor.getColumnIndex("id")), null);
                     }
                     database.insert(RxUtil.DB_FACECOLLECTIOMITEM, null, item.toContentValues());
