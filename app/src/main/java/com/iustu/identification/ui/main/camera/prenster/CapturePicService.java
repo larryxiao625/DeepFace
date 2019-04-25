@@ -276,26 +276,23 @@ public class CapturePicService extends Service {
 //            handlers.add(searchHandler);
 //            libs.add(libPath);
 //        }
-        new Thread(() -> {
-            for(int i = 0; i < libNames.size(); i ++){
-                SearchResultItem searchResultItem = null;
-                ArrayList<SearchResultItem> searchResultItems=new ArrayList<>();
-                searchHandlers.get(libNames.get(i)).searchFind(feat,1,searchResultItems, DataCache.getParameterConfig().getThresholdQuanity());
-                searchHandlers.get(libNames.get(i)).destroy();
-                if(!searchResultItems.isEmpty()) {
-                    for (SearchResultItem temp : searchResultItems) {
-                        if (searchResultItem == null) {
-                            searchResultItem = temp;
-                        } else if (temp.score > searchResultItem.score) {
-                            searchResultItem = temp;
-                        }
+        for(int i = 0; i < libNames.size(); i ++){
+            SearchResultItem searchResultItem = null;
+            ArrayList<SearchResultItem> searchResultItems=new ArrayList<>();
+            searchHandlers.get(libNames.get(i)).searchFind(feat,1,searchResultItems, DataCache.getParameterConfig().getThresholdQuanity());
+            if(!searchResultItems.isEmpty()) {
+                for (SearchResultItem temp : searchResultItems) {
+                    if (searchResultItem == null) {
+                        searchResultItem = temp;
+                    } else if (temp.score > searchResultItem.score) {
+                        searchResultItem = temp;
                     }
-                    searchResultItem.score= (float) (sqrt(searchResultItem.score - 0.71) /sqrt(1.0 - 0.71)* 0.15 + 0.85);
-                    if(searchResultItem.score > DataCache.getParameterConfig().getFactor())
-                        SqliteUtil.insertComparedItem(libNames.get(i), searchResultItem,calendar.getTime(),photoPath, cameraPrenster, originalPhoto);
                 }
+                searchResultItem.score= (float) (sqrt(searchResultItem.score - 0.71) /sqrt(1.0 - 0.71)* 0.15 + 0.85);
+                if(searchResultItem.score > DataCache.getParameterConfig().getFactor())
+                    SqliteUtil.insertComparedItem(libNames.get(i), searchResultItem,calendar.getTime(),photoPath, cameraPrenster, originalPhoto);
             }
-        }).start();
+        }
 
     }
 

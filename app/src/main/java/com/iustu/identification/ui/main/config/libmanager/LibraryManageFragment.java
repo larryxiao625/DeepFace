@@ -124,7 +124,6 @@ public class LibraryManageFragment extends BaseFragment implements LibManagerVie
 
     @Override
     public void onSuccess() {
-        ToastUtil.show("成功");
     }
 
     @Override

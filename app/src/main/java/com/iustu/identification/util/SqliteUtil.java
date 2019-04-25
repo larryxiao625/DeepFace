@@ -103,7 +103,6 @@ public class SqliteUtil {
             public void onComplete() {
                 Log.d("Camera","onComplete1");
                 comparePrenster.getView().updateCapture(imgPath);
-                ToastUtil.show("成功");
             }
         });
     }
@@ -146,7 +145,6 @@ public class SqliteUtil {
             @Override
             public void onComplete() {
                 comparePresenter.getView().updateSingleResult(compareRecord);
-                ToastUtil.show("成功");
             }
         });
     }
@@ -180,7 +178,6 @@ public class SqliteUtil {
 
             @Override
             public void onComplete() {
-                ToastUtil.show("修改成功");
                 if (accountName.equals("admin"))
                     DataCache.getAdmin().setPassword(accountPassword);
             }
