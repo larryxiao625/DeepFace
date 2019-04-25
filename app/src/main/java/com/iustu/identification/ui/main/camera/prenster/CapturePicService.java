@@ -251,6 +251,7 @@ public class CapturePicService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        FileUtil.deleteTemp();
         disposable.dispose();
         Log.d("Camera","onDestroy");
     }
