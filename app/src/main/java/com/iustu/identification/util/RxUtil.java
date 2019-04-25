@@ -60,10 +60,30 @@ public class RxUtil {
                 SQLiteDatabase database = SqliteUtil.getDatabase();
                 database.setTransactionSuccessful();
                 try {
+                    Cursor cursor = database.query(distinct, table, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
+                    e.onNext(cursor);
+                    e.onComplete();
+                    database.setTransactionSuccessful();
+                } finally {
+                    database.endTransaction();
+                }
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    // 获取查询数据库时的游标
+    public static Observable<Cursor> getLoginObservalbe(boolean distinct, String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit) {
+        return io.reactivex.Observable.create(new ObservableOnSubscribe<Cursor>() {
+            @Override
+            public void subscribe(ObservableEmitter e) {
+                SQLiteDatabase database = SqliteUtil.getDatabase();
+                database.setTransactionSuccessful();
+                try {
                     // 首先获取admin管理员账户
                     Cursor cursor1 = database.query(distinct, table, columns, "name = 'admin'", null, null, null, null, null);
                     e.onNext(cursor1);
-                    // 真正登录的账户信息
+
                     Cursor cursor = database.query(distinct, table, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
                     e.onNext(cursor);
                     e.onComplete();

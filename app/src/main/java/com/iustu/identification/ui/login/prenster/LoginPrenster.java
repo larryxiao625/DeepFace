@@ -103,7 +103,7 @@ public class LoginPrenster implements IPrenster{
     public void normalLogin(String username,String password) {
         getWaitProgressDialog("正在登陆");
         final Disposable[] disposable = new Disposable[1];
-        Observable observable = RxUtil.getQuaryObservalbe(false, RxUtil.DB_ACCOUNT, new String[]{"name", "password"}, "name = ?", new String[]{username}, null, null, null, null);
+        Observable observable = RxUtil.getLoginObservalbe(false, RxUtil.DB_ACCOUNT, new String[]{"name", "password"}, "name = ?", new String[]{username}, null, null, null, null);
         observable.subscribe(new Observer<Cursor>() {
             int count = 0;    // 为0代表第一次接受，获取Admin账户信息；为1代表登录的账户信息
             @Override
