@@ -30,12 +30,11 @@ import java.util.List;
 
 public class FaceCollectItemAdapter extends PageRecyclerViewAdapter<FaceCollectItemAdapter.Holder, FaceCollectItem> {
 
-    private ParameterConfig config = DataCache.getParameterConfig();
     private OnPageItemClickListener onPageItemClickListener;
 
     public FaceCollectItemAdapter(List<FaceCollectItem> dataLast) {
         super(dataLast);
-        setDisplayCountPerPage(config.getDisplayCount());
+        setDisplayCountPerPage(DataCache.getParameterConfig().getDisplayCount());
     }
 
     public interface FaceItemClickListener {

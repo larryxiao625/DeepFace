@@ -62,8 +62,6 @@ public class CapturePicService extends Service {
     Disposable disposable;
     volatile HashMap<String, SearchHandler> searchHandlers=new HashMap<>();
     ArrayList<String> libNames = new ArrayList<>();
-    HashSet<String> libPat = DataCache.getChosenLibConfig();
-    private ParameterConfig config;
 
     String tempBestPicPath;
     volatile List<Calendar> calendars=new ArrayList<>();
@@ -82,9 +80,8 @@ public class CapturePicService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        config = DataCache.getParameterConfig();
         mBind=new CaptureBind();
-        libPat= DataCache.getChosenLibConfig();
+        HashSet<String> libPat= DataCache.getChosenLibConfig();
         for(String libPath:libPat){
             if (searchHandlers.get(libPath) == null) {
                 SearchHandler searchHandler= (SearchHandler) HandlerFactory.createSearcher(rootPath+"/"+libPath,0,1);
@@ -281,7 +278,7 @@ public class CapturePicService extends Service {
         for(int i = 0; i < libNames.size(); i ++){
             SearchResultItem searchResultItem = null;
             ArrayList<SearchResultItem> searchResultItems=new ArrayList<>();
-            searchHandlers.get(libNames.get(i)).searchFind(feat,1,searchResultItems, config.getThresholdQuanity());
+            searchHandlers.get(libNames.get(i)).searchFind(feat,1,searchResultItems, DataCache.getParameterConfig().getThresholdQuanity());
             if(!searchResultItems.isEmpty()) {
                 for (SearchResultItem temp : searchResultItems) {
                     if (searchResultItem == null) {
@@ -291,7 +288,7 @@ public class CapturePicService extends Service {
                     }
                 }
                 searchResultItem.score= (float) (sqrt(searchResultItem.score - 0.71) /sqrt(1.0 - 0.71)* 0.15 + 0.85);
-                if(searchResultItem.score > config.getFactor())
+                if(searchResultItem.score > DataCache.getParameterConfig().getFactor())
                     SqliteUtil.insertComparedItem(libNames.get(i), searchResultItem,calendar.getTime(),photoPath, cameraPrenster, originalPhoto);
             }
         }

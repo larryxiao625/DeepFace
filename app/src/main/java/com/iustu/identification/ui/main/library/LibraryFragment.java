@@ -59,8 +59,6 @@ public class LibraryFragment extends BaseFragment implements TitleBar.TitleBarLi
 
     private List<BaseFragment> mFragmentList;
     private int fragmentNow;
-    private Account currentAccount;      // 表示当前的账户
-    private Account admin;
 
     public LibraryFragment() {
         mFragmentList = new ArrayList<>();
@@ -93,8 +91,6 @@ public class LibraryFragment extends BaseFragment implements TitleBar.TitleBarLi
 
     @Override
     protected void initView(@Nullable Bundle savedInstanceState, View view) {
-        currentAccount = DataCache.getAccount();
-        admin = DataCache.getAdmin();
         titleBar.setTitleBarListener(this);
         FragmentManager fragmentManager = getChildFragmentManager();
         for(int i = 0; i < 3; i++){
@@ -103,7 +99,7 @@ public class LibraryFragment extends BaseFragment implements TitleBar.TitleBarLi
                 mFragmentList.set(i, fragment);
             }
         }
-        if (currentAccount != null || currentAccount.name.equals("admin")) {
+        if (DataCache.getAccount() != null || DataCache.getAccount().name.equals("admin")) {
             confirm.setVisibility(View.GONE);
             needConfirm = false;
             switchFragment(fragmentNow);
@@ -114,7 +110,7 @@ public class LibraryFragment extends BaseFragment implements TitleBar.TitleBarLi
                 .title("获取管理员权限")
                 .hint("请输入管理员账户密码")
                 .positive("确定", (v, content, layout) -> {
-                    if (content.equals(admin.password)) {
+                    if (content.equals(DataCache.getAdmin().password)) {
                         needConfirm = false;
                         confirm.setVisibility(View.GONE);
                         switchFragment(fragmentNow);

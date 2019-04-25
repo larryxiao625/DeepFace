@@ -24,7 +24,6 @@ import io.reactivex.disposables.Disposable;
  */
 public class SqliteUtil {
     private static SQLiteDatabase database;
-    private static Account admin = DataCache.getAdmin();
 
     // 初始化操作，在Application的onCreate中调用
     public static void init() throws Exception {
@@ -180,7 +179,7 @@ public class SqliteUtil {
             @Override
             public void onComplete() {
                 if (accountName.equals("admin"))
-                    admin.setPassword(accountPassword);
+                    DataCache.getAdmin().setPassword(accountPassword);
             }
         });
     }

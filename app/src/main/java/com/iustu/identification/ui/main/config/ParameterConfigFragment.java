@@ -80,7 +80,6 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
     private List<Integer> dpiWidth=new ArrayList<>();     // 设置分辨率宽度的源
     private List<Integer> dpiHeight=new ArrayList<>();       // 设置分辨率高度的源
     private List<String> dpiStringList=new ArrayList<>();       // 设置分辨率的源
-    ParameterConfig parameterConfig;
 
     @Override
     protected int postContentView() {
@@ -99,7 +98,7 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
         saveCountList.add(1000);
         saveCountList.add(5000);
         saveCountList.add(10000);
-        parameterConfig=ParameterConfig.getFromSP();
+        config=ParameterConfig.getFromSP();
         previewSizeConfig=PreviewSizeConfig.getFramSp();
         dpiWidth=previewSizeConfig.getPreviewWidth();
         dpiHeight=previewSizeConfig.getPreviewHeight();
@@ -146,7 +145,7 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
         quantity.addTextChangedListener(new MyTextWatcher());
         displayCountTv.setText(config.getDisplayCount() + "");
         saveCountTv.setText(config.getSaveCount() + "");
-        dpiSetTv.setText(parameterConfig.getDpiWidth()+"*"+parameterConfig.getDpiHeight());
+        dpiSetTv.setText(config.getDpiWidth()+"*"+config.getDpiHeight());
         quantity.setText(config.getThresholdQuanity() + "");
     }
 

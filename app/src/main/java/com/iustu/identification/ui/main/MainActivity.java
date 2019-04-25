@@ -76,6 +76,7 @@ public class MainActivity extends BaseActivity implements BottomBar.BottomBarSel
     @Override
     protected void onStart() {
         super.onStart();
+        DataCache.init();
     }
 
     public void dismissWaiDialog(){

@@ -63,7 +63,6 @@ public class ConfigFragment extends BaseFragment {
     @Override
     public void onStop() {
         super.onStop();
-        Log.d("fragment", "onStop: ");
         DataCache.saveCache();
         SqliteUtil.updataLibrariedInUsed();
     }

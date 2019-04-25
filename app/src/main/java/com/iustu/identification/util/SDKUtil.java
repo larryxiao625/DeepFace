@@ -40,7 +40,6 @@ public class SDKUtil {
     public static final int ISTHESAME = 222;          // 添加照片的时候判断为同一个人，允许添加
     public static final int NOTTHESAME = 225;         // 添加照片的时候判断为不同人，不允许添加
     public static final int HASADDED = 221;        // 在添加人脸的时候表示人脸库中已经含有该人脸
-    private static ParameterConfig config = DataCache.getParameterConfig();
     private static Activity context;
     private static DetectHandler detectHandler;            // 人脸检测句柄
     private static VerifyHandler verifyHandler;            // 特征提取句柄
@@ -108,7 +107,7 @@ public class SDKUtil {
     }
 
     public static DetectHandler getDetectHandler() {
-        detectHandler.setArgument(config.gengrateArguments());
+        detectHandler.setArgument(DataCache.getParameterConfig().gengrateArguments());
         return detectHandler;
     }
 
