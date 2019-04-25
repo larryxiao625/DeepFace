@@ -14,6 +14,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.iustu.identification.R;
 import com.iustu.identification.bean.FaceCollectItem;
+import com.iustu.identification.bean.ParameterConfig;
 import com.iustu.identification.ui.base.OnPageItemClickListener;
 import com.iustu.identification.ui.base.PageRecyclerViewAdapter;
 import com.iustu.identification.util.DataCache;
@@ -29,11 +30,12 @@ import java.util.List;
 
 public class FaceCollectItemAdapter extends PageRecyclerViewAdapter<FaceCollectItemAdapter.Holder, FaceCollectItem> {
 
+    private ParameterConfig config = DataCache.getParameterConfig();
     private OnPageItemClickListener onPageItemClickListener;
 
     public FaceCollectItemAdapter(List<FaceCollectItem> dataLast) {
         super(dataLast);
-        setDisplayCountPerPage(DataCache.getParameterConfig().getDisplayCount());
+        setDisplayCountPerPage(config.getDisplayCount());
     }
 
     public interface FaceItemClickListener {

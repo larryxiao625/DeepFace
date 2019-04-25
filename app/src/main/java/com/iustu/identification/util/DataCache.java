@@ -52,7 +52,6 @@ public class DataCache {
 
 
     public static HashSet<String> getChosenLibConfig() {
-        Log.d("ChosenLibOriginal1", String.valueOf(chosenLibConfig));
         return chosenLibConfig;
     }
 

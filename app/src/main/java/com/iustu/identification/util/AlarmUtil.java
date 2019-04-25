@@ -21,6 +21,7 @@ public class AlarmUtil {
     private static Vibrator vibrator;
     private static SoundPool soundPool;
     private static HashMap<Integer, Integer> soundPoolMap;
+    private static ParameterConfig config = DataCache.getParameterConfig();
     public static void init (Context con) {
         soundPoolMap = new HashMap<Integer, Integer>();
         context = con;
@@ -29,7 +30,6 @@ public class AlarmUtil {
     }
 
     public static void alarm() {
-        ParameterConfig config = DataCache.getParameterConfig();
         int type = config.getAlarmType();
         switch (type) {
             case ParameterConfig.ONLYMP3:

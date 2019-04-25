@@ -11,6 +11,7 @@ import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import com.iustu.identification.bean.FaceCollectItem;
+import com.iustu.identification.bean.ParameterConfig;
 import com.iustu.identification.entity.Account;
 import com.iustu.identification.entity.CompareRecord;
 import com.iustu.identification.entity.Library;
@@ -37,6 +38,7 @@ import io.reactivex.schedulers.Schedulers;
  * 用来生成Observable对象的工具类
  */
 public class RxUtil {
+    private static ParameterConfig config = DataCache.getParameterConfig();
     public static final String DB_ACCOUNT = "Account";          // 对应Account数据表
     public static final String DB_LIBRARY = "Library";          // 对应Library数据表
     public static final String DB_PERSIONINFO = "PersonInfo";   // 对应PersionInfo数据表
@@ -440,7 +442,7 @@ public class RxUtil {
                 database.beginTransaction();
                 try {
                     Cursor cursor = database.query(false, RxUtil.DB_FACECOLLECTIOMITEM, FACECOLLECTION_COLUMNS, null, null, null, null, null, null, null);
-                    if (cursor.getCount() == DataCache.getParameterConfig().getSaveCount()) {
+                    if (cursor.getCount() == config.getSaveCount()) {
                         cursor.moveToNext();
                         // 删除照片
                         FileUtil.delete(cursor.getString(cursor.getColumnIndex("imgUrl")));
@@ -472,7 +474,7 @@ public class RxUtil {
                 database.beginTransaction();
                 try {
                     Cursor cursor1 = database.query(false, RxUtil.DB_COMPARERECORD, COMPARE_COLUMNS, null, null, null, null, null, null, null);
-                    if (cursor1.getCount() == DataCache.getParameterConfig().getSaveCount()) {
+                    if (cursor1.getCount() == config.getSaveCount()) {
                         cursor1.moveToNext();
                         database.delete(RxUtil.DB_COMPARERECORD, "uploadPhoto = ", new String[]{cursor1.getString(cursor1.getColumnIndex("uploadPhoto"))});
                     }

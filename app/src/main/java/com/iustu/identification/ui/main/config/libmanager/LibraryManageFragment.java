@@ -44,6 +44,7 @@ public class LibraryManageFragment extends BaseFragment implements LibManagerVie
     private PageSetHelper pageSetHelper;
 
     private HashSet<String> mChooseList = DataCache.getChosenLibConfig();     // 用来记录当前哪些库正在使用中，里面保存的是libName
+    private HashSet<String> mChangeList = DataCache.getChangedLib();
     private List<Library> mLibraryList;
 
     @Override
@@ -67,12 +68,12 @@ public class LibraryManageFragment extends BaseFragment implements LibManagerVie
             Library library = mLibraryList.get(index);
             if(library.inUsed == 1){
                 library.inUsed = 0;
-                DataCache.getChangedLib().add(library.libName);
+                mChangeList.add(library.libName);
                 mChooseList.remove(library.libName);
             }else {
                 library.inUsed = 1;
                 mChooseList.add(library.libName);
-                DataCache.getChangedLib().remove(library.libName);
+                mChangeList.remove(library.libName);
             }
             mAdapter.notifyItemChanged(position);
         });
