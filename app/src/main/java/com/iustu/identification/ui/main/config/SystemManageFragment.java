@@ -1,7 +1,5 @@
 package com.iustu.identification.ui.main.config;
 
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.DisplayMetrics;
@@ -20,13 +18,10 @@ import com.iustu.identification.ui.widget.dialog.EditDialog;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.util.DataCache;
 import com.iustu.identification.util.SqliteUtil;
-import com.tencent.bugly.beta.Beta;
 
-import org.litepal.crud.DataSupport;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.HttpUrl;
 
 /**
  * Created by Liu Yuchuan on 2017/11/5.
@@ -91,10 +86,10 @@ public class SystemManageFragment extends BaseFragment{
                 */
     }
 
-    @OnClick(R.id.tv_version)
-    public void onCheckUpdate(){
-        Beta.checkUpgrade(true, false);
-    }
+//    @OnClick(R.id.tv_version)
+//    public void onCheckUpdate(){
+//        Beta.checkUpgrade(true, false);
+//    }
 
     @OnClick(R.id.tv_modify_password)
     public void modifyPassword () {

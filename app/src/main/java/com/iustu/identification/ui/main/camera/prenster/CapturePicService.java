@@ -35,6 +35,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -59,7 +60,7 @@ public class CapturePicService extends Service {
     Calendar tempBestCalender;
     CaptureBind mBind;
     Disposable disposable;
-    ArrayList<SearchHandler> searchHandlers=new ArrayList<>();
+    volatile HashMap<String, SearchHandler> searchHandlers=new HashMap<>();
     ArrayList<String> libNames = new ArrayList<>();
     HashSet<String> libPat = DataCache.getChosenLibConfig();
 
@@ -82,11 +83,13 @@ public class CapturePicService extends Service {
         super.onCreate();
         mBind=new CaptureBind();
         HashSet<String> libPat= DataCache.getChosenLibConfig();
-//        for(String libPath:libPat){
-//            SearchHandler searchHandler= (SearchHandler) HandlerFactory.createSearcher(rootPath+"/"+libPath,0,1);
-//            searchHandlers.add(searchHandler);
-//            libNames.add(libPath);
-//        }
+        for(String libPath:libPat){
+            if (searchHandlers.get(libPath) == null) {
+                SearchHandler searchHandler= (SearchHandler) HandlerFactory.createSearcher(rootPath+"/"+libPath,0,1);
+                searchHandlers.put(libPath, searchHandler);
+            }
+            libNames.add(libPath);
+        }
         EventBus.getDefault().register(this);
         capturePic();
 //        ArrayList<String> capturesPic = new ArrayList<>();       // 保存抓拍到的图片
@@ -265,18 +268,19 @@ public class CapturePicService extends Service {
             }
     }
     public void searchFace(float[] feat,Calendar calendar,String photoPath,String originalPhoto){
-        ArrayList<SearchHandler> handlers = new ArrayList<>();
-        ArrayList<String> libs = new ArrayList<>();
-        for(String libPath:libPat){
-            SearchHandler searchHandler= (SearchHandler) HandlerFactory.createSearcher(rootPath+"/"+libPath,0,1);
-            handlers.add(searchHandler);
-            libs.add(libPath);
-        }
+//        ArrayList<SearchHandler> handlers = new ArrayList<>();
+//        ArrayList<String> libs = new ArrayList<>();
+//        for(String libPath:libPat){
+//            SearchHandler searchHandler= (SearchHandler) HandlerFactory.createSearcher(rootPath+"/"+libPath,0,1);
+//            handlers.add(searchHandler);
+//            libs.add(libPath);
+//        }
         new Thread(() -> {
-            for(int i = 0; i < handlers.size(); i ++){
+            for(int i = 0; i < libNames.size(); i ++){
                 SearchResultItem searchResultItem = null;
                 ArrayList<SearchResultItem> searchResultItems=new ArrayList<>();
-                handlers.get(i).searchFind(feat,1,searchResultItems, DataCache.getParameterConfig().getThresholdQuanity());
+                searchHandlers.get(libNames.get(i)).searchFind(feat,1,searchResultItems, DataCache.getParameterConfig().getThresholdQuanity());
+                searchHandlers.get(libNames.get(i)).destroy();
                 if(!searchResultItems.isEmpty()) {
                     for (SearchResultItem temp : searchResultItems) {
                         if (searchResultItem == null) {
@@ -287,9 +291,8 @@ public class CapturePicService extends Service {
                     }
                     searchResultItem.score= (float) (sqrt(searchResultItem.score - 0.71) /sqrt(1.0 - 0.71)* 0.15 + 0.85);
                     if(searchResultItem.score > DataCache.getParameterConfig().getFactor())
-                        SqliteUtil.insertComparedItem(libs.get(i), searchResultItem,calendar.getTime(),photoPath, cameraPrenster, originalPhoto);
+                        SqliteUtil.insertComparedItem(libNames.get(i), searchResultItem,calendar.getTime(),photoPath, cameraPrenster, originalPhoto);
                 }
-                handlers.get(i).destroy();
             }
         }).start();
 
