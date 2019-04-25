@@ -22,7 +22,6 @@ public class DataCache {
 
     // 该方法需要在登录成功时的回调中调用
     public static void initCache(Account maccount) {
-        admin = Account.getFromSP();
         account = maccount;
         init();
     }
@@ -34,6 +33,7 @@ public class DataCache {
         chosenLibConfig.addAll(tempChosenHashSet);
         previewSizeConfig= PreviewSizeConfig.getFramSp();
         previewSizeConfig.save();
+        admin = Account.getFromSP();
     }
 
     // 该方法在App退出前调用，用来将内容写回
@@ -41,6 +41,7 @@ public class DataCache {
         previewSizeConfig.save();
         parameterConfig.save();
         admin.save();
+        account.save();
         MSP.getInstance(MSP.SP_CHOSEN).edit().putStringSet(MSP.SP_CHOSEN, chosenLibConfig).apply();
     }
 
@@ -51,6 +52,16 @@ public class DataCache {
 
     public static Account getAccount() {
         return account;
+    }
+
+    public static void setAccount(Account a) {
+        account = a;
+        account.save();
+    }
+
+    public static void setAdmin(Account a) {
+        admin = a;
+        admin.save();
     }
 
 

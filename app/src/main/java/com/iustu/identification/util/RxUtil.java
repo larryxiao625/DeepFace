@@ -58,9 +58,19 @@ public class RxUtil {
             @Override
             public void subscribe(ObservableEmitter e) {
                 SQLiteDatabase database = SqliteUtil.getDatabase();
-                Cursor cursor = database.query(distinct, table, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
-                e.onNext(cursor);
-                e.onComplete();
+                database.setTransactionSuccessful();
+                try {
+                    // 首先获取admin管理员账户
+                    Cursor cursor1 = database.query(distinct, table, columns, "name = 'admin'", null, null, null, null, null);
+                    e.onNext(cursor1);
+                    // 真正登录的账户信息
+                    Cursor cursor = database.query(distinct, table, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
+                    e.onNext(cursor);
+                    e.onComplete();
+                    database.setTransactionSuccessful();
+                } finally {
+                    database.endTransaction();
+                }
             }
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());

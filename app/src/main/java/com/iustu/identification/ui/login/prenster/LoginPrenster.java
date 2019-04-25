@@ -18,6 +18,7 @@ import com.iustu.identification.util.MSP;
 import com.iustu.identification.util.RxUtil;
 import com.iustu.identification.util.SDKUtil;
 import com.iustu.identification.util.SqliteHelper;
+import com.iustu.identification.util.ToastUtil;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -104,6 +105,7 @@ public class LoginPrenster implements IPrenster{
         final Disposable[] disposable = new Disposable[1];
         Observable observable = RxUtil.getQuaryObservalbe(false, RxUtil.DB_ACCOUNT, new String[]{"name", "password"}, "name = ?", new String[]{username}, null, null, null, null);
         observable.subscribe(new Observer<Cursor>() {
+            int count = 0;    // 为0代表第一次接受，获取Admin账户信息；为1代表登录的账户信息
             @Override
             public void onSubscribe(Disposable d) {
                 disposable[0] = d;
@@ -111,7 +113,15 @@ public class LoginPrenster implements IPrenster{
 
             @Override
             public void onNext(Cursor o) {
-                waitProgressDialog.dismiss();
+                // 首先获取admin账户
+                if (count == 0) {
+                    count ++;
+                    String name = o.getString(o.getColumnIndex("name"));
+                    String pass = o.getString(o.getColumnIndex("password"));
+                    Account admin = new Account(name, pass);
+                    DataCache.setAdmin(admin);
+                    return;
+                }
                 // 说明没有改账户
                 if (o.getCount() == 0){
                     getLoginFailDialog("无此账户");
@@ -121,7 +131,8 @@ public class LoginPrenster implements IPrenster{
                     if (o.getString(o.getColumnIndex("password")).equals(password)) {
                         LibManager.loadData();
                         Account account = new Account(username, password);
-                        DataCache.initCache(account);
+                        DataCache.init();
+                        DataCache.setAccount(account);
                         return;
                     }
                 }
@@ -132,6 +143,7 @@ public class LoginPrenster implements IPrenster{
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
+                ToastUtil.showLong(e.getMessage());
                 disposable[0].dispose();
             }
 
