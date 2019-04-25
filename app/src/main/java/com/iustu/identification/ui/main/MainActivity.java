@@ -176,7 +176,6 @@ public class MainActivity extends BaseActivity implements BottomBar.BottomBarSel
     protected void onDestroy() {
         isActivityAlive = false;
         LibManager.dispose();
-        AlarmUtil.destory();
         super.onDestroy();
 //        stopService(new Intent(MainActivity.this, CapturePicService.class));
     }

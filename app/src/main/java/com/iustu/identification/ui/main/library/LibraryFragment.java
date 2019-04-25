@@ -98,7 +98,7 @@ public class LibraryFragment extends BaseFragment implements TitleBar.TitleBarLi
                 mFragmentList.set(i, fragment);
             }
         }
-        if (DataCache.getAccount().name.equals("admin")) {
+        if (DataCache.getAccount() != null && DataCache.getAccount().name.equals("admin")) {
             confirm.setVisibility(View.GONE);
             needConfirm = false;
             switchFragment(fragmentNow);
