@@ -33,15 +33,16 @@ public class DataCache {
         chosenLibConfig.addAll(tempChosenHashSet);
         previewSizeConfig= PreviewSizeConfig.getFramSp();
         previewSizeConfig.save();
-        admin = Account.getFromSP();
+        admin = Account.getFromSP(MSP.SP_ADMIN);
+        account = Account.getFromSP(MSP.SP_ACCOUNT);
     }
 
     // 该方法在App退出前调用，用来将内容写回
     public static void saveCache() {
         previewSizeConfig.save();
         parameterConfig.save();
-        admin.save();
-        account.save();
+        admin.save(MSP.SP_ADMIN);
+        account.save(MSP.SP_ACCOUNT);
         MSP.getInstance(MSP.SP_CHOSEN).edit().putStringSet(MSP.SP_CHOSEN, chosenLibConfig).apply();
     }
 
@@ -56,12 +57,12 @@ public class DataCache {
 
     public static void setAccount(Account a) {
         account = a;
-        account.save();
+        account.save(MSP.SP_ACCOUNT);
     }
 
     public static void setAdmin(Account a) {
         admin = a;
-        admin.save();
+        admin.save(MSP.SP_ADMIN);
     }
 
 

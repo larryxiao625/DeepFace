@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -100,6 +101,7 @@ public class LibraryFragment extends BaseFragment implements TitleBar.TitleBarLi
             }
         }
         if (DataCache.getAccount() != null || DataCache.getAccount().name.equals("admin")) {
+            Log.d("CameraTest","CameraTest");
             confirm.setVisibility(View.GONE);
             needConfirm = false;
             switchFragment(fragmentNow);

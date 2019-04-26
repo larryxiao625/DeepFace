@@ -48,13 +48,27 @@ public class Account {
     }
 
     // 将ParameterConfig对象转化为json字符串之后保存到SharePreference中
-    public void save() {
+    public void save(String type) {
         String jsonString = this.toJsonString();
-        MSP.getInstance(MSP.SP_ACCOUNT).edit().putString(MSP.SP_ACCOUNT, jsonString).commit();
+        switch (type) {
+            case MSP.SP_ADMIN:
+                MSP.getInstance(MSP.SP_ADMIN).edit().putString(MSP.SP_ADMIN, jsonString).commit();
+                return;
+            case MSP.SP_ACCOUNT:
+                MSP.getInstance(MSP.SP_ACCOUNT).edit().putString(MSP.SP_ACCOUNT, jsonString).commit();
+                return;
+        }
     }
 
     // 从json中解析对象并返回
-    public static Account getFromSP() {
-        return fromJsonString(MSP.getInstance(MSP.SP_ACCOUNT).getString(MSP.SP_ACCOUNT, new Account().toJsonString()));
+    public static Account getFromSP(String type) {
+        Account account = null;
+        switch (type) {
+            case MSP.SP_ADMIN:
+                account = fromJsonString(MSP.getInstance(MSP.SP_ADMIN).getString(MSP.SP_ADMIN, new Account("admin", "123456").toJsonString()));
+            case MSP.SP_ACCOUNT:
+                account = fromJsonString(MSP.getInstance(MSP.SP_ACCOUNT).getString(MSP.SP_ACCOUNT, new Account("user", "123456").toJsonString()));
+        }
+        return account;
     }
 }
