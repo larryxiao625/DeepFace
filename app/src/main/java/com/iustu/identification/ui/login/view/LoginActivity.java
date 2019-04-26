@@ -43,7 +43,7 @@ public class LoginActivity extends BaseActivity implements LibManager.OnLibLoadL
 
     private int fragmentNow;
 
-    private WaitProgressDialog waitProgressDialog;
+    private WaitProgressDialog viewWaitProgress;
 
     LoginPrenster loginPrenster;
     @Override
@@ -107,16 +107,16 @@ public class LoginActivity extends BaseActivity implements LibManager.OnLibLoadL
 
     @Override
     public void onStartLoad() {
-        if(waitProgressDialog != null){
-            waitProgressDialog.dismiss();
+        if(viewWaitProgress != null){
+            viewWaitProgress.dismiss();
         }
         loginPrenster.getWaitProgressDialog("正在初始化数据");
     }
 
 
     public void dismiss(){
-        if(waitProgressDialog != null){
-            waitProgressDialog.dismiss();
+        if(viewWaitProgress != null){
+            viewWaitProgress.dismiss();
         }
     }
 
@@ -128,8 +128,8 @@ public class LoginActivity extends BaseActivity implements LibManager.OnLibLoadL
 
     @Override
     public void onFailLoad() {
-        if(waitProgressDialog != null){
-            waitProgressDialog.dismiss();
+        if(viewWaitProgress != null){
+            viewWaitProgress.dismiss();
         }
         loginPrenster.getDataLoadFail();
     }
@@ -159,6 +159,7 @@ public class LoginActivity extends BaseActivity implements LibManager.OnLibLoadL
         @Override
         public void showWaitDialog(WaitProgressDialog waitProgressDialog) {
             waitProgressDialog.show(getFragmentManager(),"waitDialog");
+            viewWaitProgress=waitProgressDialog;
         }
 
         @Override
@@ -169,6 +170,13 @@ public class LoginActivity extends BaseActivity implements LibManager.OnLibLoadL
         @Override
         public void loginSuccessfully() {
 
+        }
+
+        @Override
+        public void dismissDialog() {
+            if(viewWaitProgress!=null){
+                viewWaitProgress.dismiss();
+            }
         }
     };
 }

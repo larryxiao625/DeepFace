@@ -163,7 +163,6 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
             if(!itemCompareRecyclerView.canScrollVertically(-1)) {
                 itemCompareRecyclerView.smoothScrollToPosition(0);
             }
-            AlarmUtil.alarm();
         }
 
         @Override

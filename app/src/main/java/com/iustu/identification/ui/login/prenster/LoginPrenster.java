@@ -116,13 +116,12 @@ public class LoginPrenster implements IPrenster{
                 // 首先获取admin账户
                 if (count == 0) {
                     count ++;
-                    while (o.moveToNext()) {
-                        String name = o.getString(o.getColumnIndex("name"));
-                        String pass = o.getString(o.getColumnIndex("password"));
-                        Account admin = new Account(name, pass);
-                        DataCache.setAdmin(admin);
-                    }
-                    return;
+                    o.moveToNext();
+                    String name = o.getString(o.getColumnIndex("name"));
+                    String pass = o.getString(o.getColumnIndex("password"));
+                    Account admin = new Account(name, pass);
+                    DataCache.setAdmin(admin);
+                    o.moveToPrevious();
                 }
                 // 说明没有改账户
                 if (o.getCount() == 0){
@@ -139,6 +138,7 @@ public class LoginPrenster implements IPrenster{
                     }
                 }
                 getLoginFailDialog("用户名或密码错误");
+                iVew.dismissDialog();
                 return;
             }
 
