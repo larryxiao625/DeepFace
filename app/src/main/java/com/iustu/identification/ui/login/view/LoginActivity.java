@@ -49,7 +49,6 @@ public class LoginActivity extends BaseActivity implements LibManager.OnLibLoadL
     @Override
     protected void initView(@Nullable Bundle savedInstanceState) {
         SDKUtil.initSdk(this);
-        AlarmUtil.init(this);
         FileUtil.createAppDirectory();
         LibManager.setOnLoadListener(this);
         loginPrenster=LoginPrenster.getInstance();

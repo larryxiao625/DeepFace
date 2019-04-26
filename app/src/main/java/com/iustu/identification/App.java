@@ -35,11 +35,6 @@ public class App extends LitePalApplication{
         //CrashReport.testJavaCrash();
         //Bugly.init(getApplicationContext(), "9c3bdbe293", false );
         SqliteHelper.init(getApplicationContext());
-        try {
-            SqliteUtil.init();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         Stetho.initializeWithDefaults(this);
         context = this;
         keepAlive();
