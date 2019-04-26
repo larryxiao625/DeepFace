@@ -58,7 +58,7 @@ public class RxUtil {
             @Override
             public void subscribe(ObservableEmitter e) {
                 SQLiteDatabase database = SqliteUtil.getDatabase();
-                database.setTransactionSuccessful();
+                database.beginTransaction();
                 try {
                     Cursor cursor = database.query(distinct, table, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
                     e.onNext(cursor);
@@ -78,7 +78,7 @@ public class RxUtil {
             @Override
             public void subscribe(ObservableEmitter e) {
                 SQLiteDatabase database = SqliteUtil.getDatabase();
-                database.setTransactionSuccessful();
+                database.beginTransaction();
                 try {
                     // 首先获取admin管理员账户
                     Cursor cursor1 = database.query(distinct, table, columns, "name = 'admin'", null, null, null, null, null);

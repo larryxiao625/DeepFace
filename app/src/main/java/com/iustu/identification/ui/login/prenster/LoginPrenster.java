@@ -116,10 +116,12 @@ public class LoginPrenster implements IPrenster{
                 // 首先获取admin账户
                 if (count == 0) {
                     count ++;
-                    String name = o.getString(o.getColumnIndex("name"));
-                    String pass = o.getString(o.getColumnIndex("password"));
-                    Account admin = new Account(name, pass);
-                    DataCache.setAdmin(admin);
+                    while (o.moveToNext()) {
+                        String name = o.getString(o.getColumnIndex("name"));
+                        String pass = o.getString(o.getColumnIndex("password"));
+                        Account admin = new Account(name, pass);
+                        DataCache.setAdmin(admin);
+                    }
                     return;
                 }
                 // 说明没有改账户
