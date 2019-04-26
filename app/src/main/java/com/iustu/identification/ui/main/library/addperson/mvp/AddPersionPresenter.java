@@ -94,7 +94,9 @@ public class AddPersionPresenter {
             featureResult=new FeatureResult();
             VerifyHandler verifyHandler = (VerifyHandler) HandlerFactory.createVerify("/sdcard/feature-M1-Framework1-cpu-8289.model");
             verifyHandler.initial();
-            return verifyHandler.extractFeature(detectResult,featureResult);
+            int result = verifyHandler.extractFeature(detectResult,featureResult);
+            verifyHandler.destroy();
+            return result;
         }else if(num==0){
             return NO_FACE;
         }else {

@@ -259,7 +259,6 @@ public class CapturePicService extends Service {
         ArrayList<DetectResult> temp=new ArrayList<>();
         temp.add(detectResult);
             FeatureResult featureResult=SDKUtil.featureResult(temp);
-            Log.d("CameraVerify", String.valueOf(featureResult.getAllFeats().size()));
             if(featureResult.getAllFeats().size()!=0){
                 for(ArrayList<float[]> arrayList:featureResult.getAllFeats()){
                     for(float[] floats:arrayList){
