@@ -48,9 +48,9 @@ public class App extends LitePalApplication{
 
     @Override
     public void onTerminate() {
-        super.onTerminate();
         SDKUtil.destory();
         AlarmUtil.destory();
+        super.onTerminate();
     }
 
     public static Context getContext(){

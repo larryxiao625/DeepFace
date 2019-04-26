@@ -111,7 +111,7 @@ public class SDKUtil {
         return detectHandler;
     }
 
-    public static VerifyHandler getVerifyHandler() {
+    private static VerifyHandler getVerifyHandler() {
         return verifyHandler;
     }
 
@@ -160,6 +160,8 @@ public class SDKUtil {
         if (result <= 0)
             return false;
         FeatureResult featureResult=new FeatureResult();
+        VerifyHandler verifyHandler = (VerifyHandler) HandlerFactory.createVerify("/sdcard/feature-M1-Framework1-cpu-8289.model");
+        verifyHandler.initial();
         result = verifyHandler.extractFeature(detectResult,featureResult);
         if (result == -1)
             return false;
@@ -218,7 +220,9 @@ public class SDKUtil {
      */
     public static FeatureResult featureResult(ArrayList<DetectResult> detectResult){
             FeatureResult featureResult=new FeatureResult();
-            SDKUtil.getVerifyHandler().extractFeatureBatch(detectResult,featureResult);
+            VerifyHandler verifyHandler = (VerifyHandler) HandlerFactory.createVerify("/sdcard/feature-M1-Framework1-cpu-8289.model");
+            verifyHandler.initial();
+            verifyHandler.extractFeatureBatch(detectResult,featureResult);
             return featureResult;
     }
 
