@@ -92,10 +92,7 @@ public class AddPersionPresenter {
         int num=SDKUtil.getDetectHandler().faceDetector(picPath,detectResult);
         if(num==1){
             featureResult=new FeatureResult();
-            VerifyHandler verifyHandler = (VerifyHandler) HandlerFactory.createVerify("/sdcard/feature-M1-Framework1-cpu-8289.model");
-            verifyHandler.initial();
-            int result = verifyHandler.extractFeature(detectResult,featureResult);
-            verifyHandler.destroy();
+            int result = SDKUtil.getVerifyHandler().extractFeature(detectResult,featureResult);
             return result;
         }else if(num==0){
             return NO_FACE;
