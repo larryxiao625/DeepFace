@@ -476,7 +476,7 @@ public class RxUtil {
                         // 删除照片
                         FileUtil.delete(cursor.getString(cursor.getColumnIndex("imgUrl")));
                         FileUtil.delete(cursor.getString(cursor.getColumnIndex("originalPath")));
-                        database.delete(RxUtil.DB_FACECOLLECTIOMITEM, "id = " + cursor.getInt(cursor.getColumnIndex("id")), null);
+                        database.delete(RxUtil.DB_FACECOLLECTIOMITEM, "id = ?" + cursor.getInt(cursor.getColumnIndex("id")), null);
                     }
                     database.insert(RxUtil.DB_FACECOLLECTIOMITEM, null, item.toContentValues());
                     database.setTransactionSuccessful();
@@ -505,7 +505,7 @@ public class RxUtil {
                     Cursor cursor1 = database.query(false, RxUtil.DB_COMPARERECORD, COMPARE_COLUMNS, null, null, null, null, null, null, null);
                     if (cursor1.getCount() == DataCache.getParameterConfig().getSaveCount()) {
                         cursor1.moveToNext();
-                        database.delete(RxUtil.DB_COMPARERECORD, "uploadPhoto = ", new String[]{cursor1.getString(cursor1.getColumnIndex("uploadPhoto"))});
+                        database.delete(RxUtil.DB_COMPARERECORD, "uploadPhoto = ?", new String[]{cursor1.getString(cursor1.getColumnIndex("uploadPhoto"))});
                     }
                     Cursor cursor = database.query(libName, RxUtil.PERSIONINFO_COLUMNS, "image_id = '" + compareRecord.getImage_id() + "'", null, null, null, null, null);
                     while(cursor.moveToNext()) {
@@ -515,7 +515,6 @@ public class RxUtil {
                         compareRecord.setIdentity(cursor.getString(cursor.getColumnIndex("identity")));
                         compareRecord.setOther(cursor.getString(cursor.getColumnIndex("other")));
                         compareRecord.setPhotoPath(cursor.getString(cursor.getColumnIndex("photoPath")));
-                        Log.d("compareinsert", "subscribe: " + compareRecord.getPhotoPath());
                         compareRecord.setName(cursor.getString(cursor.getColumnIndex("name")));
                         compareRecord.setBirthday(cursor.getString(cursor.getColumnIndex("birthday")));
                         database.insert(RxUtil.DB_COMPARERECORD, null, compareRecord.toContentValues());

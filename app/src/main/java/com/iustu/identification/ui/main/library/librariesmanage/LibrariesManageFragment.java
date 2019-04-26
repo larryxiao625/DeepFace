@@ -127,14 +127,14 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
         pageSetHelper = new PageSetHelper(recyclerView, pageTv);
         IconFontUtil.getDefault().setText(newIconTv, IconFontUtil.ADD);
         // 初始化数据
-        // initData();
+        initData();
     }
 
 
     @Override
     public void onShow() {
-        mLibraryList.clear();
-        initData();
+//        mLibraryList.clear();
+//        initData();
         if(mAdapter != null) {
             mAdapter.notifyDataChange();
         }
@@ -239,6 +239,7 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
 
     // 初始加载时进行数据初始化
     public void initData() {
+        mLibraryList.clear();
         // presenter
         presenter.onInitData();
     }
