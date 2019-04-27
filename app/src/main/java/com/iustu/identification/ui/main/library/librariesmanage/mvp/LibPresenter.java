@@ -70,6 +70,7 @@ public class LibPresenter {
                     data.add(library);
                 }
                 mView.bindData(data);
+                cursor.close();
             }
 
             @Override
@@ -155,6 +156,7 @@ public class LibPresenter {
                         chosenLib.remove(library.libName);
                     }
                 }
+                o.close();
             }
 
             @Override

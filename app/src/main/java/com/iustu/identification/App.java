@@ -58,7 +58,13 @@ public class App extends LitePalApplication{
         KeepLive.startWork(this, KeepLive.RunMode.ROGUE, foregroundNotification, new KeepLiveService() {
             @Override
             public void onWorking() {
-
+                SqliteHelper.init(getApplicationContext());
+                AlarmUtil.init(getApplicationContext());
+                try {
+                    SqliteUtil.init();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override

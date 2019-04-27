@@ -208,6 +208,7 @@ public class HistoryPrenster implements IPrenster{
                 }
                 Collections.reverse(data);
                 faceHistoryIVew.bindData(data);
+                cursor.close();
             }
 
             @Override

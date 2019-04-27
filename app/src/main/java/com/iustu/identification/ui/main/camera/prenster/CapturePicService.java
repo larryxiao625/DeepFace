@@ -204,6 +204,7 @@ public class CapturePicService extends Service {
                             calendars.add(calendar);
                             capturePicPaths.add(picPath1);
                         });
+                        picPath = null;
                         captureNum++;
                         if(captureNum==5){
                             List<String> tempCapturePicPath=new ArrayList<>();
@@ -230,7 +231,6 @@ public class CapturePicService extends Service {
 
     public void getTheBestPic(String picPath,ArrayList<DetectResult> detectResults,Calendar calendar,int faceNum){
         if(faceNum!=0){
-            Log.d("Camera","人脸数量"+detectResults.get(0).size());
             getCutPicture(picPath,detectResults.get(0),calendar,detectResults.get(0).points.size());
         }
     }
@@ -253,7 +253,6 @@ public class CapturePicService extends Service {
         super.onDestroy();
         FileUtil.deleteTemp();
         disposable.dispose();
-        Log.d("Camera","onDestroy");
     }
     public void getVerify(DetectResult detectResult,Calendar calendar,String photoPath,String originalPhoto){
         ArrayList<DetectResult> temp=new ArrayList<>();
@@ -315,18 +314,18 @@ public class CapturePicService extends Service {
 
             int height=(bottom> ParameterConfig.getFromSP().getDpiHeight()? ParameterConfig.getFromSP().getDpiHeight():bottom)-(top<0? 0:top);
             int width=(right> ParameterConfig.getFromSP().getDpiWidth()? ParameterConfig.getFromSP().getDpiWidth():right)-(left<0? 0:left);
-            Log.d("CameraOriginalPhoto",originalPhoto);
 //            Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(originalPhoto), (detectResult.getRects().get(i).left/1.2)<0? 0: (int) (detectResult.getRects().get(i).left /1.2), (detectResult.getRects().get(i).top/1.2<0)? 0: (int) (detectResult.getRects().get(i).top/1.2),width>(ParameterConfig.getFromSP().getDpiWidth()-detectResult.getRects().get(i).left/1.2)?(ParameterConfig.getFromSP().getDpiWidth()-detectResult.getRects().get(i).left/1.2):width,height>(ParameterConfig.getFromSP().getDpiHeight()-detectResult.getRects().get(i).top/1.2)?(ParameterConfig.getFromSP().getDpiHeight()-detectResult.getRects().get(i).top/1.2):height);
             Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(originalPhoto), left<0? 0: left, top<0? 0: top,width,height);
             try {
                 File file=new File(cutPathName);
                 fos=new FileOutputStream(file);
                 bitmap.compress(Bitmap.CompressFormat.JPEG,100,fos);
-                Log.d("CameraCut",cutPathName);
-                getVerify(detectResult,calendar,cutPathName,originalPhoto);
-                SqliteUtil.insertFaceCollectionItem(cutPathName, originalPhoto, calendar.getTime(),cameraPrenster);
                 fos.flush();
                 fos.close();
+                getVerify(detectResult,calendar,cutPathName,originalPhoto);
+                SqliteUtil.insertFaceCollectionItem(cutPathName, originalPhoto, calendar.getTime(),cameraPrenster);
+                cutPathName = null;
+                originalPhoto = null;
             }catch (FileNotFoundException e){
                 e.printStackTrace();
             }catch (IOException e){
@@ -351,11 +350,11 @@ public class CapturePicService extends Service {
                     Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(picPaths.get(i)));
                     FileOutputStream tempFos = new FileOutputStream(tempPath + TextUtil.dateMessage(threadCalenders.get(i).getTime())+"_"+i+".jpg");
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 50, tempFos);
+                    tempFos.flush();
+                    tempFos.close();
 //                    FileUtil.copyCompressedBitmap(picPaths.get(i),tempPath + TextUtil.dateMessage(threadCalenders.get(i).getTime())+"_"+i+".jpg");
                     ArrayList<String> inputPicPaths = new ArrayList<>();
                     inputPicPaths.add(tempPath + TextUtil.dateMessage(threadCalenders.get(i).getTime()) + "_" + i + ".jpg");
-                    tempFos.flush();
-                    tempFos.close();
                     ArrayList<DetectResult> detectResults = SDKUtil.detectFace(inputPicPaths);
                     if (detectResults!=null) {
                         if (((detectResults.get(0).getPoints().get(0).x)[1] - (detectResults.get(0).getPoints().get(0).x)[0]) > picQuality) {
@@ -377,6 +376,7 @@ public class CapturePicService extends Service {
                             FileUtil.delete(deletePath.get(delete));
                         }
                         deletePath.clear();
+                        deletePath = null;
                     }
                 } catch (NullPointerException e) {
                     e.printStackTrace();
@@ -386,6 +386,9 @@ public class CapturePicService extends Service {
                     e.printStackTrace();
                 }
             }
+            picPaths.clear();
+            picPaths = null;
+            tempBestPicPath = null;
         }
     }
 

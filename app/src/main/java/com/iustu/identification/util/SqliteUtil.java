@@ -70,7 +70,7 @@ public class SqliteUtil {
 
     /**
      * 抓拍记录的插入操作
-     * @param imgPath 图片的路径
+     * @param imgPath 图片的路径(裁剪后的图片)
      * @param originalPhoto 未裁剪的图片的路径
      * @param time 代表时间
      */

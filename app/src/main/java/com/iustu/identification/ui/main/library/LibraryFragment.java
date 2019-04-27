@@ -157,6 +157,10 @@ public class LibraryFragment extends BaseFragment implements TitleBar.TitleBarLi
     public void switchFragment(int toId){
         Fragment ff = mFragmentList.get(fragmentNow);
         Fragment to = mFragmentList.get(toId);
+        getChildFragmentManager()
+                .beginTransaction()
+                .remove(ff)
+                .commit();
         if(!to.isAdded()){
             getChildFragmentManager()
                     .beginTransaction()
@@ -184,12 +188,13 @@ public class LibraryFragment extends BaseFragment implements TitleBar.TitleBarLi
             titleBar.setBackEnable(true);
             titleBar.setSearchEnable(true);
         }
-        if(fragmentNow != ID_LIBRARIES_MANAGE){
-            getChildFragmentManager()
-                    .beginTransaction()
-                    .remove(ff)
-                    .commit();
-        }
+
+//        if(fragmentNow != ID_LIBRARIES_MANAGE){
+//            getChildFragmentManager()
+//                    .beginTransaction()
+//                    .remove(ff)
+//                    .commit();
+//        }
         fragmentNow = toId;
     }
 

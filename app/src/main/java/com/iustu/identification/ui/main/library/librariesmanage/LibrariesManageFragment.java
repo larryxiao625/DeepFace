@@ -133,8 +133,6 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
 
     @Override
     public void onShow() {
-//        mLibraryList.clear();
-//        initData();
         if(mAdapter != null) {
             mAdapter.notifyDataChange();
         }

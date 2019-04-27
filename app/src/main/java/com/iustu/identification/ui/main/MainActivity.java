@@ -76,12 +76,6 @@ public class MainActivity extends BaseActivity implements BottomBar.BottomBarSel
     @Override
     protected void onStart() {
         DataCache.init();
-        AlarmUtil.init(this);
-        try {
-            SqliteUtil.init();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         super.onStart();
     }
 

@@ -471,13 +471,20 @@ public class RxUtil {
                 database.beginTransaction();
                 try {
                     Cursor cursor = database.query(false, RxUtil.DB_FACECOLLECTIOMITEM, FACECOLLECTION_COLUMNS, null, null, null, null, null, null, null);
-                    if (cursor.getCount() == DataCache.getParameterConfig().getSaveCount()) {
-                        cursor.moveToNext();
-                        // 删除照片
-                        FileUtil.delete(cursor.getString(cursor.getColumnIndex("imgUrl")));
-                        FileUtil.delete(cursor.getString(cursor.getColumnIndex("originalPath")));
-                        database.delete(RxUtil.DB_FACECOLLECTIOMITEM, "id = ?" + cursor.getInt(cursor.getColumnIndex("id")), null);
+                    if (cursor.getCount() >= DataCache.getParameterConfig().getSaveCount()) {
+                        // 超过的数目
+                        int overCount = cursor.getCount() - DataCache.getParameterConfig().getSaveCount();
+                        int index = 0;
+                        while(index < overCount) {
+                            index ++;
+                            cursor.moveToNext();
+                            database.delete(RxUtil.DB_FACECOLLECTIOMITEM, "id = " + cursor.getInt(cursor.getColumnIndex("id")), null);
+                            FileUtil.delete(cursor.getString(cursor.getColumnIndex("imgUrl")));
+                            FileUtil.delete(cursor.getString(cursor.getColumnIndex("originalPath")));
+                        }
+
                     }
+                    cursor.close();
                     database.insert(RxUtil.DB_FACECOLLECTIOMITEM, null, item.toContentValues());
                     database.setTransactionSuccessful();
                 }finally {
@@ -503,9 +510,14 @@ public class RxUtil {
                 database.beginTransaction();
                 try {
                     Cursor cursor1 = database.query(false, RxUtil.DB_COMPARERECORD, COMPARE_COLUMNS, null, null, null, null, null, null, null);
-                    if (cursor1.getCount() == DataCache.getParameterConfig().getSaveCount()) {
-                        cursor1.moveToNext();
-                        database.delete(RxUtil.DB_COMPARERECORD, "uploadPhoto = ?", new String[]{cursor1.getString(cursor1.getColumnIndex("uploadPhoto"))});
+                    if (cursor1.getCount() >= DataCache.getParameterConfig().getSaveCount()) {
+                        int overCount = cursor1.getCount() - DataCache.getParameterConfig().getSaveCount();
+                        int index = 0;
+                        while(index < overCount) {
+                            cursor1.moveToNext();
+                            index ++;
+                            database.delete(RxUtil.DB_COMPARERECORD, "uploadPhoto = ?", new String[]{cursor1.getString(cursor1.getColumnIndex("uploadPhoto"))});
+                        }
                     }
                     Cursor cursor = database.query(libName, RxUtil.PERSIONINFO_COLUMNS, "image_id = '" + compareRecord.getImage_id() + "'", null, null, null, null, null);
                     while(cursor.moveToNext()) {
@@ -519,6 +531,8 @@ public class RxUtil {
                         compareRecord.setBirthday(cursor.getString(cursor.getColumnIndex("birthday")));
                         database.insert(RxUtil.DB_COMPARERECORD, null, compareRecord.toContentValues());
                     }
+                    cursor.close();
+                    cursor1.close();
                     database.setTransactionSuccessful();
                 }finally {
                     database.endTransaction();
