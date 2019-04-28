@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.agin.facerecsdk.AttributeHandler;
 import com.example.agin.facerecsdk.BlurHandler;
@@ -19,6 +20,7 @@ import com.example.agin.facerecsdk.SearchHandler;
 import com.example.agin.facerecsdk.SearchResultItem;
 import com.example.agin.facerecsdk.TrackerHandler;
 import com.example.agin.facerecsdk.VerifyHandler;
+import com.iustu.identification.App;
 import com.iustu.identification.bean.ParameterConfig;
 import com.iustu.identification.entity.PersionInfo;
 
@@ -86,8 +88,12 @@ public class SDKUtil {
         if (FacerecUtil.facerecsdkValid()) {
             Log.d("testSdk","sdk合法");
             Log.d("initSdk", FacerecUtil.getLicenseValidTime() + "");
+            SDKUtil.init();
+        }else if(!FacerecUtil.facerecsdkValid()){
+            Toast.makeText(App.getContext(),"SDK不合法，请检查",Toast.LENGTH_SHORT).show();
+        }else if(FacerecUtil.getLicenseValidTime()<=0){
+            Toast.makeText(App.getContext(),"SDK已过期，请重新授权",Toast.LENGTH_SHORT).show();
         }
-        SDKUtil.init();
     }
 
     // 销毁句柄，在Application的onDestory方法中调用

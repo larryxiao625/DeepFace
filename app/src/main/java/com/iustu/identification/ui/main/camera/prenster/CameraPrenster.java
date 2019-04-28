@@ -54,6 +54,7 @@ public class CameraPrenster implements UVCCameraHelper.OnMyDevConnectListener,IP
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        Log.d("CameraPrenster", String.valueOf(cameraHelper.getSupportedPreviewSizes()));
         if(cameraHelper.getSupportedPreviewSizes()!=null) {
             setSupportPreviewSize(cameraHelper.getSupportedPreviewSizes());
         }
@@ -64,6 +65,7 @@ public class CameraPrenster implements UVCCameraHelper.OnMyDevConnectListener,IP
     public void setSupportPreviewSize(List<Size> supportPreviewSize) {
         List<Integer> previewHeight=new ArrayList<>();
         List<Integer> previewWidth=new ArrayList<>();
+        Log.d("CameraSize", String.valueOf(supportPreviewSize.size()));
         if(!supportPreviewSize.isEmpty()) {
             for (Size size : supportPreviewSize) {
                 previewHeight.add(size.height);
