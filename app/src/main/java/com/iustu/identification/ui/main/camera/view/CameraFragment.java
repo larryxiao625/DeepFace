@@ -7,6 +7,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,6 +28,7 @@ import com.iustu.identification.ui.main.camera.adapter.CompareItemAdapter;
 import com.iustu.identification.ui.main.camera.prenster.CameraPrenster;
 import com.iustu.identification.ui.main.camera.prenster.CapturePicService;
 import com.iustu.identification.util.AlarmUtil;
+import com.iustu.identification.util.DataCache;
 import com.iustu.identification.util.IconFontUtil;
 import com.jiangdg.usbcamera.UVCCameraHelper;
 import com.serenegiant.usb.common.AbstractUVCCameraHandler;
@@ -156,6 +158,10 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
 
         @Override
         public void updateSingleResult(CompareRecord compareRecord) {
+            if(dataSource.size()== DataCache.getParameterConfig().getDisplayCount()){
+                dataSource.clear();
+                compareItemAdapter.notifyDataSetChanged();
+            }
             dataSource.add(0,compareRecord);
             compareItemAdapter.notifyItemInserted(0);
             if(itemCompareRecyclerView == null)
@@ -167,6 +173,10 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
 
         @Override
         public void updateCapture(String capturePic) {
+            if(capturePathString.size()== DataCache.getParameterConfig().getDisplayCount()){
+                capturePathString.clear();
+                catchFaceAdapter.notifyDataSetChanged();
+            }
             capturePathString.add(0,capturePic);
             catchFaceAdapter.notifyItemInserted(0);
             if(itemCaptureRecyclerView==null){
