@@ -287,9 +287,11 @@ public class CapturePicService extends Service {
                     }
                 }
                 searchResultItem.score= (float) (sqrt(searchResultItem.score - 0.71) /sqrt(1.0 - 0.71)* 0.15 + 0.85);
-                if(searchResultItem.score > DataCache.getParameterConfig().getFactor())
+                if(searchResultItem.score > DataCache.getParameterConfig().getFactor()) {
                     AlarmUtil.alarm();
                     SqliteUtil.insertComparedItem(libNames.get(i), searchResultItem,calendar.getTime(),photoPath, cameraPrenster, originalPhoto);
+                }
+
             }
         }
 
