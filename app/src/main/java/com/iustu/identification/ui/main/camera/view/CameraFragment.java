@@ -103,7 +103,6 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        Log.d("CameraFragment","onHidden");
         if(hidden&&cameraTextureView!=null){
             cameraHelper.unregisterUSB();
             if(cameraHelper.getUsbDeviceCount()!=0){
@@ -158,8 +157,8 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
 
         @Override
         public void updateSingleResult(CompareRecord compareRecord) {
-            if(dataSource.size()== DataCache.getParameterConfig().getDisplayCount()){
-                dataSource.clear();
+            if(dataSource.size() == DataCache.getParameterConfig().getDisplayCount()){
+                dataSource.remove(dataSource.size() - 1);
                 compareItemAdapter.notifyDataSetChanged();
             }
             dataSource.add(0,compareRecord);
@@ -174,7 +173,7 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
         @Override
         public void updateCapture(String capturePic) {
             if(capturePathString.size()== DataCache.getParameterConfig().getDisplayCount()){
-                capturePathString.clear();
+                capturePathString.remove(capturePathString.size() - 1);
                 catchFaceAdapter.notifyDataSetChanged();
             }
             capturePathString.add(0,capturePic);
