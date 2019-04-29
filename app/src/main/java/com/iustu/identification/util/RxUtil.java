@@ -413,12 +413,6 @@ public class RxUtil {
         return Observable.create(new ObservableOnSubscribe<Object>() {
             @Override
             public void subscribe(ObservableEmitter<Object> e) {
-                int res = SDKUtil.deletePerFromLibrary(persionInfo);
-                if (res == -1) {
-                    e.onError(new Exception("人脸库删除人脸特征失败"));
-                    return;
-                }
-
                 // 首先执行数据库操作
                 SQLiteDatabase database = SqliteUtil.getDatabase();
                 database.beginTransaction();
@@ -450,6 +444,11 @@ public class RxUtil {
                     database.endTransaction();
                 }
 
+                int res = SDKUtil.deletePerFromLibrary(persionInfo);
+                if (res == -1) {
+                    e.onError(new Exception("人脸库删除人脸特征失败"));
+                    return;
+                }
                 // 执行删除图片
                 FileUtil.deletePersionPhotos(persionInfo);
                 e.onComplete();

@@ -114,6 +114,8 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
         });
         pageSetHelper = new PageSetHelper(recyclerView, pageTv);
         recyclerView.post(this::onShow);
+        this.libId = getArguments().getInt(KEY_LIB_ID);
+        this.libName = getArguments().getString(KEY_LIB_NAME);
         onInitData();
     }
 
@@ -156,6 +158,7 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
     }
 
     public void setArguments(String libName){
+        Log.d("libText", "setArguments: " + libName);
         Bundle bundle = getArguments();
         if(bundle == null){
             bundle = new Bundle();

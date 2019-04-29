@@ -2,6 +2,7 @@ package com.iustu.identification.ui.main.library.peoplemagnage.mvp;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.util.Log;
 
 import com.iustu.identification.entity.PersionInfo;
 import com.iustu.identification.entity.PersonInfo;
@@ -39,6 +40,7 @@ public class PersionPresenter {
      */
     public void onInitData(String libName) {
         mView.showWaitDialog("正在加载数据...");
+        Log.d("libText", "PersionPresenter:onInitData: " + libName);
         Observable observable = RxUtil.getQuaryObservalbe(false, libName, RxUtil.PERSIONINFO_COLUMNS, null, null, null, null, "id", null);
         observable.subscribe(new Observer<Cursor>() {
             @Override
@@ -201,6 +203,7 @@ public class PersionPresenter {
      */
     public void onDeletePer(int position, PersionInfo persionInfo) {
         mView.showWaitDialog("正在删除...");
+        Log.d("libText", "PersionPresenter:onDeletePer: " + persionInfo.libName);
         Observable observable = RxUtil.getDeletePersonObservable(persionInfo);
         observable.subscribe(new Observer() {
             @Override
