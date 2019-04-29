@@ -40,11 +40,8 @@ public class PersionPresenter {
      */
     public void onInitData(String libName) {
         mView.showWaitDialog("正在加载数据...");
-<<<<<<< HEAD
         Log.d("libText", "PersionPresenter:onInitData: " + libName);
-=======
         Log.d("getDatabases",libName);
->>>>>>> e24cd149a86e3fc3c47f32f004bf1938e25ae7bf
         Observable observable = RxUtil.getQuaryObservalbe(false, libName, RxUtil.PERSIONINFO_COLUMNS, null, null, null, null, "id", null);
         observable.subscribe(new Observer<Cursor>() {
             @Override

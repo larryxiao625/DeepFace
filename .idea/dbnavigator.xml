@@ -16,7 +16,7 @@
       <scope value="GLOBAL" />
       <destination value="FILE" />
       <format value="EXCEL" />
-      <charset value="UTF-8" />
+      <charset value="GBK" />
     </export-instructions>
   </component>
   <component name="DBNavigator.Project.DatabaseBrowserManager">
@@ -34,16 +34,10 @@
       <console name="Connection" type="STANDARD" schema="main" session="Main" />
     </connection>
   </component>
-  <component name="DBNavigator.Project.DatabaseConsoleManager">
-    <connection id="020c9dca-a4a3-4104-8761-ba711582a779">
-      <console name="Connection" type="STANDARD" schema="" session="Main" />
-    </connection>
-  </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
     <open-files />
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
-<<<<<<< HEAD
     <connection id="990ad0f2-42af-45ca-9bc2-ec4c26b9c194" />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
@@ -52,9 +46,6 @@
         <condition column="id" operator="=" value="" active="true" />
       </filter>
     </filter-actions>
-=======
-    <connection id="020c9dca-a4a3-4104-8761-ba711582a779" />
->>>>>>> e24cd149a86e3fc3c47f32f004bf1938e25ae7bf
   </component>
   <component name="DBNavigator.Project.EditorStateManager">
     <last-used-providers />
@@ -79,21 +70,13 @@
   </component>
   <component name="DBNavigator.Project.Settings">
     <connections>
-<<<<<<< HEAD
       <connection id="990ad0f2-42af-45ca-9bc2-ec4c26b9c194" active="true">
-=======
-      <connection id="020c9dca-a4a3-4104-8761-ba711582a779" active="true">
->>>>>>> e24cd149a86e3fc3c47f32f004bf1938e25ae7bf
         <database>
           <name value="Connection" />
           <description value="" />
           <database-type value="SQLITE" />
           <config-type value="BASIC" />
-<<<<<<< HEAD
           <database-version value="3.21" />
-=======
-          <database-version value="9999.0" />
->>>>>>> e24cd149a86e3fc3c47f32f004bf1938e25ae7bf
           <driver-source value="BUILTIN" />
           <driver-library value="" />
           <driver value="" />
@@ -102,12 +85,7 @@
           <port value="" />
           <database value="" />
           <files>
-<<<<<<< HEAD
             <file path="C:\Users\sgh\Desktop\deepface.db" schema="main" />
-=======
-            <file path="" schema="main" />
-            <file path="$PROJECT_DIR$/../deepface.db" schema="" />
->>>>>>> e24cd149a86e3fc3c47f32f004bf1938e25ae7bf
           </files>
           <os-authentication value="false" />
           <empty-authentication value="false" />

@@ -34,6 +34,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -292,7 +293,8 @@ public class CapturePicService extends Service {
                     }
                 }
                 Log.d("CaptureOriginal", String.valueOf(searchResultItem.score));
-                searchResultItem.score= (float) (sqrt(searchResultItem.score - 0.71) /sqrt(1.0 - 0.71)* 0.15 + 0.85);
+                double score= (sqrt(searchResultItem.score - DataCache.getParameterConfig().getThresholdQuanity()) /sqrt(1.0 - DataCache.getParameterConfig().getThresholdQuanity())* 0.15 + 0.85);
+                searchResultItem.score = round(score, 2, BigDecimal.ROUND_HALF_UP);
                 Log.d("CaptureTest", String.valueOf(searchResultItem.score));
                 Log.d("CaptureImageId",searchResultItem.image_id);
                 if(searchResultItem.score > DataCache.getParameterConfig().getFactor()) {
@@ -426,5 +428,14 @@ public class CapturePicService extends Service {
         public void setPicPaths(List<String> picPaths) {
             this.picPaths = picPaths;
         }
+    }
+
+    // 第三位小数四舍五入
+    public static float round(double value, int scale, int roundingMode) {
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(scale, roundingMode);
+        float d = bd.floatValue();
+        bd = null;
+        return d;
     }
 }
