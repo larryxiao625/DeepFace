@@ -68,7 +68,7 @@ public class SplashActivity extends BaseActivity {
             ActivityCompat.requestPermissions(this,
                     permissionList.toArray(new String[permissionList.size()]),
                     REQUEST_CODE);
-        }else {
+        } else {
             startApp();
         }
     }

@@ -48,7 +48,6 @@ public class LoginActivity extends BaseActivity implements LibManager.OnLibLoadL
     LoginPrenster loginPrenster;
     @Override
     protected void initView(@Nullable Bundle savedInstanceState) {
-        SDKUtil.initSdk(this);
         FileUtil.createAppDirectory();
         LibManager.setOnLoadListener(this);
         loginPrenster=LoginPrenster.getInstance();
@@ -61,6 +60,7 @@ public class LoginActivity extends BaseActivity implements LibManager.OnLibLoadL
             fragment = new FaceLoginFragment();
         }
         mFragmentList.add((BaseFragment) fragment);
+        SDKUtil.initSdk(this);
     }
 
     @Override
