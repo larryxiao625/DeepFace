@@ -258,6 +258,7 @@ public class CapturePicService extends Service {
         ArrayList<DetectResult> temp=new ArrayList<>();
         temp.add(detectResult);
             FeatureResult featureResult=SDKUtil.featureResult(temp);
+            Log.d("CaptureFeature", String.valueOf(detectResult.matPointer));
             if(featureResult.getAllFeats().size()!=0){
                 for(ArrayList<float[]> arrayList:featureResult.getAllFeats()){
                     for(float[] floats:arrayList){
@@ -274,6 +275,7 @@ public class CapturePicService extends Service {
 //            handlers.add(searchHandler);
 //            libs.add(libPath);
 //        }
+        Log.d("CaptureLib", String.valueOf(libNames.size()));
         for(int i = 0; i < libNames.size(); i ++){
             SearchResultItem searchResultItem = null;
             ArrayList<SearchResultItem> searchResultItems=new ArrayList<>();
@@ -286,6 +288,7 @@ public class CapturePicService extends Service {
                         searchResultItem = temp;
                     }
                 }
+                Log.d("CaptureOriginal", String.valueOf(searchResultItem.score));
                 searchResultItem.score= (float) (sqrt(searchResultItem.score - 0.71) /sqrt(1.0 - 0.71)* 0.15 + 0.85);
                 Log.d("CaptureTest", String.valueOf(searchResultItem.score));
                 Log.d("CaptureImageId",searchResultItem.image_id);

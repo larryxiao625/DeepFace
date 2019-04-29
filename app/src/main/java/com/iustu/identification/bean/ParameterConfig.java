@@ -28,7 +28,7 @@ public class ParameterConfig {
     int dpiHeight=1080;
     int dpiCount=0;
     float filterScore = 0.85f;       // 人脸比对的阈值
-    float thresholdQuanity = 0.71f;       // 临界值
+    float thresholdQuanity = 0.76f;       // 临界值
     int alarmType = ONLYMP3;
 
     public ParameterConfig(){}
