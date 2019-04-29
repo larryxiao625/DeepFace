@@ -117,9 +117,11 @@ public class CompareItemAdapter extends RecyclerView.Adapter<CompareItemAdapter.
 
         @SuppressLint("SetTextI18n")
         private void setCompareRecord(CompareRecord info){
-            if(info == null){
+            if(info==null){
 
-            }else {
+            }else if(info.getPhotoPath()==null){
+
+            } else {
                 Glide.with(itemView).asBitmap()
                         .load(new File(info.getUploadPhoto()))
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -127,6 +129,7 @@ public class CompareItemAdapter extends RecyclerView.Adapter<CompareItemAdapter.
                         .into(capturePhoto);
                 String[] photos = info.getPhotoPath().split(";");
                 String libPath = "/sdcard/DeepFace/" + info.getLibName()+ "/" + photos[0];
+                Log.d("libPath",libPath);
                 Glide.with(itemView).load(BitmapFactory.decodeFile(libPath))
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .into(matchPhoto);

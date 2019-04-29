@@ -159,7 +159,7 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
         public void updateSingleResult(CompareRecord compareRecord) {
             if(dataSource.size() == DataCache.getParameterConfig().getDisplayCount()){
                 dataSource.remove(dataSource.size() - 1);
-                compareItemAdapter.notifyDataSetChanged();
+                compareItemAdapter.notifyItemRemoved(capturePathString.size()-1);
             }
             dataSource.add(0,compareRecord);
             compareItemAdapter.notifyItemInserted(0);
@@ -174,7 +174,7 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
         public void updateCapture(String capturePic) {
             if(capturePathString.size()== DataCache.getParameterConfig().getDisplayCount()){
                 capturePathString.remove(capturePathString.size() - 1);
-                catchFaceAdapter.notifyDataSetChanged();
+                catchFaceAdapter.notifyItemRemoved(capturePathString.size()-1);
             }
             capturePathString.add(0,capturePic);
             catchFaceAdapter.notifyItemInserted(0);

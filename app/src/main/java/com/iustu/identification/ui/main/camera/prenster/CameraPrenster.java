@@ -58,7 +58,6 @@ public class CameraPrenster implements UVCCameraHelper.OnMyDevConnectListener,IP
         if(cameraHelper.getSupportedPreviewSizes()!=null) {
             setSupportPreviewSize(cameraHelper.getSupportedPreviewSizes());
         }
-        iVew.showShortMsg("摄像头已连接");
     }
 
     @Override
@@ -82,7 +81,6 @@ public class CameraPrenster implements UVCCameraHelper.OnMyDevConnectListener,IP
     @Override
     public void onDisConnectDev(UsbDevice device) {
         Log.d("cameraPrenster","cameraDisConnect");
-        iVew.showShortMsg("摄像头已断开连接");
     }
 
     @Override
