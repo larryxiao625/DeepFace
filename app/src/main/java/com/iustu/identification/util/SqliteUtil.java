@@ -123,6 +123,7 @@ public class SqliteUtil {
         compareRecord.setHourTime(TextUtil.getHourString(time));
         compareRecord.setUploadPhoto(uploadPhoto);
         compareRecord.setImage_id(resultItem.image_id);
+        Log.d("imageId",resultItem.image_id);
         compareRecord.setOriginalPhoto(originalPhoto);
         Observable observable = RxUtil.getInsertCompareRecordObservable(libName, compareRecord);
         observable.subscribe(new Observer() {
