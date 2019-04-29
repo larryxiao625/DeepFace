@@ -22,22 +22,27 @@ public class DataCache {
 
     // 该方法需要在登录成功时的回调中调用
     public static void initCache(Account maccount) {
-        admin = Account.getFromSP();
+        account = maccount;
+        init();
+    }
+
+    public static void init() {
         parameterConfig = ParameterConfig.getFromSP();
         HashSet<String> tempChosenHashSet= (HashSet<String>) MSP.getInstance(MSP.SP_CHOSEN).getStringSet(MSP.SP_CHOSEN, new HashSet<String>());
         chosenLibConfig=new HashSet<>();
         chosenLibConfig.addAll(tempChosenHashSet);
         previewSizeConfig= PreviewSizeConfig.getFramSp();
-        account = maccount;
         previewSizeConfig.save();
+        admin = Account.getFromSP(MSP.SP_ADMIN);
+        account = Account.getFromSP(MSP.SP_ACCOUNT);
     }
 
     // 该方法在App退出前调用，用来将内容写回
     public static void saveCache() {
-        Log.d("ChosenLibOriginalSize", String.valueOf(chosenLibConfig.size()));
         previewSizeConfig.save();
         parameterConfig.save();
-        admin.save();
+        admin.save(MSP.SP_ADMIN);
+        account.save(MSP.SP_ACCOUNT);
         MSP.getInstance(MSP.SP_CHOSEN).edit().putStringSet(MSP.SP_CHOSEN, chosenLibConfig).apply();
     }
 
@@ -50,9 +55,18 @@ public class DataCache {
         return account;
     }
 
+    public static void setAccount(Account a) {
+        account = a;
+        account.save(MSP.SP_ACCOUNT);
+    }
+
+    public static void setAdmin(Account a) {
+        admin = a;
+        admin.save(MSP.SP_ADMIN);
+    }
+
 
     public static HashSet<String> getChosenLibConfig() {
-        Log.d("ChosenLibOriginal1", String.valueOf(chosenLibConfig));
         return chosenLibConfig;
     }
 

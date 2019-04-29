@@ -46,6 +46,7 @@ public class LibManagerPesenter {
                     data.add(library);
                 }
                 mView.bindData(data);
+                cursor.close();
             }
 
             @Override

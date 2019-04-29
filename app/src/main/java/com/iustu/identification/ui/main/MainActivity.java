@@ -75,6 +75,7 @@ public class MainActivity extends BaseActivity implements BottomBar.BottomBarSel
 
     @Override
     protected void onStart() {
+        DataCache.init();
         super.onStart();
     }
 
@@ -137,7 +138,7 @@ public class MainActivity extends BaseActivity implements BottomBar.BottomBarSel
         if(!tf.isAdded()){
             transaction.add(R.id.fragment_fm, tf, TAGS[to]);
         }
-        if(fragmentNow == 0 || fragmentNow == 3) {
+        if(fragmentNow == 0 || fragmentNow == 3 || fragmentNow == 2) {
             transaction.remove(ff);
         }
         transaction.show(tf).commit();
@@ -159,24 +160,17 @@ public class MainActivity extends BaseActivity implements BottomBar.BottomBarSel
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-
-    }
-
-    @Override
     protected void onStop() {
-        super.onStop();
         DataCache.saveCache();
         FileUtil.deleteTemp();
         SqliteUtil.updataLibrariedInUsed();
+        super.onStop();
     }
 
     @Override
     protected void onDestroy() {
         isActivityAlive = false;
         LibManager.dispose();
-        AlarmUtil.destory();
         super.onDestroy();
 //        stopService(new Intent(MainActivity.this, CapturePicService.class));
     }

@@ -12,4 +12,5 @@ public interface IVew {
     void disposeRxjava();
     void showWaitDialog(WaitProgressDialog waitProgressDialog);
     void loginSuccessfully();
+    void dismissDialog();
 }

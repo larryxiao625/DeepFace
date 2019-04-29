@@ -4,6 +4,8 @@ import android.content.ContentValues;
 
 import com.example.agin.facerecsdk.DetectResult;
 import com.example.agin.facerecsdk.FeatureResult;
+import com.example.agin.facerecsdk.HandlerFactory;
+import com.example.agin.facerecsdk.VerifyHandler;
 import com.iustu.identification.entity.PersionInfo;
 import com.iustu.identification.entity.PersonInfo;
 import com.iustu.identification.ui.main.library.addperson.AddPersonFragment;
@@ -90,7 +92,8 @@ public class AddPersionPresenter {
         int num=SDKUtil.getDetectHandler().faceDetector(picPath,detectResult);
         if(num==1){
             featureResult=new FeatureResult();
-            return SDKUtil.getVerifyHandler().extractFeature(detectResult,featureResult);
+            int result = SDKUtil.getVerifyHandler().extractFeature(detectResult,featureResult);
+            return result;
         }else if(num==0){
             return NO_FACE;
         }else {

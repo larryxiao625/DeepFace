@@ -124,33 +124,24 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
 
     }
 
-    public void onLoadError(String extra){
-        new NormalDialog.Builder()
-                .title("错误")
-                .content("加载失败," + extra)
-                .positive("重试", v->loadData(0))
-                .negative("返回", v->((LibraryFragment)getParentFragment()).switchFragment(LibraryFragment.ID_LIBRARIES_MANAGE))
-                .show(mActivity.getFragmentManager());
-    }
-
-    @Override
-    public void onHide() {
-        super.onHide();
-        isOnLoadMore = false;
-        pageSetHelper.setPage(1);
-        mPersonList.clear();
-        mAdapter.notifyDataChange();
-    }
-
     @Override
     public void onShow() {
-        Bundle bundle = getArguments();
-        if(bundle != null){
-            libName = bundle.getString(KEY_LIB_NAME, null);
+        if(mAdapter != null) {
+            mAdapter.notifyDataChange();
         }
-        page = 0;
-        loadData(0);
+        if(pageSetHelper != null){
+            pageSetHelper.notifyChange();
+        }
     }
+
+    //    @Override
+//    public void onHide() {
+//        super.onHide();
+//        isOnLoadMore = false;
+//        pageSetHelper.setPage(1);
+//        mPersonList.clear();
+//        mAdapter.notifyDataChange();
+//    }
 
     @Override
     public void onStart() {
@@ -162,15 +153,6 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
     public void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
-    }
-
-    private void onArgsError() {
-        new SingleButtonDialog.Builder()
-                .title("提示")
-                .content("参数错误")
-                .cancelable(false)
-                .button("返回", v-> ((LibraryFragment)getParentFragment()).switchFragment(LibraryFragment.ID_LIBRARIES_MANAGE))
-                .show(mActivity.getFragmentManager());
     }
 
     public void setArguments(String libName){

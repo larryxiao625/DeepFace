@@ -54,16 +54,17 @@ public class CameraPrenster implements UVCCameraHelper.OnMyDevConnectListener,IP
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        Log.d("CameraPrenster", String.valueOf(cameraHelper.getSupportedPreviewSizes()));
         if(cameraHelper.getSupportedPreviewSizes()!=null) {
             setSupportPreviewSize(cameraHelper.getSupportedPreviewSizes());
         }
-        iVew.showShortMsg("摄像头已连接");
     }
 
     @Override
     public void setSupportPreviewSize(List<Size> supportPreviewSize) {
         List<Integer> previewHeight=new ArrayList<>();
         List<Integer> previewWidth=new ArrayList<>();
+        Log.d("CameraSize", String.valueOf(supportPreviewSize.size()));
         if(!supportPreviewSize.isEmpty()) {
             for (Size size : supportPreviewSize) {
                 previewHeight.add(size.height);
@@ -80,7 +81,6 @@ public class CameraPrenster implements UVCCameraHelper.OnMyDevConnectListener,IP
     @Override
     public void onDisConnectDev(UsbDevice device) {
         Log.d("cameraPrenster","cameraDisConnect");
-        iVew.showShortMsg("摄像头已断开连接");
     }
 
     @Override

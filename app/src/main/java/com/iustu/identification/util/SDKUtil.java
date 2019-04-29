@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.agin.facerecsdk.AttributeHandler;
 import com.example.agin.facerecsdk.BlurHandler;
@@ -19,6 +20,8 @@ import com.example.agin.facerecsdk.SearchHandler;
 import com.example.agin.facerecsdk.SearchResultItem;
 import com.example.agin.facerecsdk.TrackerHandler;
 import com.example.agin.facerecsdk.VerifyHandler;
+import com.iustu.identification.App;
+import com.iustu.identification.bean.ParameterConfig;
 import com.iustu.identification.entity.PersionInfo;
 
 import java.io.File;
@@ -85,8 +88,12 @@ public class SDKUtil {
         if (FacerecUtil.facerecsdkValid()) {
             Log.d("testSdk","sdk合法");
             Log.d("initSdk", FacerecUtil.getLicenseValidTime() + "");
+            SDKUtil.init();
+        }else if(!FacerecUtil.facerecsdkValid()){
+            Toast.makeText(App.getContext(),"SDK不合法，请检查",Toast.LENGTH_SHORT).show();
+        }else if(FacerecUtil.getLicenseValidTime()<=0){
+            Toast.makeText(App.getContext(),"SDK已过期，请重新授权",Toast.LENGTH_SHORT).show();
         }
-        SDKUtil.init();
     }
 
     // 销毁句柄，在Application的onDestory方法中调用
@@ -110,8 +117,17 @@ public class SDKUtil {
         return detectHandler;
     }
 
+    public static int feature(DetectResult detectResult, FeatureResult featureResult) {
+        synchronized (SDKUtil.class) {
+            int result = verifyHandler.extractFeature(detectResult, featureResult);
+            return result;
+        }
+    }
+
     public static VerifyHandler getVerifyHandler() {
-        return verifyHandler;
+        synchronized (SDKUtil.class) {
+            return verifyHandler;
+        }
     }
 
     /**
@@ -122,7 +138,7 @@ public class SDKUtil {
         DetectResult detectResult=new DetectResult();
         SDKUtil.getDetectHandler().faceDetector(persionInfo.photoPath,detectResult);
         FeatureResult featureResult=new FeatureResult();
-        int result = verifyHandler.extractFeature(detectResult,featureResult);
+        int result = getVerifyHandler().extractFeature(detectResult,featureResult);
         if (result == -1)
             return result;
         if (featureResult.getFeat(0).size() < 0) {
@@ -159,15 +175,18 @@ public class SDKUtil {
         if (result <= 0)
             return false;
         FeatureResult featureResult=new FeatureResult();
-        result = verifyHandler.extractFeature(detectResult,featureResult);
-        if (result == -1)
+        result = getVerifyHandler().extractFeature(detectResult,featureResult);
+        if (result == -1) {
             return false;
+        }
+
         if (featureResult.getFeat(0).size() < 0) {
             return false;
         }
         float[] floats = featureResult.getFeat(0).get(0);
         persionInfo.feature = Arrays.asList(floats).toString();
         String image_id = System.currentTimeMillis() + "";
+        Log.d("batch", "sdkDoBatchPersion: " + image_id);
         persionInfo.image_id = image_id;
         SearchDBItem searchDBItem = new SearchDBItem();
         searchDBItem.feat = floats;
@@ -201,11 +220,11 @@ public class SDKUtil {
             return MORE_ONE_FACE;
         FeatureResult featureResult2 = new FeatureResult();
         FeatureResult featureResult1 = new FeatureResult();
-        verifyHandler.extractFeature(detectResult2, featureResult2);
-        verifyHandler.extractFeature(detectResult1, featureResult1);
+        getVerifyHandler().extractFeature(detectResult2, featureResult2);
+        getVerifyHandler().extractFeature(detectResult1, featureResult1);
         float[] floats2 = featureResult2.getFeat(0).get(0);
         float[] floats1 = featureResult1.getFeat(0).get(0);
-        float score = verifyHandler.verifyFeature(floats1, floats2);
+        float score = getVerifyHandler().verifyFeature(floats1, floats2);
         return score > 0.1 ? NOTTHESAME : ISTHESAME;
     }
 
@@ -217,7 +236,9 @@ public class SDKUtil {
      */
     public static FeatureResult featureResult(ArrayList<DetectResult> detectResult){
             FeatureResult featureResult=new FeatureResult();
-            SDKUtil.getVerifyHandler().extractFeatureBatch(detectResult,featureResult);
+            synchronized (SDKUtil.class) {
+                verifyHandler.extractFeatureBatch(detectResult, featureResult);
+            }
             return featureResult;
     }
 

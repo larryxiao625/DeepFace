@@ -11,6 +11,7 @@ import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import com.iustu.identification.bean.FaceCollectItem;
+import com.iustu.identification.bean.ParameterConfig;
 import com.iustu.identification.entity.Account;
 import com.iustu.identification.entity.CompareRecord;
 import com.iustu.identification.entity.Library;
@@ -57,9 +58,39 @@ public class RxUtil {
             @Override
             public void subscribe(ObservableEmitter e) {
                 SQLiteDatabase database = SqliteUtil.getDatabase();
-                Cursor cursor = database.query(distinct, table, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
-                e.onNext(cursor);
-                e.onComplete();
+                database.beginTransaction();
+                try {
+                    Cursor cursor = database.query(distinct, table, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
+                    e.onNext(cursor);
+                    e.onComplete();
+                    database.setTransactionSuccessful();
+                } finally {
+                    database.endTransaction();
+                }
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    // 获取查询数据库时的游标
+    public static Observable<Cursor> getLoginObservalbe(boolean distinct, String table, String[] columns, String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit) {
+        return io.reactivex.Observable.create(new ObservableOnSubscribe<Cursor>() {
+            @Override
+            public void subscribe(ObservableEmitter e) {
+                SQLiteDatabase database = SqliteUtil.getDatabase();
+                database.beginTransaction();
+                try {
+                    // 首先获取admin管理员账户
+                    Cursor cursor1 = database.query(distinct, table, columns, "name = 'admin'", null, null, null, null, null);
+                    e.onNext(cursor1);
+
+                    Cursor cursor = database.query(distinct, table, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
+                    e.onNext(cursor);
+                    e.onComplete();
+                    database.setTransactionSuccessful();
+                } finally {
+                    database.endTransaction();
+                }
             }
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
@@ -440,13 +471,20 @@ public class RxUtil {
                 database.beginTransaction();
                 try {
                     Cursor cursor = database.query(false, RxUtil.DB_FACECOLLECTIOMITEM, FACECOLLECTION_COLUMNS, null, null, null, null, null, null, null);
-                    if (cursor.getCount() == DataCache.getParameterConfig().getSaveCount()) {
-                        cursor.moveToNext();
-                        // 删除照片
-                        FileUtil.delete(cursor.getString(cursor.getColumnIndex("imgUrl")));
-                        FileUtil.delete(cursor.getString(cursor.getColumnIndex("originalPhoto")));
-                        database.delete(RxUtil.DB_FACECOLLECTIOMITEM, "id = " + cursor.getInt(cursor.getColumnIndex("id")), null);
+                    if (cursor.getCount() >= DataCache.getParameterConfig().getSaveCount()) {
+                        // 超过的数目
+                        int overCount = cursor.getCount() - DataCache.getParameterConfig().getSaveCount();
+                        int index = 0;
+                        while(index < overCount) {
+                            index ++;
+                            cursor.moveToNext();
+                            database.delete(RxUtil.DB_FACECOLLECTIOMITEM, "id = " + cursor.getInt(cursor.getColumnIndex("id")), null);
+                            FileUtil.delete(cursor.getString(cursor.getColumnIndex("imgUrl")));
+                            FileUtil.delete(cursor.getString(cursor.getColumnIndex("originalPath")));
+                        }
+
                     }
+                    cursor.close();
                     database.insert(RxUtil.DB_FACECOLLECTIOMITEM, null, item.toContentValues());
                     database.setTransactionSuccessful();
                 }finally {
@@ -472,9 +510,14 @@ public class RxUtil {
                 database.beginTransaction();
                 try {
                     Cursor cursor1 = database.query(false, RxUtil.DB_COMPARERECORD, COMPARE_COLUMNS, null, null, null, null, null, null, null);
-                    if (cursor1.getCount() == DataCache.getParameterConfig().getSaveCount()) {
-                        cursor1.moveToNext();
-                        database.delete(RxUtil.DB_COMPARERECORD, "uploadPhoto = ", new String[]{cursor1.getString(cursor1.getColumnIndex("uploadPhoto"))});
+                    if (cursor1.getCount() >= DataCache.getParameterConfig().getSaveCount()) {
+                        int overCount = cursor1.getCount() - DataCache.getParameterConfig().getSaveCount();
+                        int index = 0;
+                        while(index < overCount) {
+                            cursor1.moveToNext();
+                            index ++;
+                            database.delete(RxUtil.DB_COMPARERECORD, "uploadPhoto = ?", new String[]{cursor1.getString(cursor1.getColumnIndex("uploadPhoto"))});
+                        }
                     }
                     Cursor cursor = database.query(libName, RxUtil.PERSIONINFO_COLUMNS, "image_id = '" + compareRecord.getImage_id() + "'", null, null, null, null, null);
                     while(cursor.moveToNext()) {
@@ -484,11 +527,12 @@ public class RxUtil {
                         compareRecord.setIdentity(cursor.getString(cursor.getColumnIndex("identity")));
                         compareRecord.setOther(cursor.getString(cursor.getColumnIndex("other")));
                         compareRecord.setPhotoPath(cursor.getString(cursor.getColumnIndex("photoPath")));
-                        Log.d("compareinsert", "subscribe: " + compareRecord.getPhotoPath());
                         compareRecord.setName(cursor.getString(cursor.getColumnIndex("name")));
                         compareRecord.setBirthday(cursor.getString(cursor.getColumnIndex("birthday")));
                         database.insert(RxUtil.DB_COMPARERECORD, null, compareRecord.toContentValues());
                     }
+                    cursor.close();
+                    cursor1.close();
                     database.setTransactionSuccessful();
                 }finally {
                     database.endTransaction();

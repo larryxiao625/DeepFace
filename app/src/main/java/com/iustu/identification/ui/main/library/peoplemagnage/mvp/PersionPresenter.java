@@ -63,6 +63,7 @@ public class PersionPresenter {
                     data.add(persionInfo);
                 }
                 mView.bindData(data);
+                cursor.close();
             }
 
             @Override
@@ -281,6 +282,7 @@ public class PersionPresenter {
                 } else {
                     searchDialog.postBack(-1);
                 }
+                cursor.close();
             }
 
             @Override

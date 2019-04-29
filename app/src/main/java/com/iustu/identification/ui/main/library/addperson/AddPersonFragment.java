@@ -46,7 +46,6 @@ public class AddPersonFragment extends BaseFragment implements AddPersionView {
     private static final String FORMAT_LIB_NAME = "人脸库名称——%s";
     private static final String KEY_LIB_ID= "libId";
 
-
     private AddPersionPresenter presenter;
     private WaitProgressDialog waitProgressDialog;
 
@@ -76,26 +75,13 @@ public class AddPersonFragment extends BaseFragment implements AddPersionView {
 
     @Override
     protected void initView(@Nullable Bundle savedInstanceState, View view) {
-        view.post(this::onShow);
-    }
-
-    public void onArgumentsError(){
-        new SingleButtonDialog.Builder()
-                .title("错误")
-                .content("参数错误")
-                .button("确定", v -> ((LibraryFragment)getParentFragment()).switchFragment(LibraryFragment.ID_LIBRARIES_MANAGE))
-                .show(mActivity.getFragmentManager());
-    }
-
-    @Override
-    public void onShow() {
-        Bundle bundle = getArguments();
-        if(bundle != null){
-            libName = bundle.getString(KEY_LIB_NAME, null);
-            libNameTv.setText(TextUtil.format(FORMAT_LIB_NAME, libName));
-        }else {
-            onArgumentsError();
-        }
+        view.post(() -> {
+            Bundle bundle = getArguments();
+            if(bundle != null){
+                libName = bundle.getString(KEY_LIB_NAME, null);
+                libNameTv.setText(TextUtil.format(FORMAT_LIB_NAME, libName));
+            }
+        });
     }
 
     public void setArguments(String libName){
@@ -235,7 +221,6 @@ public class AddPersonFragment extends BaseFragment implements AddPersionView {
 
     @Override
     public void onAddSuccess() {
-        ToastUtil.show("添加成功");
     }
 
     // 将所有EditText清空

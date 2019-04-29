@@ -23,7 +23,7 @@ public abstract class PageRecyclerViewAdapter<VH extends RecyclerView.ViewHolder
     public PageRecyclerViewAdapter(List<T> dataLast) {
         this.mDataLast = dataLast;
         pageNow = 1;
-        setDisplayCountPerPage(DataCache.getParameterConfig().getDisplayCount());
+        setDisplayCountPerPage(10);
     }
 
     @Override

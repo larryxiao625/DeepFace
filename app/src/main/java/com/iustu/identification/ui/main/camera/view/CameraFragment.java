@@ -7,6 +7,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,6 +28,7 @@ import com.iustu.identification.ui.main.camera.adapter.CompareItemAdapter;
 import com.iustu.identification.ui.main.camera.prenster.CameraPrenster;
 import com.iustu.identification.ui.main.camera.prenster.CapturePicService;
 import com.iustu.identification.util.AlarmUtil;
+import com.iustu.identification.util.DataCache;
 import com.iustu.identification.util.IconFontUtil;
 import com.jiangdg.usbcamera.UVCCameraHelper;
 import com.serenegiant.usb.common.AbstractUVCCameraHandler;
@@ -101,7 +103,6 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        Log.d("CameraFragment","onHidden");
         if(hidden&&cameraTextureView!=null){
             cameraHelper.unregisterUSB();
             if(cameraHelper.getUsbDeviceCount()!=0){
@@ -156,6 +157,10 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
 
         @Override
         public void updateSingleResult(CompareRecord compareRecord) {
+            if(dataSource.size() == DataCache.getParameterConfig().getDisplayCount()){
+                dataSource.remove(dataSource.size() - 1);
+                compareItemAdapter.notifyItemRemoved(capturePathString.size()-1);
+            }
             dataSource.add(0,compareRecord);
             compareItemAdapter.notifyItemInserted(0);
             if(itemCompareRecyclerView == null)
@@ -163,11 +168,14 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
             if(!itemCompareRecyclerView.canScrollVertically(-1)) {
                 itemCompareRecyclerView.smoothScrollToPosition(0);
             }
-            AlarmUtil.alarm();
         }
 
         @Override
         public void updateCapture(String capturePic) {
+            if(capturePathString.size()== DataCache.getParameterConfig().getDisplayCount()){
+                capturePathString.remove(capturePathString.size() - 1);
+                catchFaceAdapter.notifyItemRemoved(capturePathString.size()-1);
+            }
             capturePathString.add(0,capturePic);
             catchFaceAdapter.notifyItemInserted(0);
             if(itemCaptureRecyclerView==null){

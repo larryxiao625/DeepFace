@@ -3,17 +3,23 @@ package com.iustu.identification.ui.main.library.librariesmanage.mvp;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.provider.ContactsContract;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.iustu.identification.entity.Library;
 import com.iustu.identification.entity.PersionInfo;
 import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
+import com.iustu.identification.util.DataCache;
 import com.iustu.identification.util.LibManager;
 import com.iustu.identification.util.RxUtil;
 import com.iustu.identification.util.SqliteHelper;
 import com.iustu.identification.util.StringUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -64,6 +70,7 @@ public class LibPresenter {
                     data.add(library);
                 }
                 mView.bindData(data);
+                cursor.close();
             }
 
             @Override
@@ -142,7 +149,14 @@ public class LibPresenter {
 
             @Override
             public void onNext(Cursor o) {
-                // 通过游标删除数据库关联的PersionInfo
+                HashSet<String> chosenLib=DataCache.getChosenLibConfig();
+                Iterator<String> iterable=chosenLib.iterator();
+                while (iterable.hasNext()){
+                    if (iterable.next()==library.libName){
+                        chosenLib.remove(library.libName);
+                    }
+                }
+                o.close();
             }
 
             @Override

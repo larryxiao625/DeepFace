@@ -21,6 +21,7 @@ import com.iustu.identification.util.MSP;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import io.reactivex.Observable;
@@ -75,7 +76,11 @@ public class FolderChooseFragment extends BaseFragment implements TitleBar.Title
                     mFileList.clear();
                 })
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(mFileList::add,
+                .subscribe((file1 -> {
+                            String regex = ".+(.JPEG|.jpeg|.JPG|.jpg|.GIF|.gif|.BMP|.bmp|.PNG|.png)$";
+                        if (file1.isDirectory() || Pattern.matches(regex, file1.getName()))
+                            mFileList.add(file1);
+                        }),
                         throwable -> Log.e("folder", throwable.getClass().getSimpleName() + "->" + throwable.getMessage()),
                         () -> {
                             parentFile = file;

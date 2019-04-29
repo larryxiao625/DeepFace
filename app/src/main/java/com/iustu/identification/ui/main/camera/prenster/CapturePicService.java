@@ -17,6 +17,7 @@ import com.example.agin.facerecsdk.HandlerFactory;
 import com.example.agin.facerecsdk.SearchHandler;
 import com.example.agin.facerecsdk.SearchResultItem;
 import com.iustu.identification.bean.ParameterConfig;
+import com.iustu.identification.util.AlarmUtil;
 import com.iustu.identification.util.DataCache;
 import com.iustu.identification.util.FileUtil;
 import com.iustu.identification.util.SDKUtil;
@@ -35,6 +36,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -59,9 +61,8 @@ public class CapturePicService extends Service {
     Calendar tempBestCalender;
     CaptureBind mBind;
     Disposable disposable;
-    ArrayList<SearchHandler> searchHandlers=new ArrayList<>();
+    volatile HashMap<String, SearchHandler> searchHandlers=new HashMap<>();
     ArrayList<String> libNames = new ArrayList<>();
-    HashSet<String> libPat = DataCache.getChosenLibConfig();
 
     String tempBestPicPath;
     volatile List<Calendar> calendars=new ArrayList<>();
@@ -82,11 +83,13 @@ public class CapturePicService extends Service {
         super.onCreate();
         mBind=new CaptureBind();
         HashSet<String> libPat= DataCache.getChosenLibConfig();
-//        for(String libPath:libPat){
-//            SearchHandler searchHandler= (SearchHandler) HandlerFactory.createSearcher(rootPath+"/"+libPath,0,1);
-//            searchHandlers.add(searchHandler);
-//            libNames.add(libPath);
-//        }
+        for(String libPath:libPat){
+            if (searchHandlers.get(libPath) == null) {
+                SearchHandler searchHandler= (SearchHandler) HandlerFactory.createSearcher(rootPath+"/"+libPath,0,1);
+                searchHandlers.put(libPath, searchHandler);
+            }
+            libNames.add(libPath);
+        }
         EventBus.getDefault().register(this);
         capturePic();
 //        ArrayList<String> capturesPic = new ArrayList<>();       // 保存抓拍到的图片
@@ -201,6 +204,7 @@ public class CapturePicService extends Service {
                             calendars.add(calendar);
                             capturePicPaths.add(picPath1);
                         });
+                        picPath = null;
                         captureNum++;
                         if(captureNum==5){
                             List<String> tempCapturePicPath=new ArrayList<>();
@@ -227,7 +231,6 @@ public class CapturePicService extends Service {
 
     public void getTheBestPic(String picPath,ArrayList<DetectResult> detectResults,Calendar calendar,int faceNum){
         if(faceNum!=0){
-            Log.d("Camera","人脸数量"+detectResults.get(0).size());
             getCutPicture(picPath,detectResults.get(0),calendar,detectResults.get(0).points.size());
         }
     }
@@ -248,14 +251,13 @@ public class CapturePicService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        FileUtil.deleteTemp();
         disposable.dispose();
-        Log.d("Camera","onDestroy");
     }
     public void getVerify(DetectResult detectResult,Calendar calendar,String photoPath,String originalPhoto){
         ArrayList<DetectResult> temp=new ArrayList<>();
         temp.add(detectResult);
             FeatureResult featureResult=SDKUtil.featureResult(temp);
-            Log.d("CameraVerify", String.valueOf(featureResult.getAllFeats().size()));
             if(featureResult.getAllFeats().size()!=0){
                 for(ArrayList<float[]> arrayList:featureResult.getAllFeats()){
                     for(float[] floats:arrayList){
@@ -265,33 +267,33 @@ public class CapturePicService extends Service {
             }
     }
     public void searchFace(float[] feat,Calendar calendar,String photoPath,String originalPhoto){
-        ArrayList<SearchHandler> handlers = new ArrayList<>();
-        ArrayList<String> libs = new ArrayList<>();
-        for(String libPath:libPat){
-            SearchHandler searchHandler= (SearchHandler) HandlerFactory.createSearcher(rootPath+"/"+libPath,0,1);
-            handlers.add(searchHandler);
-            libs.add(libPath);
-        }
-        new Thread(() -> {
-            for(int i = 0; i < handlers.size(); i ++){
-                SearchResultItem searchResultItem = null;
-                ArrayList<SearchResultItem> searchResultItems=new ArrayList<>();
-                handlers.get(i).searchFind(feat,1,searchResultItems, DataCache.getParameterConfig().getThresholdQuanity());
-                if(!searchResultItems.isEmpty()) {
-                    for (SearchResultItem temp : searchResultItems) {
-                        if (searchResultItem == null) {
-                            searchResultItem = temp;
-                        } else if (temp.score > searchResultItem.score) {
-                            searchResultItem = temp;
-                        }
+//        ArrayList<SearchHandler> handlers = new ArrayList<>();
+//        ArrayList<String> libs = new ArrayList<>();
+//        for(String libPath:libPat){
+//            SearchHandler searchHandler= (SearchHandler) HandlerFactory.createSearcher(rootPath+"/"+libPath,0,1);
+//            handlers.add(searchHandler);
+//            libs.add(libPath);
+//        }
+        for(int i = 0; i < libNames.size(); i ++){
+            SearchResultItem searchResultItem = null;
+            ArrayList<SearchResultItem> searchResultItems=new ArrayList<>();
+            searchHandlers.get(libNames.get(i)).searchFind(feat,1,searchResultItems, DataCache.getParameterConfig().getThresholdQuanity());
+            if(!searchResultItems.isEmpty()) {
+                for (SearchResultItem temp : searchResultItems) {
+                    if (searchResultItem == null) {
+                        searchResultItem = temp;
+                    } else if (temp.score > searchResultItem.score) {
+                        searchResultItem = temp;
                     }
-                    searchResultItem.score= (float) (sqrt(searchResultItem.score - 0.71) /sqrt(1.0 - 0.71)* 0.15 + 0.85);
-                    if(searchResultItem.score > DataCache.getParameterConfig().getFactor())
-                        SqliteUtil.insertComparedItem(libs.get(i), searchResultItem,calendar.getTime(),photoPath, cameraPrenster, originalPhoto);
                 }
-                handlers.get(i).destroy();
+                searchResultItem.score= (float) (sqrt(searchResultItem.score - 0.71) /sqrt(1.0 - 0.71)* 0.15 + 0.85);
+                if(searchResultItem.score > DataCache.getParameterConfig().getFactor()) {
+                    AlarmUtil.alarm();
+                    SqliteUtil.insertComparedItem(libNames.get(i), searchResultItem,calendar.getTime(),photoPath, cameraPrenster, originalPhoto);
+                }
+
             }
-        }).start();
+        }
 
     }
 
@@ -299,22 +301,33 @@ public class CapturePicService extends Service {
 
         for(int i=0;i<num;i++) {
             String cutPathName=cutPath+TextUtil.dateMessage(calendar.getTime())+"_"+i+".jpg";
-            int height=(detectResult.getRects().get(i).bottom> ParameterConfig.getFromSP().getDpiHeight()? ParameterConfig.getFromSP().getDpiHeight():detectResult.getRects().get(i).bottom)-(detectResult.getRects().get(i).top<0? 0:detectResult.getRects().get(i).top);
-            int width=(detectResult.getRects().get(i).right> ParameterConfig.getFromSP().getDpiWidth()? ParameterConfig.getFromSP().getDpiWidth():detectResult.getRects().get(i).right)-(detectResult.getRects().get(i).left<0? 0:detectResult.getRects().get(i).left);
-//            height= (int) (height*1.6);
-//            width= (int) (width*1.6);
-            Log.d("CameraOriginalPhoto",originalPhoto);
+            int centerX = (detectResult.getRects().get(i).left + detectResult.getRects().get(i).right) / 2;
+            int centerY = (detectResult.getRects().get(i).top + detectResult.getRects().get(i).bottom) / 2;
+            // 获取新的坐标系下四个边的坐标
+            int left = (int)((detectResult.getRects().get(i).left - centerX) * 1.5);
+            int right = (int)((detectResult.getRects().get(i).right - centerX) * 1.5);
+            int top = (int)((detectResult.getRects().get(i).top - centerY) * 1.5);
+            int bottom = (int)((detectResult.getRects().get(i).bottom - centerY) * 1.5);
+            // 将新的边的坐标平移到原来的坐标系
+            left = left + centerX;
+            right = right + centerX;
+            top = top + centerY;
+            bottom = bottom + centerY;
+
+            int height=(bottom> ParameterConfig.getFromSP().getDpiHeight()? ParameterConfig.getFromSP().getDpiHeight():bottom)-(top<0? 0:top);
+            int width=(right> ParameterConfig.getFromSP().getDpiWidth()? ParameterConfig.getFromSP().getDpiWidth():right)-(left<0? 0:left);
 //            Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(originalPhoto), (detectResult.getRects().get(i).left/1.2)<0? 0: (int) (detectResult.getRects().get(i).left /1.2), (detectResult.getRects().get(i).top/1.2<0)? 0: (int) (detectResult.getRects().get(i).top/1.2),width>(ParameterConfig.getFromSP().getDpiWidth()-detectResult.getRects().get(i).left/1.2)?(ParameterConfig.getFromSP().getDpiWidth()-detectResult.getRects().get(i).left/1.2):width,height>(ParameterConfig.getFromSP().getDpiHeight()-detectResult.getRects().get(i).top/1.2)?(ParameterConfig.getFromSP().getDpiHeight()-detectResult.getRects().get(i).top/1.2):height);
-            Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(originalPhoto), (detectResult.getRects().get(i).left)<0? 0: (detectResult.getRects().get(i).left), (detectResult.getRects().get(i).top)<0? 0: (detectResult.getRects().get(i).top),width,height);
+            Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(originalPhoto), left<0? 0: left, top<0? 0: top,width,height);
             try {
                 File file=new File(cutPathName);
                 fos=new FileOutputStream(file);
                 bitmap.compress(Bitmap.CompressFormat.JPEG,100,fos);
-                Log.d("CameraCut",cutPathName);
-                getVerify(detectResult,calendar,cutPathName,originalPhoto);
-                SqliteUtil.insertFaceCollectionItem(cutPathName, originalPhoto, calendar.getTime(),cameraPrenster);
                 fos.flush();
                 fos.close();
+                getVerify(detectResult,calendar,cutPathName,originalPhoto);
+                SqliteUtil.insertFaceCollectionItem(cutPathName, originalPhoto, calendar.getTime(),cameraPrenster);
+                cutPathName = null;
+                originalPhoto = null;
             }catch (FileNotFoundException e){
                 e.printStackTrace();
             }catch (IOException e){
@@ -338,12 +351,12 @@ public class CapturePicService extends Service {
                 try {
                     Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(picPaths.get(i)));
                     FileOutputStream tempFos = new FileOutputStream(tempPath + TextUtil.dateMessage(threadCalenders.get(i).getTime())+"_"+i+".jpg");
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 80, tempFos);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 50, tempFos);
+                    tempFos.flush();
+                    tempFos.close();
 //                    FileUtil.copyCompressedBitmap(picPaths.get(i),tempPath + TextUtil.dateMessage(threadCalenders.get(i).getTime())+"_"+i+".jpg");
                     ArrayList<String> inputPicPaths = new ArrayList<>();
                     inputPicPaths.add(tempPath + TextUtil.dateMessage(threadCalenders.get(i).getTime()) + "_" + i + ".jpg");
-                    tempFos.flush();
-                    tempFos.close();
                     ArrayList<DetectResult> detectResults = SDKUtil.detectFace(inputPicPaths);
                     if (detectResults!=null) {
                         if (((detectResults.get(0).getPoints().get(0).x)[1] - (detectResults.get(0).getPoints().get(0).x)[0]) > picQuality) {
@@ -365,6 +378,7 @@ public class CapturePicService extends Service {
                             FileUtil.delete(deletePath.get(delete));
                         }
                         deletePath.clear();
+                        deletePath = null;
                     }
                 } catch (NullPointerException e) {
                     e.printStackTrace();
@@ -374,6 +388,9 @@ public class CapturePicService extends Service {
                     e.printStackTrace();
                 }
             }
+            picPaths.clear();
+            picPaths = null;
+            tempBestPicPath = null;
         }
     }
 

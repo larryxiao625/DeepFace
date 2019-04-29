@@ -29,8 +29,7 @@ public class AlarmUtil {
     }
 
     public static void alarm() {
-        ParameterConfig config = DataCache.getParameterConfig();
-        int type = config.getAlarmType();
+        int type = DataCache.getParameterConfig().getAlarmType();
         switch (type) {
             case ParameterConfig.ONLYMP3:
                 alarmMP3();

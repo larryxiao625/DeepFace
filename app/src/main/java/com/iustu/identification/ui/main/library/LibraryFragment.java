@@ -4,10 +4,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
 import com.iustu.identification.R;
+import com.iustu.identification.entity.Account;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.main.library.addperson.AddPersonFragment;
 import com.iustu.identification.ui.main.library.addperson.mvp.AddPersionModel;
@@ -155,6 +157,10 @@ public class LibraryFragment extends BaseFragment implements TitleBar.TitleBarLi
     public void switchFragment(int toId){
         Fragment ff = mFragmentList.get(fragmentNow);
         Fragment to = mFragmentList.get(toId);
+        getChildFragmentManager()
+                .beginTransaction()
+                .remove(ff)
+                .commit();
         if(!to.isAdded()){
             getChildFragmentManager()
                     .beginTransaction()
@@ -182,12 +188,13 @@ public class LibraryFragment extends BaseFragment implements TitleBar.TitleBarLi
             titleBar.setBackEnable(true);
             titleBar.setSearchEnable(true);
         }
-        if(fragmentNow != ID_LIBRARIES_MANAGE){
-            getChildFragmentManager()
-                    .beginTransaction()
-                    .remove(ff)
-                    .commit();
-        }
+
+//        if(fragmentNow != ID_LIBRARIES_MANAGE){
+//            getChildFragmentManager()
+//                    .beginTransaction()
+//                    .remove(ff)
+//                    .commit();
+//        }
         fragmentNow = toId;
     }
 
