@@ -124,6 +124,7 @@ public class SqliteUtil {
         compareRecord.setUploadPhoto(uploadPhoto);
         Log.d("insert", "insertComparedItem: " + resultItem.image_id);
         compareRecord.setImage_id(resultItem.image_id);
+        Log.d("imageId",resultItem.image_id);
         compareRecord.setOriginalPhoto(originalPhoto);
         Observable observable = RxUtil.getInsertCompareRecordObservable(libName, compareRecord);
         observable.subscribe(new Observer() {

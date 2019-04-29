@@ -4,6 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     tools:ignore="RtlHardcoded"
     tools:background="@color/colorBackground"
+    android:keepScreenOn="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <LinearLayout

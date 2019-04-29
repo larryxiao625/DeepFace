@@ -90,6 +90,7 @@ public class CapturePicService extends Service {
             }
             libNames.add(libPath);
         }
+        Log.d("libNames", String.valueOf(libNames.size()));
         EventBus.getDefault().register(this);
         capturePic();
 //        ArrayList<String> capturesPic = new ArrayList<>();       // 保存抓拍到的图片
@@ -179,6 +180,7 @@ public class CapturePicService extends Service {
 //                  });
     }
 
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         return START_STICKY;
@@ -258,6 +260,7 @@ public class CapturePicService extends Service {
         ArrayList<DetectResult> temp=new ArrayList<>();
         temp.add(detectResult);
             FeatureResult featureResult=SDKUtil.featureResult(temp);
+            Log.d("CaptureFeature", String.valueOf(detectResult.matPointer));
             if(featureResult.getAllFeats().size()!=0){
                 for(ArrayList<float[]> arrayList:featureResult.getAllFeats()){
                     for(float[] floats:arrayList){
@@ -274,11 +277,13 @@ public class CapturePicService extends Service {
 //            handlers.add(searchHandler);
 //            libs.add(libPath);
 //        }
+        Log.d("CaptureLib", String.valueOf(libNames.size()));
         for(int i = 0; i < libNames.size(); i ++){
             SearchResultItem searchResultItem = null;
             ArrayList<SearchResultItem> searchResultItems=new ArrayList<>();
             searchHandlers.get(libNames.get(i)).searchFind(feat,1,searchResultItems, DataCache.getParameterConfig().getThresholdQuanity());
             if(!searchResultItems.isEmpty()) {
+                Log.d("SearchResultItem", String.valueOf(searchResultItems.size()));
                 for (SearchResultItem temp : searchResultItems) {
                     if (searchResultItem == null) {
                         searchResultItem = temp;
@@ -286,7 +291,10 @@ public class CapturePicService extends Service {
                         searchResultItem = temp;
                     }
                 }
+                Log.d("CaptureOriginal", String.valueOf(searchResultItem.score));
                 searchResultItem.score= (float) (sqrt(searchResultItem.score - 0.71) /sqrt(1.0 - 0.71)* 0.15 + 0.85);
+                Log.d("CaptureTest", String.valueOf(searchResultItem.score));
+                Log.d("CaptureImageId",searchResultItem.image_id);
                 if(searchResultItem.score > DataCache.getParameterConfig().getFactor()) {
                     AlarmUtil.alarm();
                     SqliteUtil.insertComparedItem(libNames.get(i), searchResultItem,calendar.getTime(),photoPath, cameraPrenster, originalPhoto);
