@@ -22,7 +22,10 @@ public class StringUtil {
         for(String picture : pictures) {
             PersionInfo persionInfo = new PersionInfo();
             persionInfo.photoPath = picture;
-            picture = picture.substring(0, picture.length() - 4);     // 去掉.jpg或者.png
+            if (picture.endsWith(".jpeg") || picture.endsWith(".JPEG"))
+                picture = picture.substring(0, picture.length() - 5);
+            else
+                picture = picture.substring(0, picture.length() - 4);     // 去掉.jpg或者.png
             String[] s = picture.split("/");
             String info = s[s.length - 1];    // 获取图片中包含的信息
             s = info.split("_");
