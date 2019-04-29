@@ -67,12 +67,8 @@ public class BatchPresenter {
                 view.changeSubmitable();
                 FileUtil.deleteTemp();
                 if (returns.size() > 0) {
-                    String s = "第";
-                    for (RxUtil.BatchReturn batchReturn : returns) {
-                        s += batchReturn.index + "、";
-                    }
-                    s += "张图片添加失败，请单独添加";
-                    ToastUtil.showLong(s);
+                    FileUtil.copyFailure(pictures, returns);
+                    ToastUtil.showLong("添加失败的图片请在/sdcard/DeepFace/Failure下查看");
                 }
 
             }

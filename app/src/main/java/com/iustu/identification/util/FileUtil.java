@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
@@ -90,6 +91,10 @@ public class FileUtil {
         File cut = new File(sdcard + "/DeepFace/Cut");
         if (!cut.exists())
             cut.mkdir();
+
+        File failture = new File(sdcard + "/DeepFace/Failure");
+        if (!failture.exists())
+            failture.mkdir();
     }
 
     /**
@@ -218,6 +223,39 @@ public class FileUtil {
             for (int i = 0; i < files.length; i++) {
                 File f = files[i];
                 f.delete();
+            }
+        }).start();
+    }
+
+    public static void copyFailure(ArrayList<String> pictures, ArrayList<RxUtil.BatchReturn> returns) {
+        new Thread(new Runnable() {
+            String sdFail = Environment.getExternalStorageDirectory() + "/DeepFace/Failure/";
+            @Override
+            public void run() {
+                for (RxUtil.BatchReturn batchReturn : returns) {
+                    try {
+                        // returns中index是从1开始的,所以这里要减去1
+                        String path = pictures.get(batchReturn.index - 1);
+                        InputStream inputStream = new FileInputStream(path);
+                        String[] fileNames = path.split("/");
+                        String fileName = fileNames[fileNames.length - 1];
+                        fileName = sdFail + fileName;
+                        FileOutputStream outputStream = new FileOutputStream(fileName);
+                        byte[] buffer = new byte[1024];
+                        int byteCount;
+                        while ((byteCount = inputStream.read(buffer)) != -1) {
+                            outputStream.write(buffer, 0, buffer.length);
+                        }
+                        fileName = null;
+                        fileNames = null;
+                        path = null;
+                        outputStream.flush();
+                        inputStream.close();
+                        outputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }).start();
     }
