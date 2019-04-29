@@ -90,6 +90,7 @@ public class CapturePicService extends Service {
             }
             libNames.add(libPath);
         }
+        Log.d("libNames", String.valueOf(libNames.size()));
         EventBus.getDefault().register(this);
         capturePic();
 //        ArrayList<String> capturesPic = new ArrayList<>();       // 保存抓拍到的图片
@@ -178,6 +179,7 @@ public class CapturePicService extends Service {
 //                      }
 //                  });
     }
+
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -281,6 +283,7 @@ public class CapturePicService extends Service {
             ArrayList<SearchResultItem> searchResultItems=new ArrayList<>();
             searchHandlers.get(libNames.get(i)).searchFind(feat,1,searchResultItems, DataCache.getParameterConfig().getThresholdQuanity());
             if(!searchResultItems.isEmpty()) {
+                Log.d("SearchResultItem", String.valueOf(searchResultItems.size()));
                 for (SearchResultItem temp : searchResultItems) {
                     if (searchResultItem == null) {
                         searchResultItem = temp;
