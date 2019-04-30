@@ -30,6 +30,7 @@ public class ParameterConfig {
     float filterScore = 0.85f;       // 人脸比对的阈值
     float thresholdQuanity = 0.76f;       // 临界值
     int alarmType = ONLYMP3;
+    int minEyesDistance = 20;      // 比对最小瞳距
 
     public ParameterConfig(){}
 
@@ -179,5 +180,13 @@ public class ParameterConfig {
 
     public int getAlarmType() {
         return this.alarmType;
+    }
+
+    public void setMinEyesDistance(int eyesDistance) {
+        this.minEyesDistance = eyesDistance;
+    }
+
+    public int getMinEyesDistance() {
+        return this.minEyesDistance;
     }
 }

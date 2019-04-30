@@ -77,6 +77,13 @@ public class ConfigFragment extends BaseFragment {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        DataCache.saveCache();
+        SqliteUtil.updataLibrariedInUsed();
+    }
+
+    @Override
     public void onDestroy() {
         Log.d("libText", "onDestory: ");
         super.onDestroy();
