@@ -349,7 +349,7 @@ public class CapturePicService extends Service {
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
     public void Event(ThreadCanshu threadCanshu){
-        int picQuality=0;
+        int picQuality = DataCache.getParameterConfig().getMinEyesDistance();
         String tempBestPicPath = null;
         ArrayList<DetectResult> tempDetectResults = new ArrayList<>();
         Calendar tempBestCalender = null;
