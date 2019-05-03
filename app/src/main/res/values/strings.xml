@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">DeepFace</string>
     <string name="login_prompt">将人脸放入框内，点击下方开始刷脸，\n即可自动登录</string>
     <string name="start_check_face">刷脸登录</string>
@@ -25,7 +25,7 @@
     <string name="less_or_equals">小于等于</string>
     <string name="min_faces">最小人脸:</string>
     <string name="threshold_quantity">临界值:</string>
-    <string name="min_eyes_distance">最小瞳距:</string>
+    <string name="min_eyes_distance" tools:ignore="ExtraTranslation">最小瞳距:</string>
     <string name="min_faces_hint">范围是0.0-1.0</string>
     <string name="check_factor_hint">0-1</string>
     <string name="check_facotr1">检测参数1:</string>

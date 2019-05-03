@@ -60,7 +60,7 @@ public class SDKUtil {
         detectHandler.initial();
 
         //初始化特征提取句柄
-        verifyHandler = (VerifyHandler) HandlerFactory.createVerify("/sdcard/feature-M1-Framework1-cpu-8289.model");
+        verifyHandler = (VerifyHandler) HandlerFactory.createVerify("/sdcard/feature-M3v2-Framework3-cpu-xxxx.model");
         verifyHandler.initial();
 
         // 初始化属性检测句柄
