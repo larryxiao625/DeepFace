@@ -208,17 +208,29 @@ public class CapturePicService extends Service {
                             capturePicPaths.add(picPath1);
                         });
                         picPath = null;
-                        captureNum++;
-                        if(captureNum==5){
-                            List<String> tempCapturePicPath=new ArrayList<>();
+                        if(DataCache.getParameterConfig().getNeedNoSame()) {
+                            captureNum++;
+                            if (captureNum == 5) {
+                                List<String> tempCapturePicPath = new ArrayList<>();
+                                tempCapturePicPath.addAll(capturePicPaths);
+                                List<Calendar> tempCalender = new ArrayList<>();
+                                tempCalender.addAll(calendars);
+                                threadCanshu = new ThreadCanshu(tempCalender, tempCapturePicPath);
+                                EventBus.getDefault().post(threadCanshu);
+                                capturePicPaths.clear();
+                                calendars.clear();
+                                captureNum = 0;
+                            }
+                        }else{
+                            List<String> tempCapturePicPath = new ArrayList<>();
                             tempCapturePicPath.addAll(capturePicPaths);
-                            List<Calendar> tempCalender=new ArrayList<>();
+                            List<Calendar> tempCalender = new ArrayList<>();
                             tempCalender.addAll(calendars);
-                            threadCanshu=new ThreadCanshu(tempCalender,tempCapturePicPath);
-                            EventBus.getDefault().post(threadCanshu);
+                            threadCanshu = new ThreadCanshu(tempCalender, tempCapturePicPath);
+                            Event(threadCanshu);
                             capturePicPaths.clear();
                             calendars.clear();
-                            captureNum=0;
+                            captureNum = 0;
                         }
                     }
                     @Override
