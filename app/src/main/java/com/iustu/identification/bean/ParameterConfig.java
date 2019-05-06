@@ -31,6 +31,7 @@ public class ParameterConfig {
     float thresholdQuanity = 0.76f;       // 临界值
     int alarmType = ONLYMP3;
     int minEyesDistance = 20;      // 比对最小瞳距
+    boolean needNoSame = true;       // 是否需要去重
 
     public ParameterConfig(){}
 
@@ -188,5 +189,13 @@ public class ParameterConfig {
 
     public int getMinEyesDistance() {
         return this.minEyesDistance;
+    }
+
+    public void setNeedNoSame(boolean needNoSame) {
+        this.needNoSame = needNoSame;
+    }
+
+    public boolean getNeedNoSame() {
+        return this.needNoSame;
     }
 }

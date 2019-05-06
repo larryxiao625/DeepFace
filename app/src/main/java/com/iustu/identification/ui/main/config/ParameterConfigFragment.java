@@ -14,6 +14,7 @@ import com.iustu.identification.R;
 import com.iustu.identification.bean.ParameterConfig;
 import com.iustu.identification.bean.PreviewSizeConfig;
 import com.iustu.identification.ui.base.BaseFragment;
+import com.iustu.identification.ui.widget.SwitchButton;
 import com.iustu.identification.ui.widget.seekbar.BubbleSeekBar;
 import com.iustu.identification.util.DataCache;
 import com.iustu.identification.util.MyTextWatcher;
@@ -71,6 +72,8 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
     @BindView(R.id.alarm)
     RadioGroup radioGroup;
     RadioButton radioButton;
+    @BindView(R.id.same_is_need)
+    SwitchButton switchButton;
 
     private OptionsPickerView displayCountPicker;
     private OptionsPickerView saveCountPicker;
@@ -128,6 +131,13 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
                         config.setAlarmType(ParameterConfig.MP3ANDSHAKE);
                         break;
                 }
+        });
+        switchButton.setSwitch(config.getNeedNoSame());
+        switchButton.setOnSwitchListener(new SwitchButton.OnSwitchListener() {
+            @Override
+            public void onSwitch(View view, boolean on) {
+                config.setNeedNoSame(on);
+            }
         });
         getDpiStringList();
         initData();

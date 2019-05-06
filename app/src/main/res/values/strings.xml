@@ -86,6 +86,7 @@
     <string name="login_face">刷脸登录</string>
     <string name="camera_dpi">摄像头分辨率</string>
     <string name="alarm_type">警报类型</string>
+    <string name="is_no_same">是否开启跟踪去重</string>
     <string name="alarm_only_mp3">仅响铃</string>
     <string name="alarm_only_shake">仅振动</string>
     <string name="alarm_mp3_and_shake">响铃加振动</string>
