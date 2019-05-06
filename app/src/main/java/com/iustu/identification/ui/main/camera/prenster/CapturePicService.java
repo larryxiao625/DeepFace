@@ -227,7 +227,7 @@ public class CapturePicService extends Service {
                             List<Calendar> tempCalender = new ArrayList<>();
                             tempCalender.addAll(calendars);
                             threadCanshu = new ThreadCanshu(tempCalender, tempCapturePicPath);
-                            Event(threadCanshu);
+                            EventBus.getDefault().post(threadCanshu);
                             capturePicPaths.clear();
                             calendars.clear();
                             captureNum = 0;
