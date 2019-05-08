@@ -34,6 +34,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -86,10 +87,14 @@ public class CapturePicService extends Service {
         for(String libPath:libPat){
             if (searchHandlers.get(libPath) == null) {
                 SearchHandler searchHandler= (SearchHandler) HandlerFactory.createSearcher(rootPath+"/"+libPath,0,1);
+                Log.d("createHandler","creatHandler");
                 searchHandlers.put(libPath, searchHandler);
             }
             libNames.add(libPath);
         }
+        Log.d("HandlersSize", String.valueOf(searchHandlers.size()));
+        Log.d("SearchHandlerLocation", String.valueOf(searchHandlers.get("test")));
+        Log.d("libNames", String.valueOf(libNames.size()));
         EventBus.getDefault().register(this);
         capturePic();
 //        ArrayList<String> capturesPic = new ArrayList<>();       // 保存抓拍到的图片
@@ -177,7 +182,13 @@ public class CapturePicService extends Service {
 //
 //                      }
 //                  });
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
+
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -186,7 +197,7 @@ public class CapturePicService extends Service {
 
     @SuppressLint("CheckResult")
     public void capturePic() {
-        Observable.interval(200, TimeUnit.MILLISECONDS)
+        Observable.interval(250, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Long>() {
@@ -205,17 +216,29 @@ public class CapturePicService extends Service {
                             capturePicPaths.add(picPath1);
                         });
                         picPath = null;
-                        captureNum++;
-                        if(captureNum==5){
-                            List<String> tempCapturePicPath=new ArrayList<>();
+                        if(DataCache.getParameterConfig().getNeedNoSame()) {
+                            captureNum++;
+                            if (captureNum == 5) {
+                                List<String> tempCapturePicPath = new ArrayList<>();
+                                tempCapturePicPath.addAll(capturePicPaths);
+                                List<Calendar> tempCalender = new ArrayList<>();
+                                tempCalender.addAll(calendars);
+                                threadCanshu = new ThreadCanshu(tempCalender, tempCapturePicPath);
+                                EventBus.getDefault().post(threadCanshu);
+                                capturePicPaths.clear();
+                                calendars.clear();
+                                captureNum = 0;
+                            }
+                        }else{
+                            List<String> tempCapturePicPath = new ArrayList<>();
                             tempCapturePicPath.addAll(capturePicPaths);
-                            List<Calendar> tempCalender=new ArrayList<>();
+                            List<Calendar> tempCalender = new ArrayList<>();
                             tempCalender.addAll(calendars);
-                            threadCanshu=new ThreadCanshu(tempCalender,tempCapturePicPath);
+                            threadCanshu = new ThreadCanshu(tempCalender, tempCapturePicPath);
                             EventBus.getDefault().post(threadCanshu);
                             capturePicPaths.clear();
                             calendars.clear();
-                            captureNum=0;
+                            captureNum = 0;
                         }
                     }
                     @Override
@@ -258,6 +281,7 @@ public class CapturePicService extends Service {
         ArrayList<DetectResult> temp=new ArrayList<>();
         temp.add(detectResult);
             FeatureResult featureResult=SDKUtil.featureResult(temp);
+            Log.d("CaptureFeature", String.valueOf(detectResult.matPointer));
             if(featureResult.getAllFeats().size()!=0){
                 for(ArrayList<float[]> arrayList:featureResult.getAllFeats()){
                     for(float[] floats:arrayList){
@@ -274,11 +298,14 @@ public class CapturePicService extends Service {
 //            handlers.add(searchHandler);
 //            libs.add(libPath);
 //        }
+        Log.d("CaptureLib", String.valueOf(libNames.size()));
         for(int i = 0; i < libNames.size(); i ++){
             SearchResultItem searchResultItem = null;
             ArrayList<SearchResultItem> searchResultItems=new ArrayList<>();
             searchHandlers.get(libNames.get(i)).searchFind(feat,1,searchResultItems, DataCache.getParameterConfig().getThresholdQuanity());
+            Log.d("searchResultItem", String.valueOf(searchResultItems.size()));
             if(!searchResultItems.isEmpty()) {
+                Log.d("SearchResultItem", String.valueOf(searchResultItems.size()));
                 for (SearchResultItem temp : searchResultItems) {
                     if (searchResultItem == null) {
                         searchResultItem = temp;
@@ -286,7 +313,11 @@ public class CapturePicService extends Service {
                         searchResultItem = temp;
                     }
                 }
-                searchResultItem.score= (float) (sqrt(searchResultItem.score - 0.71) /sqrt(1.0 - 0.71)* 0.15 + 0.85);
+                Log.d("CaptureOriginal", String.valueOf(searchResultItem.score));
+                double score= (sqrt(searchResultItem.score - DataCache.getParameterConfig().getThresholdQuanity()) /sqrt(1.0 - DataCache.getParameterConfig().getThresholdQuanity())* 0.15 + 0.85);
+                searchResultItem.score = round(score, 2, BigDecimal.ROUND_HALF_UP);
+                Log.d("CaptureTest", String.valueOf(searchResultItem.score));
+                Log.d("CaptureImageId",searchResultItem.image_id);
                 if(searchResultItem.score > DataCache.getParameterConfig().getFactor()) {
                     AlarmUtil.alarm();
                     SqliteUtil.insertComparedItem(libNames.get(i), searchResultItem,calendar.getTime(),photoPath, cameraPrenster, originalPhoto);
@@ -339,7 +370,7 @@ public class CapturePicService extends Service {
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
     public void Event(ThreadCanshu threadCanshu){
-        int picQuality=0;
+        int picQuality = DataCache.getParameterConfig().getMinEyesDistance();
         String tempBestPicPath = null;
         ArrayList<DetectResult> tempDetectResults = new ArrayList<>();
         Calendar tempBestCalender = null;
@@ -359,7 +390,7 @@ public class CapturePicService extends Service {
                     inputPicPaths.add(tempPath + TextUtil.dateMessage(threadCalenders.get(i).getTime()) + "_" + i + ".jpg");
                     ArrayList<DetectResult> detectResults = SDKUtil.detectFace(inputPicPaths);
                     if (detectResults!=null) {
-                        if (((detectResults.get(0).getPoints().get(0).x)[1] - (detectResults.get(0).getPoints().get(0).x)[0]) > picQuality) {
+                        if (((detectResults.get(0).getPoints().get(0).x)[1] - (detectResults.get(0).getPoints().get(0).x)[0]) > picQuality && ((detectResults.get(0).getPoints().get(0).x)[1] - (detectResults.get(0).getPoints().get(0).x)[0]) >= DataCache.getParameterConfig().getMinEyesDistance()) {
                             if(i!=0) {
                                 deletePath.add(picPaths.get(i - 1));
                             }
@@ -418,5 +449,14 @@ public class CapturePicService extends Service {
         public void setPicPaths(List<String> picPaths) {
             this.picPaths = picPaths;
         }
+    }
+
+    // 第三位小数四舍五入
+    public static float round(double value, int scale, int roundingMode) {
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(scale, roundingMode);
+        float d = bd.floatValue();
+        bd = null;
+        return d;
     }
 }

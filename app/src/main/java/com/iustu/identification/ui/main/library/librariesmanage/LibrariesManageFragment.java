@@ -184,6 +184,9 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
         // 切换到人员管理的Fragment
         // 并将数据传递过去
         // 可见ChildFragment的相互切换还是委托给ParentFragment来完成的
+        Log.d("libText", "onManagePeople: index" +index);
+        Log.d("libText", "onManagePeople: position" + position);
+        Log.d("libText", "onManagePeople: " + mLibraryList.get(index).libName);
         LibraryFragment libraryFragment = (LibraryFragment) getParentFragment();
         PeopleManageFragment peopleManageFragment = (PeopleManageFragment) libraryFragment.getFragment(LibraryFragment.ID_PEOPLE_MANAGE);
         peopleManageFragment.setArguments(mLibraryList.get(index).libName);
@@ -237,6 +240,7 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
 
     // 初始加载时进行数据初始化
     public void initData() {
+        Log.d("libText", "initData: ");
         mLibraryList.clear();
         // presenter
         presenter.onInitData();

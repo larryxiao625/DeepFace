@@ -2,6 +2,7 @@ package com.iustu.identification.ui.main.camera.adapter;
 
 import android.annotation.SuppressLint;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -122,15 +123,16 @@ public class CompareItemAdapter extends RecyclerView.Adapter<CompareItemAdapter.
             }else if(info.getPhotoPath()==null){
 
             } else {
-                Glide.with(itemView).asBitmap()
-                        .load(new File(info.getUploadPhoto()))
+                Glide.with(itemView)
+                        .load(Drawable.createFromPath(info.getUploadPhoto()))
+                        .skipMemoryCache(true)
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
-                        .format(DecodeFormat.PREFER_RGB_565)
                         .into(capturePhoto);
                 String[] photos = info.getPhotoPath().split(";");
                 String libPath = "/sdcard/DeepFace/" + info.getLibName()+ "/" + photos[0];
                 Log.d("libPath",libPath);
-                Glide.with(itemView).load(BitmapFactory.decodeFile(libPath))
+                Glide.with(itemView).load(Drawable.createFromPath(libPath))
+                        .skipMemoryCache(true)
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .into(matchPhoto);
                 libNameTv.setText(TextUtil.format(String.valueOf(info.getLibName())));

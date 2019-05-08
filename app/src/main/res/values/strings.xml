@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">DeepFace</string>
     <string name="login_prompt">将人脸放入框内，点击下方开始刷脸，\n即可自动登录</string>
     <string name="start_check_face">刷脸登录</string>
@@ -18,13 +18,14 @@
     <string name="fill_remark">请填写备注</string>
     <string name="base_parameters">基本参数</string>
     <string name="threshold_value_face">人脸对比阈值</string>
-    <string name="threshold_value_check">人证检测参数</string>
+    <string name="threshold_value_check">人脸检测参数</string>
     <string name="threshold_value_hint">低于该阈值的比对结果不会显示,为0表示不显示</string>
     <string name="display_count">显示结果数量</string>
     <string name="save_count">保存记录数量</string>
     <string name="less_or_equals">小于等于</string>
     <string name="min_faces">最小人脸:</string>
     <string name="threshold_quantity">临界值:</string>
+    <string name="min_eyes_distance" tools:ignore="ExtraTranslation">最小瞳距:</string>
     <string name="min_faces_hint">范围是0.0-1.0</string>
     <string name="check_factor_hint">0-1</string>
     <string name="check_facotr1">检测参数1:</string>
@@ -85,6 +86,7 @@
     <string name="login_face">刷脸登录</string>
     <string name="camera_dpi">摄像头分辨率</string>
     <string name="alarm_type">警报类型</string>
+    <string name="is_no_same">是否开启跟踪去重</string>
     <string name="alarm_only_mp3">仅响铃</string>
     <string name="alarm_only_shake">仅振动</string>
     <string name="alarm_mp3_and_shake">响铃加振动</string>

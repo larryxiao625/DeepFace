@@ -172,12 +172,20 @@ public class LibPresenter {
                 mView.onSuccess(LibView.TYPE_DELETE_LIB, position, null);
                 disposable.dispose();
                 mView.dissmissDialog();
+                HashSet<String> hashSet = DataCache.getChosenLibConfig();
+                if (hashSet.contains(library.libName)) {
+                    hashSet.remove(library.libName);
+                    DataCache.saveCache();
+                }
             }
         });
     }
 
     /**
      * 更改人脸库信息的逻辑代码
+     * @param old 人脸库之前的信息
+     * @param n 人脸库修改后的信息
+     * @param position 修改的人脸库的位置
      */
     public void onModifyLib(Library old, Library n, int position) {
         mView.showWaitDialog("正在更改人脸库名称...");
@@ -208,6 +216,12 @@ public class LibPresenter {
                 mView.onSuccess(LibView.TYPE_MODIFY_LIB, position, values1);
                 disposable.dispose();
                 mView.dissmissDialog();
+                HashSet<String> hashSet = DataCache.getChosenLibConfig();
+                if (hashSet.contains(old.libName)) {
+                    hashSet.remove(old.libName);
+                    hashSet.add(n.libName);
+                    DataCache.saveCache();
+                }
             }
         });
     }

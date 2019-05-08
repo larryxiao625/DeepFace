@@ -14,6 +14,7 @@ import com.iustu.identification.R;
 import com.iustu.identification.bean.ParameterConfig;
 import com.iustu.identification.bean.PreviewSizeConfig;
 import com.iustu.identification.ui.base.BaseFragment;
+import com.iustu.identification.ui.widget.SwitchButton;
 import com.iustu.identification.ui.widget.seekbar.BubbleSeekBar;
 import com.iustu.identification.util.DataCache;
 import com.iustu.identification.util.MyTextWatcher;
@@ -66,9 +67,13 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
     TextView dpiSetTv;
     @BindView(R.id.threshold_quantity)
     EditText quantity;
+    @BindView(R.id.min_eyes_distance)
+    EditText minEyesDistance;
     @BindView(R.id.alarm)
     RadioGroup radioGroup;
     RadioButton radioButton;
+    @BindView(R.id.same_is_need)
+    SwitchButton switchButton;
 
     private OptionsPickerView displayCountPicker;
     private OptionsPickerView saveCountPicker;
@@ -98,7 +103,7 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
         saveCountList.add(1000);
         saveCountList.add(5000);
         saveCountList.add(10000);
-        config=ParameterConfig.getFromSP();
+        //config=ParameterConfig.getFromSP();
         previewSizeConfig=PreviewSizeConfig.getFramSp();
         dpiWidth=previewSizeConfig.getPreviewWidth();
         dpiHeight=previewSizeConfig.getPreviewHeight();
@@ -127,6 +132,13 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
                         break;
                 }
         });
+        switchButton.setSwitch(config.getNeedNoSame());
+        switchButton.setOnSwitchListener(new SwitchButton.OnSwitchListener() {
+            @Override
+            public void onSwitch(View view, boolean on) {
+                config.setNeedNoSame(on);
+            }
+        });
         getDpiStringList();
         initData();
     }
@@ -139,6 +151,7 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
         checkFactor1.setText(config.getThreshold1() + "");
         checkFactor2.setText(config.getThreshold2() + "");
         checkFactor3.setText(config.getThreshold3() + "");
+        minEyesDistance.setText(config.getMinEyesDistance() + "");
         checkFactor1.addTextChangedListener(new MyTextWatcher());
         checkFactor2.addTextChangedListener(new MyTextWatcher());
         checkFactor3.addTextChangedListener(new MyTextWatcher());
@@ -157,23 +170,19 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
     @Override
     public void onPause() {
         if(config != null) {
-            if(minFace.getText().toString().isEmpty()) {
-                config.setMin_size(80);
-            }else if(!(Float.valueOf(checkFactor1.getText().toString())>=0)&&!(Float.valueOf(checkFactor1.getText().toString())<=1)){
-                config.setThreshold3((float) 0.6);
-            }else if(!(Float.valueOf(checkFactor2.getText().toString())>=0)&&!(Float.valueOf(checkFactor2.getText().toString())<=1)){
-                config.setThreshold2((float) 0.8);
-            }else if(!(Float.valueOf(checkFactor3.getText().toString())>=0)&&!(Float.valueOf(checkFactor3.getText().toString())<=1)){
-                config.setThreshold1((float) 0.98);
-            } else if(!(Float.valueOf(quantity.getText().toString())>=0)&&!(Float.valueOf(quantity.getText().toString())<=1)){
-                config.setThreshold1((float) 0.71);
-            } else {
-                config.setMin_size(Integer.valueOf(minFace.getText().toString()));
+            if (!checkFactor1.getText().toString().isEmpty())
                 config.setThreshold1(Float.valueOf(checkFactor1.getText().toString()));
+            if (!checkFactor2.getText().toString().isEmpty())
                 config.setThreshold2(Float.valueOf(checkFactor2.getText().toString()));
+            if (!checkFactor3.getText().toString().isEmpty())
                 config.setThreshold3(Float.valueOf(checkFactor3.getText().toString()));
+            if (!quantity.getText().toString().isEmpty())
                 config.setThresholdQuanity(Float.valueOf(quantity.getText().toString()));
+            if(!minFace.getText().toString().isEmpty()) {
+                config.setMin_size(Integer.valueOf(minFace.getText().toString()));
             }
+            if (!minEyesDistance.getText().toString().isEmpty())
+                config.setMinEyesDistance(Integer.valueOf(minEyesDistance.getText().toString()));
             config.save();
             super.onPause();
         }
@@ -245,21 +254,5 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
             dpiPicker.setPicker(dpiStringList);
         }
         dpiPicker.show();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        saveConfig();
-    }
-
-    /**
-     * 用来保存参数的配置
-     */
-    public void saveConfig() {
-        config.setMin_size(Integer.valueOf(minFace.getText().toString()));
-        config.setThreshold1(Float.valueOf(checkFactor1.getText().toString()));
-        config.setThreshold2(Float.valueOf(checkFactor2.getText().toString()));
-        config.setThreshold3(Float.valueOf(checkFactor3.getText().toString()));
     }
 }

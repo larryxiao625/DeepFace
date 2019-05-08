@@ -61,8 +61,32 @@ public class ConfigFragment extends BaseFragment {
     }
 
     @Override
+    public void onPause() {
+        Log.d("libText", "onPause: ");
+        super.onPause();
+        DataCache.saveCache();
+        SqliteUtil.updataLibrariedInUsed();
+    }
+
+    @Override
     public void onStop() {
+        Log.d("libText", "onStop: ");
         super.onStop();
+        DataCache.saveCache();
+        SqliteUtil.updataLibrariedInUsed();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        DataCache.saveCache();
+        SqliteUtil.updataLibrariedInUsed();
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.d("libText", "onDestory: ");
+        super.onDestroy();
         DataCache.saveCache();
         SqliteUtil.updataLibrariedInUsed();
     }

@@ -27,9 +27,11 @@ public class ParameterConfig {
     int dpiWidth=1920;
     int dpiHeight=1080;
     int dpiCount=0;
-    float filterScore = 0.85f;       // 人脸比对的阈值
-    float thresholdQuanity = 0.71f;       // 临界值
+    float filterScore = 0.73f;       // 人脸比对的阈值
+    float thresholdQuanity = 0.73f;       // 临界值
     int alarmType = ONLYMP3;
+    int minEyesDistance = 20;      // 比对最小瞳距
+    boolean needNoSame = true;       // 是否需要去重
 
     public ParameterConfig(){}
 
@@ -179,5 +181,21 @@ public class ParameterConfig {
 
     public int getAlarmType() {
         return this.alarmType;
+    }
+
+    public void setMinEyesDistance(int eyesDistance) {
+        this.minEyesDistance = eyesDistance;
+    }
+
+    public int getMinEyesDistance() {
+        return this.minEyesDistance;
+    }
+
+    public void setNeedNoSame(boolean needNoSame) {
+        this.needNoSame = needNoSame;
+    }
+
+    public boolean getNeedNoSame() {
+        return this.needNoSame;
     }
 }

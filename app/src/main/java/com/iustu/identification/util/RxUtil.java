@@ -146,6 +146,13 @@ public class RxUtil {
                 ContentValues values = library.toContentValues();
                 database.beginTransaction();
 
+                Cursor cursor = database.rawQuery("select * from Library where libName = ?", new String[]{library.libName});
+                if (cursor.getCount() > 0) {
+                    e.onError(new Exception("该人脸库已存在"));
+                    cursor.close();
+                    return;
+                }
+
                 String createTable = SqliteUtil.generateCreateTableString(library.libName);
                     // 执行建表语句
                 try {
@@ -155,12 +162,6 @@ public class RxUtil {
                     Log.d("sql", "subscribe: " + e3.getMessage());
                 }
                 database.insert(RxUtil.DB_LIBRARY, null, values);
-
-//                Cursor cursor = database.rawQuery("select name from sqlite_master where type='table' order by name", null);
-//                while (cursor.moveToNext()) {
-//                    String  name = cursor.getString(0);
-//                    Log.d("tables", "subscribe: " + name);
-//                }
                 database.setTransactionSuccessful();
                 database.endTransaction();
                 // 然后执行的是创建人脸库的路径
@@ -217,6 +218,12 @@ public class RxUtil {
                 ContentValues values = newLib.toContentValues();
                 SQLiteDatabase database = SqliteUtil.getDatabase();
                 database.beginTransaction();
+                Cursor cursor = database.rawQuery("select * from Library where libName = ?", new String[]{newLib.libName});
+                if (cursor.getCount() > 0) {
+                    e.onError(new Exception("该人脸库已存在"));
+                    cursor.close();
+                    return;
+                }
                 // 首先修改表名称
                 database.execSQL(alterTable);
 
@@ -318,6 +325,7 @@ public class RxUtil {
                     values1.put("count", count + 1);
                     database.update(RxUtil.DB_LIBRARY, values1, "libName = '" + persionInfo.libName + "'", null);
                     database.setTransactionSuccessful();
+                    cursor.close();
                 } finally{
                     database.endTransaction();
                 }
@@ -413,12 +421,6 @@ public class RxUtil {
         return Observable.create(new ObservableOnSubscribe<Object>() {
             @Override
             public void subscribe(ObservableEmitter<Object> e) {
-                int res = SDKUtil.deletePerFromLibrary(persionInfo);
-                if (res == -1) {
-                    e.onError(new Exception("人脸库删除人脸特征失败"));
-                    return;
-                }
-
                 // 首先执行数据库操作
                 SQLiteDatabase database = SqliteUtil.getDatabase();
                 database.beginTransaction();
@@ -450,6 +452,11 @@ public class RxUtil {
                     database.endTransaction();
                 }
 
+                int res = SDKUtil.deletePerFromLibrary(persionInfo);
+                if (res == -1) {
+                    e.onError(new Exception("人脸库删除人脸特征失败"));
+                    return;
+                }
                 // 执行删除图片
                 FileUtil.deletePersionPhotos(persionInfo);
                 e.onComplete();

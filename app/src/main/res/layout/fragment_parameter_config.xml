@@ -52,47 +52,82 @@
             <include layout="@layout/divider_horizontal"/>
             
             <LinearLayout
+                android:weightSum="3"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="2dp">
-                <TextView
-                    android:gravity="center_vertical"
-                    android:text="@string/min_faces"
-                    android:textSize="@dimen/y36"
-                    android:textColor="@color/white"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <EditText
-                    android:gravity="center_vertical"
-                    android:id="@+id/min_face"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/y38"
-                    android:inputType="numberDecimal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColorHint="@color/lite_gray"
-                    android:hint="@string/min_faces_hint"/>
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content">
 
-                <TextView
-                    android:gravity="center_vertical"
-                    android:text="@string/threshold_quantity"
-                    android:textSize="@dimen/y36"
-                    android:textColor="@color/white"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <EditText
-                    android:gravity="center_vertical"
-                    android:id="@+id/threshold_quantity"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/y38"
-                    android:inputType="numberDecimal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColorHint="@color/lite_gray"
-                    android:hint="@string/min_faces_hint"/>
-                
+                    <TextView
+                        android:gravity="center_vertical"
+                        android:text="@string/min_faces"
+                        android:textSize="@dimen/y36"
+                        android:textColor="@color/white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <EditText
+                        android:gravity="center_vertical"
+                        android:id="@+id/min_face"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/y38"
+                        android:inputType="number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColorHint="@color/lite_gray" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:gravity="center_vertical"
+                        android:text="@string/threshold_quantity"
+                        android:textSize="@dimen/y36"
+                        android:textColor="@color/white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <EditText
+                        android:gravity="center_vertical"
+                        android:id="@+id/threshold_quantity"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/y38"
+                        android:inputType="numberDecimal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColorHint="@color/lite_gray" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_weight="1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:gravity="center_vertical"
+                        android:text="@string/min_eyes_distance"
+                        android:textSize="@dimen/y36"
+                        android:textColor="@color/white"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <EditText
+                        android:gravity="center_vertical"
+                        android:id="@+id/min_eyes_distance"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/y38"
+                        android:inputType="number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColorHint="@color/lite_gray" />
+                </LinearLayout>
+
             </LinearLayout>
+
             <LinearLayout
                 android:padding="2dp"
                 android:weightSum="3"
@@ -356,6 +391,31 @@
                         android:id="@+id/alarm_mp3_and_shake"/>
 
                 </RadioGroup>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_height="@dimen/y292"
+            style="@style/ConfigLayout1">
+
+            <TextView
+                android:drawableLeft="@drawable/display_count"
+                android:text="@string/is_no_same"
+                style="@style/ConfigItemTitle"/>
+
+            <include layout="@layout/divider_horizontal"/>
+
+            <LinearLayout
+                android:paddingLeft="@dimen/x40"
+                android:paddingRight="@dimen/x25"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y160">
+
+                <com.iustu.identification.ui.widget.SwitchButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/same_is_need"/>
+
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

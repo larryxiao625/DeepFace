@@ -163,12 +163,11 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
             }
             dataSource.add(0,compareRecord);
             compareItemAdapter.notifyItemInserted(0);
-            if(itemCompareRecyclerView == null)
+            if(itemCompareRecyclerView == null){
                 return;
-            if(!itemCompareRecyclerView.canScrollVertically(-1)) {
-                itemCompareRecyclerView.smoothScrollToPosition(0);
             }
-        }
+            itemCompareRecyclerView.smoothScrollToPosition(0);
+    }
 
         @Override
         public void updateCapture(String capturePic) {
