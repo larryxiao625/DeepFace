@@ -127,9 +127,7 @@ public class SqliteUtil {
         file = new File(originalPhoto);
         String originalPath = String.format("/sdcard/DeepFace/CompareOriginal/%s", file.getName());
         compareRecord.setUploadPhoto(uploadPath);
-        Log.d("insert", "insertComparedItem: " + resultItem.image_id);
         compareRecord.setImage_id(resultItem.image_id);
-        Log.d("imageId",resultItem.image_id);
         compareRecord.setOriginalPhoto(originalPath);
 
         // 将两张图片复制到CompareXX文件夹下

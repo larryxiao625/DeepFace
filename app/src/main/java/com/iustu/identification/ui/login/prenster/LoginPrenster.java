@@ -121,7 +121,6 @@ public class LoginPrenster implements IPrenster{
                     String pass = o.getString(o.getColumnIndex("password"));
                     Account admin = new Account(name, pass);
                     DataCache.setAdmin(admin);
-                    o.moveToPrevious();
                 }
                 // 说明没有改账户
                 if (o.getCount() == 0){

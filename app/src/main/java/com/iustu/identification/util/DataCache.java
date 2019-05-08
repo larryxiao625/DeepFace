@@ -20,12 +20,6 @@ public class DataCache {
     private static HashSet<String> changedLib = new HashSet<>();         // 保存由"正在使用"转为"未使用"的libName
     private static PreviewSizeConfig previewSizeConfig;     //保存摄像头分辨率
 
-    // 该方法需要在登录成功时的回调中调用
-    public static void initCache(Account maccount) {
-        account = maccount;
-        init();
-    }
-
     public static void init() {
         parameterConfig = ParameterConfig.getFromSP();
         HashSet<String> tempChosenHashSet= (HashSet<String>) MSP.getInstance(MSP.SP_CHOSEN).getStringSet(MSP.SP_CHOSEN, new HashSet<String>());
@@ -33,7 +27,7 @@ public class DataCache {
         chosenLibConfig.addAll(tempChosenHashSet);
         previewSizeConfig= PreviewSizeConfig.getFramSp();
         previewSizeConfig.save();
-        admin = Account.getFromSP(MSP.SP_ADMIN);
+        //admin = Account.getFromSP(MSP.SP_ADMIN);
         account = Account.getFromSP(MSP.SP_ACCOUNT);
     }
 
@@ -41,8 +35,8 @@ public class DataCache {
     public static void saveCache() {
         previewSizeConfig.save();
         parameterConfig.save();
-        admin.save(MSP.SP_ADMIN);
-        account.save(MSP.SP_ACCOUNT);
+        //admin.save(MSP.SP_ADMIN);
+        //account.save(MSP.SP_ACCOUNT);
         MSP.getInstance(MSP.SP_CHOSEN).edit().putStringSet(MSP.SP_CHOSEN, chosenLibConfig).apply();
     }
 
@@ -57,12 +51,12 @@ public class DataCache {
 
     public static void setAccount(Account a) {
         account = a;
-        account.save(MSP.SP_ACCOUNT);
+        //account.save(MSP.SP_ACCOUNT);
     }
 
     public static void setAdmin(Account a) {
         admin = a;
-        admin.save(MSP.SP_ADMIN);
+        //admin.save(MSP.SP_ADMIN);
     }
 
 
