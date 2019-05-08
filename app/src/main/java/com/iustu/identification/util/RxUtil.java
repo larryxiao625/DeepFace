@@ -325,6 +325,7 @@ public class RxUtil {
                     values1.put("count", count + 1);
                     database.update(RxUtil.DB_LIBRARY, values1, "libName = '" + persionInfo.libName + "'", null);
                     database.setTransactionSuccessful();
+                    cursor.close();
                 } finally{
                     database.endTransaction();
                 }

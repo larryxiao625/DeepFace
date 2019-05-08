@@ -25,6 +25,7 @@ import com.iustu.identification.bean.ParameterConfig;
 import com.iustu.identification.entity.PersionInfo;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -145,18 +146,23 @@ public class SDKUtil {
             return -1;
         }
         float[] floats = featureResult.getFeat(0).get(0);
+        Log.d("searchHanlder","floats"+ Arrays.toString(floats));
         persionInfo.feature = Arrays.asList(floats).toString();
         SearchDBItem searchDBItem = new SearchDBItem();
         searchDBItem.feat = floats;
         searchDBItem.image_id = persionInfo.image_id;
         SearchHandler searchHandler = null;
-        if (searchHandlerCache.get(persionInfo.libName) == null) {
+//        if (searchHandlerCache.get(persionInfo.libName) == null) {
             searchHandler = (SearchHandler)HandlerFactory.createSearcher("/sdcard/DeepFace/" + persionInfo.libName, 0, 1);
-            searchHandlerCache.put(persionInfo.libName, searchHandler);
-        } else {
-            searchHandler = searchHandlerCache.get(persionInfo.libName);
-        }
+//            searchHandlerCache.put(persionInfo.libName, searchHandler);
+            Log.d("searchHandler","isNull");
+//        } else {
+//            searchHandler = searchHandlerCache.get(persionInfo.libName);
+//            Log.d("searchHandler","notNull");
+//        }
         result = searchHandler.searchAdd(searchDBItem);
+        Log.d("searchHandler", searchHandler+"result:"+result);
+        searchHandler.destroy();
         if (result == -1)
             return result;
         return result;
