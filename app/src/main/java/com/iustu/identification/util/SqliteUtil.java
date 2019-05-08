@@ -11,6 +11,7 @@ import com.iustu.identification.entity.CompareRecord;
 import com.iustu.identification.entity.Library;
 import com.iustu.identification.ui.main.camera.prenster.IPenster;
 
+import java.io.File;
 import java.util.Date;
 
 import io.reactivex.Observable;
@@ -121,11 +122,19 @@ public class SqliteUtil {
         compareRecord.setRate(resultItem.score);
         compareRecord.setTime(TextUtil.getDateString2(time));
         compareRecord.setHourTime(TextUtil.getHourString(time));
-        compareRecord.setUploadPhoto(uploadPhoto);
+        File file = new File(uploadPhoto);
+        String uploadPath = String.format("/sdcard/DeepFace/CompareCut/%s", file.getName());
+        file = new File(originalPhoto);
+        String originalPath = String.format("/sdcard/DeepFace/CompareOriginal/%s", file.getName());
+        compareRecord.setUploadPhoto(uploadPath);
         Log.d("insert", "insertComparedItem: " + resultItem.image_id);
         compareRecord.setImage_id(resultItem.image_id);
         Log.d("imageId",resultItem.image_id);
-        compareRecord.setOriginalPhoto(originalPhoto);
+        compareRecord.setOriginalPhoto(originalPath);
+
+        // 将两张图片复制到CompareXX文件夹下
+        FileUtil.copy(uploadPhoto, uploadPath);
+        FileUtil.copy(originalPhoto, originalPath);
         Observable observable = RxUtil.getInsertCompareRecordObservable(libName, compareRecord);
         observable.subscribe(new Observer() {
             @Override

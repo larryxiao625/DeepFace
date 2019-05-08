@@ -95,6 +95,14 @@ public class FileUtil {
         File failture = new File(sdcard + "/DeepFace/Failure");
         if (!failture.exists())
             failture.mkdir();
+
+        File compareOriginal = new File(sdcard + "/DeepFace/CompareOriginal");
+        if (!compareOriginal.exists())
+            compareOriginal.mkdir();
+
+        File compareCut = new File(sdcard + "/DeepFace/CompareCut");
+        if (!compareCut.exists())
+            compareCut.mkdir();
     }
 
     /**
