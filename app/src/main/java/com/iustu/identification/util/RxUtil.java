@@ -522,6 +522,8 @@ public class RxUtil {
                         while(index < overCount) {
                             cursor1.moveToNext();
                             index ++;
+                            FileUtil.delete(cursor1.getString(cursor1.getColumnIndex("uploadPhoto")));
+                            FileUtil.delete(cursor1.getString(cursor1.getColumnIndex("originalPath")));
                             database.delete(RxUtil.DB_COMPARERECORD, "uploadPhoto = ?", new String[]{cursor1.getString(cursor1.getColumnIndex("uploadPhoto"))});
                         }
                     }
