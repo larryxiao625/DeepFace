@@ -172,6 +172,11 @@ public class LibPresenter {
                 mView.onSuccess(LibView.TYPE_DELETE_LIB, position, null);
                 disposable.dispose();
                 mView.dissmissDialog();
+                HashSet<String> hashSet = DataCache.getChosenLibConfig();
+                if (hashSet.contains(library.libName)) {
+                    hashSet.remove(library.libName);
+                    DataCache.saveCache();
+                }
             }
         });
     }

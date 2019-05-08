@@ -87,10 +87,13 @@ public class CapturePicService extends Service {
         for(String libPath:libPat){
             if (searchHandlers.get(libPath) == null) {
                 SearchHandler searchHandler= (SearchHandler) HandlerFactory.createSearcher(rootPath+"/"+libPath,0,1);
+                Log.d("createHandler","creatHandler");
                 searchHandlers.put(libPath, searchHandler);
             }
             libNames.add(libPath);
         }
+        Log.d("HandlersSize", String.valueOf(searchHandlers.size()));
+        Log.d("SearchHandlerLocation", String.valueOf(searchHandlers.get("test")));
         Log.d("libNames", String.valueOf(libNames.size()));
         EventBus.getDefault().register(this);
         capturePic();
@@ -179,6 +182,11 @@ public class CapturePicService extends Service {
 //
 //                      }
 //                  });
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -189,7 +197,7 @@ public class CapturePicService extends Service {
 
     @SuppressLint("CheckResult")
     public void capturePic() {
-        Observable.interval(200, TimeUnit.MILLISECONDS)
+        Observable.interval(250, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Long>() {
@@ -208,17 +216,29 @@ public class CapturePicService extends Service {
                             capturePicPaths.add(picPath1);
                         });
                         picPath = null;
-                        captureNum++;
-                        if(captureNum==5){
-                            List<String> tempCapturePicPath=new ArrayList<>();
+                        if(DataCache.getParameterConfig().getNeedNoSame()) {
+                            captureNum++;
+                            if (captureNum == 5) {
+                                List<String> tempCapturePicPath = new ArrayList<>();
+                                tempCapturePicPath.addAll(capturePicPaths);
+                                List<Calendar> tempCalender = new ArrayList<>();
+                                tempCalender.addAll(calendars);
+                                threadCanshu = new ThreadCanshu(tempCalender, tempCapturePicPath);
+                                EventBus.getDefault().post(threadCanshu);
+                                capturePicPaths.clear();
+                                calendars.clear();
+                                captureNum = 0;
+                            }
+                        }else{
+                            List<String> tempCapturePicPath = new ArrayList<>();
                             tempCapturePicPath.addAll(capturePicPaths);
-                            List<Calendar> tempCalender=new ArrayList<>();
+                            List<Calendar> tempCalender = new ArrayList<>();
                             tempCalender.addAll(calendars);
-                            threadCanshu=new ThreadCanshu(tempCalender,tempCapturePicPath);
+                            threadCanshu = new ThreadCanshu(tempCalender, tempCapturePicPath);
                             EventBus.getDefault().post(threadCanshu);
                             capturePicPaths.clear();
                             calendars.clear();
-                            captureNum=0;
+                            captureNum = 0;
                         }
                     }
                     @Override
@@ -283,6 +303,7 @@ public class CapturePicService extends Service {
             SearchResultItem searchResultItem = null;
             ArrayList<SearchResultItem> searchResultItems=new ArrayList<>();
             searchHandlers.get(libNames.get(i)).searchFind(feat,1,searchResultItems, DataCache.getParameterConfig().getThresholdQuanity());
+            Log.d("searchResultItem", String.valueOf(searchResultItems.size()));
             if(!searchResultItems.isEmpty()) {
                 Log.d("SearchResultItem", String.valueOf(searchResultItems.size()));
                 for (SearchResultItem temp : searchResultItems) {

@@ -1,6 +1,7 @@
 package com.iustu.identification.ui.main.camera.adapter;
 
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -49,7 +50,8 @@ public class CatchFaceAdapter extends RecyclerView.Adapter<CatchFaceAdapter.Catc
         }
 
         public void setCatchFace(String catchFace){
-            Glide.with(itemView).load(BitmapFactory.decodeFile(catchFace))
+            Glide.with(itemView).load(Drawable.createFromPath(catchFace))
+                    .skipMemoryCache(true)
                     .diskCacheStrategy(DiskCacheStrategy.NONE)
                     .into(catchFaceImg);
         }
