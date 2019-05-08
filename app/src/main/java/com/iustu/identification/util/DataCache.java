@@ -28,7 +28,7 @@ public class DataCache {
         previewSizeConfig= PreviewSizeConfig.getFramSp();
         previewSizeConfig.save();
         //admin = Account.getFromSP(MSP.SP_ADMIN);
-        account = Account.getFromSP(MSP.SP_ACCOUNT);
+        //account = Account.getFromSP(MSP.SP_ACCOUNT);
     }
 
     // 该方法在App退出前调用，用来将内容写回

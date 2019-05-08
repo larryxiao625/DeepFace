@@ -83,10 +83,8 @@ public class RxUtil {
                     // 首先获取admin管理员账户
                     Cursor cursor1 = database.query(distinct, table, columns, "name = 'admin'", null, null, null, null, null);
                     e.onNext(cursor1);
-                    cursor1.close();
                     Cursor cursor = database.query(distinct, table, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
                     e.onNext(cursor);
-                    cursor.close();
                     e.onComplete();
                     database.setTransactionSuccessful();
                 } finally {

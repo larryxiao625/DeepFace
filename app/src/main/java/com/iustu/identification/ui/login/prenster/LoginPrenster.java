@@ -3,6 +3,7 @@ package com.iustu.identification.ui.login.prenster;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.iustu.identification.config.SystemConfig;
 import com.iustu.identification.entity.Account;
@@ -120,7 +121,9 @@ public class LoginPrenster implements IPrenster{
                     String name = o.getString(o.getColumnIndex("name"));
                     String pass = o.getString(o.getColumnIndex("password"));
                     Account admin = new Account(name, pass);
+                    Log.d("login", "onNext: name" + admin.name + ",password:" + admin.password);
                     DataCache.setAdmin(admin);
+                    return;
                 }
                 // 说明没有改账户
                 if (o.getCount() == 0){

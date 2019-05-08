@@ -123,7 +123,9 @@ public class SqliteUtil {
         compareRecord.setTime(TextUtil.getDateString2(time));
         compareRecord.setHourTime(TextUtil.getHourString(time));
         File file = new File(uploadPhoto);
+        Log.d("insert", "insertComparedItem: " + uploadPhoto);
         String uploadPath = String.format("/sdcard/DeepFace/CompareCut/%s", file.getName());
+        Log.d("insert", "insertComparedItem: " + uploadPath);
         file = new File(originalPhoto);
         String originalPath = String.format("/sdcard/DeepFace/CompareOriginal/%s", file.getName());
         compareRecord.setUploadPhoto(uploadPath);
@@ -153,6 +155,7 @@ public class SqliteUtil {
 
             @Override
             public void onComplete() {
+                Log.d("insert", "onComplete: uploadPhoto" + compareRecord.getUploadPhoto());
                 comparePresenter.getView().updateSingleResult(compareRecord);
             }
         });
