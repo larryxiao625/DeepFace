@@ -387,6 +387,7 @@ public class CapturePicService extends Service {
         List<Calendar> threadCalenders = threadCanshu.getThreadCalenders();
         List<String> picPaths = threadCanshu.getPicPaths();
         if (threadCalenders != null) {
+            int index = -1;      // 记录当前最优图片所在的位置
             for (int i = 0; i < picPaths.size(); i++) {
                 try {
                     Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(picPaths.get(i)));
@@ -400,9 +401,9 @@ public class CapturePicService extends Service {
                     ArrayList<DetectResult> detectResults = SDKUtil.detectFace(inputPicPaths);
                     if (detectResults!=null) {
                         if (((detectResults.get(0).getPoints().get(0).x)[1] - (detectResults.get(0).getPoints().get(0).x)[0]) > picQuality && ((detectResults.get(0).getPoints().get(0).x)[1] - (detectResults.get(0).getPoints().get(0).x)[0]) >= DataCache.getParameterConfig().getMinEyesDistance()) {
-                            if(i!=0) {
-                                deletePath.add(picPaths.get(i - 1));
-                            }
+                            if (index > -1)
+                                deletePath.add(picPaths.get(index));
+                            index = i;
                             picQuality = (int) ((detectResults.get(0).getPoints().get(0).x)[1] - (detectResults.get(0).getPoints().get(0).x)[0]);
                             tempDetectResults.clear();
                             tempDetectResults = detectResults;
@@ -415,6 +416,7 @@ public class CapturePicService extends Service {
                     if (i == (picPaths.size()-1)&&!tempDetectResults.isEmpty()) {
                         getCutPicture(tempBestPicPath, tempDetectResults.get(0), tempBestCalender, tempDetectResults.get(0).points.size());
                         for(int delete=0;delete<deletePath.size();delete++){
+                            Log.d("delete", "Event: 删除的图片是:" + deletePath.get(delete));
                             FileUtil.delete(deletePath.get(delete));
                         }
                         deletePath.clear();

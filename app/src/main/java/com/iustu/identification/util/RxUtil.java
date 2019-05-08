@@ -477,16 +477,18 @@ public class RxUtil {
                 database.beginTransaction();
                 try {
                     Cursor cursor = database.query(false, RxUtil.DB_FACECOLLECTIOMITEM, FACECOLLECTION_COLUMNS, null, null, null, null, null, null, null);
-                    if (cursor.getCount() >= DataCache.getParameterConfig().getSaveCount()) {
+                    if (cursor.getCount() > DataCache.getParameterConfig().getSaveCount()) {
                         // 超过的数目
                         int overCount = cursor.getCount() - DataCache.getParameterConfig().getSaveCount();
                         int index = 0;
                         while(index < overCount) {
                             index ++;
                             cursor.moveToNext();
-                            database.delete(RxUtil.DB_FACECOLLECTIOMITEM, "id = " + cursor.getInt(cursor.getColumnIndex("id")), null);
+                            Log.d("deleteInsert", "subscribe: 抓拍记录删除图片imgUrl:" + cursor.getString(cursor.getColumnIndex("imgUrl")));
                             FileUtil.delete(cursor.getString(cursor.getColumnIndex("imgUrl")));
+                            Log.d("deleteInsert", "subscribe: 抓拍记录删除图片originalPath:" + cursor.getString(cursor.getColumnIndex("originalPath")));
                             FileUtil.delete(cursor.getString(cursor.getColumnIndex("originalPath")));
+                            database.delete(RxUtil.DB_FACECOLLECTIOMITEM, "id = " + cursor.getInt(cursor.getColumnIndex("id")), null);
                         }
 
                     }
@@ -516,13 +518,15 @@ public class RxUtil {
                 database.beginTransaction();
                 try {
                     Cursor cursor1 = database.query(false, RxUtil.DB_COMPARERECORD, COMPARE_COLUMNS, null, null, null, null, null, null, null);
-                    if (cursor1.getCount() >= DataCache.getParameterConfig().getSaveCount()) {
+                    if (cursor1.getCount() > DataCache.getParameterConfig().getSaveCount()) {
                         int overCount = cursor1.getCount() - DataCache.getParameterConfig().getSaveCount();
                         int index = 0;
                         while(index < overCount) {
                             cursor1.moveToNext();
                             index ++;
+                            Log.d("deleteInsert", "subscribe: 比对记录删除图片uploadPhoto:" + cursor1.getString(cursor1.getColumnIndex("uploadPhoto")));
                             FileUtil.delete(cursor1.getString(cursor1.getColumnIndex("uploadPhoto")));
+                            Log.d("deleteInsert", "subscribe: 比对记录删除图片originalPhoto:" + cursor1.getString(cursor1.getColumnIndex("originalPhoto")));
                             FileUtil.delete(cursor1.getString(cursor1.getColumnIndex("originalPhoto")));
                             database.delete(RxUtil.DB_COMPARERECORD, "uploadPhoto = ?", new String[]{cursor1.getString(cursor1.getColumnIndex("uploadPhoto"))});
                         }
