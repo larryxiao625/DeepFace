@@ -170,8 +170,25 @@ public class FileUtil {
             int widthRatio = Math.round((float) options.outWidth / (float) targetWidget);
             inSampleSize = Math.min(heightRatio, widthRatio);
         }
-        Log.d("bitmap", "cauculateInSampleSize: " + inSampleSize);
         return inSampleSize;
+    }
+
+    // 获取压缩后的Options
+    public static BitmapFactory.Options getCompressOptions(String path) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        options.inPreferredConfig = Bitmap.Config.RGB_565;
+        int targetHeight = 360;
+        int targetWidget = 640;
+        int inSampleSize = 1;
+        if (options.outHeight > targetHeight || options.outWidth > targetWidget) {
+            int heightRatio = Math.round((float) options.outHeight / (float) targetHeight);
+            int widthRatio = Math.round((float) options.outWidth / (float) targetWidget);
+            inSampleSize = Math.min(heightRatio, widthRatio);
+        }
+        options.inJustDecodeBounds = false;
+        options.inSampleSize = inSampleSize;
+        return options;
     }
 
 

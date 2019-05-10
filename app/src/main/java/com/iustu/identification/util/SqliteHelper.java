@@ -38,17 +38,14 @@ public class SqliteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        //sqLiteDatabase.beginTransaction();
         sqLiteDatabase.execSQL(SQLString.CREATE_TABLE_ACCOUNT);
         sqLiteDatabase.execSQL(SQLString.CREATE_TABLE_LIBRARY);
         sqLiteDatabase.execSQL(SQLString.CREATE_TABLE_COMPARERECORD);
-        //sqLiteDatabase.execSQL(SQLString.CREATE_TABLE_PERSIONINFO);
         sqLiteDatabase.execSQL(SQLString.CREATE_TABLE_FACECOLLECTIOMITEM);
         String insertUserAccount = "insert into " + SQLString.TABLE_ACCOUNT + " values(\"user\", \"123456\")";
         String insertAdminAccount = "insert into " + SQLString.TABLE_ACCOUNT + " values(\"admin\", \"123456\")";
         sqLiteDatabase.execSQL(insertAdminAccount);
         sqLiteDatabase.execSQL(insertUserAccount);
-        //sqLiteDatabase.endTransaction();
     }
 
     @Override

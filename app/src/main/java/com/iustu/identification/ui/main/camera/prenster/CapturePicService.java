@@ -89,14 +89,10 @@ public class CapturePicService extends Service {
         for(String libPath:libPat){
             if (searchHandlers.get(libPath) == null) {
                 SearchHandler searchHandler= (SearchHandler) HandlerFactory.createSearcher(rootPath+"/"+libPath,0,1);
-                Log.d("createHandler","creatHandler");
                 searchHandlers.put(libPath, searchHandler);
             }
             libNames.add(libPath);
         }
-        Log.d("HandlersSize", String.valueOf(searchHandlers.size()));
-        Log.d("SearchHandlerLocation", String.valueOf(searchHandlers.get("test")));
-        Log.d("libNames", String.valueOf(libNames.size()));
         EventBus.getDefault().register(this);
         capturePic();
 //        ArrayList<String> capturesPic = new ArrayList<>();       // 保存抓拍到的图片
@@ -217,10 +213,9 @@ public class CapturePicService extends Service {
                             calendars.add(calendar);
                             capturePicPaths.add(picPath1);
                         });
-                        picPath = null;
                         if(DataCache.getParameterConfig().getNeedNoSame()) {
                             captureNum++;
-                            if (captureNum == 5) {
+                            if (captureNum == 4) {
                                 List<String> tempCapturePicPath = new ArrayList<>();
                                 tempCapturePicPath.addAll(capturePicPaths);
                                 List<Calendar> tempCalender = new ArrayList<>();
@@ -254,16 +249,9 @@ public class CapturePicService extends Service {
                 });
     }
 
-    public void getTheBestPic(String picPath,ArrayList<DetectResult> detectResults,Calendar calendar,int faceNum){
-        if(faceNum!=0){
-            getCutPicture(picPath,detectResults.get(0),calendar,detectResults.get(0).points.size());
-        }
-    }
-
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        Log.d("CapturePicService","onBind");
         return mBind;
     }
 
@@ -283,7 +271,6 @@ public class CapturePicService extends Service {
         ArrayList<DetectResult> temp=new ArrayList<>();
         temp.add(detectResult);
             FeatureResult featureResult=SDKUtil.featureResult(temp);
-            Log.d("CaptureFeature", String.valueOf(detectResult.matPointer));
 //            if(featureResult.getAllFeats().size()!=0){
 //                for(ArrayList<float[]> arrayList:featureResult.getAllFeats()){
 //                    for(float[] floats:arrayList){
@@ -291,7 +278,6 @@ public class CapturePicService extends Service {
 //                    }
 //                }
 //            }
-        Log.d("faceNumber", "getVerify: 当前是第几张脸:" + index);
         searchFace(featureResult.getFeat(0).get(index), calendar, photoPath, originalPhoto);
     }
     public void searchFace(float[] feat,Calendar calendar,String photoPath,String originalPhoto){
@@ -302,14 +288,11 @@ public class CapturePicService extends Service {
 //            handlers.add(searchHandler);
 //            libs.add(libPath);
 //        }
-        Log.d("CaptureLib", String.valueOf(libNames.size()));
         for(int i = 0; i < libNames.size(); i ++){
             SearchResultItem searchResultItem = null;
             ArrayList<SearchResultItem> searchResultItems=new ArrayList<>();
             searchHandlers.get(libNames.get(i)).searchFind(feat,1,searchResultItems, DataCache.getParameterConfig().getThresholdQuanity());
-            Log.d("searchResultItem", String.valueOf(searchResultItems.size()));
             if(!searchResultItems.isEmpty()) {
-                Log.d("SearchResultItem", String.valueOf(searchResultItems.size()));
                 for (SearchResultItem temp : searchResultItems) {
                     if (searchResultItem == null) {
                         searchResultItem = temp;
@@ -317,17 +300,9 @@ public class CapturePicService extends Service {
                         searchResultItem = temp;
                     }
                 }
-                Log.d("CaptureOriginal", String.valueOf(searchResultItem.score));
                 double score= (sqrt(searchResultItem.score - DataCache.getParameterConfig().getThresholdQuanity()) /sqrt(1.0 - DataCache.getParameterConfig().getThresholdQuanity())* 0.15 + 0.85);
                 searchResultItem.score = round(score, 2, BigDecimal.ROUND_HALF_UP);
-                Log.d("CaptureTest", String.valueOf(searchResultItem.score));
-                Log.d("CaptureImageId",searchResultItem.image_id);
                 if(searchResultItem.score > DataCache.getParameterConfig().getFactor()) {
-                    String test = "  ";
-                    for (int k = 0; k < feat.length; k ++) {
-                        test += (feat[k] + ",");
-                    }
-                    Log.d("search", "searchFace: "+ test + "，照片路径是:" + photoPath);
                     AlarmUtil.alarm();
                     SqliteUtil.insertComparedItem(libNames.get(i), searchResultItem,calendar.getTime(),photoPath, cameraPrenster, originalPhoto);
                 }
@@ -339,7 +314,6 @@ public class CapturePicService extends Service {
 
     public void getCutPicture(String originalPhoto, DetectResult detectResult,Calendar calendar,int num){
         for(int i=0;i<num;i++) {
-            Log.d("faceNumber", "getCutPicture: " + num + ",当前是第:" + i);
             String cutPathName=cutPath+TextUtil.dateMessage(calendar.getTime())+"_"+i+".jpg";
             int centerX = (detectResult.getRects().get(i).left + detectResult.getRects().get(i).right) / 2;
             int centerY = (detectResult.getRects().get(i).top + detectResult.getRects().get(i).bottom) / 2;
@@ -357,8 +331,7 @@ public class CapturePicService extends Service {
             int height=(bottom> ParameterConfig.getFromSP().getDpiHeight()? ParameterConfig.getFromSP().getDpiHeight():bottom)-(top<0? 0:top);
             int width=(right> ParameterConfig.getFromSP().getDpiWidth()? ParameterConfig.getFromSP().getDpiWidth():right)-(left<0? 0:left);
 //            Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(originalPhoto), (detectResult.getRects().get(i).left/1.2)<0? 0: (int) (detectResult.getRects().get(i).left /1.2), (detectResult.getRects().get(i).top/1.2<0)? 0: (int) (detectResult.getRects().get(i).top/1.2),width>(ParameterConfig.getFromSP().getDpiWidth()-detectResult.getRects().get(i).left/1.2)?(ParameterConfig.getFromSP().getDpiWidth()-detectResult.getRects().get(i).left/1.2):width,height>(ParameterConfig.getFromSP().getDpiHeight()-detectResult.getRects().get(i).top/1.2)?(ParameterConfig.getFromSP().getDpiHeight()-detectResult.getRects().get(i).top/1.2):height);
-            Log.d("bitmap", "getCutPicture: 原图路径是:" + originalPhoto);
-            Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(originalPhoto), left<0? 0: left, top<0? 0: top,width,height);
+            Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(originalPhoto, FileUtil.getCompressOptions(originalPhoto)), left<0? 0: left, top<0? 0: top,width,height);
             try {
                 File file=new File(cutPathName);
                 fos=new FileOutputStream(file);
@@ -390,12 +363,11 @@ public class CapturePicService extends Service {
             int index = -1;      // 记录当前最优图片所在的位置
             for (int i = 0; i < picPaths.size(); i++) {
                 try {
-                    Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(picPaths.get(i)));
+                    Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(picPaths.get(i), FileUtil.getCompressOptions(picPaths.get(i))));
                     FileOutputStream tempFos = new FileOutputStream(tempPath + TextUtil.dateMessage(threadCalenders.get(i).getTime())+"_"+i+".jpg");
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 50, tempFos);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 60, tempFos);
                     tempFos.flush();
                     tempFos.close();
-//                    FileUtil.copyCompressedBitmap(picPaths.get(i),tempPath + TextUtil.dateMessage(threadCalenders.get(i).getTime())+"_"+i+".jpg");
                     ArrayList<String> inputPicPaths = new ArrayList<>();
                     inputPicPaths.add(tempPath + TextUtil.dateMessage(threadCalenders.get(i).getTime()) + "_" + i + ".jpg");
                     ArrayList<DetectResult> detectResults = SDKUtil.detectFace(inputPicPaths);
@@ -416,7 +388,6 @@ public class CapturePicService extends Service {
                     if (i == (picPaths.size()-1)&&!tempDetectResults.isEmpty()) {
                         getCutPicture(tempBestPicPath, tempDetectResults.get(0), tempBestCalender, tempDetectResults.get(0).points.size());
                         for(int delete=0;delete<deletePath.size();delete++){
-                            Log.d("delete", "Event: 删除的图片是:" + deletePath.get(delete));
                             FileUtil.delete(deletePath.get(delete));
                         }
                         deletePath.clear();

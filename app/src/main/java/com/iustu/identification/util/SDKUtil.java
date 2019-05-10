@@ -192,7 +192,6 @@ public class SDKUtil {
         float[] floats = featureResult.getFeat(0).get(0);
         persionInfo.feature = Arrays.asList(floats).toString();
         String image_id = System.currentTimeMillis() + "";
-        Log.d("batch", "sdkDoBatchPersion: " + image_id);
         persionInfo.image_id = image_id;
         SearchDBItem searchDBItem = new SearchDBItem();
         searchDBItem.feat = floats;
