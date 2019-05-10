@@ -49,6 +49,7 @@ import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 import static java.lang.Math.log;
 import static java.lang.Math.sqrt;
@@ -196,8 +197,8 @@ public class CapturePicService extends Service {
     @SuppressLint("CheckResult")
     public void capturePic() {
         Observable.interval(250, TimeUnit.MILLISECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(Schedulers.io())
+                .subscribeOn(Schedulers.io())
                 .subscribe(new Observer<Long>() {
                     @Override
                     public void onSubscribe(Disposable d) {
@@ -213,9 +214,21 @@ public class CapturePicService extends Service {
                             calendars.add(calendar);
                             capturePicPaths.add(picPath1);
                         });
-                        if(DataCache.getParameterConfig().getNeedNoSame()) {
-                            captureNum++;
-                            if (captureNum == 4) {
+                        try {
+                            if (DataCache.getParameterConfig().getNeedNoSame()) {
+                                captureNum++;
+                                if (captureNum == 4) {
+                                    List<String> tempCapturePicPath = new ArrayList<>();
+                                    tempCapturePicPath.addAll(capturePicPaths);
+                                    List<Calendar> tempCalender = new ArrayList<>();
+                                    tempCalender.addAll(calendars);
+                                    threadCanshu = new ThreadCanshu(tempCalender, tempCapturePicPath);
+                                    EventBus.getDefault().post(threadCanshu);
+                                    capturePicPaths.clear();
+                                    calendars.clear();
+                                    captureNum = 0;
+                                }
+                            } else {
                                 List<String> tempCapturePicPath = new ArrayList<>();
                                 tempCapturePicPath.addAll(capturePicPaths);
                                 List<Calendar> tempCalender = new ArrayList<>();
@@ -226,16 +239,8 @@ public class CapturePicService extends Service {
                                 calendars.clear();
                                 captureNum = 0;
                             }
-                        }else{
-                            List<String> tempCapturePicPath = new ArrayList<>();
-                            tempCapturePicPath.addAll(capturePicPaths);
-                            List<Calendar> tempCalender = new ArrayList<>();
-                            tempCalender.addAll(calendars);
-                            threadCanshu = new ThreadCanshu(tempCalender, tempCapturePicPath);
-                            EventBus.getDefault().post(threadCanshu);
-                            capturePicPaths.clear();
-                            calendars.clear();
-                            captureNum = 0;
+                        }catch (OutOfMemoryError e){
+                            e.printStackTrace();
                         }
                     }
                     @Override
@@ -338,7 +343,9 @@ public class CapturePicService extends Service {
                 bitmap.compress(Bitmap.CompressFormat.JPEG,100,fos);
                 fos.flush();
                 fos.close();
-                getVerify(i,detectResult,calendar,cutPathName,originalPhoto);
+                if(DataCache.getParameterConfig().getFactor()!=0) {
+                    getVerify(i, detectResult, calendar, cutPathName, originalPhoto);
+                }
                 SqliteUtil.insertFaceCollectionItem(cutPathName, originalPhoto, calendar.getTime(),cameraPrenster);
                 cutPathName = null;
             }catch (FileNotFoundException e){
