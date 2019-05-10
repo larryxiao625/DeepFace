@@ -269,6 +269,7 @@ public class CapturePicService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        FileUtil.deleteCache();
         FileUtil.deleteTemp();
         disposable.dispose();
     }
@@ -394,9 +395,7 @@ public class CapturePicService extends Service {
                     }
                     if (i == (picPaths.size()-1)&&!tempDetectResults.isEmpty()) {
                         getCutPicture(tempBestPicPath, tempDetectResults.get(0), tempBestCalender, tempDetectResults.get(0).points.size());
-                        for(int delete=0;delete<deletePath.size();delete++){
-                            FileUtil.delete(deletePath.get(delete));
-                        }
+                        FileUtil.deleteList(deletePath);
                         deletePath.clear();
                         deletePath = null;
                     }

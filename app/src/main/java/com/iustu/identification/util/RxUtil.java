@@ -487,7 +487,7 @@ public class RxUtil {
                             Log.d("deleteInsert", "subscribe: 抓拍记录删除图片imgUrl:" + cursor.getString(cursor.getColumnIndex("imgUrl")));
                             FileUtil.delete(cursor.getString(cursor.getColumnIndex("imgUrl")));
                             Log.d("deleteInsert", "subscribe: 抓拍记录删除图片originalPath:" + cursor.getString(cursor.getColumnIndex("originalPath")));
-                            FileUtil.delete(cursor.getString(cursor.getColumnIndex("originalPath")));
+                            FileUtil.deleteWithCache(cursor.getString(cursor.getColumnIndex("originalPath")));
                             database.delete(RxUtil.DB_FACECOLLECTIOMITEM, "id = " + cursor.getInt(cursor.getColumnIndex("id")), null);
                         }
 
@@ -525,9 +525,9 @@ public class RxUtil {
                             cursor1.moveToNext();
                             index ++;
                             Log.d("deleteInsert", "subscribe: 比对记录删除图片uploadPhoto:" + cursor1.getString(cursor1.getColumnIndex("uploadPhoto")));
-                            FileUtil.delete(cursor1.getString(cursor1.getColumnIndex("uploadPhoto")));
+                            FileUtil.deleteWithCache(cursor1.getString(cursor1.getColumnIndex("uploadPhoto")));
                             Log.d("deleteInsert", "subscribe: 比对记录删除图片originalPhoto:" + cursor1.getString(cursor1.getColumnIndex("originalPhoto")));
-                            FileUtil.delete(cursor1.getString(cursor1.getColumnIndex("originalPhoto")));
+                            FileUtil.deleteWithCache(cursor1.getString(cursor1.getColumnIndex("originalPhoto")));
                             database.delete(RxUtil.DB_COMPARERECORD, "uploadPhoto = ?", new String[]{cursor1.getString(cursor1.getColumnIndex("uploadPhoto"))});
                         }
                     }
