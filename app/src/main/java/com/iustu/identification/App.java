@@ -15,6 +15,8 @@ import com.tencent.bugly.crashreport.CrashReport;
 
 import org.litepal.LitePalApplication;
 
+import leakcanary.LeakCanary;
+
 
 /**
  * Created by Liu Yuchuan on 2017/11/4.

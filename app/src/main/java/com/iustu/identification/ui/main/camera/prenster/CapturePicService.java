@@ -8,7 +8,7 @@ import android.graphics.BitmapFactory;
 import android.os.Binder;
 import android.os.Environment;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.Log;
 
 import com.example.agin.facerecsdk.DetectResult;
@@ -24,7 +24,6 @@ import com.iustu.identification.util.SDKUtil;
 import com.iustu.identification.util.SqliteUtil;
 import com.iustu.identification.util.TextUtil;
 import com.jiangdg.usbcamera.UVCCameraHelper;
-import com.serenegiant.utils.ThreadPool;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -36,22 +35,18 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import leakcanary.LeakSentry;
 
-import static java.lang.Math.log;
 import static java.lang.Math.sqrt;
 
 public class CapturePicService extends Service {
@@ -269,6 +264,7 @@ public class CapturePicService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        LeakSentry.INSTANCE.getRefWatcher().watch(this);
         FileUtil.deleteCache();
         FileUtil.deleteTemp();
         disposable.dispose();
@@ -297,6 +293,8 @@ public class CapturePicService extends Service {
         for(int i = 0; i < libNames.size(); i ++){
             SearchResultItem searchResultItem = null;
             ArrayList<SearchResultItem> searchResultItems=new ArrayList<>();
+            Log.d("searchHandlers", String.valueOf(searchHandlers.size()));
+            Log.d("searchHandlers", String.valueOf(searchHandlers.get(libNames.get(i))));
             searchHandlers.get(libNames.get(i)).searchFind(feat,1,searchResultItems, DataCache.getParameterConfig().getThresholdQuanity());
             if(!searchResultItems.isEmpty()) {
                 for (SearchResultItem temp : searchResultItems) {

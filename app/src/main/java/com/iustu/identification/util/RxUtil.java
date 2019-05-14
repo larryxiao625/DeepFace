@@ -7,19 +7,16 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Environment;
-import android.support.annotation.RequiresApi;
+import androidx.annotation.RequiresApi;
 import android.util.Log;
 
 import com.iustu.identification.bean.FaceCollectItem;
-import com.iustu.identification.bean.ParameterConfig;
 import com.iustu.identification.entity.Account;
 import com.iustu.identification.entity.CompareRecord;
 import com.iustu.identification.entity.Library;
 import com.iustu.identification.entity.PersionInfo;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.List;
 import java.util.function.Consumer;
 
 import java.util.ArrayList;
@@ -27,7 +24,6 @@ import java.util.ArrayList;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;

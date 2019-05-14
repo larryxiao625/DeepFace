@@ -1,11 +1,10 @@
 package com.iustu.identification.ui.main.history.view;
 
-import android.app.Dialog;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -19,12 +18,8 @@ import com.iustu.identification.R;
 import com.iustu.identification.bean.FaceCollectItem;
 import com.iustu.identification.ui.base.BaseDialogFragment;
 import com.iustu.identification.ui.base.BaseFragment;
-import com.iustu.identification.ui.base.OnItemClickListener;
 import com.iustu.identification.ui.main.history.adapter.FaceCollectItemAdapter;
 import com.iustu.identification.ui.main.history.prenster.HistoryPrenster;
-import com.iustu.identification.ui.main.history.view.HistoryFragment;
-import com.iustu.identification.ui.main.history.view.IVew;
-import com.iustu.identification.ui.main.history.view.CompareHistoryFragment;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.ui.widget.dialog.SingleButtonDialog;
 import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;

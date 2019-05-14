@@ -3,46 +3,34 @@ package com.iustu.identification.ui.main.batch;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.iustu.identification.R;
 import com.iustu.identification.entity.BatchSuccess;
 import com.iustu.identification.ui.main.batch.folder.ChooseFolderActivity;
-import com.iustu.identification.ui.main.batch.folder.FolderChooseFragment;
 import com.iustu.identification.ui.main.batch.mvp.BatchPresenter;
 import com.iustu.identification.ui.main.batch.mvp.BatchView;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
 import com.iustu.identification.util.FileUtil;
 import com.iustu.identification.util.IconFontUtil;
-import com.iustu.identification.util.MSP;
 import com.iustu.identification.util.ToastUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-import butterknife.BindView;
-import butterknife.OnClick;
 
 /**
  * Created by Liu Yuchuan on 2017/11/17.

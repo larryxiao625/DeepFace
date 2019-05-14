@@ -23,7 +23,7 @@
         android:textSize="@dimen/x36"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/folder_recycler_view"
         android:layout_weight="1"
         android:layout_width="match_parent"

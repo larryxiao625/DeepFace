@@ -1,21 +1,16 @@
 package com.iustu.identification.ui.main.config;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.util.DisplayMetrics;
+import androidx.annotation.Nullable;
+
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.iustu.identification.BuildConfig;
 import com.iustu.identification.R;
-import com.iustu.identification.bean.BatchCompareImg;
-import com.iustu.identification.config.SystemConfig;
 import com.iustu.identification.entity.Account;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.widget.dialog.EditDialog;
-import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.util.DataCache;
 import com.iustu.identification.util.SqliteUtil;
 

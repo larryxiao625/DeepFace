@@ -2,7 +2,7 @@ package com.iustu.identification.ui.main.library.peoplemagnage;
 
 import android.app.DialogFragment;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,8 +18,6 @@ import com.iustu.identification.ui.main.library.peoplemagnage.mvp.PersionPresent
 import com.iustu.identification.util.ToastUtil;
 
 import org.greenrobot.eventbus.EventBus;
-
-import butterknife.BindView;
 
 public class SearchDialog extends DialogFragment {
 

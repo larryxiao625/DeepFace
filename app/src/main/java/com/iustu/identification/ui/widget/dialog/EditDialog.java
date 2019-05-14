@@ -2,7 +2,6 @@ package com.iustu.identification.ui.widget.dialog;
 
 import android.app.FragmentManager;
 import android.os.Bundle;
-import android.support.design.widget.TextInputLayout;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -13,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.iustu.identification.R;
 import com.iustu.identification.ui.base.BaseDialogFragment;
 

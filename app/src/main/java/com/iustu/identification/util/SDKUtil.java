@@ -64,9 +64,9 @@ public class SDKUtil {
         verifyHandler = (VerifyHandler) HandlerFactory.createVerify("/sdcard/feature-M3v2-Framework3-cpu-xxxx.model");
         verifyHandler.initial();
 
-        // 初始化属性检测句柄
-        attributeHandler = (AttributeHandler) HandlerFactory.createAttribute("/sdcard/attr-Framework1-cpu-0a15-bc0a.model");
-        attributeHandler.initial();
+//        // 初始化属性检测句柄
+//        attributeHandler = (AttributeHandler) HandlerFactory.createAttribute("/sdcard/attr-Framework1-cpu-0a15-bc0a.model");
+//        attributeHandler.initial();
 
         // 初始化人脸跟踪检测句柄
         trackerHandler= (TrackerHandler) HandlerFactory.createTracker(2000000);

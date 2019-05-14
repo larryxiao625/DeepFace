@@ -1,12 +1,11 @@
 package com.iustu.identification.ui.main.library.librariesmanage;
 
 import android.content.ContentValues;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -26,7 +25,6 @@ import com.iustu.identification.ui.main.library.peoplemagnage.PeopleManageFragme
 import com.iustu.identification.ui.widget.dialog.Edit2Dialog;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
-import com.iustu.identification.util.AlarmUtil;
 import com.iustu.identification.util.IconFontUtil;
 import com.iustu.identification.util.PageSetHelper;
 import com.iustu.identification.util.ToastUtil;
