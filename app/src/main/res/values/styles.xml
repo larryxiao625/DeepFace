@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -61,7 +61,7 @@
         <item name="android:maxLength">40</item>
     </style>
 
-    <style name="TabLayout" parent="android:Widget">
+    <style name="TabLayout" parent="android:Theme.Material" tools:targetApi="lollipop">
         <item name="tabMaxWidth">264dp</item>
         <item name="tabIndicatorColor">@color/lite_blue</item>
         <item name="tabIndicatorHeight">2dp</item>

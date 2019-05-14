@@ -11,14 +11,14 @@
         android:layout_height="wrap_content">
     </com.iustu.identification.ui.widget.TitleBar>
 
-    <android.support.design.widget.TabLayout
+    <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_config"
         style="@style/TabLayout"
         app:tabBackground="@color/tab_bg_color"
         app:tabMode="fixed"
         android:layout_width="match_parent"
         android:layout_height="@dimen/y110">
-    </android.support.design.widget.TabLayout>
+    </com.google.android.material.tabs.TabLayout>
 
 
     <androidx.viewpager.widget.ViewPager
