@@ -56,11 +56,13 @@ public class CapturePicService extends Service {
     static String tempPath=Environment.getExternalStorageDirectory()+"/DeepFace/temp/";
     private CameraPrenster cameraPrenster;
     volatile int captureNum=0;
+    volatile int captureCount = 0;       // 计数器
     int picQuality=0;
     Calendar tempBestCalender;
     CaptureBind mBind;
     Disposable disposable;
     volatile HashMap<String, SearchHandler> searchHandlers=new HashMap<>();
+    volatile HashSet<String> imageIdCache = new HashSet<>();      // 保存ImageID
     ArrayList<String> libNames = new ArrayList<>();
 
     String tempBestPicPath;
@@ -202,6 +204,12 @@ public class CapturePicService extends Service {
 
                     @Override
                     public void onNext(Long aLong) {
+                        if (captureCount == 4){
+                            imageIdCache.clear();
+                            captureCount = 0;
+                        }
+                        captureCount ++;
+
                         Calendar calendar=Calendar.getInstance();
                         String fileName=TextUtil.dateMessage(calendar.getTime())+"_"+captureNum+".jpg";
                         String picPath=rootPath+"/"+fileName;
@@ -280,9 +288,9 @@ public class CapturePicService extends Service {
 //                    }
 //                }
 //            }
-        searchFace(featureResult.getFeat(0).get(index), calendar, photoPath, originalPhoto);
+        searchFace(featureResult.getFeat(0).get(index), calendar, photoPath, originalPhoto, imageIdCache);
     }
-    public void searchFace(float[] feat,Calendar calendar,String photoPath,String originalPhoto){
+    public void searchFace(float[] feat,Calendar calendar,String photoPath,String originalPhoto, HashSet<String> idCache){
 //        ArrayList<SearchHandler> handlers = new ArrayList<>();
 //        ArrayList<String> libs = new ArrayList<>();
 //        for(String libPath:libPat){
@@ -293,9 +301,11 @@ public class CapturePicService extends Service {
         for(int i = 0; i < libNames.size(); i ++){
             SearchResultItem searchResultItem = null;
             ArrayList<SearchResultItem> searchResultItems=new ArrayList<>();
-            Log.d("searchHandlers", String.valueOf(searchHandlers.size()));
-            Log.d("searchHandlers", String.valueOf(searchHandlers.get(libNames.get(i))));
             searchHandlers.get(libNames.get(i)).searchFind(feat,1,searchResultItems, DataCache.getParameterConfig().getThresholdQuanity());
+            if (idCache.contains(searchResultItem.image_id)) {
+                return;
+            }
+            imageIdCache.add(searchResultItem.image_id);
             if(!searchResultItems.isEmpty()) {
                 for (SearchResultItem temp : searchResultItems) {
                     if (searchResultItem == null) {
