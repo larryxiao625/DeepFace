@@ -302,12 +302,12 @@ public class CapturePicService extends Service {
             SearchResultItem searchResultItem = null;
             ArrayList<SearchResultItem> searchResultItems=new ArrayList<>();
             searchHandlers.get(libNames.get(i)).searchFind(feat,1,searchResultItems, DataCache.getParameterConfig().getThresholdQuanity());
-            if (idCache.contains(searchResultItem.image_id)) {
-                return;
-            }
-            imageIdCache.add(searchResultItem.image_id);
             if(!searchResultItems.isEmpty()) {
                 for (SearchResultItem temp : searchResultItems) {
+                    if (idCache.contains(temp.image_id)) {
+                        return;
+                    }
+                    imageIdCache.add(temp.image_id);
                     if (searchResultItem == null) {
                         searchResultItem = temp;
                     } else if (temp.score > searchResultItem.score) {
