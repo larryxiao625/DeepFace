@@ -132,15 +132,6 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
         }
     }
 
-    //    @Override
-//    public void onHide() {
-//        super.onHide();
-//        isOnLoadMore = false;
-//        pageSetHelper.setPage(1);
-//        mPersonList.clear();
-//        mAdapter.notifyDataChange();
-//    }
-
     @Override
     public void onStart() {
         super.onStart();
@@ -154,7 +145,6 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
     }
 
     public void setArguments(String libName){
-        Log.d("libText", "setArguments: " + libName);
         Bundle bundle = getArguments();
         if(bundle == null){
             bundle = new Bundle();
@@ -214,7 +204,6 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
             photoPath = path;
             int degree = ImageUtils.readPictureDegree(path);
             if(degree == 0){
-                //addPhoto(new File(path));
                 presenter.onAddPhoto(mPersonList.get(currentPersionPosition), photoPath, currentPersionPosition);
             }else {
                 Observable<File> observable = ImageUtils.modifiedSavePhoto("添加照片", path, ImageUtils.readPictureDegree(path), new FileCallBack() {
@@ -349,7 +338,6 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void Event(Integer page) {
-        Log.d("search", "setTargetPage: " + page);
         mAdapter.setPageNow(page);
         pageSetHelper.notifyChange();
     }

@@ -41,13 +41,6 @@ public class ConfigFragment extends BaseFragment {
         tabLayout.setupWithViewPager(viewPager);
     }
 
-    public BaseFragment getFragment(int id){
-        if(mAdapter == null){
-            return null;
-        }
-        return (BaseFragment) mAdapter.getItem(id);
-    }
-
     @Override
     public void onHide() {
         super.onHide();
@@ -62,7 +55,6 @@ public class ConfigFragment extends BaseFragment {
 
     @Override
     public void onPause() {
-        Log.d("libText", "onPause: ");
         super.onPause();
         DataCache.saveCache();
         SqliteUtil.updataLibrariedInUsed();
@@ -70,7 +62,6 @@ public class ConfigFragment extends BaseFragment {
 
     @Override
     public void onStop() {
-        Log.d("libText", "onStop: ");
         super.onStop();
         DataCache.saveCache();
         SqliteUtil.updataLibrariedInUsed();
@@ -85,7 +76,6 @@ public class ConfigFragment extends BaseFragment {
 
     @Override
     public void onDestroy() {
-        Log.d("libText", "onDestory: ");
         super.onDestroy();
         DataCache.saveCache();
         SqliteUtil.updataLibrariedInUsed();

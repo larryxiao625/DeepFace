@@ -111,11 +111,6 @@ public class LibraryManageFragment extends BaseFragment implements LibManagerVie
     }
 
     @Override
-    public void updateLibrary() {
-        presenter.onUpdateData(mChooseList);
-    }
-
-    @Override
     public void onFailed(String e) {
         ToastUtil.show(e);
     }

@@ -148,22 +148,13 @@ public class SDKUtil {
             return -1;
         }
         float[] floats = featureResult.getFeat(0).get(0);
-        Log.d("searchHanlder","floats"+ Arrays.toString(floats));
         persionInfo.feature = Arrays.asList(floats).toString();
         SearchDBItem searchDBItem = new SearchDBItem();
         searchDBItem.feat = floats;
         searchDBItem.image_id = persionInfo.image_id;
         SearchHandler searchHandler = null;
-//        if (searchHandlerCache.get(persionInfo.libName) == null) {
-            searchHandler = (SearchHandler)HandlerFactory.createSearcher("/sdcard/DeepFace/" + persionInfo.libName, 0, 1);
-//            searchHandlerCache.put(persionInfo.libName, searchHandler);
-            Log.d("searchHandler","isNull");
-//        } else {
-//            searchHandler = searchHandlerCache.get(persionInfo.libName);
-//            Log.d("searchHandler","notNull");
-//        }
+        searchHandler = (SearchHandler)HandlerFactory.createSearcher("/sdcard/DeepFace/" + persionInfo.libName, 0, 1);
         result = searchHandler.searchAdd(searchDBItem);
-        Log.d("searchHandler", searchHandler+"result:"+result);
         searchHandler.destroy();
         if (result == -1)
             return result;
@@ -176,10 +167,8 @@ public class SDKUtil {
      */
     public static boolean sdkDoBatchPersion(PersionInfo persionInfo) {
         String compressPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DeepFace/temp/" + persionInfo.photoPath;
-        //String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DeepFace/" + persionInfo.libName + "/" + persionInfo.photoPath;
         DetectResult detectResult=new DetectResult();
         int result = SDKUtil.getDetectHandler().faceDetector(compressPath,detectResult);
-        //int result = SDKUtil.getDetectHandler().faceDetector(path,detectResult);
         if (result <= 0)
             return false;
         FeatureResult featureResult=new FeatureResult();
@@ -259,7 +248,6 @@ public class SDKUtil {
             for(int i=0;i<picPaths.size();i++){
                 DetectResult detectResult=new DetectResult();
                 int faceNum=SDKUtil.getDetectHandler().faceDetector(picPaths.get(0),detectResult);
-                Log.d("capturePic", "人脸检测结果是" + faceNum);
                 if(faceNum!=0){
                     detectResults.add(detectResult);
                 }
