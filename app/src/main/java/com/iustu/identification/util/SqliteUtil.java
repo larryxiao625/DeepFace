@@ -95,14 +95,12 @@ public class SqliteUtil {
 
             @Override
             public void onError(Throwable e) {
-                Log.d("Camera","onError");
                 e.printStackTrace();
                 ToastUtil.show(e.getMessage());
             }
 
             @Override
             public void onComplete() {
-                Log.d("Camera","onComplete1");
                 comparePrenster.getView().updateCapture(imgPath);
             }
         });
@@ -123,9 +121,7 @@ public class SqliteUtil {
         compareRecord.setTime(TextUtil.getDateString2(time));
         compareRecord.setHourTime(TextUtil.getHourString(time));
         File file = new File(uploadPhoto);
-        Log.d("insert", "insertComparedItem: " + uploadPhoto);
         String uploadPath = String.format("/sdcard/DeepFace/CompareCut/%s", file.getName());
-        Log.d("insert", "insertComparedItem: " + uploadPath);
         file = new File(originalPhoto);
         String originalPath = String.format("/sdcard/DeepFace/CompareOriginal/%s", file.getName());
         compareRecord.setUploadPhoto(uploadPath);
@@ -155,7 +151,6 @@ public class SqliteUtil {
 
             @Override
             public void onComplete() {
-                Log.d("insert", "onComplete: uploadPhoto" + compareRecord.getUploadPhoto());
                 comparePresenter.getView().updateSingleResult(compareRecord);
             }
         });
@@ -185,7 +180,6 @@ public class SqliteUtil {
             @Override
             public void onError(Throwable e) {
                 e.printStackTrace();
-                ToastUtil.show("错误：" + e.getMessage());
             }
 
             @Override

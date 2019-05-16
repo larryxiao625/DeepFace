@@ -154,7 +154,6 @@ public class RxUtil {
                     database.execSQL(createTable);
                 } catch (SQLException e3) {
                     e3.printStackTrace();
-                    Log.d("sql", "subscribe: " + e3.getMessage());
                 }
                 database.insert(RxUtil.DB_LIBRARY, null, values);
                 database.setTransactionSuccessful();
@@ -187,7 +186,6 @@ public class RxUtil {
                 String dropTable = SqliteUtil.generateDropTableString(library.libName);
                 database.execSQL(dropTable);
                 database.delete(RxUtil.DB_LIBRARY, "libName = '" + library.libName + "'", null);
-                    //database.delete(RxUtil.DB_PERSIONINFO, "libName = '" + library.libName + "'", null);
                 database.setTransactionSuccessful();
                 database.endTransaction();
                 // 删掉对相应的文件夹
@@ -400,8 +398,7 @@ public class RxUtil {
                 } finally {
                     database.endTransaction();
                 }
-                // 其次进行文件删除
-                //String finalPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DeepFace/" + persionInfo.libName + "/" + persionInfo.name + System.currentTimeMillis() + ".jpg";
+                // 其次进行文件删
                 FileUtil.delete(path);
                 e.onComplete();
             }
@@ -480,9 +477,7 @@ public class RxUtil {
                         while(index < overCount) {
                             index ++;
                             cursor.moveToNext();
-                            Log.d("deleteInsert", "subscribe: 抓拍记录删除图片imgUrl:" + cursor.getString(cursor.getColumnIndex("imgUrl")));
                             FileUtil.delete(cursor.getString(cursor.getColumnIndex("imgUrl")));
-                            Log.d("deleteInsert", "subscribe: 抓拍记录删除图片originalPath:" + cursor.getString(cursor.getColumnIndex("originalPath")));
                             FileUtil.deleteWithCache(cursor.getString(cursor.getColumnIndex("originalPath")));
                             database.delete(RxUtil.DB_FACECOLLECTIOMITEM, "id = " + cursor.getInt(cursor.getColumnIndex("id")), null);
                         }
@@ -520,9 +515,7 @@ public class RxUtil {
                         while(index < overCount) {
                             cursor1.moveToNext();
                             index ++;
-                            Log.d("deleteInsert", "subscribe: 比对记录删除图片uploadPhoto:" + cursor1.getString(cursor1.getColumnIndex("uploadPhoto")));
                             FileUtil.deleteWithCache(cursor1.getString(cursor1.getColumnIndex("uploadPhoto")));
-                            Log.d("deleteInsert", "subscribe: 比对记录删除图片originalPhoto:" + cursor1.getString(cursor1.getColumnIndex("originalPhoto")));
                             FileUtil.deleteWithCache(cursor1.getString(cursor1.getColumnIndex("originalPhoto")));
                             database.delete(RxUtil.DB_COMPARERECORD, "uploadPhoto = ?", new String[]{cursor1.getString(cursor1.getColumnIndex("uploadPhoto"))});
                         }
@@ -585,8 +578,6 @@ public class RxUtil {
                 SQLiteDatabase database = SqliteUtil.getDatabase();
                 database.beginTransaction();
                 try {
-                    Log.d("compare", "subscribe: " + compareRecord.getImage_id());
-                    Log.d("compare", "subscribe: " + compareRecord.getLibName());
                     database.delete(RxUtil.DB_COMPARERECORD, "uploadPhoto = ?", new String[]{compareRecord.getUploadPhoto()});
                     database.setTransactionSuccessful();
                 } finally {

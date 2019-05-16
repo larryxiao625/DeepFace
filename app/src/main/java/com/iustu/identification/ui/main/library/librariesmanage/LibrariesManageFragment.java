@@ -78,7 +78,6 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
     @Override
     protected void initView(@Nullable Bundle savedInstanceState, View view) {
         super.initView(savedInstanceState, view);
-        //mLibraryList = LibManager.getLibraryList();     // 获取所有的人脸库,这里我们需要修改
         mAdapter = new LibrariesManageAdapter(mLibraryList);
         mAdapter.setOnLibrariesItemButtonClickedListener(this);
         mAdapter.setPageSetHelper(pageSetHelper);
@@ -108,13 +107,6 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
                     .negative("取消", null)
                     .show(mActivity.getFragmentManager());
         });
-        mAdapter.setLoadMoreListener(new PageRecyclerViewAdapter.LoadMoreListener() {
-            @Override
-            public void loadMore() {
-                // Presenter 实现
-            }
-        });
-        //mAdapter.setDisplayCountPerPage();
         recyclerView.setLayoutManager(new GridLayoutManager(mActivity, 10, LinearLayoutManager.HORIZONTAL, false){
             @Override
             public boolean canScrollHorizontally() {
@@ -182,9 +174,6 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
         // 切换到人员管理的Fragment
         // 并将数据传递过去
         // 可见ChildFragment的相互切换还是委托给ParentFragment来完成的
-        Log.d("libText", "onManagePeople: index" +index);
-        Log.d("libText", "onManagePeople: position" + position);
-        Log.d("libText", "onManagePeople: " + mLibraryList.get(index).libName);
         LibraryFragment libraryFragment = (LibraryFragment) getParentFragment();
         PeopleManageFragment peopleManageFragment = (PeopleManageFragment) libraryFragment.getFragment(LibraryFragment.ID_PEOPLE_MANAGE);
         peopleManageFragment.setArguments(mLibraryList.get(index).libName);
@@ -238,7 +227,6 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
 
     // 初始加载时进行数据初始化
     public void initData() {
-        Log.d("libText", "initData: ");
         mLibraryList.clear();
         // presenter
         presenter.onInitData();

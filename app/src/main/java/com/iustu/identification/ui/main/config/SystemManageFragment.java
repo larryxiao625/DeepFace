@@ -30,12 +30,6 @@ public class SystemManageFragment extends BaseFragment{
     TextView versionTv;
 
     @Override
-    public void onStart() {
-        super.onStart();
-
-    }
-
-    @Override
     protected int postContentView() {
         return R.layout.fragment_system_manage;
     }
@@ -45,16 +39,6 @@ public class SystemManageFragment extends BaseFragment{
         account = DataCache.getAccount();
         usernameTv.setText(("用户：" + account.name));
         versionTv.setText(("当前版本：" + BuildConfig.VERSION_NAME));
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onHide() {
-        super.onHide();
     }
 
     @OnClick(R.id.ip_alter_tv)
@@ -80,11 +64,6 @@ public class SystemManageFragment extends BaseFragment{
                 .show(mActivity.getFragmentManager());
                 */
     }
-
-//    @OnClick(R.id.tv_version)
-//    public void onCheckUpdate(){
-//        Beta.checkUpgrade(true, false);
-//    }
 
     @OnClick(R.id.tv_modify_password)
     public void modifyPassword () {

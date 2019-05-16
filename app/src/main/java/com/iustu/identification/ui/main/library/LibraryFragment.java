@@ -186,13 +186,6 @@ public class LibraryFragment extends BaseFragment implements TitleBar.TitleBarLi
             titleBar.setBackEnable(true);
             titleBar.setSearchEnable(true);
         }
-
-//        if(fragmentNow != ID_LIBRARIES_MANAGE){
-//            getChildFragmentManager()
-//                    .beginTransaction()
-//                    .remove(ff)
-//                    .commit();
-//        }
         fragmentNow = toId;
     }
 
@@ -244,9 +237,5 @@ public class LibraryFragment extends BaseFragment implements TitleBar.TitleBarLi
         }else {
             super.onBackPressed();
         }
-    }
-
-    public void notifyLibChange(){
-        mFragmentList.get(ID_LIBRARIES_MANAGE).setInitData(false);
     }
 }
