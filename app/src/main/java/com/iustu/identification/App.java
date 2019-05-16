@@ -15,7 +15,7 @@ import com.tencent.bugly.crashreport.CrashReport;
 
 import org.litepal.LitePalApplication;
 
-import leakcanary.LeakCanary;
+//import leakcanary.LeakCanary;
 
 
 /**

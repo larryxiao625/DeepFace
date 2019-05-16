@@ -20,10 +20,12 @@ public class CopyModelUtil {
 
     // 将assects下的model文件夹中的内容拷贝到手机sd卡
     public static void copyAssetsToSD(Context context) {
+        Log.d("asstes", String.valueOf(new File(sdPath).canWrite()));
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
+
                     String[] models = context.getAssets().list(modelPath);
                     for (String model : models) {
                         File outFile = new File(sdPath + model);

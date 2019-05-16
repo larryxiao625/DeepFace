@@ -84,6 +84,8 @@ public class SDKUtil {
         // 设置生成的证书文件的路径
         FacerecUtil.generateLicense(file + "/license_key.txt");
         updateFile(file + "/license_key.txt");
+        Log.d("file",file);
+        Log.d("file", String.valueOf(new File(file+"/license.txt").canRead()));
         // 设置license的路径
         FacerecUtil.setLicensePath(file);
         if (FacerecUtil.facerecsdkValid()) {

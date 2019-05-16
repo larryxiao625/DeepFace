@@ -45,7 +45,7 @@ import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import leakcanary.LeakSentry;
+//import leakcanary.LeakSentry;
 
 import static java.lang.Math.sqrt;
 
@@ -272,7 +272,7 @@ public class CapturePicService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        LeakSentry.INSTANCE.getRefWatcher().watch(this);
+//        LeakSentry.INSTANCE.getRefWatcher().watch(this);
         FileUtil.deleteCache();
         FileUtil.deleteTemp();
         disposable.dispose();
