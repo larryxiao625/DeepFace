@@ -93,91 +93,6 @@ public class CapturePicService extends Service {
         }
         EventBus.getDefault().register(this);
         capturePic();
-//        ArrayList<String> capturesPic = new ArrayList<>();       // 保存抓拍到的图片
-//        Observable.interval(200, TimeUnit.MILLISECONDS)
-//                .map(new Function<Long, Object>() {
-//                    @Override
-//                    public Object apply(Long aLong) {
-//                        Calendar calendar=Calendar.getInstance();
-//                        String picPath=rootPath+"/"+System.currentTimeMillis()+".jpg";
-//                        cameraHelper.capturePicture(picPath, picPath1 -> {
-//                            captureNum ++;
-//                            capturesPic.add(picPath);
-//                        });
-//                        if (captureNum == 5) {
-//                            captureNum = 0;
-//                            ArrayList<String> f = new ArrayList<>();
-//                            for (int i = 0; i < capturesPic.size(); i ++) {
-//                                f.add(capturesPic.get(i));
-//                            }
-//                            capturesPic.clear();
-//                            return f;
-//                        } else {
-//                            return picPath;
-//                        }
-//                    }
-//                }).subscribeOn(AndroidSchedulers.mainThread())
-//                  .observeOn(Schedulers.io())
-//                  .subscribe(new Observer<Object>() {
-//
-//                      @Override
-//                      public void onSubscribe(Disposable d) {
-//                          disposable = d;
-//                      }
-//
-//                      @Override
-//                      public void onNext(Object o) {
-//                          if (o.getClass().equals(String.class)) {
-//                              return;
-//                          }
-//                          ArrayList<String> compressedPictures = new ArrayList<>();
-//                          Log.d("bestPic", "五张图片是 " + ((ArrayList<String>)o).toString());
-//                          // 压缩五张图片
-//                          for (int i = 0; i < ((ArrayList<String>)o).size(); i ++) {
-//                              File file = new File(((ArrayList<String>)o).get(i));
-//                              String fileName = file.getName();
-//                              String finalpath = tempPath + "/" + fileName;
-//                              Log.d("capturePic", "图片名称是" + fileName);
-//                              FileUtil.copyCompressedBitmap(file.getAbsolutePath(), finalpath);
-//                              compressedPictures.add(finalpath);
-//                          }
-//
-//                          Log.d("capturePic", "压缩后的数量是" + compressedPictures.size());
-//                          // 提取特征
-//                          ArrayList<DetectResult> results;
-//                          results = SDKUtil.detectFace(compressedPictures);
-//                          Log.d("capturePic", "人脸检测结果是" + results.size());
-//                          // 选取最优
-//                          float max = -1.0f;
-//                          int bestIndex = -1;
-//                          if (results.size() == 0)
-//                              return;
-//                          for (int i = 0; i < results.size(); i ++) {
-//                              DetectResult detectResult = results.get(i);
-//                              float m = detectResult.points.get(0).x[1] - detectResult.points.get(0).x[0];
-//                              Log.d("capturePic", "两眼距离是" + m);
-//                              if (max <= m) {
-//                                  bestIndex = i;
-//                                  max = m;
-//                              }
-//                          }
-//
-//                          // 选出的最优图片的路径
-//                          String bestPicture = ((ArrayList<String>)o).get(bestIndex);
-//                          Log.d("bestPic", "最优图片是 " + bestPicture);
-//
-//                      }
-//
-//                      @Override
-//                      public void onError(Throwable e) {
-//
-//                      }
-//
-//                      @Override
-//                      public void onComplete() {
-//
-//                      }
-//                  });
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
@@ -280,24 +195,10 @@ public class CapturePicService extends Service {
     public void getVerify(int index, DetectResult detectResult,Calendar calendar,String photoPath,String originalPhoto){
         ArrayList<DetectResult> temp=new ArrayList<>();
         temp.add(detectResult);
-            FeatureResult featureResult=SDKUtil.featureResult(temp);
-//            if(featureResult.getAllFeats().size()!=0){
-//                for(ArrayList<float[]> arrayList:featureResult.getAllFeats()){
-//                    for(float[] floats:arrayList){
-//                        searchFace(floats,calendar,photoPath,originalPhoto);
-//                    }
-//                }
-//            }
+        FeatureResult featureResult=SDKUtil.featureResult(temp);
         searchFace(featureResult.getFeat(0).get(index), calendar, photoPath, originalPhoto, imageIdCache);
     }
     public void searchFace(float[] feat,Calendar calendar,String photoPath,String originalPhoto, HashSet<String> idCache){
-//        ArrayList<SearchHandler> handlers = new ArrayList<>();
-//        ArrayList<String> libs = new ArrayList<>();
-//        for(String libPath:libPat){
-//            SearchHandler searchHandler= (SearchHandler) HandlerFactory.createSearcher(rootPath+"/"+libPath,0,1);
-//            handlers.add(searchHandler);
-//            libs.add(libPath);
-//        }
         for(int i = 0; i < libNames.size(); i ++){
             SearchResultItem searchResultItem = null;
             ArrayList<SearchResultItem> searchResultItems=new ArrayList<>();
@@ -305,8 +206,11 @@ public class CapturePicService extends Service {
             if(!searchResultItems.isEmpty()) {
                 for (SearchResultItem temp : searchResultItems) {
                     if (idCache.contains(temp.image_id)) {
+                        FileUtil.deleteWithCache(photoPath);
+                        FileUtil.deleteWithCache(originalPhoto);
                         return;
                     }
+                    idCache.add(temp.image_id);
                     imageIdCache.add(temp.image_id);
                     if (searchResultItem == null) {
                         searchResultItem = temp;

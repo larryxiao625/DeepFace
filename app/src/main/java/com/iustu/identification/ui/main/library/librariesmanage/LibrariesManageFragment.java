@@ -81,6 +81,7 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
         mAdapter = new LibrariesManageAdapter(mLibraryList);
         mAdapter.setOnLibrariesItemButtonClickedListener(this);
         mAdapter.setPageSetHelper(pageSetHelper);
+
         // RecyclerView的Item点击事件实现更改库名称
         mAdapter.setOnPageItemClickListener((view1, index, position) -> {
             Library library = mLibraryList.get(position);

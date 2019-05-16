@@ -80,7 +80,6 @@ public class SearchDialog extends DialogFragment {
             else
                 searchString += "and identity = '" + identity + "'";
         }
-        Log.d("search", "startSearch: " + searchString);
         PersionPresenter.searchPerson(libName, searchString, this);
     }
 
@@ -90,12 +89,10 @@ public class SearchDialog extends DialogFragment {
             ToastUtil.show("查无此人");
             return;
         } else {
-            Log.d("search", "postBack: " + index);
             int n = index % 3;
             int page = index / 3;
             if (n > 0)
                 page ++;
-            Log.d("search", "postBack: " + page);
             EventBus.getDefault().post(page);
             getDialog().dismiss();
         }

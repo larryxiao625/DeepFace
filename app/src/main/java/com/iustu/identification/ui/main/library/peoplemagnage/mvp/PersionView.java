@@ -8,10 +8,10 @@ import com.iustu.identification.entity.PersonInfo;
 import java.util.List;
 
 public interface PersionView {
-    public static final int TYPE_ADD_PHOTO = 0;
-    public static final int TYPE_DELETE_PHOTO = 1;
-    public static final int TYPE_DELETE_PER = 2;
-    public static final int TYPE_SAVE_CHANGE = 3;
+    int TYPE_ADD_PHOTO = 0;
+    int TYPE_DELETE_PHOTO = 1;
+    int TYPE_DELETE_PER = 2;
+    int TYPE_SAVE_CHANGE = 3;
 
     void setPresenter(PersionPresenter persenter);
 
@@ -49,7 +49,16 @@ public interface PersionView {
      */
     void onSaveChange(int position, PersionInfo persionInfo);
 
+    /**
+     * 在获取人脸库所有人员信息的时候显示等待框
+     * @param content 等待框的文字内容
+     */
     void showWaitDialog(String content);
+
+    /**
+     * 在在获取人脸库所有人员信息成功或者失败时
+     * 关闭等待框
+     */
     void dissmissDialog();
 
     /**
@@ -59,5 +68,10 @@ public interface PersionView {
      * @param values 本次操作的数据的变动结果，如果是删除人员的话，该参数没有意义
      */
     void onSuccess(int type, int position, ContentValues values);
+
+    /**
+     * 在获取人脸库所有人员信息失败时
+     * @param message 失败的信息
+     */
     void onFailed(String message);
 }
