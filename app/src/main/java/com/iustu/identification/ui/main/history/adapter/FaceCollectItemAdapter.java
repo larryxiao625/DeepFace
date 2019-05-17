@@ -1,7 +1,7 @@
 package com.iustu.identification.ui.main.history.adapter;
 
 import android.graphics.Color;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,14 +14,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.iustu.identification.R;
 import com.iustu.identification.bean.FaceCollectItem;
-import com.iustu.identification.bean.ParameterConfig;
 import com.iustu.identification.ui.base.OnPageItemClickListener;
 import com.iustu.identification.ui.base.PageRecyclerViewAdapter;
 import com.iustu.identification.util.DataCache;
-import com.iustu.identification.util.TextUtil;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.util.List;
 
 /**

@@ -1,15 +1,14 @@
 package com.iustu.identification.ui.main.library;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.util.Log;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+
 import android.view.View;
 import android.widget.TextView;
 
 import com.iustu.identification.R;
-import com.iustu.identification.entity.Account;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.main.library.addperson.AddPersonFragment;
 import com.iustu.identification.ui.main.library.addperson.mvp.AddPersionModel;
@@ -23,7 +22,6 @@ import com.iustu.identification.ui.main.library.peoplemagnage.mvp.PersionPresent
 import com.iustu.identification.ui.widget.TitleBar;
 import com.iustu.identification.ui.widget.dialog.EditDialog;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
-import com.iustu.identification.util.AlarmUtil;
 import com.iustu.identification.util.DataCache;
 
 import java.util.ArrayList;
@@ -135,7 +133,7 @@ public class LibraryFragment extends BaseFragment implements TitleBar.TitleBarLi
                 .title("获取管理员权限")
                 .hint("请输入管理员账户密码")
                 .positive("确定", (v, content, layout) -> {
-                    if (content.equals("123456")) {
+                    if (content.equals(DataCache.getAdmin().password)) {
                         needConfirm = false;
                         confirm.setVisibility(View.GONE);
                         switchFragment(fragmentNow);
@@ -188,13 +186,6 @@ public class LibraryFragment extends BaseFragment implements TitleBar.TitleBarLi
             titleBar.setBackEnable(true);
             titleBar.setSearchEnable(true);
         }
-
-//        if(fragmentNow != ID_LIBRARIES_MANAGE){
-//            getChildFragmentManager()
-//                    .beginTransaction()
-//                    .remove(ff)
-//                    .commit();
-//        }
         fragmentNow = toId;
     }
 
@@ -246,9 +237,5 @@ public class LibraryFragment extends BaseFragment implements TitleBar.TitleBarLi
         }else {
             super.onBackPressed();
         }
-    }
-
-    public void notifyLibChange(){
-        mFragmentList.get(ID_LIBRARIES_MANAGE).setInitData(false);
     }
 }

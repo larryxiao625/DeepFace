@@ -14,6 +14,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
@@ -25,6 +26,8 @@ public class FileUtil {
     private static final String regex = ".+(.JPEG|.jpeg|.JPG|.jpg|.GIF|.gif|.BMP|.bmp|.PNG|.png)$";
 
     private static final Pattern PATTERN = Pattern.compile(regex);
+
+    private static final ArrayList<String> deleteCache = new ArrayList<>();
 
     public static String getType(File file){
         if(file.isDirectory()){
@@ -95,6 +98,14 @@ public class FileUtil {
         File failture = new File(sdcard + "/DeepFace/Failure");
         if (!failture.exists())
             failture.mkdir();
+
+        File compareOriginal = new File(sdcard + "/DeepFace/CompareOriginal");
+        if (!compareOriginal.exists())
+            compareOriginal.mkdir();
+
+        File compareCut = new File(sdcard + "/DeepFace/CompareCut");
+        if (!compareCut.exists())
+            compareCut.mkdir();
     }
 
     /**
@@ -162,8 +173,25 @@ public class FileUtil {
             int widthRatio = Math.round((float) options.outWidth / (float) targetWidget);
             inSampleSize = Math.min(heightRatio, widthRatio);
         }
-        Log.d("bitmap", "cauculateInSampleSize: " + inSampleSize);
         return inSampleSize;
+    }
+
+    // 获取压缩后的Options
+    public static BitmapFactory.Options getCompressOptions(String path) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        options.inPreferredConfig = Bitmap.Config.RGB_565;
+        int targetHeight = 360;
+        int targetWidget = 640;
+        int inSampleSize = 1;
+        if (options.outHeight > targetHeight || options.outWidth > targetWidget) {
+            int heightRatio = Math.round((float) options.outHeight / (float) targetHeight);
+            int widthRatio = Math.round((float) options.outWidth / (float) targetWidget);
+            inSampleSize = Math.min(heightRatio, widthRatio);
+        }
+        options.inJustDecodeBounds = false;
+        options.inSampleSize = inSampleSize;
+        return options;
     }
 
 
@@ -184,6 +212,35 @@ public class FileUtil {
             file.delete();
         }).start();
 
+    }
+
+    // 批量删除图片
+    public static void deleteWithCache(String path) {
+        deleteCache.add(path);
+        if (deleteCache.size() > 100) {
+            ArrayList<String> d = new ArrayList<>();
+            d.addAll(deleteCache);
+            deleteList(d);
+            deleteCache.clear();
+        }
+    }
+
+    // 程序退出的时候执行
+    public static void deleteCache() {
+        ArrayList<String> d = new ArrayList<>();
+        d.addAll(deleteCache);
+        deleteList(d);
+        deleteCache.clear();
+    }
+
+    // 删除批量的图片
+    public static void deleteList(List<String> list) {
+        new Thread(() -> {
+            for(String s : list) {
+                File file = new File(s);
+                file.delete();
+            }
+        }).start();
     }
 
     /**

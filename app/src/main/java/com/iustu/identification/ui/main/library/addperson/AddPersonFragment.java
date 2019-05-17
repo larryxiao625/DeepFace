@@ -2,10 +2,9 @@ package com.iustu.identification.ui.main.library.addperson;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,10 +12,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.iustu.identification.R;
 import com.iustu.identification.entity.PersionInfo;
-import com.iustu.identification.entity.PersonInfo;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.main.MainActivity;
-import com.iustu.identification.ui.main.library.LibraryFragment;
 import com.iustu.identification.ui.main.library.addperson.mvp.AddPersionPresenter;
 import com.iustu.identification.ui.main.library.addperson.mvp.AddPersionView;
 import com.iustu.identification.ui.widget.dialog.SingleButtonDialog;
@@ -221,6 +218,7 @@ public class AddPersonFragment extends BaseFragment implements AddPersionView {
 
     @Override
     public void onAddSuccess() {
+        ToastUtil.show("添加成功");
     }
 
     // 将所有EditText清空

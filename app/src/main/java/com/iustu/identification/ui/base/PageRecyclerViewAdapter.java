@@ -1,9 +1,8 @@
 package com.iustu.identification.ui.base;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.iustu.identification.util.DataCache;
 import com.iustu.identification.util.PageSetHelper;
 
 import java.util.List;

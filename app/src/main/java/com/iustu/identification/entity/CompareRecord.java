@@ -1,7 +1,6 @@
 package com.iustu.identification.entity;
 
 import android.content.ContentValues;
-import android.support.design.widget.TabLayout;
 
 /**
  * created by sgh, 2019-4-2

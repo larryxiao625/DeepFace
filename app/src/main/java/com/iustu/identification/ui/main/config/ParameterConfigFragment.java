@@ -1,13 +1,12 @@
 package com.iustu.identification.ui.main.config;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bigkoo.pickerview.OptionsPickerView;
 import com.iustu.identification.R;
@@ -38,10 +37,6 @@ import butterknife.OnClick;
  * 值得注意的是BubbleSeekBar获取的百分比只能通过OnPrecessChange方法
  * 中的参数，而且其参数process的值的范围是0-1000，所以要获取具体的
  * 百分比，就要除以1000
- *
- * 修改方案：
- * 1. 修改onProgressChange
- * 2. onHide和onPause中的逻辑由Presenter实现
  */
 
 public class ParameterConfigFragment extends BaseFragment implements BubbleSeekBar.OnProgressChangeListener{
@@ -103,7 +98,6 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
         saveCountList.add(1000);
         saveCountList.add(5000);
         saveCountList.add(10000);
-        //config=ParameterConfig.getFromSP();
         previewSizeConfig=PreviewSizeConfig.getFramSp();
         dpiWidth=previewSizeConfig.getPreviewWidth();
         dpiHeight=previewSizeConfig.getPreviewHeight();

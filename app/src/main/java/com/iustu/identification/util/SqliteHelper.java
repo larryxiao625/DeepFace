@@ -1,16 +1,11 @@
 package com.iustu.identification.util;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.iustu.identification.entity.Account;
-import com.iustu.identification.entity.CompareRecord;
-import com.iustu.identification.entity.Library;
-import com.iustu.identification.entity.PersonInfo;
-import com.iustu.identification.entity.TakeRecord;
 
 /**
  * created by sgh, 2019-4-2
@@ -38,17 +33,14 @@ public class SqliteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        //sqLiteDatabase.beginTransaction();
         sqLiteDatabase.execSQL(SQLString.CREATE_TABLE_ACCOUNT);
         sqLiteDatabase.execSQL(SQLString.CREATE_TABLE_LIBRARY);
         sqLiteDatabase.execSQL(SQLString.CREATE_TABLE_COMPARERECORD);
-        //sqLiteDatabase.execSQL(SQLString.CREATE_TABLE_PERSIONINFO);
         sqLiteDatabase.execSQL(SQLString.CREATE_TABLE_FACECOLLECTIOMITEM);
         String insertUserAccount = "insert into " + SQLString.TABLE_ACCOUNT + " values(\"user\", \"123456\")";
         String insertAdminAccount = "insert into " + SQLString.TABLE_ACCOUNT + " values(\"admin\", \"123456\")";
         sqLiteDatabase.execSQL(insertAdminAccount);
         sqLiteDatabase.execSQL(insertUserAccount);
-        //sqLiteDatabase.endTransaction();
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.iustu.identification.ui.main.library.peoplemagnage;
 
 import android.app.DialogFragment;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,8 +18,6 @@ import com.iustu.identification.ui.main.library.peoplemagnage.mvp.PersionPresent
 import com.iustu.identification.util.ToastUtil;
 
 import org.greenrobot.eventbus.EventBus;
-
-import butterknife.BindView;
 
 public class SearchDialog extends DialogFragment {
 
@@ -82,7 +80,6 @@ public class SearchDialog extends DialogFragment {
             else
                 searchString += "and identity = '" + identity + "'";
         }
-        Log.d("search", "startSearch: " + searchString);
         PersionPresenter.searchPerson(libName, searchString, this);
     }
 
@@ -92,12 +89,10 @@ public class SearchDialog extends DialogFragment {
             ToastUtil.show("查无此人");
             return;
         } else {
-            Log.d("search", "postBack: " + index);
             int n = index % 3;
             int page = index / 3;
             if (n > 0)
                 page ++;
-            Log.d("search", "postBack: " + page);
             EventBus.getDefault().post(page);
             getDialog().dismiss();
         }

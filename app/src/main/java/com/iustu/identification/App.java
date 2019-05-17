@@ -15,6 +15,8 @@ import com.tencent.bugly.crashreport.CrashReport;
 
 import org.litepal.LitePalApplication;
 
+//import leakcanary.LeakCanary;
+
 
 /**
  * Created by Liu Yuchuan on 2017/11/4.
@@ -30,10 +32,7 @@ public class App extends LitePalApplication{
     @Override
     public void onCreate() {
         super.onCreate();
-        //Stetho.initializeWithDefaults(this);
         CrashReport.initCrashReport(getApplicationContext());
-        //CrashReport.testJavaCrash();
-        //Bugly.init(getApplicationContext(), "9c3bdbe293", false );
         SqliteHelper.init(getApplicationContext());
         Stetho.initializeWithDefaults(this);
         context = this;

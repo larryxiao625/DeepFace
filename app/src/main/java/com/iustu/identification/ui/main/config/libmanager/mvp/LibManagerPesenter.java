@@ -62,7 +62,6 @@ public class LibManagerPesenter {
                 disposable.dispose();
                 mView.dissmissDialog();
                 disposable = null;
-                //mView.onSuccess();
             }
         });
     }
@@ -84,13 +83,11 @@ public class LibManagerPesenter {
             public void onError(Throwable e) {
                 e.printStackTrace();
                 ToastUtil.show("数据库同步失败:" + e.getMessage());
-                //mView.onFailed("数据库同步失败:" + e.getMessage());
             }
 
             @Override
             public void onComplete() {
                 disposable.dispose();
-                //mView.dissmissDialog();
                 disposable = null;
                 mView.onSuccess();
             }

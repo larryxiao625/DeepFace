@@ -4,10 +4,10 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
@@ -15,17 +15,13 @@ import android.widget.TextView;
 
 import com.iustu.identification.R;
 import com.iustu.identification.entity.PersionInfo;
-import com.iustu.identification.entity.PersonInfo;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.base.PageRecyclerViewAdapter;
 import com.iustu.identification.ui.main.MainActivity;
-import com.iustu.identification.ui.main.library.LibraryFragment;
 import com.iustu.identification.ui.main.library.addperson.AddPersonFragment;
 import com.iustu.identification.ui.main.library.peoplemagnage.mvp.PersionPresenter;
 import com.iustu.identification.ui.main.library.peoplemagnage.mvp.PersionView;
 import com.iustu.identification.ui.widget.dialog.EditDialog;
-import com.iustu.identification.ui.widget.dialog.NormalDialog;
-import com.iustu.identification.ui.widget.dialog.SingleButtonDialog;
 import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
 import com.iustu.identification.util.ExceptionUtil;
 import com.iustu.identification.util.FileCallBack;
@@ -136,15 +132,6 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
         }
     }
 
-    //    @Override
-//    public void onHide() {
-//        super.onHide();
-//        isOnLoadMore = false;
-//        pageSetHelper.setPage(1);
-//        mPersonList.clear();
-//        mAdapter.notifyDataChange();
-//    }
-
     @Override
     public void onStart() {
         super.onStart();
@@ -158,7 +145,6 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
     }
 
     public void setArguments(String libName){
-        Log.d("libText", "setArguments: " + libName);
         Bundle bundle = getArguments();
         if(bundle == null){
             bundle = new Bundle();
@@ -218,7 +204,6 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
             photoPath = path;
             int degree = ImageUtils.readPictureDegree(path);
             if(degree == 0){
-                //addPhoto(new File(path));
                 presenter.onAddPhoto(mPersonList.get(currentPersionPosition), photoPath, currentPersionPosition);
             }else {
                 Observable<File> observable = ImageUtils.modifiedSavePhoto("添加照片", path, ImageUtils.readPictureDegree(path), new FileCallBack() {
@@ -353,7 +338,6 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void Event(Integer page) {
-        Log.d("search", "setTargetPage: " + page);
         mAdapter.setPageNow(page);
         pageSetHelper.notifyChange();
     }

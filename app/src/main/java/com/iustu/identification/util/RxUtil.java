@@ -7,19 +7,16 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
 import android.os.Environment;
-import android.support.annotation.RequiresApi;
+import androidx.annotation.RequiresApi;
 import android.util.Log;
 
 import com.iustu.identification.bean.FaceCollectItem;
-import com.iustu.identification.bean.ParameterConfig;
 import com.iustu.identification.entity.Account;
 import com.iustu.identification.entity.CompareRecord;
 import com.iustu.identification.entity.Library;
 import com.iustu.identification.entity.PersionInfo;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.List;
 import java.util.function.Consumer;
 
 import java.util.ArrayList;
@@ -27,7 +24,6 @@ import java.util.ArrayList;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -83,7 +79,6 @@ public class RxUtil {
                     // 首先获取admin管理员账户
                     Cursor cursor1 = database.query(distinct, table, columns, "name = 'admin'", null, null, null, null, null);
                     e.onNext(cursor1);
-
                     Cursor cursor = database.query(distinct, table, columns, selection, selectionArgs, groupBy, having, orderBy, limit);
                     e.onNext(cursor);
                     e.onComplete();
@@ -159,7 +154,6 @@ public class RxUtil {
                     database.execSQL(createTable);
                 } catch (SQLException e3) {
                     e3.printStackTrace();
-                    Log.d("sql", "subscribe: " + e3.getMessage());
                 }
                 database.insert(RxUtil.DB_LIBRARY, null, values);
                 database.setTransactionSuccessful();
@@ -192,7 +186,6 @@ public class RxUtil {
                 String dropTable = SqliteUtil.generateDropTableString(library.libName);
                 database.execSQL(dropTable);
                 database.delete(RxUtil.DB_LIBRARY, "libName = '" + library.libName + "'", null);
-                    //database.delete(RxUtil.DB_PERSIONINFO, "libName = '" + library.libName + "'", null);
                 database.setTransactionSuccessful();
                 database.endTransaction();
                 // 删掉对相应的文件夹
@@ -405,8 +398,7 @@ public class RxUtil {
                 } finally {
                     database.endTransaction();
                 }
-                // 其次进行文件删除
-                //String finalPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DeepFace/" + persionInfo.libName + "/" + persionInfo.name + System.currentTimeMillis() + ".jpg";
+                // 其次进行文件删
                 FileUtil.delete(path);
                 e.onComplete();
             }
@@ -478,16 +470,16 @@ public class RxUtil {
                 database.beginTransaction();
                 try {
                     Cursor cursor = database.query(false, RxUtil.DB_FACECOLLECTIOMITEM, FACECOLLECTION_COLUMNS, null, null, null, null, null, null, null);
-                    if (cursor.getCount() >= DataCache.getParameterConfig().getSaveCount()) {
+                    if (cursor.getCount() > DataCache.getParameterConfig().getSaveCount()) {
                         // 超过的数目
                         int overCount = cursor.getCount() - DataCache.getParameterConfig().getSaveCount();
                         int index = 0;
                         while(index < overCount) {
                             index ++;
                             cursor.moveToNext();
-                            database.delete(RxUtil.DB_FACECOLLECTIOMITEM, "id = " + cursor.getInt(cursor.getColumnIndex("id")), null);
                             FileUtil.delete(cursor.getString(cursor.getColumnIndex("imgUrl")));
-                            FileUtil.delete(cursor.getString(cursor.getColumnIndex("originalPath")));
+                            FileUtil.deleteWithCache(cursor.getString(cursor.getColumnIndex("originalPath")));
+                            database.delete(RxUtil.DB_FACECOLLECTIOMITEM, "id = " + cursor.getInt(cursor.getColumnIndex("id")), null);
                         }
 
                     }
@@ -517,12 +509,14 @@ public class RxUtil {
                 database.beginTransaction();
                 try {
                     Cursor cursor1 = database.query(false, RxUtil.DB_COMPARERECORD, COMPARE_COLUMNS, null, null, null, null, null, null, null);
-                    if (cursor1.getCount() >= DataCache.getParameterConfig().getSaveCount()) {
+                    if (cursor1.getCount() > DataCache.getParameterConfig().getSaveCount()) {
                         int overCount = cursor1.getCount() - DataCache.getParameterConfig().getSaveCount();
                         int index = 0;
                         while(index < overCount) {
                             cursor1.moveToNext();
                             index ++;
+                            FileUtil.deleteWithCache(cursor1.getString(cursor1.getColumnIndex("uploadPhoto")));
+                            FileUtil.deleteWithCache(cursor1.getString(cursor1.getColumnIndex("originalPhoto")));
                             database.delete(RxUtil.DB_COMPARERECORD, "uploadPhoto = ?", new String[]{cursor1.getString(cursor1.getColumnIndex("uploadPhoto"))});
                         }
                     }
@@ -584,8 +578,6 @@ public class RxUtil {
                 SQLiteDatabase database = SqliteUtil.getDatabase();
                 database.beginTransaction();
                 try {
-                    Log.d("compare", "subscribe: " + compareRecord.getImage_id());
-                    Log.d("compare", "subscribe: " + compareRecord.getLibName());
                     database.delete(RxUtil.DB_COMPARERECORD, "uploadPhoto = ?", new String[]{compareRecord.getUploadPhoto()});
                     database.setTransactionSuccessful();
                 } finally {

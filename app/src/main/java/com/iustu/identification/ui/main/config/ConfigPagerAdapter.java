@@ -1,12 +1,11 @@
 package com.iustu.identification.ui.main.config;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.iustu.identification.ui.main.config.libmanager.LibraryManageFragment;
 import com.iustu.identification.ui.main.config.libmanager.mvp.LibManagerPesenter;
-import com.iustu.identification.ui.main.library.librariesmanage.LibrariesManageFragment;
 
 /**
  * Created by Liu Yuchuan on 2017/11/5.

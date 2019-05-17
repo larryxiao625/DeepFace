@@ -3,7 +3,7 @@ package com.iustu.identification.ui.widget.seekbar;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.support.annotation.IntRange;
+import androidx.annotation.IntRange;
 
 import java.util.Locale;
 

@@ -1,21 +1,16 @@
 package com.iustu.identification.ui.main.config;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.util.DisplayMetrics;
+import androidx.annotation.Nullable;
+
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.iustu.identification.BuildConfig;
 import com.iustu.identification.R;
-import com.iustu.identification.bean.BatchCompareImg;
-import com.iustu.identification.config.SystemConfig;
 import com.iustu.identification.entity.Account;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.widget.dialog.EditDialog;
-import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.util.DataCache;
 import com.iustu.identification.util.SqliteUtil;
 
@@ -35,12 +30,6 @@ public class SystemManageFragment extends BaseFragment{
     TextView versionTv;
 
     @Override
-    public void onStart() {
-        super.onStart();
-
-    }
-
-    @Override
     protected int postContentView() {
         return R.layout.fragment_system_manage;
     }
@@ -50,16 +39,6 @@ public class SystemManageFragment extends BaseFragment{
         account = DataCache.getAccount();
         usernameTv.setText(("用户：" + account.name));
         versionTv.setText(("当前版本：" + BuildConfig.VERSION_NAME));
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onHide() {
-        super.onHide();
     }
 
     @OnClick(R.id.ip_alter_tv)
@@ -85,11 +64,6 @@ public class SystemManageFragment extends BaseFragment{
                 .show(mActivity.getFragmentManager());
                 */
     }
-
-//    @OnClick(R.id.tv_version)
-//    public void onCheckUpdate(){
-//        Beta.checkUpgrade(true, false);
-//    }
 
     @OnClick(R.id.tv_modify_password)
     public void modifyPassword () {

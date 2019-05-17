@@ -6,7 +6,7 @@
     tools:ignore="RtlHardcoded"
     android:paddingBottom="@dimen/y20"
     android:layout_height="match_parent">
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:overScrollMode="never"
         android:background="@drawable/out_line_bg"
         android:id="@+id/people_manage_recycler_view"

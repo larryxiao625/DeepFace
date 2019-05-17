@@ -3,20 +3,17 @@ package com.iustu.identification.ui.main.history.view;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.ViewPager;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
+import androidx.viewpager.widget.ViewPager;
 import android.view.View;
 
-import com.bigkoo.pickerview.TimePickerView;
+import com.google.android.material.tabs.TabLayout;
 import com.iustu.identification.R;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.main.history.adapter.HistoryPagerAdapter;
 import com.iustu.identification.ui.main.history.prenster.HistoryPrenster;
 import com.iustu.identification.ui.widget.TitleBar;
-import com.iustu.identification.ui.widget.dialog.NormalDialog;
-import com.iustu.identification.ui.widget.dialog.SingleButtonDialog;
 
 import java.util.ArrayList;
 import java.util.List;
