@@ -151,7 +151,7 @@ public class FaceHistoryFragment extends BaseFragment implements FaceCollectItem
                 dialogArrayList.remove(i);
             }
             dialogArrayList.add(normalDialog);
-            normalDialog.show(mActivity.getFragmentManager(),"queryError");
+            normalDialog.show(mActivity.getSupportFragmentManager(),"queryError");
         }
 
         @Override
@@ -161,7 +161,7 @@ public class FaceHistoryFragment extends BaseFragment implements FaceCollectItem
                 dialogArrayList.remove(i);
             }
             dialogArrayList.add(waitProgressDialog);
-            waitProgressDialog.show(mActivity.getFragmentManager(),"queryProcessing");
+            waitProgressDialog.show(mActivity.getSupportFragmentManager(),"queryProcessing");
         }
 
         @Override
@@ -171,7 +171,7 @@ public class FaceHistoryFragment extends BaseFragment implements FaceCollectItem
                 dialogArrayList.remove(i);
             }
             dialogArrayList.add(singleButtonDialog);
-            singleButtonDialog.show(mActivity.getFragmentManager(),"argumentsError");
+            singleButtonDialog.show(mActivity.getSupportFragmentManager(),"argumentsError");
         }
 
         @Override

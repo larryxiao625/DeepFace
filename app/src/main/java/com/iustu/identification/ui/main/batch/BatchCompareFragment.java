@@ -1,10 +1,10 @@
 package com.iustu.identification.ui.main.batch;
 
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -31,6 +31,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Created by Liu Yuchuan on 2017/11/17.
@@ -156,7 +157,7 @@ public class BatchCompareFragment extends DialogFragment implements BatchView {
                         .content("停止当前任务?")
                         .negative("取消", null)
                         .positive("确定", v -> dismiss())
-                        .show(getActivity().getFragmentManager());
+                        .show(Objects.requireNonNull(getActivity()).getSupportFragmentManager());
             }else {
                 this.dismiss();
             }

@@ -121,7 +121,7 @@ public class LibraryFragment extends BaseFragment implements TitleBar.TitleBarLi
                     confirm.setVisibility(View.VISIBLE);
                     return true;
                 })
-                .show(mActivity.getFragmentManager());
+                .show(mActivity.getSupportFragmentManager());
 
     }
 
@@ -145,7 +145,7 @@ public class LibraryFragment extends BaseFragment implements TitleBar.TitleBarLi
                     confirm.setVisibility(View.VISIBLE);
                     return true;
                 })
-                .show(mActivity.getFragmentManager());
+                .show(mActivity.getSupportFragmentManager());
     }
 
     public BaseFragment getFragment(int id){
@@ -210,7 +210,7 @@ public class LibraryFragment extends BaseFragment implements TitleBar.TitleBarLi
                     confirm.setVisibility(View.VISIBLE);
                     return true;
                 })
-                .show(mActivity.getFragmentManager());
+                .show(mActivity.getSupportFragmentManager());
 
     }
 
@@ -231,7 +231,7 @@ public class LibraryFragment extends BaseFragment implements TitleBar.TitleBarLi
                     .content("放弃添加？")
                     .positive("确定", v->switchFragment(ID_LIBRARIES_MANAGE))
                     .negative("取消", null)
-                    .show(mActivity.getFragmentManager());
+                    .show(mActivity.getSupportFragmentManager());
         }else if(fragmentNow == ID_PEOPLE_MANAGE){
             switchFragment(ID_LIBRARIES_MANAGE);
         }else {

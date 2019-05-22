@@ -125,7 +125,7 @@ public class LibraryManageFragment extends BaseFragment implements LibManagerVie
                 .title(content)
                 .cancelable(false)
                 .build();
-        waitProgressDialog.show(mActivity.getFragmentManager(), "Loading");
+        waitProgressDialog.show(mActivity.getSupportFragmentManager(), "Loading");
     }
 
     @Override

@@ -107,8 +107,8 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
                 cameraPrenster.onDettachDev(cameraHelper.getUsbDeviceList().get(0));
                         getActivity().unbindService(myServiceConnection);
             }
-            cameraHelper.release();
-            cameraTextureView.onPause();
+            cameraHelper.release(); //释放摄像机资源
+            cameraTextureView.onPause(); //释放摄像机资源
             Objects.requireNonNull(getActivity()).stopService(serviceIntent);
         }
     }

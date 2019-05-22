@@ -1,6 +1,5 @@
 package com.iustu.identification.ui.widget.dialog;
 
-import android.app.FragmentManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -11,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.iustu.identification.R;

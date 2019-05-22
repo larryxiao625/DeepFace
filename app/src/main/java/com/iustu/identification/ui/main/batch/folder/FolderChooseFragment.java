@@ -147,7 +147,7 @@ public class FolderChooseFragment extends BaseFragment implements TitleBar.Title
                 .content("退出选择文件夹？")
                 .positive("是", v -> getBackToBatch(false))
                 .negative("否", null)
-                .show(mActivity.getFragmentManager());
+                .show(mActivity.getSupportFragmentManager());
     }
 
     public void onTitleBack(){

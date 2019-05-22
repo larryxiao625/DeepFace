@@ -48,7 +48,7 @@ public class SplashActivity extends BaseActivity {
                     .content("抱歉，该款应用暂未支持平板")
                     .cancelable(false)
                     .button("确定", v-> finish())
-                    .show(getFragmentManager());
+                    .show(getSupportFragmentManager());
             return;
         }
         Observable.timer(1000, TimeUnit.MILLISECONDS)
@@ -107,7 +107,7 @@ public class SplashActivity extends BaseActivity {
                         startActivity(intent);
                     })
                     .negative("取消", v -> finish())
-                    .show(getFragmentManager());
+                    .show(getSupportFragmentManager());
         }
     }
 
