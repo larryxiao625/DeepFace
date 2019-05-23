@@ -15,7 +15,7 @@ public class PersionInfo {
     public String identity = "未填写";         // 身份证号(选)
     public String home = "未填写";           // 籍贯(选)
     public String other = "未填写";         // 备注
-    public String feature;     // 人脸特点，SDK生成的，用来唯一标识人脸
+    public String feature;     // 人脸特点，SDK生成的
     public String image_id;    // key
     public String birthday = "未填写";
 

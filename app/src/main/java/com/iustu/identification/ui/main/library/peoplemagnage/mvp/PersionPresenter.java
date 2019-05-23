@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.util.Log;
 
 import com.iustu.identification.entity.PersionInfo;
-import com.iustu.identification.entity.PersonInfo;
 import com.iustu.identification.ui.main.library.peoplemagnage.SearchDialog;
 import com.iustu.identification.util.RxUtil;
 import com.iustu.identification.util.SDKUtil;

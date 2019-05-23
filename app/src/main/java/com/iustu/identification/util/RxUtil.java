@@ -36,7 +36,7 @@ import io.reactivex.schedulers.Schedulers;
 public class RxUtil {
     public static final String DB_ACCOUNT = "Account";          // 对应Account数据表
     public static final String DB_LIBRARY = "Library";          // 对应Library数据表
-    public static final String DB_PERSIONINFO = "PersonInfo";   // 对应PersionInfo数据表
+    public static final String DB_PERSIONINFO = "PersionInfo";   // 对应PersionInfo数据表
     //public static final String DB_TAKERECORD = "TakeRecord";     // 对应TakeRecord数据表
     public static final String DB_COMPARERECORD = "CompareRecord";  // 对应CompareRecord数据表
     public static final String DB_FACECOLLECTIOMITEM = "FaceCollectionItem"; // 对应FaceCollectionItem数据表

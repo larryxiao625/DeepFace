@@ -39,6 +39,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -136,7 +137,7 @@ public class CapturePicService extends Service {
                             if (DataCache.getParameterConfig().getNeedNoSame()) {
                                 captureNum++;
                                 if (captureNum == 4) {
-                                    List<String> tempCapturePicPath = new ArrayList<>();
+                                    CopyOnWriteArrayList<String> tempCapturePicPath = new CopyOnWriteArrayList<>();
                                     tempCapturePicPath.addAll(capturePicPaths);
                                     List<Calendar> tempCalender = new ArrayList<>();
                                     tempCalender.addAll(calendars);
@@ -147,8 +148,11 @@ public class CapturePicService extends Service {
                                     captureNum = 0;
                                 }
                             } else {
-                                List<String> tempCapturePicPath = new ArrayList<>();
-                                tempCapturePicPath.addAll(capturePicPaths);
+                                CopyOnWriteArrayList<String> tempCapturePicPath = new CopyOnWriteArrayList<>();
+                                for(String s : capturePicPaths) {
+                                    tempCapturePicPath.add(s);
+                                }
+                                //tempCapturePicPath.addAll(capturePicPaths);
                                 List<Calendar> tempCalender = new ArrayList<>();
                                 tempCalender.addAll(calendars);
                                 threadCanshu = new ThreadCanshu(tempCalender, tempCapturePicPath);
@@ -276,7 +280,7 @@ public class CapturePicService extends Service {
         String tempBestPicPath = null;
         ArrayList<DetectResult> tempDetectResults = new ArrayList<>();
         Calendar tempBestCalender = null;
-        List<String> deletePath=new ArrayList<>();
+        CopyOnWriteArrayList<String> deletePath=new CopyOnWriteArrayList<>();
         List<Calendar> threadCalenders = threadCanshu.getThreadCalenders();
         List<String> picPaths = threadCanshu.getPicPaths();
         if (threadCalenders != null) {
@@ -327,9 +331,9 @@ public class CapturePicService extends Service {
 
     public class ThreadCanshu{
         public List<Calendar> threadCalenders;
-        public List<String> picPaths ;
+        public CopyOnWriteArrayList<String> picPaths ;
 
-        public ThreadCanshu(List<Calendar> threadCalenders, List<String> picPaths) {
+        public ThreadCanshu(List<Calendar> threadCalenders, CopyOnWriteArrayList<String> picPaths) {
             this.threadCalenders = threadCalenders;
             this.picPaths = picPaths;
         }
@@ -342,13 +346,10 @@ public class CapturePicService extends Service {
             this.threadCalenders = threadCalenders;
         }
 
-        public List<String> getPicPaths() {
+        public CopyOnWriteArrayList<String> getPicPaths() {
             return picPaths;
         }
 
-        public void setPicPaths(List<String> picPaths) {
-            this.picPaths = picPaths;
-        }
     }
 
     // 第三位小数四舍五入
