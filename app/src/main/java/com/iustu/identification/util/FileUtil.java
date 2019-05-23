@@ -236,8 +236,8 @@ public class FileUtil {
     // 删除批量的图片
     public static void deleteList(List<String> list) {
         new Thread(() -> {
-            for(String s : list) {
-                File file = new File(s);
+            for(int i=0;i<list.size();i++) {
+                File file = new File(list.get(i));
                 file.delete();
             }
         }).start();
