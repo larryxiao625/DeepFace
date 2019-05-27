@@ -47,7 +47,7 @@ public class UUIDutil {
             FileInputStream fis=new FileInputStream(UUIDMountFileString);
             byte[] bytes=new byte[fis.available()];
             fis.read(bytes);
-            UUID= Arrays.toString(bytes);
+            UUID=new String(bytes);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

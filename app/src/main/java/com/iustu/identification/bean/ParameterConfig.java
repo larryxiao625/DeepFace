@@ -35,7 +35,7 @@ public class ParameterConfig {
     boolean needNoSame = true;       // 是否需要去重
     String ipAddress="0.0.0.0"; //请求服务器ip地址
     String deviceId;
-    boolean isFirstStart=false;
+    boolean isFirstStart=true;
     public ParameterConfig(){}
 
     // 将对象转化为json字符串，存进SharePreference中
