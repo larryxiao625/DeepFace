@@ -1,11 +1,12 @@
 package com.iustu.identification.ui.widget.dialog;
 
-import android.app.FragmentManager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.fragment.app.FragmentManager;
 
 import com.iustu.identification.R;
 import com.iustu.identification.ui.base.BaseDialogFragment;

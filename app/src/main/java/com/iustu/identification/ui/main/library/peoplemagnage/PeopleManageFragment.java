@@ -194,7 +194,7 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
                     pageSetHelper.setPage(pageTo);
                     return true;
                 })
-                .show(mActivity.getFragmentManager());
+                .show(mActivity.getSupportFragmentManager());
     }
 
     @Override
@@ -287,7 +287,7 @@ public class PeopleManageFragment extends BaseFragment implements PersionView, P
                 .title(content)
                 .cancelable(false)
                 .build();
-        waitProgressDialog.show(mActivity.getFragmentManager(), "Loading");
+        waitProgressDialog.show(mActivity.getSupportFragmentManager(), "Loading");
     }
 
     @Override

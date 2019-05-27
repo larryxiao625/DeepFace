@@ -84,10 +84,10 @@ public class CapturePicService extends Service {
     public void onCreate() {
         super.onCreate();
         mBind=new CaptureBind();
-        HashSet<String> libPat= DataCache.getChosenLibConfig();
+        HashSet<String> libPat= DataCache.getChosenLibConfig(); //从配置文件中调取选取的人脸库
         for(String libPath:libPat){
             if (searchHandlers.get(libPath) == null) {
-                SearchHandler searchHandler= (SearchHandler) HandlerFactory.createSearcher(rootPath+"/"+libPath,0,1);
+                SearchHandler searchHandler= (SearchHandler) HandlerFactory.createSearcher(rootPath+"/"+libPath,0,1); //初始化人脸搜索句柄
                 searchHandlers.put(libPath, searchHandler);
             }
             libNames.add(libPath);
@@ -107,6 +107,9 @@ public class CapturePicService extends Service {
         return START_STICKY;
     }
 
+    /**
+     * 使用轮询实现1秒4张照片，并通过EventBus将四张照片完成后，一起交付到线程池进行后续检测
+     */
     @SuppressLint("CheckResult")
     public void capturePic() {
         Observable.interval(250, TimeUnit.MILLISECONDS)
@@ -300,18 +303,18 @@ public class CapturePicService extends Service {
                             if (index > -1)
                                 deletePath.add(picPaths.get(index));
                             index = i;
-                            picQuality = (int) ((detectResults.get(0).getPoints().get(0).x)[1] - (detectResults.get(0).getPoints().get(0).x)[0]);
+                            picQuality = (int) ((detectResults.get(0).getPoints().get(0).x)[1] - (detectResults.get(0).getPoints().get(0).x)[0]);  //通过瞳距得到相片质量
                             tempDetectResults.clear();
                             tempDetectResults = detectResults;
                             tempBestCalender = threadCalenders.get(i);
                             tempBestPicPath = picPaths.get(i);
                         }else {
-                            deletePath.add(picPaths.get(i));
+                            deletePath.add(picPaths.get(i)); //质量较差的照片
                         }
                     }
                     if (i == (picPaths.size()-1)&&!tempDetectResults.isEmpty()) {
-                        getCutPicture(tempBestPicPath, tempDetectResults.get(0), tempBestCalender, tempDetectResults.get(0).points.size());
-                        FileUtil.deleteList(deletePath);
+                        getCutPicture(tempBestPicPath, tempDetectResults.get(0), tempBestCalender, tempDetectResults.get(0).points.size()); //根据算法返回结果裁剪人脸并保存
+                        FileUtil.deleteList(deletePath); //删除质量较差的照片
                         deletePath.clear();
                         deletePath = null;
                     }

@@ -181,7 +181,7 @@ public class CompareHistoryFragment extends BaseFragment implements CompareHisto
                 baseDialogFragments.remove(i);
             }
             baseDialogFragments.add(normalDialog);
-            normalDialog.show(mActivity.getFragmentManager(),"queryError");
+            normalDialog.show(mActivity.getSupportFragmentManager(),"queryError");
         }
 
         @Override
@@ -191,7 +191,7 @@ public class CompareHistoryFragment extends BaseFragment implements CompareHisto
                 baseDialogFragments.remove(i);
             }
             baseDialogFragments.add(waitProgressDialog);
-            waitProgressDialog.show(mActivity.getFragmentManager(),"queryProcessing");
+            waitProgressDialog.show(mActivity.getSupportFragmentManager(),"queryProcessing");
         }
 
         @Override
@@ -201,7 +201,7 @@ public class CompareHistoryFragment extends BaseFragment implements CompareHisto
                 baseDialogFragments.remove(i);
             }
             baseDialogFragments.add(singleButtonDialog);
-            singleButtonDialog.show(mActivity.getFragmentManager(),"argumentsError");
+            singleButtonDialog.show(mActivity.getSupportFragmentManager(),"argumentsError");
         }
 
         @Override

@@ -99,7 +99,7 @@ public class AddPersonFragment extends BaseFragment implements AddPersionView {
         String name = nameEdit.getText().toString().trim();
         if(name.equals("")){
             builder.content("请填写姓名")
-                    .show(mActivity.getFragmentManager());
+                    .show(mActivity.getSupportFragmentManager());
             return;
         }
         String idCardNumber = idCardEdit.getText().toString().trim();
@@ -115,7 +115,7 @@ public class AddPersonFragment extends BaseFragment implements AddPersionView {
         String sex = sexEdit.getText().toString().trim();
         if(sex != null && !sex.equals("") && !sex.equals("男") && !sex.equals("女")){
             builder.content("性别请输入(男或女)")
-                    .show(mActivity.getFragmentManager());
+                    .show(mActivity.getSupportFragmentManager());
             return;
         }
         if(photoPath == null) {
@@ -202,7 +202,7 @@ public class AddPersonFragment extends BaseFragment implements AddPersionView {
                 .title(content)
                 .cancelable(false)
                 .build();
-        waitProgressDialog.show(mActivity.getFragmentManager(), "Loading");
+        waitProgressDialog.show(mActivity.getSupportFragmentManager(), "Loading");
     }
 
     @Override

@@ -106,7 +106,7 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
                         return true;
                     })
                     .negative("取消", null)
-                    .show(mActivity.getFragmentManager());
+                    .show(mActivity.getSupportFragmentManager());
         });
         recyclerView.setLayoutManager(new GridLayoutManager(mActivity, 10, LinearLayoutManager.HORIZONTAL, false){
             @Override
@@ -156,7 +156,7 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
         bundle.putString("libName", mLibraryList.get(index).libName);
         bundle.putInt("index", index);
         fragment.setArguments(bundle);
-        fragment.show(getActivity().getFragmentManager(), "show");
+        fragment.show(getActivity().getSupportFragmentManager(), "show");
     }
 
     // 点击新增人员按钮时，直接跳转到对应的Fragment
@@ -190,7 +190,7 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
                     deleteLib(mLibraryList.get(index), index);
                 })
                 .negative("取消", null)
-                .show(mActivity.getFragmentManager());
+                .show(mActivity.getSupportFragmentManager());
     }
 
     // 新增 按钮的点击事件
@@ -210,7 +210,7 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
                     return true;
                 })
                 .negative("取消", null)
-                .show(mActivity.getFragmentManager());
+                .show(mActivity.getSupportFragmentManager());
     }
 
     public void deleteLib(Library library, int position){
@@ -250,7 +250,7 @@ public class LibrariesManageFragment extends BaseFragment implements LibView, Li
                 .title(content)
                 .cancelable(false)
                 .build();
-        waitProgressDialog.show(mActivity.getFragmentManager(), "Loading");
+        waitProgressDialog.show(mActivity.getSupportFragmentManager(), "Loading");
     }
 
     @Override

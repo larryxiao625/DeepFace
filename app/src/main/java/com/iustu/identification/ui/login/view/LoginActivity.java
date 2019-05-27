@@ -135,22 +135,22 @@ public class LoginActivity extends BaseActivity implements LibManager.OnLibLoadL
     IVew iVew=new IVew() {
         @Override
         public void showServerDialog(EditDialog editDialog) {
-            editDialog.show(getFragmentManager(),"server");
+            editDialog.show(getSupportFragmentManager(),"server");
         }
 
         @Override
         public void showLoginFail(SingleButtonDialog singleButtonDialog) {
-            singleButtonDialog.show(getFragmentManager(),"loginFail");
+            singleButtonDialog.show(getSupportFragmentManager(),"loginFail");
         }
 
         @Override
         public void showDataFailLoad(NormalDialog normalDialog) {
-            normalDialog.show(getFragmentManager(),"loadFail");
+            normalDialog.show(getSupportFragmentManager(),"loadFail");
         }
 
         @Override
         public void showWaitDialog(WaitProgressDialog waitProgressDialog) {
-            waitProgressDialog.show(getFragmentManager(),"waitDialog");
+            waitProgressDialog.show(getSupportFragmentManager(),"waitDialog");
             viewWaitProgress=waitProgressDialog;
         }
 

@@ -59,7 +59,7 @@ public class MainActivity extends BaseActivity implements BottomBar.BottomBarSel
                 .content("登录已过期，请重新登录")
                 .positive("确定", v-> LoginActivity.start(this))
                 .negative("取消", v->finish())
-                .show(getFragmentManager());
+                .show(getSupportFragmentManager());
     }
 
     public WaitProgressDialog showWaitDialog(String message, View.OnClickListener action){

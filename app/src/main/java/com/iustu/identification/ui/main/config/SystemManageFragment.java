@@ -75,7 +75,7 @@ public class SystemManageFragment extends BaseFragment{
                     return true;
                 })
                 .negative("取消", null)
-                .show(mActivity.getFragmentManager());
+                .show(mActivity.getSupportFragmentManager());
     }
 
 }
