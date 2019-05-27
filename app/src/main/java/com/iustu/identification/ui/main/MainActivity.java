@@ -27,6 +27,7 @@ import com.iustu.identification.util.FileUtil;
 import com.iustu.identification.util.LibManager;
 import com.iustu.identification.util.SqliteUtil;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,13 +68,17 @@ public class MainActivity extends BaseActivity implements BottomBar.BottomBarSel
                 .cancelable(false)
                 .title(message)
                 .build();
-        waitDialog.show(getFragmentManager(), "wait");
+        waitDialog.show(getSupportFragmentManager(), "wait");
         return waitDialog;
     }
 
     @Override
     protected void onStart() {
-        DataCache.init();
+        try {
+            DataCache.init();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         super.onStart();
     }
 
