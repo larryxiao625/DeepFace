@@ -1,5 +1,7 @@
 package com.iustu.identification.api.message;
 
+import com.iustu.identification.bean.ParameterConfig;
+
 public class UploadImagePost {
 
     /**
@@ -8,7 +10,7 @@ public class UploadImagePost {
      * imageContent : iVBORw0KGgoAAAANSUhEUgAAAd4AAAI0CAYAAACzqUi6AAAMImlDQ1BJ Q0MgUHJvZmlsZQAASImVlwdUU0kXx+eVVBJaIAJSQu9K 图片内容的Base64编码
      */
 
-    private String deviceId;
+    private String deviceId= ParameterConfig.getFromSP().getDeviceId();
     private String snapTime;
     private String imageContent;
 

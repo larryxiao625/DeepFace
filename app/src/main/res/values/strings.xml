@@ -92,4 +92,5 @@
     <string name="alarm_mp3_and_shake">响铃加振动</string>
     <string name="equal">等于</string>
     <string name="modify_password">修改密码</string>
+    <string name="device_id">设备ID</string>
 </resources>

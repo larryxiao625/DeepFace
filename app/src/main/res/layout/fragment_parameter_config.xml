@@ -419,6 +419,34 @@
 
             </LinearLayout>
         </LinearLayout>
+        <LinearLayout
+            android:layout_height="@dimen/y292"
+            style="@style/ConfigLayout1">
+
+            <TextView
+                android:drawableLeft="@drawable/display_count"
+                android:text="@string/device_id"
+                style="@style/ConfigItemTitle"/>
+
+            <include layout="@layout/divider_horizontal"/>
+
+            <LinearLayout
+                android:id="@+id/show_ip_address"
+                android:paddingLeft="@dimen/x40"
+                android:paddingRight="@dimen/x25"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y160">
+
+                <TextView
+                    android:id="@+id/show_ip_tv"
+                    android:gravity="center_vertical"
+                    tools:text="0"
+                    android:textSize="@dimen/y36"
+                    android:textColor="@color/lite_blue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"  />
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 
 </ScrollView>

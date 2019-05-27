@@ -7,6 +7,7 @@ import com.iustu.identification.bean.PreviewSizeConfig;
 import com.iustu.identification.entity.Account;
 
 import java.util.HashSet;
+import java.util.UUID;
 
 /**
  * created by sgh, 2019-4-2
@@ -22,6 +23,12 @@ public class DataCache {
 
     public static void init() {
         parameterConfig = ParameterConfig.getFromSP();
+        if(!parameterConfig.isFirstStart()){
+            parameterConfig.setFirstStart(true);
+            parameterConfig.setDeviceId(UUID.randomUUID().toString());
+            Log.d("UUID",parameterConfig.getDeviceId());
+            parameterConfig.save();
+        }
         HashSet<String> tempChosenHashSet= (HashSet<String>) MSP.getInstance(MSP.SP_CHOSEN).getStringSet(MSP.SP_CHOSEN, new HashSet<String>());
         chosenLibConfig=new HashSet<>();
         chosenLibConfig.addAll(tempChosenHashSet);
