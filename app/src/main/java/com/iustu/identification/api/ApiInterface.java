@@ -5,6 +5,8 @@ import com.iustu.identification.api.message.UploadImageCallBack;
 import com.iustu.identification.api.message.UploadImagePost;
 
 import io.reactivex.Observable;
+import retrofit2.http.Body;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
 
@@ -76,5 +78,5 @@ public interface ApiInterface {
      * 人脸平台图片上传接口
      */
     @POST("haiou/uploadGlassImage")
-    Observable<UploadImageCallBack> uploadImage(@Part UploadImagePost uploadImagePost);
+    Observable<UploadImageCallBack> uploadImage(@Body UploadImagePost uploadImagePost);
 }

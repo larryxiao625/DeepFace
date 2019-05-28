@@ -16,7 +16,7 @@ public class FaceCollectItem extends DataSupport{
     private String faceId;
     private int id;
     private String originalPhoto;        // 最初的照片
-    private Integer isUpload;     //图片是否上传，0表示未上传，1代表上传成功
+    private int isUpload;     //图片是否上传，0表示未上传，1代表上传成功
 
     public FaceCollectItem() {}
 
@@ -78,11 +78,11 @@ public class FaceCollectItem extends DataSupport{
         return this.hourTime;
     }
 
-    public Integer getIsUpload() {
+    public int getIsUpload() {
         return isUpload;
     }
 
-    public void setIsUpload(Integer isUpload) {
+    public void setIsUpload(int isUpload) {
         this.isUpload = isUpload;
     }
 }

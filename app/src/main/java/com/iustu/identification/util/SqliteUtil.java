@@ -75,7 +75,7 @@ public class SqliteUtil {
      * @param originalPhoto 未裁剪的图片的路径
      * @param time 代表时间
      */
-    public static void insertFaceCollectionItem(String imgPath, String originalPhoto, Date time,IPenster comparePrenster,Integer isUpload){
+    public static void insertFaceCollectionItem(String imgPath, String originalPhoto, Date time,IPenster comparePrenster,int isUpload){
         FaceCollectItem item = new FaceCollectItem();
         item.setTime(TextUtil.getDateString2(time));
         item.setHourTime(TextUtil.getHourString(time));
