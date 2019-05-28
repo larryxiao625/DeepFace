@@ -17,6 +17,8 @@ import com.example.agin.facerecsdk.HandlerFactory;
 import com.example.agin.facerecsdk.SearchHandler;
 import com.example.agin.facerecsdk.SearchResultItem;
 import com.iustu.identification.api.Api;
+import com.iustu.identification.api.message.UploadImageCallBack;
+import com.iustu.identification.api.message.UploadImagePost;
 import com.iustu.identification.bean.ParameterConfig;
 import com.iustu.identification.util.AlarmUtil;
 import com.iustu.identification.util.Base64Util;
@@ -268,7 +270,35 @@ public class CapturePicService extends Service {
                 if(DataCache.getParameterConfig().getFactor()!=0) {
                     getVerify(i, detectResult, calendar, cutPathName, originalPhoto);
                 }
-                SqliteUtil.insertFaceCollectionItem(cutPathName, originalPhoto, calendar.getTime(),cameraPrenster);
+                String finalCutPathName = cutPathName;
+                Api.uploadImageCallBackObservable(Base64Util.convertBase64(cutPathName),TextUtil.getDateString(TextUtil.FORMAT_MILLISECOND,calendar.getTime()))
+                        .subscribe(new Observer<UploadImageCallBack>() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onNext(UploadImageCallBack uploadImageCallBack) {
+                                if(uploadImageCallBack.getErrorCode()!=0) {
+                                    SqliteUtil.insertFaceCollectionItem(finalCutPathName, originalPhoto, calendar.getTime(), cameraPrenster, 1);
+                                }else {
+                                    SqliteUtil.insertFaceCollectionItem(finalCutPathName, originalPhoto, calendar.getTime(), cameraPrenster, 0);
+                                }
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                e.printStackTrace();
+                                SqliteUtil.insertFaceCollectionItem(finalCutPathName, originalPhoto, calendar.getTime(),cameraPrenster,0);
+
+                            }
+
+                            @Override
+                            public void onComplete() {
+
+                            }
+                        });
                 cutPathName = null;
             }catch (FileNotFoundException e){
                 e.printStackTrace();

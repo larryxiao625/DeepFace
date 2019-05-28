@@ -75,12 +75,13 @@ public class SqliteUtil {
      * @param originalPhoto 未裁剪的图片的路径
      * @param time 代表时间
      */
-    public static void insertFaceCollectionItem(String imgPath, String originalPhoto, Date time,IPenster comparePrenster){
+    public static void insertFaceCollectionItem(String imgPath, String originalPhoto, Date time,IPenster comparePrenster,Integer isUpload){
         FaceCollectItem item = new FaceCollectItem();
         item.setTime(TextUtil.getDateString2(time));
         item.setHourTime(TextUtil.getHourString(time));
         item.setImgUrl(imgPath);
         item.setOriginalPhoto(originalPhoto);
+        item.setIsUpload(isUpload);
         Observable observable = RxUtil.getInsertFaceCollectionItem(item);
         observable.subscribe(new Observer() {
             @Override
