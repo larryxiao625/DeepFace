@@ -50,6 +50,7 @@ public class FaceCollectItemAdapter extends PageRecyclerViewAdapter<FaceCollectI
         this.itemClickListener = itemClickListener;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onBindHolder(Holder holder, int index, int position) {
         if(index >= mDataLast.size()){

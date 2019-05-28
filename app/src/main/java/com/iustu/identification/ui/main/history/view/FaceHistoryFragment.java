@@ -36,7 +36,7 @@ import butterknife.OnClick;
  * Created by Liu Yuchuan on 2017/11/21.
  */
 
-public class FaceHistoryFragment extends BaseFragment implements FaceCollectItemAdapter.FaceItemClickListener {
+public class FaceHistoryFragment extends BaseFragment implements FaceCollectItemAdapter.FaceItemClickListener, View.OnClickListener {
     @BindView(R.id.date_from_tv)
     TextView fromDateTv;
     @BindView(R.id.date_to_tv)
@@ -49,6 +49,8 @@ public class FaceHistoryFragment extends BaseFragment implements FaceCollectItem
     ImageView originalPhoto;
     @BindView(R.id.face_history_original_fl)
     FrameLayout frameLayout;
+    @BindView(R.id.restart_all_fail)
+    TextView reUploadFail;
 
     private Calendar startCalendar = Calendar.getInstance();
     private Calendar endCalendar = Calendar.getInstance();
@@ -82,14 +84,9 @@ public class FaceHistoryFragment extends BaseFragment implements FaceCollectItem
         recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(new GridLayoutManager(mActivity, 3));
         pageSetHelper = new PageSetHelper(recyclerView, pageTv);
-        originalPhoto.setOnClickListener( v -> {
-            v.setVisibility(View.GONE);
-            frameLayout.setVisibility(View.GONE);
-        });
-        frameLayout.setOnClickListener( v -> {
-            v.setVisibility(View.GONE);
-            originalPhoto.setVisibility(View.GONE);
-        });
+        originalPhoto.setOnClickListener(this);
+        frameLayout.setOnClickListener(this);
+        reUploadFail.setOnClickListener(this);
     }
 
     @Override
@@ -125,6 +122,19 @@ public class FaceHistoryFragment extends BaseFragment implements FaceCollectItem
 //        if(mAdapter.getPageNow() >= mAdapter.getPageMax() - 1){
 //            loadData(++page);
 //        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.face_history_original_iv:
+                v.setVisibility(View.GONE);
+                frameLayout.setVisibility(View.GONE);
+            case R.id.face_history_original_fl:
+                v.setVisibility(View.GONE);
+                originalPhoto.setVisibility(View.GONE);
+            case R.id.restart_all_fail:
+        }
     }
 
     IVew iVew=new IVew() {
