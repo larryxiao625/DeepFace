@@ -14,6 +14,11 @@ public class UploadImagePost {
     private String snapTime;
     private String imageContent;
 
+    public UploadImagePost(String snapTime, String imageContent) {
+        this.snapTime = snapTime;
+        this.imageContent = imageContent;
+    }
+
     public String getDeviceId() {
         return deviceId;
     }

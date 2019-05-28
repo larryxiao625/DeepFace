@@ -14,10 +14,11 @@ import java.util.Locale;
 import static android.text.Html.FROM_HTML_MODE_LEGACY;
 
 public class TextUtil {
-    private static final SimpleDateFormat format2=new SimpleDateFormat("yyyy-MM-dd",Locale.CHINA);
-    private static final SimpleDateFormat format3 = new SimpleDateFormat("HH:mm:ss", Locale.CHINA);
-    private static final SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日", Locale.CHINESE);
-    private static final SimpleDateFormat MESSAGE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINESE);
+    public static final SimpleDateFormat format2=new SimpleDateFormat("yyyy-MM-dd",Locale.CHINA);
+    public static final SimpleDateFormat format3 = new SimpleDateFormat("HH:mm:ss", Locale.CHINA);
+    public static final SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日", Locale.CHINESE);
+    public static final SimpleDateFormat MESSAGE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINESE);
+    public static final SimpleDateFormat FORMAT_MILLISECOND=new SimpleDateFormat("yyy-MM-dd HH:mm:ss:SSS",Locale.CHINESE);
     private TextUtil(){}
 
     public static Date fromDateString(String text){
@@ -31,7 +32,7 @@ public class TextUtil {
         return date;
     }
 
-    public static String getDateString(Date date){
+    public static String getDateString(SimpleDateFormat format,Date date){
         return format.format(date);
     }
 

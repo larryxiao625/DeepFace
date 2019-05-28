@@ -16,8 +16,10 @@ import com.example.agin.facerecsdk.FeatureResult;
 import com.example.agin.facerecsdk.HandlerFactory;
 import com.example.agin.facerecsdk.SearchHandler;
 import com.example.agin.facerecsdk.SearchResultItem;
+import com.iustu.identification.api.Api;
 import com.iustu.identification.bean.ParameterConfig;
 import com.iustu.identification.util.AlarmUtil;
+import com.iustu.identification.util.Base64Util;
 import com.iustu.identification.util.DataCache;
 import com.iustu.identification.util.FileUtil;
 import com.iustu.identification.util.SDKUtil;
@@ -334,8 +336,10 @@ public class CapturePicService extends Service {
     /**
      * 上传图片方法,传入参数为图片路径
      */
-    public void uploadImage(){
-
+    public void uploadImage(Calendar calendar,String picPath){
+        String snapTime=TextUtil.getDateString(TextUtil.FORMAT_MILLISECOND,calendar.getTime());
+        String picBase64= Base64Util.convertBase64(picPath);
+        Api.uploadImageCallBackObservable(snapTime,picBase64);
     }
     /**
      * EventBus使用的内部类
