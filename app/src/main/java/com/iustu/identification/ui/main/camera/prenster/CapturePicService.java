@@ -331,7 +331,15 @@ public class CapturePicService extends Service {
             tempBestPicPath = null;
         }
     }
+    /**
+     * 上传图片方法,传入参数为图片路径
+     */
+    public void uploadImage(){
 
+    }
+    /**
+     * EventBus使用的内部类
+     */
     public class ThreadCanshu{
         public List<Calendar> threadCalenders;
         public CopyOnWriteArrayList<String> picPaths ;
