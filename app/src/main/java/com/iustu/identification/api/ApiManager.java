@@ -65,7 +65,7 @@ public class ApiManager {
      * 不要持有其引用
      * @return api
      */
-    ApiInterface getApi(){
+    public ApiInterface getApi(){
         if(mApi == null){
             synchronized (ApiInterface.class){
                 mApi = mRetrofit.create(ApiInterface.class);

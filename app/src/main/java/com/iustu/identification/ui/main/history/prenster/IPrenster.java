@@ -14,4 +14,5 @@ public interface IPrenster {
     void attchFaceHistoryView(IVew iVew);
     void attchSwitchFragment(HistoryFragment.SwitchFragmentLister switchFragmentLister);
     void getFaceCollectionData(String fromtime, String totime);
+    void getFaceUploadFailData(String fromTime, String toTime);
 }

@@ -77,7 +77,7 @@ public class SqliteUtil {
      */
     public static void insertFaceCollectionItem(String imgPath, String originalPhoto, Date time,IPenster comparePrenster,int isUpload){
         FaceCollectItem item = new FaceCollectItem();
-        item.setTime(TextUtil.getDateString2(time));
+        item.setTime(TextUtil.getDateString(TextUtil.FORMAT_MILLISECOND,time));
         item.setHourTime(TextUtil.getHourString(time));
         item.setImgUrl(imgPath);
         item.setOriginalPhoto(originalPhoto);

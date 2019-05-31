@@ -134,6 +134,7 @@ public class FaceHistoryFragment extends BaseFragment implements FaceCollectItem
                 v.setVisibility(View.GONE);
                 originalPhoto.setVisibility(View.GONE);
             case R.id.restart_all_fail:
+                historyPrenster.getFaceUploadFailData(fromDateTv.getText().toString(),toDateTv.getText().toString());
         }
     }
 
