@@ -330,8 +330,10 @@ public class HistoryPrenster implements IPrenster{
 
             @Override
             public void onNext(Cursor cursor) {
+                Log.d("Count", String.valueOf(cursor.getCount()));
                 if(cursor.getCount()==0){
                     ToastUtil.show("该期间中无上传失败记录");
+                    Log.d("Count", String.valueOf(cursor.getCount()));
                 }else {
                     List<FaceCollectItem> faceCollectItems = new ArrayList<>();
                     while (cursor.moveToNext()) {
@@ -344,9 +346,6 @@ public class HistoryPrenster implements IPrenster{
                         faceCollectItem.setOriginalPhoto(cursor.getString(cursor.getColumnIndex("originalPath")));
                         faceCollectItem.setIsUpload(cursor.getInt(cursor.getColumnIndex("isUpload")));
                         faceCollectItems.add(faceCollectItem);
-                        Log.d("History", cursor.getString(cursor.getColumnIndex("image_id")));
-                        Log.d("History", cursor.getString(cursor.getColumnIndex("libName")));
-                        Log.d("History", cursor.getString(cursor.getColumnIndex("name")));
                     }
                     uploadAllFailImage(faceCollectItems);
                 }
@@ -403,7 +402,7 @@ public class HistoryPrenster implements IPrenster{
         final int[] failNum = {0};
         final int[] successNum = {0};
         for(FaceCollectItem faceCollectItem:faceCollectItems){
-            Api.uploadImageCallBackObservable(Base64Util.convertBase64(faceCollectItem.getImgUrl()), faceCollectItem.getTime())
+            Api.uploadImageCallBackObservable(Base64Util.convertBase64(faceCollectItem.getImgUrl()), faceCollectItem.getTime()+ " " +faceCollectItem.getHourTime())
                     .subscribe(new Observer<UploadImageCallBack>() {
                         @Override
                         public void onSubscribe(Disposable d) {

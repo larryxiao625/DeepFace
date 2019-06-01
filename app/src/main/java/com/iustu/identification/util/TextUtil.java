@@ -18,7 +18,7 @@ public class TextUtil {
     public static final SimpleDateFormat format3 = new SimpleDateFormat("HH:mm:ss", Locale.CHINA);
     public static final SimpleDateFormat format = new SimpleDateFormat("yyyy年MM月dd日", Locale.CHINESE);
     public static final SimpleDateFormat MESSAGE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINESE);
-    public static final SimpleDateFormat FORMAT_MILLISECOND=new SimpleDateFormat("yyy-MM-dd HH:mm:ss:SSS",Locale.CHINESE);
+    public static final SimpleDateFormat FORMAT_MILLISECOND=new SimpleDateFormat("HH:mm:ss:SSS",Locale.CHINESE);
     private TextUtil(){}
 
     public static Date fromDateString(String text){
