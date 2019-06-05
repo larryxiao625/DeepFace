@@ -239,15 +239,11 @@ public class HistoryPrenster implements IPrenster{
             public void onError(Throwable e) {
                 queryError(FACE_HISTORY_VIEW);
                 e.printStackTrace();
-                disposable.dispose();
-                disposable = null;
             }
 
             @Override
             public void onComplete() {
                 faceHistoryIVew.showSuccess();
-                disposable.dispose();
-                disposable = null;
             }
         });
     }
@@ -301,14 +297,10 @@ public class HistoryPrenster implements IPrenster{
             public void onError(Throwable e) {
                 queryError(FACE_HISTORY_VIEW);
                 e.printStackTrace();
-                disposable.dispose();
-                disposable = null;
             }
 
             @Override
             public void onComplete() {
-                disposable.dispose();
-                disposable = null;
             }
         });
     }
@@ -349,7 +341,7 @@ public class HistoryPrenster implements IPrenster{
                         faceCollectItems.add(faceCollectItem);
                         faceHistoryIVew.showSuccess();
                     }
-                    uploadAllFailImage(faceCollectItems);
+                    uploadAllFailImage(faceCollectItems,fromTime,toTime);
                 }
             }
 
@@ -396,7 +388,7 @@ public class HistoryPrenster implements IPrenster{
      * 人脸上传失败记录重传方法
      */
 
-    public void uploadAllFailImage(List<FaceCollectItem> faceCollectItems){
+    public void uploadAllFailImage(List<FaceCollectItem> faceCollectItems,String fromTime,String toTime){
         /**
          * 循环获取人脸上传失败记录
          */
@@ -431,6 +423,7 @@ public class HistoryPrenster implements IPrenster{
 
                         @Override
                         public void onComplete() {
+                            getFaceCollectionData(fromTime,toTime);
                             ToastUtil.show("成功个数:"+successNum[0]+",失败个数:"+failNum[0]);
                             faceHistoryIVew.showSuccess();
                         }

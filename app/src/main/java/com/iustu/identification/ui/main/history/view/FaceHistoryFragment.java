@@ -207,7 +207,7 @@ public class FaceHistoryFragment extends BaseFragment implements FaceCollectItem
 
         @Override
         public void notifyDataChange() {
-            mAdapter.notifyDataSetChanged();
+            mAdapter.notifyDataChange();
         }
     };
 

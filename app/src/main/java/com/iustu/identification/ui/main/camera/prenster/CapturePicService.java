@@ -264,7 +264,7 @@ public class CapturePicService extends Service {
             try {
                 File file=new File(cutPathName);
                 fos=new FileOutputStream(file);
-                bitmap.compress(Bitmap.CompressFormat.JPEG,100,fos);
+                bitmap.compress(Bitmap.CompressFormat.JPEG,80,fos);
                 fos.flush();
                 fos.close();
                 if(DataCache.getParameterConfig().getFactor()!=0) {
