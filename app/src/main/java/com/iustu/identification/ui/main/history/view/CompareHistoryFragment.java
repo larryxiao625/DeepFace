@@ -224,6 +224,11 @@ public class CompareHistoryFragment extends BaseFragment implements CompareHisto
             compareItemList.remove(position);
             mAdapter.notifyDataChange();
         }
+
+        @Override
+        public void notifyDataChange() {
+
+        }
     };
 
     @Override

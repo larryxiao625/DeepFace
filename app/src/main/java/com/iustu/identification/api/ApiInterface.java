@@ -77,6 +77,6 @@ public interface ApiInterface {
     /**
      * 人脸平台图片上传接口
      */
-    @POST("haiou/uploadGlassImage")
+    @POST("user/test1")
     Observable<UploadImageCallBack> uploadImage(@Body UploadImagePost uploadImagePost);
 }

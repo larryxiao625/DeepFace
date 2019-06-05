@@ -99,7 +99,7 @@ public class FaceCollectItemAdapter extends PageRecyclerViewAdapter<FaceCollectI
             if(faceCollectionItem.getIsUpload()==0){
                 isUpload.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_fail));
             }else{
-
+                isUpload.setImageDrawable(App.getContext().getDrawable(R.drawable.ic_success));
             }
             Glide.with(itemView.getContext())
                     .setDefaultRequestOptions(new RequestOptions().placeholder(R.drawable.photo_holder).error(R.drawable.photo_holder).dontAnimate())

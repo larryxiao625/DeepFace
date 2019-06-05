@@ -37,7 +37,7 @@ public class ParametersConfig {
         location = preferences.getString(KEY_LOCATION, "无限制");
         dpiWidth=preferences.getInt(KEY_DPI_WIDTH,1920);
         dpiHeight=preferences.getInt(KEY_DPI_HEIGHT,1080);
-        ipAddress=preferences.getString(IP_ADDRESS,"0.0.0.0");
+        ipAddress=preferences.getString(IP_ADDRESS,"www.happydoudou.xyz/public/index.php");
 
     }
 

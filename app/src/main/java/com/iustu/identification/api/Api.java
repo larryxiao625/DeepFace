@@ -8,6 +8,7 @@ import javax.security.auth.Subject;
 
 import io.reactivex.Observable;
 import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 
@@ -26,6 +27,7 @@ public class Api {
         return ApiManager.getInstance()
                 .getApi()
                 .uploadImage(uploadImagePost)
-                .subscribeOn(Schedulers.io());
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 }

@@ -33,7 +33,7 @@ public class ParameterConfig {
     int alarmType = ONLYMP3;
     int minEyesDistance = 20;      // 比对最小瞳距
     boolean needNoSame = true;       // 是否需要去重
-    String ipAddress="0.0.0.0"; //请求服务器ip地址
+    String ipAddress="www.happydoudou.xyz/public/index.php"; //请求服务器ip地址
     String deviceId;
     boolean isFirstStart=true;
     public ParameterConfig(){}

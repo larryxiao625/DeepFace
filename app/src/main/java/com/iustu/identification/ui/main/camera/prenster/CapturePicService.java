@@ -280,6 +280,7 @@ public class CapturePicService extends Service {
 
                             @Override
                             public void onNext(UploadImageCallBack uploadImageCallBack) {
+                                Log.d("uploadImageCallback", String.valueOf(uploadImageCallBack.getErrorCode()));
                                 if(uploadImageCallBack.getErrorCode()!=0) {
                                     SqliteUtil.insertFaceCollectionItem(finalCutPathName, originalPhoto, calendar.getTime(), cameraPrenster, 1);
                                 }else {

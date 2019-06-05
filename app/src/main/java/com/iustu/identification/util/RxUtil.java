@@ -87,6 +87,7 @@ public class RxUtil {
     }
 
     // 批量更改人脸库的选中状态
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public static Observable updataLibraries() {
         return Observable.create(e -> {
             SQLiteDatabase database = SqliteUtil.getDatabase();
