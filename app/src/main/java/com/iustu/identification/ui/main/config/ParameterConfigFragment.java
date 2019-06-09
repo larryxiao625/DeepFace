@@ -1,5 +1,6 @@
 package com.iustu.identification.ui.main.config;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import android.view.View;
@@ -69,6 +70,8 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
     RadioButton radioButton;
     @BindView(R.id.same_is_need)
     SwitchButton switchButton;
+    @BindView(R.id.show_ip_tv)
+    TextView ipAddress;
 
     private OptionsPickerView displayCountPicker;
     private OptionsPickerView saveCountPicker;
@@ -138,6 +141,7 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
     }
 
     // 将从DataCache获取的数据加载到空间上
+    @SuppressLint("SetTextI18n")
     public void initData() {
         config = DataCache.getParameterConfig();
         faceSeekBar.setProgress((int)(config.getFactor() * 1000));
@@ -154,6 +158,7 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
         saveCountTv.setText(config.getSaveCount() + "");
         dpiSetTv.setText(config.getDpiWidth()+"*"+config.getDpiHeight());
         quantity.setText(config.getThresholdQuanity() + "");
+        ipAddress.setText(config.getDeviceId());
     }
 
     public void getDpiStringList(){

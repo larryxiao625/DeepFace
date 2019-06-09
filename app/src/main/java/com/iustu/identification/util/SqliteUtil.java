@@ -75,12 +75,13 @@ public class SqliteUtil {
      * @param originalPhoto 未裁剪的图片的路径
      * @param time 代表时间
      */
-    public static void insertFaceCollectionItem(String imgPath, String originalPhoto, Date time,IPenster comparePrenster){
+    public static void insertFaceCollectionItem(String imgPath, String originalPhoto, Date time,IPenster comparePrenster,int isUpload){
         FaceCollectItem item = new FaceCollectItem();
         item.setTime(TextUtil.getDateString2(time));
-        item.setHourTime(TextUtil.getHourString(time));
+        item.setHourTime(TextUtil.getDateString(TextUtil.FORMAT_MILLISECOND,time));
         item.setImgUrl(imgPath);
         item.setOriginalPhoto(originalPhoto);
+        item.setIsUpload(isUpload);
         Observable observable = RxUtil.getInsertFaceCollectionItem(item);
         observable.subscribe(new Observer() {
             @Override
@@ -119,7 +120,7 @@ public class SqliteUtil {
         CompareRecord compareRecord = new CompareRecord();
         compareRecord.setRate(resultItem.score);
         compareRecord.setTime(TextUtil.getDateString2(time));
-        compareRecord.setHourTime(TextUtil.getHourString(time));
+        compareRecord.setHourTime(TextUtil.getDateString(TextUtil.FORMAT_MILLISECOND,time));
         File file = new File(uploadPhoto);
         String uploadPath = String.format("/sdcard/DeepFace/CompareCut/%s", file.getName());
         file = new File(originalPhoto);

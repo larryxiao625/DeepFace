@@ -1,6 +1,8 @@
 package com.iustu.identification.api;
 
 import com.iustu.identification.BuildConfig;
+import com.iustu.identification.bean.ParameterConfig;
+import com.iustu.identification.config.ParametersConfig;
 import com.iustu.identification.config.SystemConfig;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
@@ -35,7 +37,7 @@ public class ApiManager {
                 .addInterceptor(logInterceptor)
                 .build();
         Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl(SystemConfig.getInstance().getIpAddress())
+                .baseUrl("http://"+ParameterConfig.getFromSP().getIpAddress()+"/")
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create());
@@ -63,7 +65,7 @@ public class ApiManager {
      * 不要持有其引用
      * @return api
      */
-    ApiInterface getApi(){
+    public ApiInterface getApi(){
         if(mApi == null){
             synchronized (ApiInterface.class){
                 mApi = mRetrofit.create(ApiInterface.class);

@@ -4,10 +4,7 @@ import android.content.ContentValues;
 
 import com.example.agin.facerecsdk.DetectResult;
 import com.example.agin.facerecsdk.FeatureResult;
-import com.example.agin.facerecsdk.HandlerFactory;
-import com.example.agin.facerecsdk.VerifyHandler;
 import com.iustu.identification.entity.PersionInfo;
-import com.iustu.identification.entity.PersonInfo;
 import com.iustu.identification.ui.main.library.addperson.AddPersonFragment;
 import com.iustu.identification.util.RxUtil;
 import com.iustu.identification.util.SDKUtil;

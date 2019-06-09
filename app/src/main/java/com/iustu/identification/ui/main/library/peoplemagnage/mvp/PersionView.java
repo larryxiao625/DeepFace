@@ -3,7 +3,7 @@ package com.iustu.identification.ui.main.library.peoplemagnage.mvp;
 import android.content.ContentValues;
 
 import com.iustu.identification.entity.PersionInfo;
-import com.iustu.identification.entity.PersonInfo;
+
 
 import java.util.List;
 

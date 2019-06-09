@@ -21,6 +21,8 @@ import com.iustu.identification.util.SDKUtil;
 import com.iustu.identification.util.SqliteHelper;
 import com.iustu.identification.util.ToastUtil;
 
+import java.io.IOException;
+
 import io.reactivex.Observable;
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
@@ -134,7 +136,11 @@ public class LoginPrenster implements IPrenster{
                     if (o.getString(o.getColumnIndex("password")).equals(password)) {
                         LibManager.loadData();
                         Account account = new Account(username, password);
-                        DataCache.init();
+                        try {
+                            DataCache.init();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                         DataCache.setAccount(account);
                         return;
                     }

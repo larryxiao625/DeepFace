@@ -16,8 +16,12 @@ import com.example.agin.facerecsdk.FeatureResult;
 import com.example.agin.facerecsdk.HandlerFactory;
 import com.example.agin.facerecsdk.SearchHandler;
 import com.example.agin.facerecsdk.SearchResultItem;
+import com.iustu.identification.api.Api;
+import com.iustu.identification.api.message.UploadImageCallBack;
+import com.iustu.identification.api.message.UploadImagePost;
 import com.iustu.identification.bean.ParameterConfig;
 import com.iustu.identification.util.AlarmUtil;
+import com.iustu.identification.util.Base64Util;
 import com.iustu.identification.util.DataCache;
 import com.iustu.identification.util.FileUtil;
 import com.iustu.identification.util.SDKUtil;
@@ -29,6 +33,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -39,6 +44,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -139,7 +145,7 @@ public class CapturePicService extends Service {
                             if (DataCache.getParameterConfig().getNeedNoSame()) {
                                 captureNum++;
                                 if (captureNum == 4) {
-                                    List<String> tempCapturePicPath = new ArrayList<>();
+                                    CopyOnWriteArrayList<String> tempCapturePicPath = new CopyOnWriteArrayList<>();
                                     tempCapturePicPath.addAll(capturePicPaths);
                                     List<Calendar> tempCalender = new ArrayList<>();
                                     tempCalender.addAll(calendars);
@@ -150,8 +156,11 @@ public class CapturePicService extends Service {
                                     captureNum = 0;
                                 }
                             } else {
-                                List<String> tempCapturePicPath = new ArrayList<>();
-                                tempCapturePicPath.addAll(capturePicPaths);
+                                CopyOnWriteArrayList<String> tempCapturePicPath = new CopyOnWriteArrayList<>();
+                                for(String s : capturePicPaths) {
+                                    tempCapturePicPath.add(s);
+                                }
+                                //tempCapturePicPath.addAll(capturePicPaths);
                                 List<Calendar> tempCalender = new ArrayList<>();
                                 tempCalender.addAll(calendars);
                                 threadCanshu = new ThreadCanshu(tempCalender, tempCapturePicPath);
@@ -252,22 +261,54 @@ public class CapturePicService extends Service {
             int height=(bottom> ParameterConfig.getFromSP().getDpiHeight()? ParameterConfig.getFromSP().getDpiHeight():bottom)-(top<0? 0:top);
             int width=(right> ParameterConfig.getFromSP().getDpiWidth()? ParameterConfig.getFromSP().getDpiWidth():right)-(left<0? 0:left);
 //            Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(originalPhoto), (detectResult.getRects().get(i).left/1.2)<0? 0: (int) (detectResult.getRects().get(i).left /1.2), (detectResult.getRects().get(i).top/1.2<0)? 0: (int) (detectResult.getRects().get(i).top/1.2),width>(ParameterConfig.getFromSP().getDpiWidth()-detectResult.getRects().get(i).left/1.2)?(ParameterConfig.getFromSP().getDpiWidth()-detectResult.getRects().get(i).left/1.2):width,height>(ParameterConfig.getFromSP().getDpiHeight()-detectResult.getRects().get(i).top/1.2)?(ParameterConfig.getFromSP().getDpiHeight()-detectResult.getRects().get(i).top/1.2):height);
-            Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(originalPhoto, FileUtil.getCompressOptions(originalPhoto)), left<0? 0: left, top<0? 0: top,width,height);
+            Log.d("originalPhoto",originalPhoto);
             try {
+                Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(originalPhoto, FileUtil.getCompressOptions(originalPhoto)), left<0? 0: left, top<0? 0: top,width,height);
                 File file=new File(cutPathName);
-                fos=new FileOutputStream(file);
-                bitmap.compress(Bitmap.CompressFormat.JPEG,100,fos);
-                fos.flush();
-                fos.close();
+                BufferedOutputStream bos=new BufferedOutputStream(new FileOutputStream(file));
+                bitmap.compress(Bitmap.CompressFormat.JPEG,80,bos);
+                bos.flush();
+                bos.close();
                 if(DataCache.getParameterConfig().getFactor()!=0) {
                     getVerify(i, detectResult, calendar, cutPathName, originalPhoto);
                 }
-                SqliteUtil.insertFaceCollectionItem(cutPathName, originalPhoto, calendar.getTime(),cameraPrenster);
+                String finalCutPathName = cutPathName;
+                Api.uploadImageCallBackObservable(Base64Util.convertBase64(cutPathName),TextUtil.getDateString(TextUtil.FORMAT_MILLISECOND,calendar.getTime()))
+                        .subscribe(new Observer<UploadImageCallBack>() {
+                            @Override
+                            public void onSubscribe(Disposable d) {
+
+                            }
+
+                            @Override
+                            public void onNext(UploadImageCallBack uploadImageCallBack) {
+                                Log.d("uploadImageCallback", String.valueOf(uploadImageCallBack.getErrorCode()));
+                                if(uploadImageCallBack.getErrorCode()!=0) {
+                                    SqliteUtil.insertFaceCollectionItem(finalCutPathName, originalPhoto, calendar.getTime(), cameraPrenster, 1);
+                                }else {
+                                    SqliteUtil.insertFaceCollectionItem(finalCutPathName, originalPhoto, calendar.getTime(), cameraPrenster, 0);
+                                }
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                e.printStackTrace();
+                                SqliteUtil.insertFaceCollectionItem(finalCutPathName, originalPhoto, calendar.getTime(),cameraPrenster,0);
+
+                            }
+
+                            @Override
+                            public void onComplete() {
+
+                            }
+                        });
                 cutPathName = null;
             }catch (FileNotFoundException e){
                 e.printStackTrace();
             }catch (IOException e){
                 e.printStackTrace();
+            }catch (NullPointerException e){
+                return;
             }
         }
 
@@ -279,7 +320,7 @@ public class CapturePicService extends Service {
         String tempBestPicPath = null;
         ArrayList<DetectResult> tempDetectResults = new ArrayList<>();
         Calendar tempBestCalender = null;
-        List<String> deletePath=new ArrayList<>();
+        CopyOnWriteArrayList<String> deletePath=new CopyOnWriteArrayList<>();
         List<Calendar> threadCalenders = threadCanshu.getThreadCalenders();
         List<String> picPaths = threadCanshu.getPicPaths();
         if (threadCalenders != null) {
@@ -315,7 +356,7 @@ public class CapturePicService extends Service {
                         deletePath = null;
                     }
                 } catch (NullPointerException e) {
-                    e.printStackTrace();
+                    return;
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -327,12 +368,22 @@ public class CapturePicService extends Service {
             tempBestPicPath = null;
         }
     }
-
+    /**
+     * 上传图片方法,传入参数为图片路径
+     */
+    public void uploadImage(Calendar calendar,String picPath){
+        String snapTime=TextUtil.getDateString(TextUtil.FORMAT_MILLISECOND,calendar.getTime());
+        String picBase64= Base64Util.convertBase64(picPath);
+        Api.uploadImageCallBackObservable(snapTime,picBase64);
+    }
+    /**
+     * EventBus使用的内部类
+     */
     public class ThreadCanshu{
         public List<Calendar> threadCalenders;
-        public List<String> picPaths ;
+        public CopyOnWriteArrayList<String> picPaths ;
 
-        public ThreadCanshu(List<Calendar> threadCalenders, List<String> picPaths) {
+        public ThreadCanshu(List<Calendar> threadCalenders, CopyOnWriteArrayList<String> picPaths) {
             this.threadCalenders = threadCalenders;
             this.picPaths = picPaths;
         }
@@ -345,13 +396,10 @@ public class CapturePicService extends Service {
             this.threadCalenders = threadCalenders;
         }
 
-        public List<String> getPicPaths() {
+        public CopyOnWriteArrayList<String> getPicPaths() {
             return picPaths;
         }
 
-        public void setPicPaths(List<String> picPaths) {
-            this.picPaths = picPaths;
-        }
     }
 
     // 第三位小数四舍五入

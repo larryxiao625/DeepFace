@@ -2,12 +2,17 @@ package com.iustu.identification.ui.main.history.prenster;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.media.FaceDetector;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.bigkoo.pickerview.OptionsPickerView;
 import com.bigkoo.pickerview.TimePickerView;
 import com.iustu.identification.App;
+import com.iustu.identification.api.Api;
+import com.iustu.identification.api.ApiManager;
+import com.iustu.identification.api.message.UploadImageCallBack;
 import com.iustu.identification.bean.FaceCollectItem;
 import com.iustu.identification.entity.CompareRecord;
 import com.iustu.identification.ui.main.history.view.HistoryFragment;
@@ -15,8 +20,10 @@ import com.iustu.identification.ui.main.history.view.IVew;
 import com.iustu.identification.ui.widget.dialog.NormalDialog;
 import com.iustu.identification.ui.widget.dialog.SingleButtonDialog;
 import com.iustu.identification.ui.widget.dialog.WaitProgressDialog;
+import com.iustu.identification.util.Base64Util;
 import com.iustu.identification.util.PickerViewFactor;
 import com.iustu.identification.util.RxUtil;
+import com.iustu.identification.util.StringUtil;
 import com.iustu.identification.util.TextUtil;
 import com.iustu.identification.util.ToastUtil;
 
@@ -43,6 +50,7 @@ public class HistoryPrenster implements IPrenster{
     int END_CALENDER=1; //toDateChoose
     int FACE_HISTORY_VIEW=0;
     int COMPARE_HISTORY_VIEW=1;
+    int FACE_FAIL_UPLOAD=2;
     Context context;
     static HistoryPrenster instance;
     public static HistoryPrenster getInstance(Context context){
@@ -153,10 +161,16 @@ public class HistoryPrenster implements IPrenster{
                 .title("正在查询")
                 .button("取消", v-> dispose())
                 .build();
+        WaitProgressDialog uploadDialog=new WaitProgressDialog.Builder()
+                .title("正在重传")
+                .button("取消",null)
+                .build();
         if(viewType==FACE_HISTORY_VIEW){
             faceHistoryIVew.showQueryProcessing(waitProgressDialog);
         }else if(viewType==COMPARE_HISTORY_VIEW){
             compareHistoryIVew.showQueryProcessing(waitProgressDialog);
+        }else if(viewType==FACE_FAIL_UPLOAD){
+            faceHistoryIVew.showQueryProcessing(uploadDialog);
         }
     }
 
@@ -169,13 +183,23 @@ public class HistoryPrenster implements IPrenster{
                 .content("参数错误")
                 .button("确定", v-> switchFragmentLister.switchFragment(HistoryFragment.ID_FACE))
                 .build();
+        SingleButtonDialog uploadFailDialog=new SingleButtonDialog.Builder()
+                .title("上传错误")
+                .cancelable(false)
+                .content("参数错误")
+                .button("确定",v-> switchFragmentLister.switchFragment(HistoryFragment.ID_FACE))
+                .build();
         if(viewType==FACE_HISTORY_VIEW){
             faceHistoryIVew.showArgumentsError(singleButtonDialog);
         }else if(viewType==COMPARE_HISTORY_VIEW){
             compareHistoryIVew.showArgumentsError(singleButtonDialog);
         }
     }
-
+    /**
+     * 获取人脸抓拍记录
+     * @param fromTime
+     * @param toTime
+     */
     @Override
     public void getFaceCollectionData(String fromTime, String toTime) {
         queryProcessing(FACE_HISTORY_VIEW);
@@ -203,6 +227,7 @@ public class HistoryPrenster implements IPrenster{
                     faceCollectItem.setTime(cursor.getString(cursor.getColumnIndex("time")));
                     faceCollectItem.setHourTime(cursor.getString(cursor.getColumnIndex("hourTime")));
                     faceCollectItem.setOriginalPhoto(cursor.getString(cursor.getColumnIndex("originalPath")));
+                    faceCollectItem.setIsUpload(cursor.getInt(cursor.getColumnIndex("isUpload")));
                     data.add(faceCollectItem);
                 }
                 Collections.reverse(data);
@@ -214,15 +239,11 @@ public class HistoryPrenster implements IPrenster{
             public void onError(Throwable e) {
                 queryError(FACE_HISTORY_VIEW);
                 e.printStackTrace();
-                disposable.dispose();
-                disposable = null;
             }
 
             @Override
             public void onComplete() {
                 faceHistoryIVew.showSuccess();
-                disposable.dispose();
-                disposable = null;
             }
         });
     }
@@ -276,14 +297,62 @@ public class HistoryPrenster implements IPrenster{
             public void onError(Throwable e) {
                 queryError(FACE_HISTORY_VIEW);
                 e.printStackTrace();
-                disposable.dispose();
-                disposable = null;
             }
 
             @Override
             public void onComplete() {
-                disposable.dispose();
-                disposable = null;
+            }
+        });
+    }
+
+    /**
+     * 获取所有人脸上传失败记录
+     * @param fromTime
+     * @param toTime
+     */
+    @Override
+    public void getFaceUploadFailData(String fromTime, String toTime) {
+        queryProcessing(FACE_FAIL_UPLOAD);
+        Observable observable = RxUtil.getQuaryObservalbe(false, RxUtil.DB_FACECOLLECTIOMITEM, RxUtil.FACECOLLECTION_COLUMNS, "datetime(time) between datetime('" + fromTime + "') and datetime('" + toTime + "')" + " and isUpload " + "=?", new String[]{"0"}, null, null, null, null);
+        observable.subscribe(new Observer<Cursor>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(Cursor cursor) {
+                Log.d("Count", String.valueOf(cursor.getCount()));
+                if(cursor.getCount()==0){
+                    ToastUtil.show("该期间中无上传失败记录");
+                    Log.d("Count", String.valueOf(cursor.getCount()));
+                    faceHistoryIVew.showSuccess();
+                }else {
+                    List<FaceCollectItem> faceCollectItems = new ArrayList<>();
+                    while (cursor.moveToNext()) {
+                        FaceCollectItem faceCollectItem = new FaceCollectItem();
+                        faceCollectItem.setFaceId(cursor.getString(cursor.getColumnIndex("faceId")));
+                        faceCollectItem.setId(cursor.getInt(cursor.getColumnIndex("id")));
+                        faceCollectItem.setImgUrl(cursor.getString(cursor.getColumnIndex("imgUrl")));
+                        faceCollectItem.setTime(cursor.getString(cursor.getColumnIndex("time")));
+                        faceCollectItem.setHourTime(cursor.getString(cursor.getColumnIndex("hourTime")));
+                        faceCollectItem.setOriginalPhoto(cursor.getString(cursor.getColumnIndex("originalPath")));
+                        faceCollectItem.setIsUpload(cursor.getInt(cursor.getColumnIndex("isUpload")));
+                        faceCollectItems.add(faceCollectItem);
+                        faceHistoryIVew.showSuccess();
+                    }
+                    uploadAllFailImage(faceCollectItems,fromTime,toTime);
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onComplete() {
+
             }
         });
     }
@@ -298,7 +367,7 @@ public class HistoryPrenster implements IPrenster{
 
             @Override
             public void onNext(Cursor o) {
-                // 通过游标删除数据库关联的PersionInfo
+                // 通过游标删除数据库关联的PersonInfo
             }
 
             @Override
@@ -313,5 +382,52 @@ public class HistoryPrenster implements IPrenster{
                 compareHistoryIVew.onSuccess(position);
             }
         });
+    }
+
+    /**
+     * 人脸上传失败记录重传方法
+     */
+
+    public void uploadAllFailImage(List<FaceCollectItem> faceCollectItems,String fromTime,String toTime){
+        /**
+         * 循环获取人脸上传失败记录
+         */
+        queryProcessing(FACE_FAIL_UPLOAD);
+        final int[] failNum = {0};
+        final int[] successNum = {0};
+        for(FaceCollectItem faceCollectItem:faceCollectItems){
+            Api.uploadImageCallBackObservable(Base64Util.convertBase64(faceCollectItem.getImgUrl()), faceCollectItem.getTime()+ " " +faceCollectItem.getHourTime())
+                    .subscribe(new Observer<UploadImageCallBack>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+                            disposable=d;
+                        }
+
+                        @Override
+                        public void onNext(UploadImageCallBack uploadImageCallBack) {
+                            if(uploadImageCallBack.getErrorCode()!=0){
+                                RxUtil.updateFaceStatus(faceCollectItem).subscribe();
+                                successNum[0]++;
+                            }else{
+                                failNum[0]++;
+                            }
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            e.printStackTrace();
+                            queryError(FACE_FAIL_UPLOAD);
+                            faceHistoryIVew.showSuccess();
+                        }
+
+                        @Override
+                        public void onComplete() {
+                            getFaceCollectionData(fromTime,toTime);
+                            ToastUtil.show("成功个数:"+successNum[0]+",失败个数:"+failNum[0]);
+                            faceHistoryIVew.showSuccess();
+                        }
+                    });
+        }
     }
 }

@@ -18,4 +18,5 @@ public interface IVew {
     void bindData(List data);
     void showSuccess();
     void onSuccess(int position);
+    void notifyDataChange();
 }

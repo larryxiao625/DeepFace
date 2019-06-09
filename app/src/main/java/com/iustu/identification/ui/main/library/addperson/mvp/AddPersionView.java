@@ -1,8 +1,6 @@
 package com.iustu.identification.ui.main.library.addperson.mvp;
 
 import com.iustu.identification.entity.PersionInfo;
-import com.iustu.identification.entity.PersonInfo;
-
 /**
  * created by sgh, 2019-4-3
  * AddPersion

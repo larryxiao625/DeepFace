@@ -2,8 +2,6 @@ package com.iustu.identification.bean;
 
 import android.util.Log;
 
-import com.iustu.identification.config.LibraryConfig;
-
 /**
  * Created by Liu Yuchuan on 2017/11/20.
  */

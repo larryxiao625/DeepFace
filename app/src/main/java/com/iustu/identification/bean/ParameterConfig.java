@@ -3,6 +3,7 @@ package com.iustu.identification.bean;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.iustu.identification.util.GetMacUtil;
 import com.iustu.identification.util.MSP;
 
 /**
@@ -32,7 +33,9 @@ public class ParameterConfig {
     int alarmType = ONLYMP3;
     int minEyesDistance = 20;      // 比对最小瞳距
     boolean needNoSame = true;       // 是否需要去重
-
+    String ipAddress="www.happydoudou.xyz/public/index.php"; //请求服务器ip地址
+    String deviceId;
+    boolean isFirstStart=true;
     public ParameterConfig(){}
 
     // 将对象转化为json字符串，存进SharePreference中
@@ -197,5 +200,29 @@ public class ParameterConfig {
 
     public boolean getNeedNoSame() {
         return this.needNoSame;
+    }
+
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
+    }
+
+    public String getDeviceId() {
+        return deviceId;
+    }
+
+    public void setDeviceId(String deviceId) {
+        this.deviceId = deviceId;
+    }
+
+    public boolean isFirstStart() {
+        return isFirstStart;
+    }
+
+    public void setFirstStart(boolean firstStart) {
+        isFirstStart = firstStart;
     }
 }

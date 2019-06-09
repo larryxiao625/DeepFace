@@ -23,6 +23,7 @@ public class ParametersConfig {
     private static ParametersConfig mInstance;
 
     private static final String name = "parametersConfig";
+    private static final String IP_ADDRESS = "ipAddress";
 
     private ParametersConfig(){
         SharedPreferences preferences = MSP.getInstance(name);
@@ -36,6 +37,7 @@ public class ParametersConfig {
         location = preferences.getString(KEY_LOCATION, "无限制");
         dpiWidth=preferences.getInt(KEY_DPI_WIDTH,1920);
         dpiHeight=preferences.getInt(KEY_DPI_HEIGHT,1080);
+        ipAddress=preferences.getString(IP_ADDRESS,"www.happydoudou.xyz/public/index.php");
 
     }
 
@@ -59,6 +61,7 @@ public class ParametersConfig {
                 .putInt(KEY_DPI_WIDTH,dpiWidth)
                 .putInt(KEY_DPI_HEIGHT,dpiHeight)
                 .putInt(KEY_DPI_COUNT,dpiCount)
+                .putString(IP_ADDRESS,ipAddress)
                 .apply();
     }
 
@@ -72,6 +75,7 @@ public class ParametersConfig {
     private int dpiWidth;
     private int dpiHeight;
     private int dpiCount;
+    private String ipAddress;
 
     public static String getKeyThresholdValueFace() {
         return KEY_THRESHOLD_VALUE_FACE;
@@ -187,5 +191,13 @@ public class ParametersConfig {
 
     public void setDpiCount(int dpiCount) {
         this.dpiCount = dpiCount;
+    }
+
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
     }
 }

@@ -14,17 +14,30 @@
         android:src="@drawable/photo_holder"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-    <TextView
-        android:textColor="@color/white"
+    <RelativeLayout
         android:layout_gravity="bottom"
-        android:gravity="center"
-        android:padding="@dimen/y10"
-        tools:text="2017-11-2\n13:14:09"
-        android:textSize="@dimen/y30"
-        android:id="@+id/date_time_tv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
+        <TextView
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:padding="@dimen/y10"
+            tools:text="2017-11-2\n13:14:09"
+            android:textSize="@dimen/y30"
+            android:id="@+id/date_time_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:layout_marginBottom="3dp"
+            android:layout_marginEnd="5dp"
+            android:layout_alignBottom="@id/date_time_tv"
+            android:layout_alignEnd="@id/date_time_tv"
+            android:id="@+id/upload_status"
+            android:layout_width="@dimen/y50"
+            android:layout_height="@dimen/y50"
+            android:src="@drawable/ic_success" />
+    </RelativeLayout>
 
     <View
         android:background="@drawable/face_collect_item_bg"

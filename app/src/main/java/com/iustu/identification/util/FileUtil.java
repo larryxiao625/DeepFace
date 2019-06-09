@@ -16,6 +16,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Pattern;
 
 /**
@@ -27,7 +28,7 @@ public class FileUtil {
 
     private static final Pattern PATTERN = Pattern.compile(regex);
 
-    private static final ArrayList<String> deleteCache = new ArrayList<>();
+    private static final CopyOnWriteArrayList<String> deleteCache = new CopyOnWriteArrayList<>();
 
     public static String getType(File file){
         if(file.isDirectory()){
@@ -218,27 +219,23 @@ public class FileUtil {
     public static void deleteWithCache(String path) {
         deleteCache.add(path);
         if (deleteCache.size() > 100) {
-            ArrayList<String> d = new ArrayList<>();
-            d.addAll(deleteCache);
-            deleteList(d);
+            deleteList(deleteCache);
             deleteCache.clear();
         }
     }
 
     // 程序退出的时候执行
     public static void deleteCache() {
-        ArrayList<String> d = new ArrayList<>();
-        d.addAll(deleteCache);
-        deleteList(d);
+        deleteList(deleteCache);
         deleteCache.clear();
     }
 
     // 删除批量的图片
-    public static void deleteList(List<String> list) {
+    public static void deleteList(CopyOnWriteArrayList<String> list) {
         new Thread(() -> {
-            for(int i=0;i<list.size();i++) {
+            for (int i = 0; i < list.size(); i ++) {
                 File file = new File(list.get(i));
-                file.delete();
+                file.deleteOnExit();
             }
         }).start();
     }

@@ -78,6 +78,17 @@
             android:textSize="@dimen/y42"
             android:layout_width="@dimen/x240"
             android:layout_height="@dimen/y72" />
+        <TextView
+            android:id="@+id/restart_all_fail"
+            android:layout_gravity="center_horizontal|bottom"
+            android:gravity="center"
+            android:layout_marginStart="100dp"
+            android:background="@drawable/batch_compare"
+            android:textColor="@color/white"
+            android:text="@string/reupload_fail"
+            android:textSize="@dimen/y42"
+            android:layout_width="@dimen/x240"
+            android:layout_height="@dimen/y72" />
     </FrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView

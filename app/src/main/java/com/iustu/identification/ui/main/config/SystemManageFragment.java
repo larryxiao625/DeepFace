@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import com.iustu.identification.BuildConfig;
 import com.iustu.identification.R;
+import com.iustu.identification.bean.ParameterConfig;
+import com.iustu.identification.config.SystemConfig;
 import com.iustu.identification.entity.Account;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.widget.dialog.EditDialog;
@@ -17,6 +19,7 @@ import com.iustu.identification.util.SqliteUtil;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import okhttp3.HttpUrl;
 
 /**
  * Created by Liu Yuchuan on 2017/11/5.
@@ -29,6 +32,7 @@ public class SystemManageFragment extends BaseFragment{
     @BindView(R.id.tv_version)
     TextView versionTv;
 
+    ParameterConfig config=ParameterConfig.getFromSP();
     @Override
     protected int postContentView() {
         return R.layout.fragment_system_manage;
@@ -41,11 +45,28 @@ public class SystemManageFragment extends BaseFragment{
         versionTv.setText(("当前版本：" + BuildConfig.VERSION_NAME));
     }
 
+    @Override
+    public void onHide() {
+        super.onHide();
+        config.save();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        config.save();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        config.save();
+    }
+
     @OnClick(R.id.ip_alter_tv)
     public void alterIp(){
-        /*
         new EditDialog.Builder()
-                .content(systemConfig.getIpAddress())
+                .content(config.getIpAddress())
                 .title("更改域名地址")
                 .hint("新域名")
                 .positive("确定", (v, content, layout) -> {
@@ -57,12 +78,11 @@ public class SystemManageFragment extends BaseFragment{
                         layout.setError("地址不合法");
                         return false;
                     }
-                    systemConfig.setIpAddress(content);
+                    config.setIpAddress(content);
                     return true;
                 })
                 .negative("取消", null)
-                .show(mActivity.getFragmentManager());
-                */
+                .show(mActivity.getSupportFragmentManager());
     }
 
     @OnClick(R.id.tv_modify_password)

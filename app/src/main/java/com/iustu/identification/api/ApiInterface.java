@@ -1,20 +1,14 @@
 package com.iustu.identification.api;
 
-import com.iustu.identification.api.message.Message;
 
-
-import java.util.List;
+import com.iustu.identification.api.message.UploadImageCallBack;
+import com.iustu.identification.api.message.UploadImagePost;
 
 import io.reactivex.Observable;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
-import retrofit2.Response;
 import retrofit2.http.Body;
-import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
-import retrofit2.http.Query;
 
 /**
  * Created by Liu Yuchuan on 2017/11/25.
@@ -80,4 +74,9 @@ public interface ApiInterface {
 //    Observable<Response<String>> getFaceSearchImage(@Query("type") String type, @Query("id") String id, @Query("session") String session);
 //    @POST("/")
 //    Observable<Message> keepAlive(@Body RequestBody message);
+    /**
+     * 人脸平台图片上传接口
+     */
+    @POST("user/test1")
+    Observable<UploadImageCallBack> uploadImage(@Body UploadImagePost uploadImagePost);
 }

@@ -6,7 +6,9 @@ import com.iustu.identification.bean.ParameterConfig;
 import com.iustu.identification.bean.PreviewSizeConfig;
 import com.iustu.identification.entity.Account;
 
+import java.io.IOException;
 import java.util.HashSet;
+import java.util.UUID;
 
 /**
  * created by sgh, 2019-4-2
@@ -20,8 +22,18 @@ public class DataCache {
     private static HashSet<String> changedLib = new HashSet<>();         // 保存由"正在使用"转为"未使用"的libName
     private static PreviewSizeConfig previewSizeConfig;     //保存摄像头分辨率
 
-    public static void init() {
+    public static void init() throws IOException {
         parameterConfig = ParameterConfig.getFromSP();
+        if(!UUIDutil.isFirstUse()){
+            UUIDutil.setUUID();
+            Log.d("UUID",parameterConfig.getDeviceId());
+            parameterConfig.setDeviceId(UUIDutil.getUUID());
+            parameterConfig.save();
+        }
+        if(ParameterConfig.getFromSP().isFirstStart()){
+            parameterConfig.setFirstStart(false);
+            parameterConfig.setDeviceId(UUIDutil.getUUID());
+        }
         HashSet<String> tempChosenHashSet= (HashSet<String>) MSP.getInstance(MSP.SP_CHOSEN).getStringSet(MSP.SP_CHOSEN, new HashSet<String>());
         chosenLibConfig=new HashSet<>();
         chosenLibConfig.addAll(tempChosenHashSet);
