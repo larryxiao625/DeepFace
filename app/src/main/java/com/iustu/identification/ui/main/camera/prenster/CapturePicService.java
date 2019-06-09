@@ -33,6 +33,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -260,13 +261,14 @@ public class CapturePicService extends Service {
             int height=(bottom> ParameterConfig.getFromSP().getDpiHeight()? ParameterConfig.getFromSP().getDpiHeight():bottom)-(top<0? 0:top);
             int width=(right> ParameterConfig.getFromSP().getDpiWidth()? ParameterConfig.getFromSP().getDpiWidth():right)-(left<0? 0:left);
 //            Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(originalPhoto), (detectResult.getRects().get(i).left/1.2)<0? 0: (int) (detectResult.getRects().get(i).left /1.2), (detectResult.getRects().get(i).top/1.2<0)? 0: (int) (detectResult.getRects().get(i).top/1.2),width>(ParameterConfig.getFromSP().getDpiWidth()-detectResult.getRects().get(i).left/1.2)?(ParameterConfig.getFromSP().getDpiWidth()-detectResult.getRects().get(i).left/1.2):width,height>(ParameterConfig.getFromSP().getDpiHeight()-detectResult.getRects().get(i).top/1.2)?(ParameterConfig.getFromSP().getDpiHeight()-detectResult.getRects().get(i).top/1.2):height);
-            Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(originalPhoto, FileUtil.getCompressOptions(originalPhoto)), left<0? 0: left, top<0? 0: top,width,height);
+            Log.d("originalPhoto",originalPhoto);
             try {
+                Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(originalPhoto, FileUtil.getCompressOptions(originalPhoto)), left<0? 0: left, top<0? 0: top,width,height);
                 File file=new File(cutPathName);
-                fos=new FileOutputStream(file);
-                bitmap.compress(Bitmap.CompressFormat.JPEG,80,fos);
-                fos.flush();
-                fos.close();
+                BufferedOutputStream bos=new BufferedOutputStream(new FileOutputStream(file));
+                bitmap.compress(Bitmap.CompressFormat.JPEG,80,bos);
+                bos.flush();
+                bos.close();
                 if(DataCache.getParameterConfig().getFactor()!=0) {
                     getVerify(i, detectResult, calendar, cutPathName, originalPhoto);
                 }
@@ -305,6 +307,8 @@ public class CapturePicService extends Service {
                 e.printStackTrace();
             }catch (IOException e){
                 e.printStackTrace();
+            }catch (NullPointerException e){
+                return;
             }
         }
 
@@ -352,7 +356,7 @@ public class CapturePicService extends Service {
                         deletePath = null;
                     }
                 } catch (NullPointerException e) {
-                    e.printStackTrace();
+                    return;
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } catch (IOException e) {

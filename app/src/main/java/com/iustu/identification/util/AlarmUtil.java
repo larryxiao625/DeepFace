@@ -44,12 +44,9 @@ public class AlarmUtil {
     }
     private static void alarmMP3() {
         soundPoolMap.put(1, soundPool.load(context, R.raw.myalarm, 1));
-        soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
-            @Override
-            public void onLoadComplete(SoundPool soundPool, int i, int i1) {
-                synchronized (AlarmUtil.class) {
-                    soundPool.play(soundPoolMap.get(1), 1, 1, 0, 1, 2.0f);
-                }
+        soundPool.setOnLoadCompleteListener((soundPool, i, i1) -> {
+            synchronized (AlarmUtil.class) {
+                soundPool.play(soundPoolMap.get(1), 1, 1, 0, 1, 2.0f);
             }
         });
     }
