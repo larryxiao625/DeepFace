@@ -4,6 +4,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.iustu.identification.BuildConfig;
@@ -14,6 +15,7 @@ import com.iustu.identification.entity.Account;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.widget.dialog.EditDialog;
 import com.iustu.identification.util.DataCache;
+import com.iustu.identification.util.QRCodeUtil;
 import com.iustu.identification.util.SqliteUtil;
 
 
@@ -33,6 +35,10 @@ public class SystemManageFragment extends BaseFragment{
     TextView versionTv;
     @BindView(R.id.show_ip_tv)
     TextView ipShow;
+    @BindView(R.id.show_qrcode)
+    ImageView showQrCode;
+    @BindView(R.id.qr_code)
+    ImageView qrCode;
 
     ParameterConfig config=ParameterConfig.getFromSP();
     @Override
@@ -47,6 +53,12 @@ public class SystemManageFragment extends BaseFragment{
         usernameTv.setText(("用户：" + account.name));
         versionTv.setText(("当前版本：" + BuildConfig.VERSION_NAME));
         ipShow.setText(config.getDeviceId());
+        showQrCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                qrCode.setImageBitmap(QRCodeUtil.createQRCodeBitmap(config.getDeviceId(),300,300));
+            }
+        });
     }
 
     @Override
