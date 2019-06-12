@@ -31,6 +31,8 @@ public class SystemManageFragment extends BaseFragment{
     TextView usernameTv;
     @BindView(R.id.tv_version)
     TextView versionTv;
+    @BindView(R.id.show_ip_tv)
+    TextView ipShow;
 
     ParameterConfig config=ParameterConfig.getFromSP();
     @Override
@@ -41,8 +43,10 @@ public class SystemManageFragment extends BaseFragment{
     @Override
     protected void initView(@Nullable Bundle savedInstanceState, View view) {
         account = DataCache.getAccount();
+        ParameterConfig config=ParameterConfig.getFromSP();
         usernameTv.setText(("用户：" + account.name));
         versionTv.setText(("当前版本：" + BuildConfig.VERSION_NAME));
+        ipShow.setText(config.getDeviceId());
     }
 
     @Override
