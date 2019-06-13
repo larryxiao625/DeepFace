@@ -92,11 +92,11 @@ public class SystemManageFragment extends BaseFragment{
                     if(!content.endsWith("/")){
                         content  += "/";
                     }
-                    HttpUrl httpUrl = HttpUrl.parse(content);
-                    if(httpUrl == null) {
-                        layout.setError("地址不合法");
-                        return false;
-                    }
+//                    HttpUrl httpUrl = HttpUrl.parse(content);
+//                    if(httpUrl == null) {
+//                        layout.setError("地址不合法");
+//                        return false;
+//                    }
                     config.setIpAddress(content);
                     return true;
                 })
