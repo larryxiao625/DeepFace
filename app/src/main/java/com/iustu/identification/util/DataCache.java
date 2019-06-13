@@ -24,9 +24,8 @@ public class DataCache {
 
     public static void init() throws IOException {
         parameterConfig = ParameterConfig.getFromSP();
-        if(!UUIDutil.isFirstUse()){
+        if(UUIDutil.isFirstUse()){
             UUIDutil.setUUID();
-            Log.d("UUID",parameterConfig.getDeviceId());
             parameterConfig.setDeviceId(UUIDutil.getUUID());
             parameterConfig.save();
         }

@@ -53,10 +53,13 @@ public class SystemManageFragment extends BaseFragment{
         usernameTv.setText(("用户：" + account.name));
         versionTv.setText(("当前版本：" + BuildConfig.VERSION_NAME));
         ipShow.setText(config.getDeviceId());
-        showQrCode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                qrCode.setImageBitmap(QRCodeUtil.createQRCodeBitmap(config.getDeviceId(),300,300));
+        showQrCode.setOnClickListener(v -> {
+            qrCode.setImageBitmap(QRCodeUtil.createQRCodeBitmap(config.getDeviceId(),400,400));
+            qrCode.setVisibility(View.VISIBLE);
+        });
+        qrCode.setOnClickListener(v -> {
+            if(v.getVisibility()==View.VISIBLE){
+                v.setVisibility(View.GONE);
             }
         });
     }

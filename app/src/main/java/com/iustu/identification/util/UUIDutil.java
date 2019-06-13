@@ -24,9 +24,9 @@ public class UUIDutil {
     public static boolean isFirstUse(){
         File UUIDFile=new File(UUIDMountFileString);
         if(UUIDFile.exists()){
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     /**
