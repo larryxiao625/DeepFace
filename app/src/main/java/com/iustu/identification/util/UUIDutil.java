@@ -2,6 +2,8 @@ package com.iustu.identification.util;
 
 import android.util.Log;
 
+import com.iustu.identification.bean.ParameterConfig;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -29,19 +31,6 @@ public class UUIDutil {
         return true;
     }
 
-    /**
-     * 第一次设置唯一标识符
-     * @throws IOException
-     */
-    public static void setUUID() throws IOException {
-        UUID= java.util.UUID.randomUUID().toString();
-        File file=new File(UUIDMountFileString);
-        file.createNewFile();
-        FileOutputStream fos=new FileOutputStream(UUIDMountFileString);
-        fos.write(UUID.getBytes());
-        fos.close();
-    }
-
     public static String getUUID() {
         try {
             FileInputStream fis=new FileInputStream(UUIDMountFileString);
@@ -57,7 +46,18 @@ public class UUIDutil {
         return UUID;
     }
 
-    public void setUUID(String UUID) {
-        this.UUID = UUID;
+    public static void setUUID(String UUID) {
+        File file=new File(UUIDMountFileString);
+        try {
+            if(!file.exists()){
+                file.createNewFile();
+            }
+            FileOutputStream fos=new FileOutputStream(UUIDMountFileString);
+            fos.write(UUID.getBytes());
+            fos.close();
+            fos.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

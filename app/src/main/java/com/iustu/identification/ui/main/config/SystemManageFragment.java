@@ -3,6 +3,7 @@ package com.iustu.identification.ui.main.config;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -10,18 +11,17 @@ import android.widget.TextView;
 import com.iustu.identification.BuildConfig;
 import com.iustu.identification.R;
 import com.iustu.identification.bean.ParameterConfig;
-import com.iustu.identification.config.SystemConfig;
 import com.iustu.identification.entity.Account;
 import com.iustu.identification.ui.base.BaseFragment;
 import com.iustu.identification.ui.widget.dialog.EditDialog;
 import com.iustu.identification.util.DataCache;
 import com.iustu.identification.util.QRCodeUtil;
 import com.iustu.identification.util.SqliteUtil;
+import com.iustu.identification.util.UUIDutil;
 
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.HttpUrl;
 
 /**
  * Created by Liu Yuchuan on 2017/11/5.
@@ -33,14 +33,35 @@ public class SystemManageFragment extends BaseFragment{
     TextView usernameTv;
     @BindView(R.id.tv_version)
     TextView versionTv;
-    @BindView(R.id.show_ip_tv)
-    TextView ipShow;
+    @BindView(R.id.show_device_id)
+    TextView deviceIdShow;
     @BindView(R.id.show_qrcode)
     ImageView showQrCode;
     @BindView(R.id.qr_code)
     ImageView qrCode;
+    @OnClick(R.id.show_device_id)
+    void setDeviceID(){
+        new EditDialog.Builder()
+                .content(config.getDeviceId())
+                .title("更改设备ID")
+                .hint("新ID")
+                .positive("确定", (v, content, layout) -> {
+//                    HttpUrl httpUrl = HttpUrl.parse(content);
+//                    if(httpUrl == null) {
+//                        layout.setError("地址不合法");
+//                        return false;
+//                    }
+                    UUIDutil.setUUID(content);
+                    config.setDeviceId(content);
+                    config.save();
+                    deviceIdShow.setText(content);
+                    return true;
+                })
+                .negative("取消", null)
+                .show(mActivity.getSupportFragmentManager());
+    }
 
-    ParameterConfig config=ParameterConfig.getFromSP();
+    ParameterConfig config;
     @Override
     protected int postContentView() {
         return R.layout.fragment_system_manage;
@@ -49,10 +70,11 @@ public class SystemManageFragment extends BaseFragment{
     @Override
     protected void initView(@Nullable Bundle savedInstanceState, View view) {
         account = DataCache.getAccount();
+        config = DataCache.getParameterConfig();
         ParameterConfig config=ParameterConfig.getFromSP();
         usernameTv.setText(("用户：" + account.name));
         versionTv.setText(("当前版本：" + BuildConfig.VERSION_NAME));
-        ipShow.setText(config.getDeviceId());
+        deviceIdShow.setText(config.getDeviceId());
         showQrCode.setOnClickListener(v -> {
             qrCode.setImageBitmap(QRCodeUtil.createQRCodeBitmap(config.getDeviceId(),400,400));
             qrCode.setVisibility(View.VISIBLE);

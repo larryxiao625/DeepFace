@@ -6,6 +6,10 @@ import com.google.gson.Gson;
 import com.iustu.identification.util.GetMacUtil;
 import com.iustu.identification.util.MSP;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 /**
  * created by sgh, 2019-4-2
  *
@@ -61,6 +65,7 @@ public class ParameterConfig {
     // 将ParameterConfig对象转化为json字符串之后保存到SharePreference中
     public void save() {
         String jsonString = this.toJsonString();
+        Log.d("parameterConfig",jsonString);
         MSP.getInstance(MSP.SP_PARAMETERS).edit().putString(MSP.SP_PARAMETERS, jsonString).apply();
     }
 
@@ -215,7 +220,7 @@ public class ParameterConfig {
     }
 
     public void setDeviceId(String deviceId) {
-        this.deviceId = deviceId;
+        this.deviceId=deviceId;
     }
 
     public boolean isFirstStart() {
