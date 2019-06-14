@@ -1,5 +1,6 @@
 package com.iustu.identification.util;
 
+import android.provider.Contacts;
 import android.util.Log;
 
 import com.iustu.identification.bean.ParameterConfig;
@@ -9,6 +10,8 @@ import com.iustu.identification.entity.Account;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.UUID;
+
+import retrofit2.http.PATCH;
 
 /**
  * created by sgh, 2019-4-2
@@ -24,15 +27,12 @@ public class DataCache {
 
     public static void init() throws IOException {
         parameterConfig = ParameterConfig.getFromSP();
-        if(!UUIDutil.isFirstUse()){
-            UUIDutil.setUUID();
-            Log.d("UUID",parameterConfig.getDeviceId());
-            parameterConfig.setDeviceId(UUIDutil.getUUID());
-            parameterConfig.save();
-        }
-        if(ParameterConfig.getFromSP().isFirstStart()){
+        if(UUIDutil.isFirstUse() && ParameterConfig.getFromSP().isFirstStart()){
             parameterConfig.setFirstStart(false);
-            parameterConfig.setDeviceId(UUIDutil.getUUID());
+            String UID=UUID.randomUUID().toString();
+            UUIDutil.setUUID(UID);
+            parameterConfig.setDeviceId(UID);
+            parameterConfig.save();
         }
         HashSet<String> tempChosenHashSet= (HashSet<String>) MSP.getInstance(MSP.SP_CHOSEN).getStringSet(MSP.SP_CHOSEN, new HashSet<String>());
         chosenLibConfig=new HashSet<>();

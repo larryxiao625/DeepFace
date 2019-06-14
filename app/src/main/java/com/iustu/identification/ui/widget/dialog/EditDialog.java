@@ -17,6 +17,8 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.iustu.identification.R;
 import com.iustu.identification.ui.base.BaseDialogFragment;
 
+import java.io.IOException;
+
 /**
  * Created by Liu Yuchuan on 2017/11/15.
  */
@@ -46,7 +48,7 @@ public class EditDialog extends BaseDialogFragment{
     private EditDialogListener negativeListener;
 
     public interface EditDialogListener{
-        boolean onClick(View v, String content, TextInputLayout layout);
+        boolean onClick(View v, String content, TextInputLayout layout) throws IOException;
     }
 
     @Override
@@ -77,7 +79,11 @@ public class EditDialog extends BaseDialogFragment{
         positiveTv.setOnClickListener(v -> {
             boolean dismiss = true;
             if(positiveListener != null){
-                dismiss = positiveListener.onClick(v, contentEdit.getText().toString(), textInputLayout);
+                try {
+                    dismiss = positiveListener.onClick(v, contentEdit.getText().toString(), textInputLayout);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
             if(dismiss) {
                 dismiss();
@@ -86,7 +92,11 @@ public class EditDialog extends BaseDialogFragment{
         negativeTv.setText(negativeText);
         negativeTv.setOnClickListener(v -> {
             if(negativeListener != null){
-                negativeListener.onClick(v, contentEdit.getText().toString().trim(), textInputLayout);
+                try {
+                    negativeListener.onClick(v, contentEdit.getText().toString().trim(), textInputLayout);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
             dismiss();
         });

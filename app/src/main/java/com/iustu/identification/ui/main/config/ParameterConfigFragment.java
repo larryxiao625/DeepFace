@@ -70,8 +70,6 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
     RadioButton radioButton;
     @BindView(R.id.same_is_need)
     SwitchButton switchButton;
-    @BindView(R.id.show_ip_tv)
-    TextView ipAddress;
 
     private OptionsPickerView displayCountPicker;
     private OptionsPickerView saveCountPicker;
@@ -158,7 +156,6 @@ public class ParameterConfigFragment extends BaseFragment implements BubbleSeekB
         saveCountTv.setText(config.getSaveCount() + "");
         dpiSetTv.setText(config.getDpiWidth()+"*"+config.getDpiHeight());
         quantity.setText(config.getThresholdQuanity() + "");
-        ipAddress.setText(config.getDeviceId());
     }
 
     public void getDpiStringList(){
