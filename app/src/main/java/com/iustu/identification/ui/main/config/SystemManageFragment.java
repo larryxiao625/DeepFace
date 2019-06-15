@@ -89,19 +89,25 @@ public class SystemManageFragment extends BaseFragment{
     @Override
     public void onHide() {
         super.onHide();
-        config.save();
+        if(config!=null) {
+            config.save();
+        }
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        config.save();
+        if(config!=null) {
+            config.save();
+        }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        config.save();
+        if(config!=null) {
+            config.save();
+        }
     }
 
     @OnClick(R.id.ip_alter_tv)
