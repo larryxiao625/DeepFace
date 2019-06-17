@@ -457,8 +457,9 @@ public class RxUtil {
                     while(index < overCount) {
                         index ++;
                         cursor.moveToNext();
-                        FileUtil.delete(cursor.getString(cursor.getColumnIndex("imgUrl")));
+                        FileUtil.deleteWithCache(cursor.getString(cursor.getColumnIndex("imgUrl")));
                         FileUtil.deleteWithCache(cursor.getString(cursor.getColumnIndex("originalPath")));
+
                         database.delete(RxUtil.DB_FACECOLLECTIOMITEM, "id = " + cursor.getInt(cursor.getColumnIndex("id")), null);
                     }
 

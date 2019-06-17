@@ -140,6 +140,8 @@ public class SDKUtil {
     public static int sdkDoPerson(PersionInfo persionInfo) {
         DetectResult detectResult=new DetectResult();
         SDKUtil.getDetectHandler().faceDetector(persionInfo.photoPath,detectResult);
+        Log.d("addPerson", String.valueOf(detectResult.size()));
+        Log.d("addPerson", String.valueOf(detectResult));
         FeatureResult featureResult=new FeatureResult();
         int result = getVerifyHandler().extractFeature(detectResult,featureResult);
         if (result == -1)

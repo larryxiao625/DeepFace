@@ -243,129 +243,141 @@ public class CapturePicService extends Service {
     }
 
     public void getCutPicture(String originalPhoto, DetectResult detectResult,Calendar calendar,int num){
-        for(int i=0;i<num;i++) {
-            String cutPathName=cutPath+TextUtil.dateMessage(calendar.getTime())+"_"+i+".jpg";
-            int centerX = (detectResult.getRects().get(i).left + detectResult.getRects().get(i).right) / 2;
-            int centerY = (detectResult.getRects().get(i).top + detectResult.getRects().get(i).bottom) / 2;
-            // 获取新的坐标系下四个边的坐标
-            int left = (int)((detectResult.getRects().get(i).left - centerX) * 1.5);
-            int right = (int)((detectResult.getRects().get(i).right - centerX) * 1.5);
-            int top = (int)((detectResult.getRects().get(i).top - centerY) * 1.5);
-            int bottom = (int)((detectResult.getRects().get(i).bottom - centerY) * 1.5);
-            // 将新的边的坐标平移到原来的坐标系
-            left = left + centerX;
-            right = right + centerX;
-            top = top + centerY;
-            bottom = bottom + centerY;
+        try {
+            for (int i = 0; i < num; i++) {
+                String cutPathName = cutPath + TextUtil.dateMessage(calendar.getTime()) + "_" + i + ".jpg";
+                int centerX = (detectResult.getRects().get(i).left + detectResult.getRects().get(i).right) / 2;
+                int centerY = (detectResult.getRects().get(i).top + detectResult.getRects().get(i).bottom) / 2;
+                // 获取新的坐标系下四个边的坐标
+                int left = (int) ((detectResult.getRects().get(i).left - centerX) * 1.5);
+                int right = (int) ((detectResult.getRects().get(i).right - centerX) * 1.5);
+                int top = (int) ((detectResult.getRects().get(i).top - centerY) * 1.5);
+                int bottom = (int) ((detectResult.getRects().get(i).bottom - centerY) * 1.5);
+                // 将新的边的坐标平移到原来的坐标系
+                left = left + centerX;
+                right = right + centerX;
+                top = top + centerY;
+                bottom = bottom + centerY;
 
-            int height=(bottom> ParameterConfig.getFromSP().getDpiHeight()? ParameterConfig.getFromSP().getDpiHeight():bottom)-(top<0? 0:top);
-            int width=(right> ParameterConfig.getFromSP().getDpiWidth()? ParameterConfig.getFromSP().getDpiWidth():right)-(left<0? 0:left);
+                int height = (bottom > ParameterConfig.getFromSP().getDpiHeight() ? ParameterConfig.getFromSP().getDpiHeight() : bottom) - (top < 0 ? 0 : top);
+                int width = (right > ParameterConfig.getFromSP().getDpiWidth() ? ParameterConfig.getFromSP().getDpiWidth() : right) - (left < 0 ? 0 : left);
 //            Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(originalPhoto), (detectResult.getRects().get(i).left/1.2)<0? 0: (int) (detectResult.getRects().get(i).left /1.2), (detectResult.getRects().get(i).top/1.2<0)? 0: (int) (detectResult.getRects().get(i).top/1.2),width>(ParameterConfig.getFromSP().getDpiWidth()-detectResult.getRects().get(i).left/1.2)?(ParameterConfig.getFromSP().getDpiWidth()-detectResult.getRects().get(i).left/1.2):width,height>(ParameterConfig.getFromSP().getDpiHeight()-detectResult.getRects().get(i).top/1.2)?(ParameterConfig.getFromSP().getDpiHeight()-detectResult.getRects().get(i).top/1.2):height);
-            Log.d("originalPhoto",originalPhoto);
-            try {
-                Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(originalPhoto, FileUtil.getCompressOptions(originalPhoto)), left<0? 0: left, top<0? 0: top,width,height);
-                File file=new File(cutPathName);
-                BufferedOutputStream bos=new BufferedOutputStream(new FileOutputStream(file));
-                bitmap.compress(Bitmap.CompressFormat.JPEG,80,bos);
-                bos.flush();
-                bos.close();
-                if(DataCache.getParameterConfig().getFactor()!=0) {
-                    getVerify(i, detectResult, calendar, cutPathName, originalPhoto);
-                }
-                String finalCutPathName = cutPathName;
-                Api.uploadImageCallBackObservable(Base64Util.convertBase64(cutPathName),TextUtil.getDateString(TextUtil.FORMAT_MILLISECOND,calendar.getTime()))
-                        .subscribe(new Observer<UploadImageCallBack>() {
-                            @Override
-                            public void onSubscribe(Disposable d) {
+                Log.d("originalPhoto", originalPhoto);
+                try {
+                    Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(originalPhoto, FileUtil.getCompressOptions(originalPhoto)), left < 0 ? 0 : left, top < 0 ? 0 : top, width, height);
+                    File file = new File(cutPathName);
+                    BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 80, bos);
+                    bos.flush();
+                    bos.close();
+                    if (DataCache.getParameterConfig().getFactor() != 0) {
+                        getVerify(i, detectResult, calendar, cutPathName, originalPhoto);
+                    }
+                    String finalCutPathName = cutPathName;
+                    Api.uploadImageCallBackObservable(Base64Util.convertBase64(cutPathName), TextUtil.getDateString(TextUtil.FORMAT_MILLISECOND, calendar.getTime()))
+                            .subscribe(new Observer<UploadImageCallBack>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
 
-                            }
-
-                            @Override
-                            public void onNext(UploadImageCallBack uploadImageCallBack) {
-                                Log.d("uploadImageCallback", String.valueOf(uploadImageCallBack.getErrorCode()));
-                                if(uploadImageCallBack.getErrorCode()!=0) {
-                                    SqliteUtil.insertFaceCollectionItem(finalCutPathName, originalPhoto, calendar.getTime(), cameraPrenster, 1);
-                                }else {
-                                    SqliteUtil.insertFaceCollectionItem(finalCutPathName, originalPhoto, calendar.getTime(), cameraPrenster, 0);
                                 }
-                            }
 
-                            @Override
-                            public void onError(Throwable e) {
-                                e.printStackTrace();
-                                SqliteUtil.insertFaceCollectionItem(finalCutPathName, originalPhoto, calendar.getTime(),cameraPrenster,0);
+                                @Override
+                                public void onNext(UploadImageCallBack uploadImageCallBack) {
+                                    Log.d("uploadImageCallback", String.valueOf(uploadImageCallBack.getErrorCode()));
+                                    if (uploadImageCallBack.getErrorCode() != 0) {
+                                        SqliteUtil.insertFaceCollectionItem(finalCutPathName, originalPhoto, calendar.getTime(), cameraPrenster, 1);
+                                    } else {
+                                        SqliteUtil.insertFaceCollectionItem(finalCutPathName, originalPhoto, calendar.getTime(), cameraPrenster, 0);
+                                    }
+                                }
 
-                            }
+                                @Override
+                                public void onError(Throwable e) {
+                                    e.printStackTrace();
+                                    SqliteUtil.insertFaceCollectionItem(finalCutPathName, originalPhoto, calendar.getTime(), cameraPrenster, 0);
 
-                            @Override
-                            public void onComplete() {
+                                }
 
-                            }
-                        });
-                cutPathName = null;
-            }catch (FileNotFoundException e){
-                e.printStackTrace();
-            }catch (IOException e){
-                e.printStackTrace();
-            }catch (NullPointerException e){
-                return;
+                                @Override
+                                public void onComplete() {
+
+                                }
+                            });
+                    cutPathName = null;
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (NullPointerException e) {
+                    return;
+                }
             }
+        }catch (NullPointerException e){
+            e.printStackTrace();
         }
 
     }
 
     @Subscribe(threadMode = ThreadMode.ASYNC)
     public void Event(ThreadCanshu threadCanshu){
-        int picQuality = DataCache.getParameterConfig().getMinEyesDistance();
-        String tempBestPicPath = null;
-        ArrayList<DetectResult> tempDetectResults = new ArrayList<>();
-        Calendar tempBestCalender = null;
-        CopyOnWriteArrayList<String> deletePath=new CopyOnWriteArrayList<>();
-        List<Calendar> threadCalenders = threadCanshu.getThreadCalenders();
-        List<String> picPaths = threadCanshu.getPicPaths();
-        if (threadCalenders != null) {
-            int index = -1;      // 记录当前最优图片所在的位置
-            for (int i = 0; i < picPaths.size(); i++) {
-                try {
-                    Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(picPaths.get(i), FileUtil.getCompressOptions(picPaths.get(i))));
-                    FileOutputStream tempFos = new FileOutputStream(tempPath + TextUtil.dateMessage(threadCalenders.get(i).getTime())+"_"+i+".jpg");
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 60, tempFos);
-                    tempFos.flush();
-                    tempFos.close();
-                    ArrayList<String> inputPicPaths = new ArrayList<>();
-                    inputPicPaths.add(tempPath + TextUtil.dateMessage(threadCalenders.get(i).getTime()) + "_" + i + ".jpg");
-                    ArrayList<DetectResult> detectResults = SDKUtil.detectFace(inputPicPaths);
-                    if (detectResults!=null) {
-                        if (((detectResults.get(0).getPoints().get(0).x)[1] - (detectResults.get(0).getPoints().get(0).x)[0]) > picQuality && ((detectResults.get(0).getPoints().get(0).x)[1] - (detectResults.get(0).getPoints().get(0).x)[0]) >= DataCache.getParameterConfig().getMinEyesDistance()) {
-                            if (index > -1)
-                                deletePath.add(picPaths.get(index));
-                            index = i;
-                            picQuality = (int) ((detectResults.get(0).getPoints().get(0).x)[1] - (detectResults.get(0).getPoints().get(0).x)[0]);  //通过瞳距得到相片质量
-                            tempDetectResults.clear();
-                            tempDetectResults = detectResults;
-                            tempBestCalender = threadCalenders.get(i);
-                            tempBestPicPath = picPaths.get(i);
-                        }else {
-                            deletePath.add(picPaths.get(i)); //质量较差的照片
+        try {
+            int picQuality = DataCache.getParameterConfig().getMinEyesDistance();
+            String tempBestPicPath = null;
+            ArrayList<DetectResult> tempDetectResults = new ArrayList<>();
+            Calendar tempBestCalender = null;
+            CopyOnWriteArrayList<String> deletePath = new CopyOnWriteArrayList<>();
+            List<Calendar> threadCalenders = threadCanshu.getThreadCalenders();
+            List<String> picPaths = threadCanshu.getPicPaths();
+            Log.d("detectResults", "gogogo");
+            if (threadCalenders != null) {
+                int index = -1;      // 记录当前最优图片所在的位置
+                for (int i = 0; i < picPaths.size(); i++) {
+                    try {
+                        Bitmap bitmap = Bitmap.createBitmap(BitmapFactory.decodeFile(picPaths.get(i), FileUtil.getCompressOptions(picPaths.get(i))));
+                        FileOutputStream tempFos = new FileOutputStream(tempPath + TextUtil.dateMessage(threadCalenders.get(i).getTime()) + "_" + i + ".jpg");
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 60, tempFos);
+                        tempFos.flush();
+                        tempFos.close();
+                        ArrayList<String> inputPicPaths = new ArrayList<>();
+                        inputPicPaths.add(tempPath + TextUtil.dateMessage(threadCalenders.get(i).getTime()) + "_" + i + ".jpg");
+                        ArrayList<DetectResult> detectResults = SDKUtil.detectFace(inputPicPaths);
+                        if ( detectResults!=null &&detectResults.get(0).points.size() != 0) {
+                            if (((detectResults.get(0).getPoints().get(0).x)[1] - (detectResults.get(0).getPoints().get(0).x)[0]) > picQuality && ((detectResults.get(0).getPoints().get(0).x)[1] - (detectResults.get(0).getPoints().get(0).x)[0]) >= DataCache.getParameterConfig().getMinEyesDistance()) {
+                                if (index > -1)
+                                    deletePath.add(picPaths.get(index));
+                                index = i;
+                                picQuality = (int) ((detectResults.get(0).getPoints().get(0).x)[1] - (detectResults.get(0).getPoints().get(0).x)[0]);  //通过瞳距得到相片质量
+                                tempDetectResults.clear();
+                                tempDetectResults = detectResults;
+                                tempBestCalender = threadCalenders.get(i);
+                                tempBestPicPath = picPaths.get(i);
+                            } else {
+                                deletePath.add(picPaths.get(i)); //质量较差的照片
+                            }
+                        }else{
+                            Log.d("noFace","noFace");
+                            deletePath.add(picPaths.get(i));
+                            Log.d("deletePath", String.valueOf(deletePath));
                         }
+                        if (i == (picPaths.size() - 1) && !tempDetectResults.isEmpty()) {
+                            getCutPicture(tempBestPicPath, tempDetectResults.get(0), tempBestCalender, tempDetectResults.get(0).points.size()); //根据算法返回结果裁剪人脸并保存
+                        }
+                    } catch (NullPointerException e) {
+                        e.printStackTrace();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                    if (i == (picPaths.size()-1)&&!tempDetectResults.isEmpty()) {
-                        getCutPicture(tempBestPicPath, tempDetectResults.get(0), tempBestCalender, tempDetectResults.get(0).points.size()); //根据算法返回结果裁剪人脸并保存
-                        FileUtil.deleteList(deletePath); //删除质量较差的照片
-                        deletePath.clear();
-                        deletePath = null;
-                    }
-                } catch (NullPointerException e) {
-                    return;
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
+                Log.d("detectResults", String.valueOf(deletePath));
+                FileUtil.deleteList(deletePath); //删除质量较差的照片
+                picPaths.clear();
+                picPaths = null;
+                tempBestPicPath = null;
             }
-            picPaths.clear();
-            picPaths = null;
-            tempBestPicPath = null;
+        }catch (NullPointerException e){
+            e.printStackTrace();
         }
     }
     /**

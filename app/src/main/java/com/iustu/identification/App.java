@@ -8,6 +8,7 @@ import com.fanjun.keeplive.config.ForegroundNotification;
 import com.fanjun.keeplive.config.KeepLiveService;
 import com.iustu.identification.ui.main.camera.prenster.CapturePicService;
 import com.iustu.identification.util.AlarmUtil;
+import com.iustu.identification.util.FileUtil;
 import com.iustu.identification.util.SDKUtil;
 import com.iustu.identification.util.SqliteHelper;
 import com.iustu.identification.util.SqliteUtil;
@@ -37,7 +38,6 @@ public class App extends LitePalApplication{
         Stetho.initializeWithDefaults(this);
         context = this;
         keepAlive();
-
     }
 
     @Override
@@ -72,4 +72,18 @@ public class App extends LitePalApplication{
             }
         });
     }
+
+    @Override
+    public void onLowMemory() {
+        FileUtil.deleteTemp();
+        super.onLowMemory();
+    }
+
+    @Override
+    public void onTrimMemory(int level) {
+        FileUtil.deleteTemp();
+        super.onTrimMemory(level);
+    }
+
+
 }

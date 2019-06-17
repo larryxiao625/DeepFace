@@ -27,6 +27,7 @@ import com.iustu.identification.ui.main.camera.adapter.CompareItemAdapter;
 import com.iustu.identification.ui.main.camera.prenster.CameraPrenster;
 import com.iustu.identification.ui.main.camera.prenster.CapturePicService;
 import com.iustu.identification.util.DataCache;
+import com.iustu.identification.util.FileUtil;
 import com.iustu.identification.util.IconFontUtil;
 import com.jiangdg.usbcamera.UVCCameraHelper;
 import com.serenegiant.usb.common.AbstractUVCCameraHandler;
@@ -115,11 +116,13 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
 
     @Override
     public void onHide() {
+        FileUtil.deleteTemp();
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FileUtil.deleteTemp();
     }
 
     @Override
@@ -219,6 +222,7 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
     public void onStop() {
         super.onStop();
         Log.d("CameraFragment","onStop");
+        FileUtil.deleteTemp();
     }
 
     @Override
@@ -226,6 +230,7 @@ public class CameraFragment extends BaseFragment implements CameraViewInterface.
         super.onDestroy();
         Log.d("CameraFragment","onDestroy");
         Objects.requireNonNull(getActivity()).stopService(serviceIntent);
+        FileUtil.deleteTemp();
     }
 
     ServiceConnection myServiceConnection=new ServiceConnection() {

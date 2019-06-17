@@ -235,7 +235,8 @@ public class FileUtil {
         new Thread(() -> {
             for (int i = 0; i < list.size(); i ++) {
                 File file = new File(list.get(i));
-                file.deleteOnExit();
+                Log.d("deleteFile",file.getAbsolutePath());
+                file.delete();
             }
         }).start();
     }
