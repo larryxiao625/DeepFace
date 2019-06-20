@@ -26,7 +26,11 @@ public class IdentityUtil {
      * @return 是否合法
      */
     public static boolean isValidatedIdentity(String id) {
-        return new IdcardValidator().isValidatedAllIdcard(id);
+        IdcardValidator i = new IdcardValidator();
+        if(id.length() == 15) {
+            id = i.convertIdcarBy15bit(id);
+        }
+        return i.isValidatedAllIdcard(id);
     }
 
     public static void getInformation(String id) {

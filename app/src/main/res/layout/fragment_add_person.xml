@@ -58,7 +58,7 @@
                     android:text="@string/id_number"
                     style="@style/LibraryText"/>
                 <EditText
-                    android:inputType="number"
+                    android:singleLine="true"
                     android:id="@+id/id_card_edit"
                     android:hint="@string/fill_id_number"
                     style="@style/LibraryEditText"/>
