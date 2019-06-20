@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
  */
 public class IdentityUtil {
     private static IdcardInfoExtractor idcardInfoExtractor;
-    public static String location;     // 籍贯
+    private static String location;     // 籍贯
     public static String birthday;     // 生日
     public static String gender;     // 性别
 

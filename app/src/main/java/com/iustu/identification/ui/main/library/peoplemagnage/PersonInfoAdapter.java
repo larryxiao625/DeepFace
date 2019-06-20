@@ -2,6 +2,8 @@ package com.iustu.identification.ui.main.library.peoplemagnage;
 
 import android.graphics.Color;
 import android.net.Uri;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -106,6 +108,7 @@ public class PersonInfoAdapter extends PageRecyclerViewAdapter<PersonInfoAdapter
     }
 
 
+    @NonNull
     @Override
     public Holder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())

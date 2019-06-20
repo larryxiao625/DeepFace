@@ -24,8 +24,8 @@ import io.reactivex.disposables.Disposable;
 public class PersionPresenter {
     private Disposable disposable;
 
-    PersionView mView;
-    PersionModel mModel;
+    private PersionView mView;
+    private PersionModel mModel;
 
     public PersionPresenter (PersionModel model) {
         this.mModel = model;
